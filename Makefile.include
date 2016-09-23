@@ -1,0 +1,28 @@
+##
+##  Visopsys
+##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##
+##  Makefile.include
+##
+
+# Top-level include file for code Makefiles.  Sets global compile options.
+
+NASM = nasm
+CC = gcc
+CC++ = g++
+AR = ar
+LD = ld
+OPT = -Os
+ARCH = -m32
+CODEGEN = -pipe -fno-common -fno-strict-aliasing -fno-builtin \
+	-fno-omit-frame-pointer -fno-asynchronous-unwind-tables \
+	-fno-stack-protector
+CCODEGEN = ${CODEGEN} -ffreestanding
+C++CODEGEN = ${CODEGEN} -fno-rtti -fno-exceptions
+WARN = -Wall -W -Wshadow -Wcast-align -Wsign-compare -Waggregate-return \
+	-Wmissing-format-attribute -Wredundant-decls -Werror
+CWARN = ${WARN} -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
+C++WARN = ${WARN}
+
+export NASM CC CC++ AR LD OPT ARCH CCODEGEN C++CODEGEN CWARN C++WARN
+

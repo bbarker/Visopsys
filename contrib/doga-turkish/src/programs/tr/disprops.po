@@ -1,0 +1,115 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: disprops.c:565
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalisabilir\n"
+
+#: disprops.c:113
+#, c-format
+msgid " %d x %d, %d bit "
+msgstr " %d x %d, %d Bit "
+
+#: disprops.c:397
+msgid "Background"
+msgstr "Arkaplan"
+
+#: disprops.c:438
+msgid "Background wallpaper:"
+msgstr "Arkaplan duvar kagidi:"
+
+#: disprops.c:485
+msgid "Boot in graphics mode"
+msgstr "Grafik modda boot et"
+
+#: disprops.c:531
+msgid "Cancel"
+msgstr "Iptal"
+
+#: disprops.c:410
+msgid "Change"
+msgstr "Degistir"
+
+#: disprops.c:301
+msgid "Changed"
+msgstr "Degistirildi"
+
+#: disprops.c:452
+msgid "Choose"
+msgstr "Seç"
+
+#: disprops.c:388
+msgid "Colors:"
+msgstr "Renkler:"
+
+#: disprops.c:397
+msgid "Desktop"
+msgstr "Masaüstü"
+
+#: disprops.c:347
+msgid "Display Settings"
+msgstr "Ekran Ayarlari"
+
+#: disprops.c:306
+msgid "Error"
+msgstr "Hata"
+
+#: disprops.c:305
+#, c-format
+msgid "Error %d setting mode"
+msgstr "%d modu ayarlanirken hata olustu"
+
+#: disprops.c:397
+msgid "Foreground"
+msgstr "Önplan"
+
+#: disprops.c:480
+msgid "Miscellaneous:"
+msgstr "Çesitli:"
+
+#: disprops.c:525
+msgid "OK"
+msgstr "Tamam"
+
+#: disprops.c:366
+msgid "Screen resolution:"
+msgstr "Ekran çözünürlügü:"
+
+#: disprops.c:493
+msgid "Show a clock on the desktop"
+msgstr "Masaüstünde saati göster"
+
+#: disprops.c:297
+#, c-format
+msgid ""
+"The resolution has been changed to %dx%d, %dbpp\n"
+"This will take effect after you reboot."
+msgstr ""
+"Ekran çözünürlügü %dx%d 'e degistirildi, %dbpp\n"
+"Bir sonraki yeniden baslatmada uygulanacak."
+
+#: disprops.c:458
+msgid "Use background wallpaper"
+msgstr "Arkaplan duvar kagidini kullan"

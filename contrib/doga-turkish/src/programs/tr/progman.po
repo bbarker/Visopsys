@@ -1,0 +1,145 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: progman.c:596
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalisabilir\n"
+
+#: progman.c:220
+msgid "Can't get temporary memory for processes"
+msgstr "Islemler için geçici bellek alinamiyor"
+
+#: progman.c:505
+msgid "Disk performance:"
+msgstr "Disk performansi: "
+
+#: progman.c:327
+msgid "Enter command"
+msgstr "Komut girin"
+
+#: progman.c:97
+msgid "Error"
+msgstr "Hata"
+
+#: progman.c:615
+msgid "Error getting memory"
+msgstr "Bellege alinirken hata"
+
+#: progman.c:60
+msgid "Free memory: "
+msgstr "Bos bellek: "
+
+#: progman.c:63
+msgid "K/tick"
+msgstr " K/tick"
+
+#: progman.c:569
+msgid "Kill process"
+msgstr "Islemi durdur(KILL)"
+
+#: progman.c:58
+msgid "Memory blocks: "
+msgstr "Bellek bloklari: "
+
+#: progman.c:328
+msgid "Please enter a command to run:"
+msgstr "Lütfen çalistirilacak komutu girin:"
+
+#: progman.c:395
+msgid "Please enter the desired priority"
+msgstr "Lütfen belirlenen önem seviyesini girin"
+
+#: progman.c:522
+#, c-format
+msgid "Process                   PID PPID UID Pri Priv CPU% STATE   "
+msgstr "Islem                   PID PPID UID Pri Priv CPU% DURUMU   "
+
+#: progman.c:481
+msgid "Program Manager"
+msgstr "Program Yönetici"
+
+#: progman.c:61
+msgid "Read: "
+msgstr "Okuma: "
+
+#: progman.c:556
+msgid "Run program"
+msgstr "Program çalistir"
+
+#: progman.c:395 progman.c:563
+msgid "Set priority"
+msgstr "Önem seviyesini ayarla"
+
+#: progman.c:536
+msgid "Show all sub-processes"
+msgstr "Tüm alt islemleri göster"
+
+#: progman.c:357
+msgid "Unable to execute program"
+msgstr "Program çalistirilamiyor"
+
+#: progman.c:458
+msgid "Unable to launch file dialog"
+msgstr "Dosya diyalogu baslatilamadi"
+
+#: progman.c:59
+msgid "Used memory: "
+msgstr "Kullanilan bellek: "
+
+#: progman.c:62
+msgid "Write: "
+msgstr "Yazma: "
+
+#: progman.c:299
+msgid "finished "
+msgstr "tamamlandi "
+
+#: progman.c:287
+msgid "ready "
+msgstr "hazir "
+
+#: progman.c:284
+msgid "running "
+msgstr "çalisiyor "
+
+#: progman.c:293
+msgid "sleeping "
+msgstr "uykuda "
+
+#: progman.c:296
+msgid "stopped "
+msgstr "durdu "
+
+#: progman.c:305
+msgid "unknown "
+msgstr "bilinmeyen "
+
+#: progman.c:290
+msgid "waiting "
+msgstr "bekleniyor "
+
+#: progman.c:302
+msgid "zombie "
+msgstr "zombi "

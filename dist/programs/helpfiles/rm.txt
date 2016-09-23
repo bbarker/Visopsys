@@ -1,0 +1,23 @@
+
+ -- rm --
+
+Remove (delete) one or more files.
+
+Synonym:
+  del
+
+Usage:
+  rm [-R] [-S#] <file1> [file2] [...]
+
+This command will remove one or more files.  Normally it will not remove
+directories.  To remove a directory, use the 'rmdir' command.
+
+Options:
+-R              : Force recursive deletion, including directories.
+-S[number]      : Securely delete the file by overwriting it with random
+                  data (number minus 1 times) and then NULLs, and then
+                  deleting the file.  The default number value is 5 if no
+                  value is supplied.
+
+Note the -S option is not allowed if the -R option is used.
+

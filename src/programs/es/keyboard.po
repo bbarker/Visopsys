@@ -1,0 +1,13 @@
+#: keyboard.c:181
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" funciona solamente en modo grfico\n"
+
+#: keyboard.c:197
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr ""

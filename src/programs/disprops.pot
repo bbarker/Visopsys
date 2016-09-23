@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: disprops.c:56
+msgid "Display Settings"
+msgstr ""
+
+#: disprops.c:57
+msgid "Screen resolution:"
+msgstr ""
+
+#: disprops.c:58
+msgid "Colors:"
+msgstr ""
+
+#: disprops.c:59
+msgid "Foreground"
+msgstr ""
+
+#: disprops.c:60
+msgid "Background"
+msgstr ""
+
+#: disprops.c:61
+msgid "Desktop"
+msgstr ""
+
+#: disprops.c:62
+msgid "Change"
+msgstr ""
+
+#: disprops.c:63
+msgid "Background wallpaper:"
+msgstr ""
+
+#: disprops.c:64
+msgid "Choose"
+msgstr ""
+
+#: disprops.c:65
+msgid "Use background wallpaper"
+msgstr ""
+
+#: disprops.c:66
+msgid "Miscellaneous:"
+msgstr ""
+
+#: disprops.c:67
+msgid "Boot in graphics mode"
+msgstr ""
+
+#: disprops.c:68
+msgid "Show a clock on the desktop"
+msgstr ""
+
+#: disprops.c:69
+msgid "OK"
+msgstr ""
+
+#: disprops.c:70
+msgid "Cancel"
+msgstr ""
+
+#: disprops.c:218
+#, c-format
+msgid " %d x %d, %d bit "
+msgstr ""
+
+#: disprops.c:686
+#, c-format
+msgid ""
+"The resolution has been changed to %dx%d, %dbpp\n"
+"This will take effect after you reboot."
+msgstr ""
+
+#: disprops.c:690
+msgid "Changed"
+msgstr ""
+
+#: disprops.c:694
+#, c-format
+msgid "Error %d setting mode"
+msgstr ""
+
+#: disprops.c:695
+msgid "Error"
+msgstr ""
+
+#: disprops.c:971
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""

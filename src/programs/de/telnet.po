@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: 2013-11-09 23:36-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: telnet.c:45
+#, c-format
+msgid ""
+"usage:\n"
+"%s <address | hostname>\n"
+msgstr ""
+"Benutzung:\n"
+"%s <Addresse | Hostname>\n"
+
+#: telnet.c:66
+msgid "SE\n"
+msgstr ""
+
+#: telnet.c:70
+msgid "NOP\n"
+msgstr ""
+
+#: telnet.c:74
+msgid "Data Mark\n"
+msgstr ""
+
+#: telnet.c:78
+msgid "Break\n"
+msgstr ""
+
+#: telnet.c:82
+msgid "Interrupt Process\n"
+msgstr "Prozess unterbrechen\n"
+
+#: telnet.c:86
+msgid "Abort output\n"
+msgstr "Ausgabe abbrechen\n"
+
+#: telnet.c:90
+msgid "Are You There\n"
+msgstr ""
+
+#: telnet.c:94
+msgid "Erase character\n"
+msgstr "Charakter löschen\n"
+
+#: telnet.c:98
+msgid "Erase Line\n"
+msgstr "Linie löschen\n"
+
+#: telnet.c:102
+msgid "Go ahead\n"
+msgstr ""
+
+#: telnet.c:106
+msgid "SB\n"
+msgstr ""
+
+#: telnet.c:110
+msgid "WILL "
+msgstr ""
+
+#: telnet.c:114
+msgid "WON'T "
+msgstr ""
+
+#: telnet.c:118
+msgid "DO "
+msgstr ""
+
+#: telnet.c:122
+msgid "DON'T "
+msgstr ""
+
+#: telnet.c:126
+#, c-format
+msgid "unknown code %d\n"
+msgstr "Unbekannter Code %d\n"
+
+#: telnet.c:137
+msgid "echo\n"
+msgstr ""
+
+#: telnet.c:141
+msgid "suppress go ahead\n"
+msgstr ""
+
+#: telnet.c:145
+msgid "status\n"
+msgstr "Status\n"
+
+#: telnet.c:149
+msgid "timing mark\n"
+msgstr ""
+
+#: telnet.c:153
+msgid "terminal type\n"
+msgstr "Terminaltyp\n"
+
+#: telnet.c:157
+msgid "window size\n"
+msgstr "Fenstergrösse\n"
+
+#: telnet.c:161
+msgid "terminal speed\n"
+msgstr "Schnelligkeit des Terminals\n"
+
+#: telnet.c:165
+msgid "remote flow control\n"
+msgstr ""
+
+#: telnet.c:169
+msgid "linemode\n"
+msgstr ""
+
+#: telnet.c:173 telnet.c:177
+msgid "environment variables\n"
+msgstr "Systemvariablen\n"
+
+#: telnet.c:181
+#, c-format
+msgid "unknown option %d\n"
+msgstr "Unbekannte Option %d\n"

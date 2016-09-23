@@ -1,0 +1,148 @@
+diff -uprNw src/kernel/kernelKeyboard.c src/kernel/kernelKeyboard.c
+--- src/kernel/kernelKeyboard.c	2005-08-24 00:22:49.000000000 +0200
++++ src/kernel/kernelKeyboard.c	2005-09-01 11:13:03.000000000 +0200
+@@ -61,7 +61,15 @@ static kernelKeyMap EN_US = {
+     14,13,',','.','/',0,'*',0,' ',0,0,0,0,0,0,0,		   // 30-3F
+     0,0,0,0,0,0,13,17,11,'-',18,'5',19,'+','1',20,		   // 40-4F
+     12,'0',127,0,0,0                				   // 50-55
+-  }
++  },
++  // Alt-Gr map is the same as the regular map for this keyboard
++  { 27,'1','2','3','4','5','6','7','8','9','0','-','=',8,9,'q',    // 00-0F
++    'w','e','r','t','y','u','i','o','p','[',']',10,0,'a','s','d',  // 10-1F
++    'f','g','h','j','k','l',';',39,'`',0,'\\','z','x','c','v','b', // 20-2F
++    'n','m',',','.','/',0,'*',0,' ',0,0,0,0,0,0,0,                 // 30-3F
++    0,0,0,0,0,0,13,17,11,'-',18,'5',19,'+',0,20,                   // 40-4F
++    12,0,127,0,0,0                                                 // 50-55
++  }
+ };
+ 
+ static kernelKeyMap EN_UK = {
+@@ -84,16 +92,60 @@ static kernelKeyMap EN_UK = {
+   },
+   // Control map
+   { 27, '1','2','3','4','5','6','7','8','9','0','-','=',8,9,17,	   // 00-0F
+-    23,5,18,20,25,21,9,15,16,'[',']',10,0,1,19,4,		   // 10=1F 
++    23,5,18,20,25,21,9,15,16,'[',']',10,0,1,19,4,		   // 10-1F 
+     6,7,8,10,11,12,';', '@','`',0,0,26,24,3,22,2,    		   // 20-2F
+     14,13,',','.','/',0,'*',0,' ',0,0,0,0,0,0,0,		   // 30-3F
+     0,0,0,0,0,0,13,17,11,'-',18,'5',19,'+','1',20,		   // 40-4F
+     12,'0',127,0,0,0                				   // 50-55
++  },
++  // Alt-Gr map is the same as the regular map for this keyboard
++  { 27,'1','2','3','4','5','6','7','8','9','0','-','=',8,9,'q',    // 00-0F
++    'w','e','r','t','y','u','i','o','p','[',']',10,0,'a','s','d',  // 10-1F
++    'f','g','h','j','k','l',';',39,'`',0,'#','z','x','c','v','b',  // 20-2F
++    'n','m',',','.','/',0,'*',0,' ',0,0,0,0,0,0,0,                 // 30-3F
++    0,0,0,0,0,0,13,17,11,'-',18,'5',19,'+','1',20,                 // 40-4F
++    12,'0',127,0,0,'\\'                                            // 50-55
++  }
++};
++
++static kernelKeyMap DE_DE = {
++  "Deutsch (Deutschland)",
++  // Regular map
++  { 27,'1','2','3','4','5','6','7','8','9','0',0xdf,0xb4,8 /*BS*/,9 /*HT*/,'q',    	// 00-0F
++    'w','e','r','t','z','u','i','o','p',0xfc,'+',10,0,'a','s','d',  			// 10-1F
++    'f','g','h','j','k','l',0xf6,0xe4,'#',0,'<','y','x','c','v','b', 			// 20-2F
++    'n','m',',','.','-',0,'*' /*NUM*/,0,' ',0,0,0,0,0,0,0,     		            	// 30-3F
++    0,0,0,0,0,0,13/*HOME*/,17/*UP*/,11/*PGUP*/,'-'/*NUM*/,18/*LEFT*/,'5'/*NUM*/,19/*RIGHT*/,'+'/*NUM*/,0/*END*/,20/*DOWN*/,  	// 40-4F
++    12/*PGDN*/,0/*INS*/,127/*DEL*/,0,0,0                                                 			// 50-55
++  },
++  // Shift map
++  { 27,'!','"',0xa7,'$','%','&','/','(',')','=','?','`',8,9,'Q',	   // 00-0F
++    'W','E','R','T','Z','U','I','O','P',0xdc,'*',10,0,'A','S','D',  // 10-1F 
++    'F','G','H','J','K','L',0xd6,0xc4,'\'',0,'>','Y','X','C','V','B',// 20-2F
++    'N','M',';',':','_',0,'*',0,' ',0,0,0,0,0,0,0,        	   // 30-3F
++    0,0,0,0,0,0,'7','8','9','-','4','5','6','+','1','2',	   // 40-4F
++    '3','0','.',0,0,0                				   // 50-55
++  },
++  // Control map
++  { 27, '1','2','3','4','5','6','7','8','9','0','-','=',8,9,17,    // 00-0F
++    23,5,18,20,25,21,9,15,16,'[',']',10,0,1,19,4,		   // 10-1F 
++    6,7,8,10,11,12,';','"','`',0,0,26,24,3,22,2,    		   // 20-2F
++    14,13,',','.','/',0,'*',0,' ',0,0,0,0,0,0,0,		   // 30-3F
++    0,0,0,0,0,0,13,17,11,'-',18,'5',19,'+','1',20,		   // 40-4F
++    12,'0',127,0,0,0                				   // 50-55
++  },
++  // Alt-Gr map 
++  { 27,'1',0xb2,0xb3,0xbc,0xbd,'6','7','8','9','0','\\',0xb8,8 /*BS*/,9 /*HT*/,'@',    	// 00-0F
++    'w','e','r','t','z','u','i','o','p',0xfc,'~',10,0,0xe6,0xdf,0xf0,  			// 10-1F
++    'f','g','h','j','k','l',0xf6,0xe4,'`',0,'|',0xab,0xbb,0xe7,'v','b',			// 20-2F
++    'n',0xb5,',','.','-',0,'*' /*NUM*/,0,' ',0,0,0,0,0,0,0,     	            	// 30-3F
++    0,0,0,0,0,0,13/*HOME*/,17/*UP*/,11/*PGUP*/,'-'/*NUM*/,18/*LEFT*/,'5'/*NUM*/,19/*RIGHT*/,'+'/*NUM*/,0/*END*/,20/*DOWN*/,  	// 40-4F
++    12/*PGDN*/,0/*INS*/,127/*DEL*/,0,0,0                                                 			// 50-55
+   }
+ };
+ 
+ static kernelKeyMap *allMaps[] = {
+-  &EN_US, &EN_UK, NULL
++  &EN_US, &EN_UK, &DE_DE, NULL
+ };
+ 
+ 
+diff -uprNw src/kernel/kernelKeyboardDriver.c src/kernel/kernelKeyboardDriver.c
+--- src/kernel/kernelKeyboardDriver.c	2005-08-24 00:22:49.000000000 +0200
++++ src/kernel/kernelKeyboardDriver.c	2005-09-01 11:13:03.000000000 +0200
+@@ -45,6 +45,7 @@
+ #define RIGHT_SHIFT      54
+ #define LEFT_CTRL        29
+ #define LEFT_ALT         56
++#define RIGHT_ALT        38 //extended scancode
+ #define ASTERISK_KEY     55
+ #define F1_KEY           59
+ #define F2_KEY           60
+@@ -56,6 +57,7 @@
+ #define NUMLOCK          69
+ #define SCROLLLOCK       70
+ 
++#define ALTGR_FLAG       0x100
+ #define INSERT_FLAG      0x80
+ #define CAPSLOCK_FLAG    0x40
+ #define NUMLOCK_FLAG     0x20
+@@ -190,6 +192,12 @@ static void driverReadData(void)
+ 	  // Left Alt release.
+ 	  keyboardDevice->flags &= ~ALT_FLAG;
+ 	  return;
++	case (KEY_RELEASE + RIGHT_ALT):
++	  if(extended)
++          {
++            keyboardDevice->flags &= ~ALTGR_FLAG;
++            break;
++          }
+ 	default:
+ 	  data -= KEY_RELEASE;
+ 	  release = 1;
+@@ -250,6 +258,12 @@ static void driverReadData(void)
+ 	case F2_KEY:
+ 	  kernelMultitaskerDumpProcessList();
+ 	  return;
++        case RIGHT_ALT:
++          if(extended)
++          {
++            keyboardDevice->flags |= ALTGR_FLAG;
++            break;
++          }
+ 	default:
+ 	  break;
+ 	}
+@@ -284,6 +298,8 @@ static void driverReadData(void)
+       else
+ 	data = keyboardDevice->keyMap->controlMap[data - 1];
+     }
++  else if(keyboardDevice->flags & ALTGR_FLAG)
++    data = keyboardDevice->keyMap->altGrMap[data - 1];
+   
+   else
+     data = keyboardDevice->keyMap->regMap[data - 1];
+diff -uprNw src/kernel/kernelKeyboard.h src/kernel/kernelKeyboard.h
+--- src/kernel/kernelKeyboard.h	2005-05-17 23:55:48.000000000 +0200
++++ src/kernel/kernelKeyboard.h	2005-09-01 11:13:03.000000000 +0200
+@@ -30,6 +30,7 @@ typedef struct {
+   char regMap[86];
+   char shiftMap[86];
+   char controlMap[86];
++  char altGrMap[86];
+ 
+ } kernelKeyMap;
+ 

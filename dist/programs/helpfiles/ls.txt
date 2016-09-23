@@ -1,0 +1,18 @@
+
+ -- ls --
+
+List files.
+
+Synonym:
+  dir
+
+Usage:
+  ls [name1] [name2] [...]
+
+This command will list (show information about) one or more files or
+directories.  If no parameters are specified, 'ls' will display the contents
+of the current directory.  If any of the parameters specify directories,
+all of the files in those directories are displayed.  If any of the parameters
+are the names of individual files, then information about those specific
+files are displayed.
+

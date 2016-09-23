@@ -1,0 +1,11 @@
+
+ -- imgedit --
+
+Simple image editor
+
+Usage:
+  imgedit [options] [file]
+
+Options:
+-s  : Save as same file name (don't prompt)
+

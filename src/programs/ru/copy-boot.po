@@ -1,0 +1,186 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: copy-boot\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: 2015-05-08 01:17+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-Bookmarks: 5,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: copy-boot.c:130
+#, c-format
+msgid ""
+"usage:\n"
+"%s <boot image> <output file|device>\n"
+msgstr ""
+
+#: copy-boot.c:148
+#, c-format
+msgid "Error reading disk %s\n"
+msgstr ""
+
+#: copy-boot.c:158 copy-boot.c:209
+#, c-format
+msgid "Can't open device %s\n"
+msgstr ""
+
+#: copy-boot.c:165 copy-boot.c:216
+#, c-format
+msgid "Can't seek device to sector %u\n"
+msgstr ""
+
+#: copy-boot.c:176
+msgid "Can't read sector\n"
+msgstr ""
+
+#: copy-boot.c:199
+#, c-format
+msgid "Error writing disk %s\n"
+msgstr ""
+
+#: copy-boot.c:227
+msgid "Can't write sector\n"
+msgstr ""
+
+#: copy-boot.c:240
+#, c-format
+msgid "Read boot sector from %s\n"
+msgstr ""
+
+#: copy-boot.c:245
+#, c-format
+msgid "Couldn't read boot sector from %s\n"
+msgstr ""
+
+#: copy-boot.c:251
+#, c-format
+msgid "%s is not a valid boot sector\n"
+msgstr ""
+
+#: copy-boot.c:265
+#, c-format
+msgid "Write boot sector to %s\n"
+msgstr ""
+
+#: copy-boot.c:270
+#, c-format
+msgid "Couldn't write boot sector to %s\n"
+msgstr ""
+
+#: copy-boot.c:282
+#, c-format
+msgid "Couldn't write backup boot sector to %s\n"
+msgstr ""
+
+#: copy-boot.c:298
+msgid "Merge boot sectors\n"
+msgstr ""
+
+#: copy-boot.c:313
+msgid "File system type is not supported\n"
+msgstr ""
+
+#: copy-boot.c:335
+msgid "Find first unused cluster\n"
+msgstr ""
+
+#: copy-boot.c:340
+#, c-format
+msgid "Can't alloc %u bytes to find an unused cluster\n"
+msgstr ""
+
+#: copy-boot.c:349
+msgid "Can't read FAT sector\n"
+msgstr ""
+
+#: copy-boot.c:403
+#, c-format
+msgid "Unknown FAT type %s\n"
+msgstr ""
+
+#: copy-boot.c:408
+#, c-format
+msgid "First unused cluster %u\n"
+msgstr ""
+
+#: copy-boot.c:435
+msgid "Set OS loader parameters\n"
+msgstr ""
+
+#: copy-boot.c:441
+msgid "Target filesystem is FAT12\n"
+msgstr ""
+
+#: copy-boot.c:443
+msgid "Target filesystem is FAT16\n"
+msgstr ""
+
+#: copy-boot.c:444 copy-boot.c:479
+#, c-format
+msgid "%u reserved\n"
+msgstr ""
+
+#: copy-boot.c:446 copy-boot.c:481
+#, c-format
+msgid "%u FATs of %u\n"
+msgstr ""
+
+#: copy-boot.c:449
+#, c-format
+msgid "%u root dir sectors\n"
+msgstr ""
+
+#: copy-boot.c:452 copy-boot.c:485
+#, c-format
+msgid "Sectors per cluster %u\n"
+msgstr ""
+
+#: copy-boot.c:478
+msgid "Target filesystem is FAT32\n"
+msgstr ""
+
+#: copy-boot.c:483
+#, c-format
+msgid "Root dir cluster %u\n"
+msgstr ""
+
+#: copy-boot.c:500
+#, c-format
+msgid "First user sector for OS loader is %u\n"
+msgstr ""
+
+#: copy-boot.c:511
+#, c-format
+msgid "OS loader sectors are %u\n"
+msgstr ""
+
+#: copy-boot.c:525
+msgid "Add boot sector signature\n"
+msgstr ""
+
+#: copy-boot.c:547
+#, c-format
+msgid "fatBSHeader size is 0x%02x instead of 0x3E\n"
+msgstr ""
+
+#: copy-boot.c:554
+#, c-format
+msgid "fat32BSHeader size is 0x%02x instead of 0x5A\n"
+msgstr ""
+
+#: copy-boot.c:561
+#, c-format
+msgid "fat32FsInfo size is %d instead of 512\n"
+msgstr ""

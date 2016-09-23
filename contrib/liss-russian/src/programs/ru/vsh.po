@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vsh.po\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:13-0300\n"
+"PO-Revision-Date: 2015-05-08 02:43+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language: ru\n"
+
+#: vsh.c:722
+#, c-format
+msgid ""
+"\n"
+"Visopsys Shell.\n"
+msgstr ""
+"\n"
+"Visopsys Shell.\n"
+
+#: vsh.c:738
+#, c-format
+msgid "Can't determine current directory\n"
+msgstr "Невозможно определить текущий каталог\n"
+
+#: vsh.c:285
+#, c-format
+msgid "Shouldn't set an env variable that long\n"
+msgstr "Не стоит назначать переменную jокружения являющуюся long\n"
+
+#: vsh.c:723
+#, c-format
+msgid "Type \"help\" for commands.\n"
+msgstr "Наберите  \"help\" для списка команд.\n"
+
+#: vsh.c:349
+#, c-format
+msgid "Unknown command \"%s\".\n"
+msgstr "Неизвестная команда \"%s\".\n"
+
+#: vsh.c:192 vsh.c:211
+#, c-format
+msgid "Usage: %s <file1> [file2] [...]\n"
+msgstr "Использование: %s <файл1> [файл2] [...]\n"
+
+#: vsh.c:227 vsh.c:244
+#, c-format
+msgid "Usage: %s <source file> <destination file>\n"
+msgstr "Использование: %s <исходный файл> <конечный файл>\n"
+
+#: vsh.c:276 vsh.c:317
+#, c-format
+msgid "Usage: %s <variable_name>\n"
+msgstr "Использование: %s <имя_переменной>\n"
+
+#: vsh.c:298
+#, c-format
+msgid "Usage: %s <variable_name> <variable_value>\n"
+msgstr "Использование: %s <имя_переменной> <значение_переменной>\n"
+
+#: vsh.c:751
+#, c-format
+msgid "exiting.\n"
+msgstr "выход.\n"
+
+#: vsh.c:616
+#, c-format
+msgid "logout\n"
+msgstr "выход\n"

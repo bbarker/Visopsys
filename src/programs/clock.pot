@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clock.c:56
+msgid "Clock"
+msgstr ""
+
+#: clock.c:59
+msgid "Sun"
+msgstr ""
+
+#: clock.c:60
+msgid "Mon"
+msgstr ""
+
+#: clock.c:61
+msgid "Tue"
+msgstr ""
+
+#: clock.c:62
+msgid "Wed"
+msgstr ""
+
+#: clock.c:63
+msgid "Thu"
+msgstr ""
+
+#: clock.c:64
+msgid "Fri"
+msgstr ""
+
+#: clock.c:65
+msgid "Sat"
+msgstr ""
+
+#: clock.c:69
+msgid "Jan"
+msgstr ""
+
+#: clock.c:70
+msgid "Feb"
+msgstr ""
+
+#: clock.c:71
+msgid "Mar"
+msgstr ""
+
+#: clock.c:72
+msgid "Apr"
+msgstr ""
+
+#: clock.c:73
+msgid "May"
+msgstr ""
+
+#: clock.c:74
+msgid "Jun"
+msgstr ""
+
+#: clock.c:75
+msgid "Jul"
+msgstr ""
+
+#: clock.c:76
+msgid "Aug"
+msgstr ""
+
+#: clock.c:77
+msgid "Sep"
+msgstr ""
+
+#: clock.c:78
+msgid "Oct"
+msgstr ""
+
+#: clock.c:79
+msgid "Nov"
+msgstr ""
+
+#: clock.c:80
+msgid "Dec"
+msgstr ""
+
+#: clock.c:122
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""

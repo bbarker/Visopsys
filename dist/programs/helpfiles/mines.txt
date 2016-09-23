@@ -1,0 +1,8 @@
+
+ -- mines --
+
+A mine sweeper game.
+
+Usage:
+  mines
+

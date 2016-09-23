@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 10:57-0300\n"
+"PO-Revision-Date: 2013-11-02 12:43-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: cdrom.c:158
+#, c-format
+msgid ""
+"\n"
+"\n"
+"No CD-ROMS registered\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Keine CD-ROMS registriert\n"
+"\n"
+
+#: cdrom.c:144
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Problem getting CD-ROM info\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Problem beim Aufruf der CD-ROM Info\n"
+"\n"
+
+#: cdrom.c:193
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Unknown command \"%s\"\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Unbekanntes Kommando \"%s\"\n"
+"\n"

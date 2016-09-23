@@ -1,0 +1,137 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-07 23:55+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: kernelInitialize.c:301
+msgid ""
+"\n"
+" *** Your boot disk appears to be running in unsupported native-SATA mode.\n"
+" *** You may be able to temporarily enable ATA or 'legacy' IDE mode in\n"
+" *** your BIOS setup.\n"
+msgstr ""
+"\n"
+" *** Es scheint so, dass Ihre Boot-Disk im nativen SATA-Modus läuft. Dieser\n"
+" *** wird jedoch nicht unterstützt. Sie sollten vielleicht zeitweise den ATA-\n"
+" *** oder IDE-Modus (Legacy-Modus) in Ihren BIOS-Einstellungen aktivieren.\n"
+
+#: kernelFilesystemFat.c:3949
+#, c-format
+msgid "%llu files need defragmentation"
+msgstr "%llu Dateien benötigen eine Defragmentierung"
+
+#: kernelFilesystemFat.c:3935
+#, c-format
+msgid "Analyzing"
+msgstr "Analyse läuft"
+
+#: kernelFilesystemFatPlus.c:281
+msgid "Checking constraints"
+msgstr "Die Bedingungen werden überprüft"
+
+#: kernelFilesystemFatPlus.c:410
+msgid "Clearing new FAT sectors"
+msgstr "Die neuen FAT-Sektoren werden bereinigt"
+
+#: kernelFilesystemFatPlus.c:353
+#, c-format
+msgid "Data exists outside the new size (%u >= %llu)"
+msgstr "Die Daten existieren außerhalb der neuen Größe (%u >= %llu)"
+
+#: kernelFilesystemFat.c:3782
+#, c-format
+msgid "Defragmenting %llu/%llu: %s"
+msgstr "Defragmentieren von %llu/%llu: %s"
+
+#: kernelFilesystemFatPlus.c:437
+msgid "Error clearing new FAT sectors"
+msgstr "Fehler beim bereinigen der neuen FAT-Sektoren"
+
+#: kernelFilesystemFatPlus.c:334
+msgid "Error defragmenting filesystem"
+msgstr "Fehler beim Defragmentieren des Dateisystems"
+
+#: kernelFilesystemFatPlus.c:417
+msgid "Error getting memory"
+msgstr "Fehler beim beziehen von Speicher"
+
+#: kernelFilesystemFatPlus.c:291
+msgid "Error getting resizing constraints"
+msgstr "Fehler beim beziehen der Bedingungen für die Größenanpassung"
+
+#: kernelFilesystemFatPlus.c:399
+msgid "Error moving data"
+msgstr "Fehler beim verschieben der Daten"
+
+#: kernelFilesystemFatPlus.c:318 kernelFilesystemFatPlus.c:342
+msgid "Error reading filesystem info"
+msgstr "Fehler beim auslesen der Informationen zum Dateisystem"
+
+#: kernelFilesystemFatPlus.c:451
+msgid "Error synching FAT copies"
+msgstr "Fehler beim synchronisieren der FAT-Kopien"
+
+#: kernelFilesystemFatPlus.c:476 kernelFilesystemFatPlus.c:485
+msgid "Error updating filesystem info"
+msgstr "Fehler beim aktualisieren der Informationen zum Dateisystem"
+
+#: kernelFilesystemFatPlus.c:301
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (maximum is %llu)"
+msgstr ""
+"Das Dateisystem kann nicht auf die Größe von %llu Blöcken angepasst werden "
+"(Maximum ist %llu)"
+
+#: kernelFilesystemFatPlus.c:298
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (minimum is %llu)"
+msgstr ""
+"Das Dateisystem kann nicht auf die Größe von %llu Blöcken angepasst werden "
+"(Minimum ist %llu)"
+
+#: kernelShutdown.c:45
+msgid "OK to power off now."
+msgstr "OK jetzt herunterzufahren"
+
+#: kernelFilesystemFat.c:3910 kernelFilesystemFatPlus.c:310
+msgid "Reading filesystem info"
+msgstr "Informationen zum Dateisystem werden ausgelesen"
+
+#: kernelShutdown.c:44
+msgid "Rebooting."
+msgstr "Es wird neu gestartet."
+
+#: kernelShutdown.c:315
+#, c-format
+msgid "SYSTEM HALTED: Panic at %s:%s(%d)"
+msgstr "SYSTEM WURDE ANGEHALTEN: Fehler bei %s:%s(%d)"
+
+#: kernelShutdown.c:153
+msgid "Shutting down"
+msgstr "Herunterfahren"
+
+#: kernelShutdown.c:42
+msgid "Shutting down Visopsys, please wait..."
+msgstr "Visopsys wird heruntergefahren, bitte warten Sie..."
+
+#: kernelFilesystemFatPlus.c:461
+msgid "Updating filesystem info"
+msgstr "Aktualisieren der Informationen zum Dateisystem"
+
+#: kernelShutdown.c:43
+msgid "[ Wait for \"OK to power off\" message ]"
+msgstr "[ Es wird auf die Nachricht \"OK zum herunterfahren\" gewartet ]"

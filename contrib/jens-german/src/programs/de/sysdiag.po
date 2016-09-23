@@ -1,0 +1,183 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 02:26+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sysdiag.c:118
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue%s"
+msgstr ""
+"\n"
+"Weiter mit beliebiger Taste%s"
+
+#: sysdiag.c:404 sysdiag.c:613
+#, c-format
+msgid ""
+"\n"
+"[ Press 'Q' to cancel ]\n"
+msgstr ""
+"\n"
+"[ Drücken Sie 'Q' zum abbrechen ]\n"
+
+#: sysdiag.c:65
+#, c-format
+msgid "%d errors"
+msgstr "%d Fehler"
+
+#: sysdiag.c:155
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: sysdiag.c:118
+msgid ", or 'q' to quit"
+msgstr ", oder 'q' zum abbrechen"
+
+#: sysdiag.c:305
+#, c-format
+msgid "Disk read error at sector %llu\n"
+msgstr "Lesefehler bei Sektor %llu\n"
+
+#: sysdiag.c:837 sysdiag.c:923
+msgid "Disk test"
+msgstr "Disk-Test"
+
+#: sysdiag.c:309
+#, c-format
+msgid "Disk write error at sector %llu\n"
+msgstr "Schreibfehler bei Sektor %llu\n"
+
+#: sysdiag.c:977
+msgid "Do you want to do a disk test, or a memory test?\n"
+msgstr "Wollen Sie einen Disk- oder Speichertest machen?\n"
+
+#: sysdiag.c:55
+msgid ""
+"Do you want to do a read-only test, or a read-write test?\n"
+"A read-only test is faster and guaranteed to be data-safe,\n"
+"however it is less thorough.  A read-write test takes\n"
+"longer and is more thorough, but can potentially cause\n"
+"some data loss if your disk is failing."
+msgstr ""
+"Wollen Sie einen Nur-Lesen- oder einen Lesen-Schreiben-Test durchführen?\n"
+"Ein Nur-Lesen-Test ist schneller und garantiert datensicher,\n"
+"ist jedoch weniger gründlich. Ein Lesen-Schreiben-Test braucht\n"
+"länger und ist gründlicher, kann aber potentiell Datenverlust\n"
+"verursachen, wenn Ihre Disk versagt."
+
+#: sysdiag.c:264
+msgid "Do you want to view the results?\n"
+msgstr "Wollen Sie sich die Ergebnisse ansehen?\n"
+
+#: sysdiag.c:141
+msgid "Error"
+msgstr "Fehler"
+
+#: sysdiag.c:64
+msgid "Error performing test"
+msgstr "Fehler beim durchführen des Tests"
+
+#: sysdiag.c:313
+#, c-format
+msgid "Memory error at %llu\n"
+msgstr "Speicherfehler bei %llu\n"
+
+#: sysdiag.c:837 sysdiag.c:924
+msgid "Memory test"
+msgstr "Speichertest"
+
+#: sysdiag.c:60
+#, c-format
+msgid "Performing %s test on disk %s"
+msgstr "Test %s auf Disk %s läuft..."
+
+#: sysdiag.c:61
+#, c-format
+msgid "Performing memory test of %uMB - %uMB in use"
+msgstr "Speichertest bei %uMB - %uMB (in Benutzung) läuft"
+
+#: sysdiag.c:208
+msgid "Please choose the disk to test:"
+msgstr "Bitte wählen Sie die Disk die getestet werden soll:"
+
+#: sysdiag.c:220 sysdiag.c:904
+msgid "Quit"
+msgstr "Beenden"
+
+#: sysdiag.c:869 sysdiag.c:928
+msgid "Read-only"
+msgstr "Nur-Lesen"
+
+#: sysdiag.c:869 sysdiag.c:929
+msgid "Read-write"
+msgstr "Lesen-Schreiben"
+
+#: sysdiag.c:51
+msgid "System Diagnostics"
+msgstr "Systemdiagnose"
+
+#: sysdiag.c:898
+msgid "Test"
+msgstr "Test"
+
+#: sysdiag.c:62
+msgid "Test cancelled"
+msgstr "Test wurde abgebrochen"
+
+#: sysdiag.c:63
+msgid "Test completed"
+msgstr "Test wurde beendet"
+
+#: sysdiag.c:276
+msgid "Test results"
+msgstr "Testergebnisse"
+
+#: sysdiag.c:487
+#, c-format
+msgid "Testing disk sectors %llu/%llu"
+msgstr "Sektorentest %llu/%llu"
+
+#: sysdiag.c:697
+#, c-format
+msgid "Testing memory MB %llu/%llu"
+msgstr "Speichertest (in MB) %llu/%llu"
+
+#: sysdiag.c:219
+msgid "View results"
+msgstr "Ergebnisse ansehen"
+
+#: sysdiag.c:52
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Um diesen Befehl auszuführen müssen Sie spezielle Rechte besitzen.\n"
+"(Versuchen Sie sich als \"admin\" anzumelden)"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "read-only"
+msgstr "Nur-Lesen"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "read-write"
+msgstr "Lesen-Schreiben"

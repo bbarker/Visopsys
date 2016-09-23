@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:05-0300\n"
+"PO-Revision-Date: 2015-05-08 00:05+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: login.c:463
+#, c-format
+msgid ""
+"\n"
+"Welcome %s\n"
+"%s"
+msgstr ""
+"\n"
+"Добро пожаловать %s\n"
+"%s"
+
+#: login.c:456
+#, fuzzy, c-format
+msgid "Couldn't load login shell %s!"
+msgstr "Не могу загрузить оболочку входа %s!"
+
+#: login.c:123 login.c:408
+msgid "Error"
+msgstr "Ошибка"
+
+#: login.c:432
+msgid "Login Failed"
+msgstr "Вход не удался"
+
+#: login.c:210
+msgid "Login Window"
+msgstr "Окно входа"
+
+#: login.c:441
+msgid "Read Only"
+msgstr "Только чтение"
+
+#: login.c:254
+msgid "Reboot"
+msgstr "Перезагрузка"
+
+#: login.c:260
+msgid "Shut down"
+msgstr "Завершение работы"
+
+#: login.c:106
+msgid "That login name is too long."
+msgstr "Логин слишком длинный."
+
+#: login.c:107
+msgid "That password is too long."
+msgstr "Пароль слишком длинный."
+
+#: login.c:432
+#, fuzzy
+msgid "Unable to log in to the Window Manager!"
+msgstr "Невозможно войти в менеджер окон!"
+
+#: login.c:97
+msgid "login: "
+msgstr "логин:"
+
+#: login.c:322
+#, c-format
+msgid "password: "
+msgstr "пароль:"

@@ -1,0 +1,131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: users\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:12-0300\n"
+"PO-Revision-Date: 2015-05-08 02:44+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language: ru\n"
+
+#: users.c:557
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда \"%s\" работает только в графическом режиме\n"
+
+#: users.c:435 users.c:511
+msgid "Add User"
+msgstr "Добавить пользователя"
+
+#: users.c:460
+msgid "Can't delete the last user"
+msgstr "Не могу удалить последнего пользователя"
+
+#: users.c:240
+msgid "Cancel"
+msgstr "Отмена"
+
+#: users.c:212
+msgid "Confirm password:"
+msgstr "Подтвердите пароль:"
+
+#: users.c:518
+msgid "Delete User"
+msgstr "Удалить пользователя"
+
+#: users.c:454
+#, c-format
+msgid "Delete user %s?"
+msgstr "Удалить пользователя %s?"
+
+#: users.c:456
+msgid "Delete?"
+msgstr "Удалить?"
+
+#: users.c:602
+msgid "Done"
+msgstr "Готово"
+
+#: users.c:435
+msgid "Enter the user name:"
+msgstr "Введите имя пользователя:"
+
+#: users.c:78
+msgid "Error"
+msgstr "Ошибка"
+
+#: users.c:375
+msgid "Error adding user"
+msgstr "Ошибка при добавлении пользователя"
+
+#: users.c:406
+msgid "Error deleting user"
+msgstr "Ошибка при удалении пользователя"
+
+#: users.c:96
+msgid "Error getting user names"
+msgstr "Ошибка при получении имен пользователей"
+
+#: users.c:345
+msgid "Error setting password"
+msgstr "Ошибка при назначении пароля"
+
+#: users.c:196
+msgid "New password:"
+msgstr "Новый пароль:"
+
+#: users.c:599
+#, c-format
+msgid "No such user \"%s\""
+msgstr "Нет такого пользователя \"%s\""
+
+#: users.c:235
+msgid "OK"
+msgstr "ОК"
+
+#: users.c:183
+msgid "Old password:"
+msgstr "Старый пароль"
+
+#: users.c:602
+msgid "Password set"
+msgstr "Пароль назначен"
+
+#: users.c:223 users.c:349
+msgid "Passwords do not match"
+msgstr "Пароли не совпадают"
+
+#: users.c:343 users.c:404
+msgid "Permission denied"
+msgstr "Доступ запрещен"
+
+#: users.c:155 users.c:157 users.c:526
+msgid "Set Password"
+msgstr "Назначить пароль"
+
+#: users.c:367
+#, c-format
+msgid "User \"%s\" already exists."
+msgstr "Пользователь \"%s\" уже существует."
+
+#: users.c:483
+msgid "User Manager"
+msgstr "Менеджер пользователей"
+
+#: users.c:170
+#, c-format
+msgid "User name: %s"
+msgstr "Имя пользователя: %s"

@@ -1,0 +1,12 @@
+
+ -- disprops --
+
+Control the display properties
+
+Usage:
+  disprops
+
+The disprops program is interactive, and may only be used in graphics mode.
+It can be used to change display settings, such as the screen resolution,
+the background wallpaper, and the base colors used by the window manager.
+

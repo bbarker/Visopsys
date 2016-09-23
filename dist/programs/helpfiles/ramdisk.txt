@@ -1,0 +1,28 @@
+
+ -- ramdisk --
+
+Create or destroy RAM disks
+
+Usage:
+  ramdisk <create> <bytes>[unit]
+  ramdisk <destroy> <name>
+
+Create or destroy a RAM disk.  A RAM disk is an area of memory which behaves
+as a physical disk drive.
+
+When creating a RAM disk, the size argument may be given in bytes, or
+(optionally) with a unit such as K (kilobytes), M (megabytes), or G
+(gigabytes).  For example:
+
+<bytes = 1> and [unit = K] ==> total size 1 KB = 1024 bytes
+<bytes = 1> and [unit = M] ==> total size 1 MB = 1,048,576 bytes
+<bytes = 1> and [unit = G] ==> total size 1 GB = 1,073,741,824 bytes
+
+When destroying a RAM disk, the name is given.
+
+Examples:
+  ramdisk create 1048576
+  ramdisk create 1024K
+  ramdisk create 1M
+  ramdisk destroy ram0
+

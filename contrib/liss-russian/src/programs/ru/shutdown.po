@@ -1,0 +1,58 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: shutdown\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:19+0100\n"
+"PO-Revision-Date: 2014-08-13 22:07+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss@21ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: shutdown.c:70
+msgid ""
+"Can't seem to eject.  Try pushing\n"
+"the 'eject' button now."
+msgstr ""
+"Похоже, не удается извлечь.  Попробуйте\n"
+"сейчас нажать кноку \"Извлечь\"."
+
+#: shutdown.c:232
+msgid "Eject CD-ROM"
+msgstr "Извлечь CD-ROM"
+
+#: shutdown.c:89
+msgid "Ejecting"
+msgstr "Извлечение"
+
+#: shutdown.c:68
+msgid "Ejecting, please wait..."
+msgstr "Извлечение, подождите..."
+
+#: shutdown.c:100
+msgid "Error"
+msgstr "Ошибка"
+
+#: shutdown.c:208
+msgid "Reboot"
+msgstr "Перезагрузка"
+
+#: shutdown.c:182 shutdown.c:219
+msgid "Shut down"
+msgstr "Выключение"
+
+#: shutdown.c:69
+msgid "Unable to unlock the media door"
+msgstr "Невозможно открыть дверцу носителя"
+
+#: shutdown.c:306
+#, c-format
+msgid "Use \"%s -f\" to force.\n"
+msgstr "Используйте \"%s -f\" для принудительного завершения.\n"

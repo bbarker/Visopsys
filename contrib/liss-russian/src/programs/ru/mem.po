@@ -1,0 +1,38 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mem\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:06-0300\n"
+"PO-Revision-Date: 2015-05-08 00:01+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language: ru\n"
+
+#: mem.c:104
+#, c-format
+msgid " --- %s usage information by block ---\n"
+msgstr " --- %s usage information by block ---\n"
+
+#: mem.c:135
+#, c-format
+msgid ""
+" --- Usage totals ---\n"
+"Used blocks : %d\n"
+"Total memory: %u Kb\n"
+"Used memory : %u Kb - %d%%\n"
+"Free memory : %u Kb - %d%%\n"
+msgstr ""
+" --- ИТОГО ---\n"
+"Исп. блоков : %d\n"
+"Всего: %u Kb\n"
+"Использовано: %u Kb - %d%%\n"
+"Свободно: %u Kb - %d%%\n"

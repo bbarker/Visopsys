@@ -1,0 +1,13 @@
+
+ -- filesys --
+
+Program for specifying mounting characteristics of file systems.
+
+Usage:
+  filesys
+
+The 'filesys' (File Systems) program is interactive, and may only be used
+in graphics mode.  It can be used to edit the mount configuration file to
+specify mount points of file systems, and whether or not to auto-mount
+them at boot time.
+

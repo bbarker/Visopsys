@@ -1,0 +1,143 @@
+Index: include/ntfs/debug.h
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/include/ntfs/debug.h,v
+retrieving revision 1.6
+diff -u -r1.6 debug.h
+--- include/ntfs/debug.h	29 Jan 2007 16:39:48 -0000	1.6
++++ include/ntfs/debug.h	16 Feb 2012 00:49:36 -0000
+@@ -38,10 +38,8 @@
+ 
+ #define NTFS_BUG(msg)							\
+ {									\
+-	int ___i;							\
+ 	ntfs_log_critical("Bug in %s(): %s\n", __FUNCTION__, msg);	\
+ 	ntfs_log_debug("Forcing segmentation fault!");			\
+-	___i = ((int*)NULL)[1];						\
+ }
+ 
+ #endif /* defined _NTFS_DEBUG_H */
+Index: include/ntfs/layout.h
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/include/ntfs/layout.h,v
+retrieving revision 1.4
+diff -u -r1.4 layout.h
+--- include/ntfs/layout.h	28 Jan 2007 16:46:27 -0000	1.4
++++ include/ntfs/layout.h	16 Feb 2012 00:56:29 -0000
+@@ -1388,7 +1388,7 @@
+ 	u8 revision;
+ 	u8 sub_authority_count;
+ 	SID_IDENTIFIER_AUTHORITY identifier_authority;
+-	u32 sub_authority[1];		/* At least one sub_authority. */
++	u32 sub_authority[2];		/* At least one sub_authority. */
+ } __attribute__((__packed__)) SID;
+ 
+ /**
+Index: libntfs/dir.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/dir.c,v
+retrieving revision 1.6
+diff -u -r1.6 dir.c
+--- libntfs/dir.c	29 Jan 2007 16:39:48 -0000	1.6
++++ libntfs/dir.c	16 Feb 2012 00:46:22 -0000
+@@ -115,7 +115,7 @@
+ 	u8 *index_end;
+ 	ntfs_attr *ia_na;
+ 	int eo, rc;
+-	u32 index_block_size, index_vcn_size;
++	u32 index_block_size; //, index_vcn_size;
+ 	u8 index_vcn_size_bits;
+ 
+ 	if (!dir_ni || !dir_ni->mrec || !uname || uname_len <= 0) {
+@@ -281,10 +281,10 @@
+ 
+ 	/* Determine the size of a vcn in the directory index. */
+ 	if (vol->cluster_size <= index_block_size) {
+-		index_vcn_size = vol->cluster_size;
++		//index_vcn_size = vol->cluster_size;
+ 		index_vcn_size_bits = vol->cluster_size_bits;
+ 	} else {
+-		index_vcn_size = vol->sector_size;
++		//index_vcn_size = vol->sector_size;
+ 		index_vcn_size_bits = vol->sector_size_bits;
+ 	}
+ 
+Index: libntfs/logfile.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/logfile.c,v
+retrieving revision 1.8
+diff -u -r1.8 logfile.c
+--- libntfs/logfile.c	31 Jan 2007 02:04:01 -0000	1.8
++++ libntfs/logfile.c	16 Feb 2012 00:50:48 -0000
+@@ -471,7 +471,7 @@
+ 	u8 *kaddr = NULL;
+ 	RESTART_PAGE_HEADER *rstr1_ph = NULL;
+ 	RESTART_PAGE_HEADER *rstr2_ph = NULL;
+-	int log_page_size, log_page_mask, err;
++	int log_page_size, err; //, log_page_mask
+ 	BOOL logfile_is_empty = TRUE;
+ 	u8 log_page_bits;
+ 
+@@ -484,7 +484,7 @@
+ 	if (size > (s64)MaxLogFileSize)
+ 		size = MaxLogFileSize;
+ 	log_page_size = DefaultLogPageSize;
+-	log_page_mask = log_page_size - 1;
++	//log_page_mask = log_page_size - 1;
+ 	/*
+ 	 * Use generic_ffs() instead of ffs() to enable the compiler to
+ 	 * optimize log_page_size and log_page_bits into constants.
+Index: libntfs/visopsys_io.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/visopsys_io.c,v
+retrieving revision 1.17
+diff -u -r1.17 visopsys_io.c
+--- libntfs/visopsys_io.c	8 Jan 2011 18:28:59 -0000	1.17
++++ libntfs/visopsys_io.c	16 Feb 2012 00:43:43 -0000
+@@ -541,7 +541,7 @@
+   //	 -1 if not and errno set. in this case handle is trashed.
+ 
+   int status = 0;
+-  visopsys_fd *fd = NULL;
++  //visopsys_fd *fd = NULL;
+ 
+   Vdebug("STAT\n");
+ 
+@@ -552,7 +552,7 @@
+       return (status = -1);
+     }
+ 
+-  fd = (visopsys_fd *) dev->d_private;
++  //fd = (visopsys_fd *) dev->d_private;
+ 
+   ntfs_log_trace("stat() operation not implemented\n");
+   errno = ntfs_visopsys_errno(ERR_NOTIMPLEMENTED);
+Index: ntfsprogs/ntfsresize.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/ntfsprogs/ntfsresize.c,v
+retrieving revision 1.13
+diff -u -r1.13 ntfsresize.c
+--- ntfsprogs/ntfsresize.c	9 Mar 2011 02:53:08 -0000	1.13
++++ ntfsprogs/ntfsresize.c	16 Feb 2012 00:52:34 -0000
+@@ -842,7 +842,7 @@
+ 
+ static int collect_relocation_info(ntfs_resize_t *resize, runlist *rl)
+ {
+-	s64 lcn, lcn_length, start, len, inode;
++	s64 lcn, lcn_length, len, inode; //, start
+ 	s64 new_vol_size;	/* (last LCN on the volume) + 1 */
+ 
+ 	lcn = rl->lcn;
+@@ -856,11 +856,11 @@
+ 	if (inode == FILE_Bitmap && resize->ctx->attr->type == AT_DATA)
+ 		return (0);
+ 	
+-	start = lcn;
++	//start = lcn;
+ 	len = lcn_length;
+ 
+ 	if (lcn < new_vol_size) {
+-		start = new_vol_size;
++		//start = new_vol_size;
+ 		len = lcn_length - (new_vol_size - lcn);
+ 
+ 		if (!opt.info && (inode == FILE_MFTMirr)) {

@@ -1,0 +1,134 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-07 23:55+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: kernelInitialize.c:301
+msgid ""
+"\n"
+" *** Your boot disk appears to be running in unsupported native-SATA mode.\n"
+" *** You may be able to temporarily enable ATA or 'legacy' IDE mode in\n"
+" *** your BIOS setup.\n"
+msgstr ""
+"\n"
+" *** Su disco de arranque está utilizando el modo SATA nativo.\n"
+" *** Este modo no es soportado actualmente, pero usted deberia poder habilitar\n"
+" *** el modo ATA o IDE en la configuracion de su BIOS.\n"
+
+#: kernelFilesystemFat.c:3949
+#, c-format
+msgid "%llu files need defragmentation"
+msgstr "%llu archivos necesitan defragmentacion"
+
+#: kernelFilesystemFat.c:3935
+#, c-format
+msgid "Analyzing"
+msgstr "Analizando"
+
+#: kernelFilesystemFatPlus.c:281
+msgid "Checking constraints"
+msgstr "Chequeando limites"
+
+#: kernelFilesystemFatPlus.c:410
+msgid "Clearing new FAT sectors"
+msgstr "Limpiando nuevos sectores FAT"
+
+#: kernelFilesystemFatPlus.c:353
+#, c-format
+msgid "Data exists outside the new size (%u >= %llu)"
+msgstr "Aún existe informacion fuera del nuevo tamaño (%u >= %llu)"
+
+#: kernelFilesystemFat.c:3782
+#, c-format
+msgid "Defragmenting %llu/%llu: %s"
+msgstr "Defragmentando %llu/%llu: %s"
+
+#: kernelFilesystemFatPlus.c:437
+msgid "Error clearing new FAT sectors"
+msgstr "Error limpiando sectores FAT"
+
+#: kernelFilesystemFatPlus.c:334
+msgid "Error defragmenting filesystem"
+msgstr "Error al defragmentar"
+
+#: kernelFilesystemFatPlus.c:417
+msgid "Error getting memory"
+msgstr "Error ubicando memoria"
+
+#: kernelFilesystemFatPlus.c:291
+msgid "Error getting resizing constraints"
+msgstr "Error al buscar los límites de cambio de tamaño"
+
+#: kernelFilesystemFatPlus.c:399
+msgid "Error moving data"
+msgstr "Error moviendo datos"
+
+#: kernelFilesystemFatPlus.c:318 kernelFilesystemFatPlus.c:342
+msgid "Error reading filesystem info"
+msgstr "Error al leer la informacion del sistema de archivos"
+
+#: kernelFilesystemFatPlus.c:451
+msgid "Error synching FAT copies"
+msgstr "Error al sincronizar las copias FAT"
+
+#: kernelFilesystemFatPlus.c:476 kernelFilesystemFatPlus.c:485
+msgid "Error updating filesystem info"
+msgstr "Error actualizando informacion del sistema de archivos"
+
+#: kernelFilesystemFatPlus.c:301
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (maximum is %llu)"
+msgstr ""
+"El sistema de archivos no puede cambiar su tamaño a %llu bloques."
+"(El maximo es %llu)"
+
+#: kernelFilesystemFatPlus.c:298
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (minimum is %llu)"
+msgstr ""
+"El sistema de archivos no puede cambiar su tamaño a %llu bloques."
+"(El minimo es %llu)"
+
+#: kernelShutdown.c:45
+msgid "OK to power off now."
+msgstr "Ya puede apagar"
+
+#: kernelFilesystemFat.c:3910 kernelFilesystemFatPlus.c:310
+msgid "Reading filesystem info"
+msgstr "Leyendo informacion del sistema de archivos"
+
+#: kernelShutdown.c:44
+msgid "Rebooting."
+msgstr "Reiniciando."
+
+#: kernelShutdown.c:315
+#, c-format
+msgid "SYSTEM HALTED: Panic at %s:%s(%d)"
+msgstr "SISTEMA DETENIDO: Panico en %s:%s(%d)"
+
+#: kernelShutdown.c:153
+msgid "Shutting down"
+msgstr "Apagando"
+
+#: kernelShutdown.c:42
+msgid "Shutting down Visopsys, please wait..."
+msgstr "Apagando Visopsys, espere por favor..."
+
+#: kernelFilesystemFatPlus.c:461
+msgid "Updating filesystem info"
+msgstr "Actualizando informacion del sistema de archivos"
+
+#: kernelShutdown.c:43
+msgid "[ Wait for \"OK to power off\" message ]"
+msgstr "[ Espere por el mensaje \"Ya Puede Apagar\" ]"

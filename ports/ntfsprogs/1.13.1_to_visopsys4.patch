@@ -1,0 +1,17 @@
+Index: libntfs/Makefile.visopsys
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/Makefile.visopsys,v
+retrieving revision 1.22
+diff -u -r1.22 Makefile.visopsys
+--- libntfs/Makefile.visopsys	19 Feb 2012 03:41:14 -0000	1.22
++++ libntfs/Makefile.visopsys	24 Mar 2012 17:41:42 -0000
+@@ -74,8 +74,7 @@
+ 	${AR} -rs ${LIBRARY} ${OBJS}
+ 
+ ${SHAREDLIB}: ${PICOBJS}
+-	${CC} -shared -nostdlib -Wl,-soname=${SONAME} ${PICOBJS} -static \
+-	-lgcc -o $@
++	${CC} -shared -nostdlib -Wl,-soname=${SONAME},-z,norelro,--build-id=none ${PICOBJS} -static -lgcc -o $@
+ 
+ strip: ${SHAREDLIB}
+ 	${STRIP}

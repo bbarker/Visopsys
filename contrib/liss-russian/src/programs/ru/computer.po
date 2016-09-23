@@ -1,0 +1,180 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: computer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:38+0100\n"
+"PO-Revision-Date: 2015-05-08 01:07+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: computer.c:694
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда  \"%s\" работает только в графическом режиме\n"
+
+#: computer.c:445
+msgid " (read only)"
+msgstr "(только чтение)"
+
+#: computer.c:428
+#, c-format
+msgid "%u cylinders, %u heads, %u sectors\n"
+msgstr "%u cylinders, %u heads, %u sectors\n"
+
+#: computer.c:75
+msgid "Browse"
+msgstr "Обзор"
+
+#: computer.c:424
+msgid "CD-ROM\n"
+msgstr "CD-ROM\n"
+
+#: computer.c:595
+#, c-format
+msgid "Can't load icon image %s"
+msgstr "Не могу загрузить значок%s"
+
+#: computer.c:215
+#, c-format
+msgid "Can't mount %s on %s"
+msgstr "Не могу подключить %s на %s"
+
+#: computer.c:56
+msgid "Computer"
+msgstr "Компьютер"
+
+#: computer.c:652
+msgid "Disk"
+msgstr "Диск"
+
+#: computer.c:381
+#, c-format
+msgid "Disk %s is not mounted"
+msgstr "Диск %s не подключен"
+
+#: computer.c:310
+#, c-format
+msgid "Disk is already mounted as %s"
+msgstr "Диск уже подключен как %s"
+
+#: computer.c:106
+msgid "Error"
+msgstr "Ошибка"
+
+#: computer.c:275 computer.c:352
+msgid "Error launching file browser"
+msgstr "Ошибка запуска файлового менеджера"
+
+#: computer.c:138
+msgid "Error re-reading disk info"
+msgstr "Error re-reading disk info"
+
+#: computer.c:484 computer.c:527
+#, fuzzy
+msgid "Error spawning browser thread"
+msgstr "Error spawning browser thread"
+
+#: computer.c:493
+#, fuzzy
+msgid "Error spawning mount as thread"
+msgstr "Error spawning mount as thread"
+
+#: computer.c:511
+#, fuzzy
+msgid "Error spawning properties thread"
+msgstr "Error spawning properties thread"
+
+#: computer.c:502
+#, fuzzy
+msgid "Error spawning unmount thread"
+msgstr "Error spawning unmount thread"
+
+#: computer.c:390
+#, c-format
+msgid "Error unmounting %s"
+msgstr "Ошибка отключения %s"
+
+#: computer.c:212
+#, c-format
+msgid "Filesystem on %s is not supported for browsing"
+msgstr "Файловая система на %s не поддерживается для обзора"
+
+#: computer.c:439
+#, c-format
+msgid "Filesystem type: %s\n"
+msgstr "Тип ФС: %s\n"
+
+#: computer.c:417
+msgid "Fixed "
+msgstr "Исправлено"
+
+#: computer.c:555
+msgid "Memory allocation error"
+msgstr "Ошибка распределения памяти."
+
+#: computer.c:76
+msgid "Mount as..."
+msgstr "Подключить как..."
+
+#: computer.c:332
+msgid "Mount point"
+msgstr "Точка подключения"
+
+#: computer.c:443
+#, c-format
+msgid "Mounted as %s%s\n"
+msgstr "Подключено как %s%s\n"
+
+#: computer.c:254 computer.c:320
+#, c-format
+msgid "No media in disk %s"
+msgstr "Нет носителя в %s"
+
+#: computer.c:436
+#, c-format
+msgid "Partition type: %s\n"
+msgstr "Тип раздела: %s\n"
+
+#: computer.c:333
+msgid "Please enter the mount point"
+msgstr "Введите точку подключения"
+
+#: computer.c:78 computer.c:447
+msgid "Properties"
+msgstr "Свойства"
+
+#: computer.c:419
+msgid "Removable "
+msgstr "Съемный"
+
+#: computer.c:432
+#, c-format
+msgid "Size: %llu MB\n"
+msgstr "Размер: %llu MB\n"
+
+#: computer.c:77
+msgid "Unmount"
+msgstr "Отключить"
+
+#: computer.c:422
+msgid "floppy\n"
+msgstr "НГМД\n"
+
+#: computer.c:426
+msgid "hard disk\n"
+msgstr "жесткий диск\n"

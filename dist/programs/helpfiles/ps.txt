@@ -1,0 +1,11 @@
+
+ -- ps --
+
+Print all of the running processes
+
+Usage:
+  ps
+
+This command will print all of the running processes, their process IDs,
+privilege level, priority level, CPU utilization and other statistics.
+

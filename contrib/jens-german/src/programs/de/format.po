@@ -1,0 +1,216 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:02-0300\n"
+"PO-Revision-Date: 2014-01-22 17:47-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: format.c:284
+#, c-format
+msgid ""
+"\n"
+"%s (I)gnore/(U)nmount/(C)ancel?: "
+msgstr ""
+"\n"
+"%s (I)Ignorieren/(U)Verbindung trennen/(C)Abbrechen?: "
+
+#: format.c:104
+#, c-format
+msgid ""
+"\n"
+"%s (y/n): "
+msgstr ""
+"\n"
+"%s (y/n): "
+
+#: format.c:130
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue. "
+msgstr ""
+"\n"
+"Drücke eine Taste zum Fortfahren."
+
+#: format.c:523 format.c:546
+#, c-format
+msgid ""
+"\n"
+"Quitting.\n"
+msgstr ""
+"\n"
+"Schliesse.\n"
+
+#: format.c:480
+#, c-format
+msgid ""
+"\n"
+"Visopsys FORMAT Utility\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"\n"
+"Visopsys FORMAT Werkzeug\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: format.c:540
+#, c-format
+msgid ""
+"\n"
+"YOU HAVE REQUESTED TO FORMAT YOUR ROOT DISK.  I probably shouldn't let you\n"
+"do this.  After format is complete, you should shut down the computer.\n"
+"Are you SURE you want to proceed?"
+msgstr ""
+"\n"
+"DIE ROOT DISK WIRD FORMATIERT.\n"
+"Nach der Formatierung sollten Sie den Computer neustarten.\n"
+"Wollen Sie WIRKLICH fortfahren?"
+
+#: format.c:382
+#, c-format
+msgid "%s [-l] [-s] [-t type] [-T] [disk_name]\n"
+msgstr "%s [-l] [-s] [-t Typ] [-T] [Disk_name]\n"
+
+#: format.c:216 format.c:280
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: format.c:305
+#, c-format
+msgid "Cancel\n"
+msgstr "Abbrechen\n"
+
+#: format.c:197
+msgid "Choose Disk"
+msgstr "Disk auswählen"
+
+#: format.c:100
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+#: format.c:279
+msgid "Disk is mounted"
+msgstr "Disk verbunden"
+
+#: format.c:152
+msgid "Error"
+msgstr "Fehler"
+
+#: format.c:370
+#, c-format
+msgid "Error %d copying boot sector \"%s\" to disk %s"
+msgstr "Fehler %d beim Kopieren des Bootsektors \"%s\" nach Disk %s"
+
+#: format.c:581
+#, c-format
+msgid "Format complete"
+msgstr "Formatierung kompletiert"
+
+#: format.c:518
+#, c-format
+msgid ""
+"Formatting disk %s as %s.  All data currenly on the disk will be lost.\n"
+"Are you sure?"
+msgstr ""
+"Formatiere Disk %s als %s. Alle Daten auf der Disk werden gelöscht.\n"
+"Sind Sie sicher?"
+
+#: format.c:554
+msgid "Formatting..."
+msgstr "Formatiere..."
+
+#: format.c:280
+msgid "Ignore"
+msgstr "Ignorieren"
+
+#: format.c:293
+#, c-format
+msgid "Ignore\n"
+msgstr "Ignorieren\n"
+
+#: format.c:459
+#, c-format
+msgid "Missing parameter for %s option"
+msgstr "Parameter für %s Option fehlt"
+
+#: format.c:446
+msgid "Missing type argument for '-t' option"
+msgstr "Typen-Argument für '-t' Option fehlt"
+
+#: format.c:430
+msgid "Missing volume name argument for '-n' option"
+msgstr "Volumennamen-Argument für '-n' Option fehlt"
+
+#: format.c:119
+#, c-format
+msgid "No\n"
+msgstr "Nein\n"
+
+#: format.c:357
+#, c-format
+msgid "No boot sector available for filesystem type %s\n"
+msgstr "Kein Bootsektor für das %s Dateisystem vorhanden\n"
+
+#: format.c:212
+msgid "OK"
+msgstr "OK"
+
+#: format.c:583
+msgid "Success"
+msgstr "Erfolg"
+
+#: format.c:273
+#, c-format
+msgid ""
+"The disk is mounted as %s.  It is STRONGLY recommended\n"
+"that you unmount before continuing"
+msgstr ""
+"Die Disk ist als %s verbunden.  Es wird SEHR empfohlen\n"
+"die Verbindung erst zu trennen"
+
+#: format.c:324
+#, c-format
+msgid "Unable to unmount %s"
+msgstr "Verbindung mit %s kann nicht getrennt werden"
+
+#: format.c:464
+#, c-format
+msgid "Unknown option '%c'"
+msgstr "Unbekannte Option '%c'"
+
+#: format.c:280
+msgid "Unmount"
+msgstr "Verbindung trennen"
+
+#: format.c:299
+#, c-format
+msgid "Unmount\n"
+msgstr "Verbindung trennen\n"
+
+#: format.c:113
+#, c-format
+msgid "Yes\n"
+msgstr "Ja\n"
+
+#: format.c:500
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Sie brauchen spezielle Rechte für dieses Kommando.\n"
+"(Versuchen Sie, sich als \"admin\" einzuloggen)"
+
+#: format.c:381
+#, c-format
+msgid "usage:\n"
+msgstr "Benutzung:\n"

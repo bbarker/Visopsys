@@ -1,0 +1,96 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ping.c:402
+#, c-format
+msgid ""
+"\n"
+"--- %d.%d.%d.%d ping statistics ---\n"
+msgstr ""
+"\n"
+"--- %d.%d.%d.%d Ping-istatistigi ---\n"
+
+#: ping.c:160
+#, c-format
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
+msgstr "%d Byte, %d.%d.%d.%d tarafindan : icmp_seq=%d ttl=%d süre=X ms\n"
+
+#: ping.c:404
+#, c-format
+msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
+msgstr "%d paket aktarildi, %d alindi, %d%% paket kaybi, süre Xms\n"
+
+#: ping.c:288
+msgid "Enter Address"
+msgstr "Adresi girin"
+
+#: ping.c:289
+msgid "Enter the network address to ping:"
+msgstr "Pinglenecek ag adresini girin:"
+
+#: ping.c:84
+msgid "Error"
+msgstr "Hata"
+
+#: ping.c:344
+msgid "Error opening network connection"
+msgstr "Ag baglantisi açilirken hata olustu"
+
+#: ping.c:384
+msgid "Error pinging host"
+msgstr "saglayici pinglenirken hata olustu"
+
+#: ping.c:362
+msgid "Error setting signal handler"
+msgstr "Sinyal isleyicisi ayarlanirken hata olustu"
+
+#: ping.c:375
+msgid "Error starting response thread"
+msgstr "Yanit islemi olusturulurken hata olustu"
+
+#: ping.c:325
+msgid "Memory allocation error"
+msgstr "Bellek ayirma hatasi"
+
+#: ping.c:272
+msgid "Networking is not currently enabled"
+msgstr "Ag su anda etkin degil"
+
+#: ping.c:193
+msgid "Ping"
+msgstr "Ping"
+
+#: ping.c:348
+#, c-format
+msgid "Ping %d.%d.%d.%d %d bytes of data\n"
+msgstr "Ping %d.%d.%d.%d %d Bayt kadar veri\n"
+
+#: ping.c:226
+msgid "Stop"
+msgstr "Dur"
+
+#: ping.c:92
+#, c-format
+msgid ""
+"usage:\n"
+"%s [-T] <address | hostname>\n"
+msgstr ""
+"Kullanimi:\n"
+"%s [-T] <address | hostname>\n"

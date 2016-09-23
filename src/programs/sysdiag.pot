@@ -1,0 +1,169 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sysdiag.c:54
+msgid "System Diagnostics"
+msgstr ""
+
+#: sysdiag.c:55 sysdiag.c:1023
+msgid "Disk test"
+msgstr ""
+
+#: sysdiag.c:56 sysdiag.c:1024
+msgid "Memory test"
+msgstr ""
+
+#: sysdiag.c:57 sysdiag.c:1028
+msgid "Read-only"
+msgstr ""
+
+#: sysdiag.c:58 sysdiag.c:1029
+msgid "Read-write"
+msgstr ""
+
+#: sysdiag.c:59
+msgid "Test"
+msgstr ""
+
+#: sysdiag.c:60 sysdiag.c:235
+msgid "Quit"
+msgstr ""
+
+#: sysdiag.c:61
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+
+#: sysdiag.c:64
+msgid ""
+"Do you want to do a read-only test, or a read-write test?\n"
+"A read-only test is faster and guaranteed to be data-safe,\n"
+"however it is less thorough.  A read-write test takes\n"
+"longer and is more thorough, but can potentially cause\n"
+"some data loss if your disk is failing."
+msgstr ""
+
+#: sysdiag.c:69
+#, c-format
+msgid "Performing %s test on disk %s"
+msgstr ""
+
+#: sysdiag.c:70
+#, c-format
+msgid "Performing memory test of %uMB - %uMB in use"
+msgstr ""
+
+#: sysdiag.c:71
+msgid "Test cancelled"
+msgstr ""
+
+#: sysdiag.c:72
+msgid "Test completed"
+msgstr ""
+
+#: sysdiag.c:73
+msgid "Error performing test"
+msgstr ""
+
+#: sysdiag.c:74
+#, c-format
+msgid "%d errors"
+msgstr ""
+
+#: sysdiag.c:128
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue%s"
+msgstr ""
+
+#: sysdiag.c:129
+msgid ", or 'q' to quit"
+msgstr ""
+
+#: sysdiag.c:153
+msgid "Error"
+msgstr ""
+
+#: sysdiag.c:168
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+msgstr ""
+
+#: sysdiag.c:223
+msgid "Please choose the disk to test:"
+msgstr ""
+
+#: sysdiag.c:234
+msgid "View results"
+msgstr ""
+
+#: sysdiag.c:278
+msgid "Do you want to view the results?\n"
+msgstr ""
+
+#: sysdiag.c:292
+msgid "Test results"
+msgstr ""
+
+#: sysdiag.c:324
+#, c-format
+msgid "Disk read error at sector %llu\n"
+msgstr ""
+
+#: sysdiag.c:328
+#, c-format
+msgid "Disk write error at sector %llu\n"
+msgstr ""
+
+#: sysdiag.c:332
+#, c-format
+msgid "Memory error at %llu\n"
+msgstr ""
+
+#: sysdiag.c:426 sysdiag.c:437
+msgid "read-write"
+msgstr ""
+
+#: sysdiag.c:426 sysdiag.c:437
+msgid "read-only"
+msgstr ""
+
+#: sysdiag.c:428 sysdiag.c:675
+msgid ""
+"\n"
+"[ Press 'Q' to cancel ]\n"
+msgstr ""
+
+#: sysdiag.c:547
+#, c-format
+msgid "Testing disk sectors %llu/%llu"
+msgstr ""
+
+#: sysdiag.c:763
+#, c-format
+msgid "Testing memory MB %llu/%llu"
+msgstr ""
+
+#: sysdiag.c:1074
+msgid "Do you want to do a disk test, or a memory test?\n"
+msgstr ""

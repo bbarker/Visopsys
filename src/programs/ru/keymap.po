@@ -1,0 +1,270 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: keymap\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: 2015-05-08 02:04+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: keymap.c:89
+msgid "Keyboard Map"
+msgstr "Раскладка клавиатуры"
+
+#: keymap.c:90
+msgid "Current:"
+msgstr "Текущий:"
+
+#: keymap.c:91
+msgid "Name:"
+msgstr "Имя:"
+
+#: keymap.c:92
+#, fuzzy
+msgid "Language:"
+msgstr "использование:\n"
+
+#: keymap.c:93
+msgid "Save"
+msgstr "Сохранить"
+
+#: keymap.c:94
+msgid "Set as default"
+msgstr "Назначить по умолчанию"
+
+#: keymap.c:95
+msgid "Close"
+msgstr "Закрыть"
+
+#: keymap.c:148
+msgid "usage:\n"
+msgstr "использование:\n"
+
+#: keymap.c:149
+#, fuzzy, c-format
+msgid "%s [-T] [-p] [-s file_name] [map_name]\n"
+msgstr "%s [-T] [-s имя_файла] имя_раскладки]\n"
+
+#: keymap.c:167
+msgid "Error"
+msgstr "Ошибка"
+
+#: keymap.c:169
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"ОШИБКА: %s\n"
+"\n"
+
+#: keymap.c:183 keymap.c:411
+#, c-format
+msgid "Couldn't open file %s"
+msgstr "Не могу прочитать файл %s"
+
+#: keymap.c:193
+#, c-format
+msgid "Couldn't read file %s"
+msgstr "Не могу прочитать файл %s"
+
+#: keymap.c:278 keymap.c:329
+#, c-format
+msgid "Couldn't find keyboard map %s"
+msgstr "Не могу найти раскладку %s"
+
+#: keymap.c:285
+#, c-format
+msgid "Couldn't set keyboard map to %s"
+msgstr "Не могу записать раскладку в %s"
+
+#: keymap.c:292
+msgid "Couldn't get current keyboard map"
+msgstr "Не могу получить текущую раскладку"
+
+#: keymap.c:304
+msgid "Couldn't write keyboard map setting"
+msgstr "Не могу записать параметры раскладки"
+
+#: keymap.c:395
+#, c-format
+msgid ""
+"Can't write %s:\n"
+"Filesystem is read-only"
+msgstr ""
+"Не могу записать %s:\n"
+"ФС только для чтения"
+
+#: keymap.c:420
+#, c-format
+msgid "Couldn't write file %s"
+msgstr "Не могу записать файл %s"
+
+#: keymap.c:644
+msgid "Save as"
+msgstr "Сохранить как..."
+
+#: keymap.c:645
+msgid "Choose the output file:"
+msgstr "Выберите файл для вывода:"
+
+#: keymap.c:678
+msgid "Saved"
+msgstr "Сохранено"
+
+#: keymap.c:678
+msgid "Map saved"
+msgstr "Раскладка сохранена"
+
+#: keymap.c:714
+msgid "Select character"
+msgstr ""
+
+#: keymap.c:950
+msgid "Change key settings"
+msgstr "Выберите параметры клавиши"
+
+#: keymap.c:970
+#, fuzzy, c-format
+msgid "Scan code: 0x%02x (%s)"
+msgstr "Scan code: %d (0x%02x)"
+
+#: keymap.c:979
+msgid "Unicode"
+msgstr ""
+
+#: keymap.c:985
+msgid "Normal"
+msgstr ""
+
+#: keymap.c:988
+#, fuzzy
+msgid "Shift"
+msgstr "Shift code:"
+
+#: keymap.c:991
+msgid "AltGr"
+msgstr ""
+
+#: keymap.c:994
+#, fuzzy
+msgid "Shift-AltGr"
+msgstr "Shift code:"
+
+#: keymap.c:997
+msgid "Ctrl"
+msgstr ""
+
+#: keymap.c:1101
+msgid "OK"
+msgstr "ОК"
+
+#: keymap.c:1106
+msgid "Cancel"
+msgstr "Отмена"
+
+#: keymap.c:1429
+msgid "1st row"
+msgstr ""
+
+#: keymap.c:1431
+msgid "2nd row"
+msgstr ""
+
+#: keymap.c:1433
+msgid "3rd row"
+msgstr ""
+
+#: keymap.c:1435
+msgid "4th row"
+msgstr ""
+
+#: keymap.c:1437
+msgid "5th row"
+msgstr ""
+
+#: keymap.c:1439
+msgid "6th row"
+msgstr ""
+
+#: keymap.c:1458
+#, c-format
+msgid ""
+"\n"
+"Printing out keymap \"%s\"\n"
+"\n"
+msgstr ""
+
+#: keymap.c:1459
+#, fuzzy
+msgid "Regular map"
+msgstr "Regular code:"
+
+#: keymap.c:1461
+#, fuzzy
+msgid "Shift map"
+msgstr "Shift code:"
+
+#: keymap.c:1463
+msgid "Ctrl map"
+msgstr ""
+
+#: keymap.c:1465
+msgid "AltGr map"
+msgstr ""
+
+#: keymap.c:1467
+#, fuzzy
+msgid "Shift-AltGr map"
+msgstr "Shift code:"
+
+#: keymap.c:1503
+msgid "Missing filename argument for -s option\n"
+msgstr "Пропущено имя файла для опции -s\n"
+
+#: keymap.c:1522
+#, c-format
+msgid "Missing parameter for %s option\n"
+msgstr "Пропущен параметр для опции %s\n"
+
+#: keymap.c:1528
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr "Неизвестная опция '%c'\n"
+
+#: keymap.c:1633
+msgid " (current)"
+msgstr "(текуший)"
+
+#~ msgid "ASCII codes:"
+#~ msgstr "ASCII codes:"
+
+#~ msgid "Alt Gr code:"
+#~ msgstr "Alt Gr code:"
+
+#~ msgid "Backspace"
+#~ msgstr "Backspace"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Space"
+#~ msgstr "Space"
+
+#~ msgid "Tab"
+#~ msgstr "Tab"

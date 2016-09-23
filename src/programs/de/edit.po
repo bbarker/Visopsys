@@ -1,0 +1,107 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: edit.c:58
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: edit.c:59
+msgid "File"
+msgstr "Datei"
+
+#: edit.c:60
+msgid "Untitled"
+msgstr "Unbenannt"
+
+#: edit.c:61
+msgid "File has been modified.  Discard changes?"
+msgstr "Datei wurde verändert. Änderungen verwerfen?"
+
+#: edit.c:62
+msgid "Please enter the name of the file to edit:"
+msgstr "Bitte geben Sie den Namen der Datei ein die bearbeitet werden soll:"
+
+#: edit.c:110
+msgid "Open"
+msgstr "Öffnen"
+
+#: edit.c:111
+msgid "Save"
+msgstr "Speichern"
+
+#: edit.c:112
+msgid "Quit"
+msgstr "Beenden"
+
+#: edit.c:131
+msgid "Error"
+msgstr "Fehler"
+
+#: edit.c:153 edit.c:156
+msgid " (modified)"
+msgstr " (geändert)"
+
+#: edit.c:411
+msgid "Enter filename"
+msgstr "Dateiname eingeben"
+
+#: edit.c:967
+msgid "Discard changes?"
+msgstr "Änderungen verwerfen?"
+
+#: edit.c:968
+msgid "Discard"
+msgstr "Verwerfen"
+
+#: edit.c:968
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: edit.c:1003 edit.c:1331
+msgid "Couldn't create file in a read-only filesystem"
+msgstr ""
+"Das Dateisystem ist schreibgeschützt, die Datei konnte nicht erstellt werden"
+
+#: edit.c:1005 edit.c:1333
+#, c-format
+msgid "Error %d loading file"
+msgstr "Fehler %d beim laden der Datei"
+
+#: edit.c:1133
+msgid "Unable to launch file dialog"
+msgstr "Datei-Fenster konnte nicht gestartet werden"
+
+#: edit.c:1145
+#, c-format
+msgid "Error %d saving file"
+msgstr "Fehler %d beim speichern der Datei"
+
+#: edit.c:1278
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Der Befehl \"%s\" funktioniert nur im Grafik-Modus \n"
+
+#: edit.c:1294
+#, c-format
+msgid "Unknown option '%c'"
+msgstr ""

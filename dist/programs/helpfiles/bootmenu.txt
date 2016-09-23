@@ -1,0 +1,18 @@
+
+ -- bootmenu --
+
+This program will install or edit the boot loader menu.
+
+Usage:
+  bootmenu <physical disk name>
+
+The 'bootmenu' program is interactive, and operates in both text and
+graphics modes.  It allows the 'admin' user to install the Visopsys boot
+loader program on a hard disk, and edit the menu options that appear.
+
+Example:
+  bootmenu hd0
+
+This example will launch the bootmenu program to install or edit the boot
+choices for the first hard disk, hd0.
+

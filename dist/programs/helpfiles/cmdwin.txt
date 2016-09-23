@@ -1,0 +1,13 @@
+
+ -- cmdwin --
+
+Open a new command window.
+
+Usage:
+  cmdwin
+
+(Only available in graphics mode)
+
+This command will open a new text window running a new instance of the
+'vsh' command shell.
+

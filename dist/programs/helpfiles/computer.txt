@@ -1,0 +1,14 @@
+
+ -- computer --
+
+A graphical program for navigating the resources of the computer.
+
+Usage:
+  computer
+
+The computer program is interactive, and may only be used in graphics mode.
+It displays a window with icons representing media resources such as floppy
+disks, hard disks, CD-ROMs, and flash disks.  Clicking on an icon will cause
+the system to attempt to mount (if necessary) the volume and open a file
+browser window for that filesystem.
+

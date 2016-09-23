@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CHKDISK\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 10:58-0300\n"
+"PO-Revision-Date: 2015-05-08 00:55+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: chkdisk.c:103
+#, c-format
+msgid ""
+"\n"
+"The filesystem may contain errors.\n"
+"Do you want to try to repair it? (y/n): "
+msgstr ""
+"\n"
+"Файловая система содержит ошибки.\n"
+"Попробуем починить? (y/n): "
+
+#: chkdisk.c:91
+#, c-format
+msgid ""
+"\n"
+"Visopsys CHKDISK Utility\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+"\n"
+msgstr ""
+"\n"
+"Visopsys CHKDISK Utility\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+"\n"
+
+#: chkdisk.c:56
+#, c-format
+msgid "%s <disk_name>\n"
+msgstr "%s <имя_диска>\n"
+
+#: chkdisk.c:116
+#, c-format
+msgid "Filesystem consistency check failed.\n"
+msgstr "Проверка целостности ФС не удалась.\n"
+
+#: chkdisk.c:55
+#, c-format
+msgid "usage:\n"
+msgstr "использование:\n"

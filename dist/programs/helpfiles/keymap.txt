@@ -1,0 +1,41 @@
+
+ -- keymap --
+
+View or change the current keyboard mapping
+
+Usage:
+  keymap [-T] [-p] [-s file_name] [keymap_name]
+
+The keymap program can be used to view the available keyboard mapping, or
+set the current map.  It works in both text and graphics modes:
+
+A particular keymap can be selected by supplying a file name for keymap_name,
+or else using its descriptive name (with double quotes (") around it if it
+contains space characters).
+
+If no keymap is specified on the command line, the current default one will
+be selected.
+
+In text mode:
+
+  The -p option will print a detailed listing of the selected keymap.
+
+  The -s option will save the selected keymap using the supplied file name.
+
+  The -x option will convert a version 1 keymap to version 2.
+
+  If a keymap is specified without the -p or -s options, then the keymap will
+  be set as the current default.
+
+  With no options, all available mappings are listed, with the current default
+  indicated.
+
+In graphics mode, the program is interactive and the user can select and
+manipulate keymaps visually.
+
+Options:
+-p  : Print a detailed listing of the keymap (text mode).
+-s  : Save the specified keymap to the supplied file name (text mode).
+-T  : Force text mode operation
+-x  : Convert a version 1 keymap to version 2 (text mode).
+

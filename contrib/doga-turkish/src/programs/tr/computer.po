@@ -1,0 +1,176 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: computer.c:694
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalisabilir\n"
+
+#: computer.c:445
+msgid " (read only)"
+msgstr " (sadece okunabilir)"
+
+#: computer.c:428
+#, c-format
+msgid "%u cylinders, %u heads, %u sectors\n"
+msgstr "%u silindir, %u kafa, %u sektör\n"
+
+#: computer.c:75
+msgid "Browse"
+msgstr "Seç"
+
+#: computer.c:424
+msgid "CD-ROM\n"
+msgstr "CD-ROM\n"
+
+#: computer.c:595
+#, c-format
+msgid "Can't load icon image %s"
+msgstr "Ikon dosyasi %s yüklenemedi"
+
+#: computer.c:215
+#, c-format
+msgid "Can't mount %s on %s"
+msgstr "%s üzerindeki %s takilamiyor"
+
+#: computer.c:56
+msgid "Computer"
+msgstr "Bilgisayar"
+
+#: computer.c:652
+msgid "Disk"
+msgstr "Disk"
+
+#: computer.c:381
+#, c-format
+msgid "Disk %s is not mounted"
+msgstr "Disk %s takili degil"
+
+#: computer.c:310
+#, c-format
+msgid "Disk is already mounted as %s"
+msgstr "Disk %s olarak zaten takili"
+
+#: computer.c:106
+msgid "Error"
+msgstr "Hata"
+
+#: computer.c:275 computer.c:352
+msgid "Error launching file browser"
+msgstr "Dosya gezgini açilirken hata olustu"
+
+#: computer.c:138
+msgid "Error re-reading disk info"
+msgstr "Disk bilgisi yeniden okunurken hata olustu"
+
+#: computer.c:484 computer.c:527
+msgid "Error spawning browser thread"
+msgstr "Gezgin islemi olusturulurken hata olustu"
+
+#: computer.c:493
+msgid "Error spawning mount as thread"
+msgstr "Takilma islemi olusturulurken hata olustu"
+
+#: computer.c:511
+msgid "Error spawning properties thread"
+msgstr "Özellikler islemi olusturulurken hata olustu"
+
+#: computer.c:502
+msgid "Error spawning unmount thread"
+msgstr "Çikartma islemi olusturulurken hata olustu"
+
+#: computer.c:390
+#, c-format
+msgid "Error unmounting %s"
+msgstr "%s çikartilirken hata olustu"
+
+#: computer.c:212
+#, c-format
+msgid "Filesystem on %s is not supported for browsing"
+msgstr "%s üzerinde dosya sistemi, gezgin tarafindan desteklenmemektedir"
+
+#: computer.c:439
+#, c-format
+msgid "Filesystem type: %s\n"
+msgstr "Dosya sistemi türü: %s\n"
+
+#: computer.c:417
+msgid "Fixed "
+msgstr "Onarildi "
+
+#: computer.c:555
+msgid "Memory allocation error"
+msgstr "Bellek ayirma hatasi"
+
+#: computer.c:76
+msgid "Mount as..."
+msgstr "olarak tak..."
+
+#: computer.c:332
+msgid "Mount point"
+msgstr "Takma noktasi"
+
+#: computer.c:443
+#, c-format
+msgid "Mounted as %s%s\n"
+msgstr "%s%s olarak takildi\n"
+
+#: computer.c:254 computer.c:320
+#, c-format
+msgid "No media in disk %s"
+msgstr "%s diskinde medya bulunamadi"
+
+#: computer.c:436
+#, c-format
+msgid "Partition type: %s\n"
+msgstr "Bölümlendirme türü: %s\n"
+
+#: computer.c:333
+msgid "Please enter the mount point"
+msgstr "Lütfen takilma noktasini giriniz"
+
+#: computer.c:78 computer.c:447
+msgid "Properties"
+msgstr "Özellikler"
+
+#: computer.c:419
+msgid "Removable "
+msgstr "Çikarilabilir "
+
+#: computer.c:432
+#, c-format
+msgid "Size: %llu MB\n"
+msgstr "Boyut: %llu MB\n"
+
+#: computer.c:77
+msgid "Unmount"
+msgstr "Çikar"
+
+#: computer.c:422
+msgid "floppy\n"
+msgstr "disket\n"
+
+#: computer.c:426
+msgid "hard disk\n"
+msgstr "sabit disk\n"

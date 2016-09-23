@@ -1,0 +1,97 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 10:59-0300\n"
+"PO-Revision-Date: 2014-01-22 18:43-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: cal.c:58
+msgid "April"
+msgstr "Abril"
+
+#: cal.c:59
+msgid "August"
+msgstr "Agosto"
+
+#: cal.c:206
+msgid "Calendar"
+msgstr "Calendario"
+
+#: cal.c:59
+msgid "December"
+msgstr "Diciembre"
+
+#: cal.c:58
+msgid "February"
+msgstr "Febrero"
+
+#: cal.c:54
+msgid "Fr"
+msgstr "Vi"
+
+#: cal.c:58
+msgid "January"
+msgstr "Enero"
+
+#: cal.c:58
+msgid "July"
+msgstr "Julio"
+
+#: cal.c:58
+msgid "June"
+msgstr "Junio"
+
+#: cal.c:58
+msgid "March"
+msgstr "Marzo"
+
+#: cal.c:58
+msgid "May"
+msgstr "Mayo"
+
+#: cal.c:54
+msgid "Mo"
+msgstr "Lu"
+
+#: cal.c:59
+msgid "November"
+msgstr "Noviembre"
+
+#: cal.c:59
+msgid "October"
+msgstr "Octubre"
+
+#: cal.c:54
+msgid "Sa"
+msgstr "Sa"
+
+#: cal.c:59
+msgid "September"
+msgstr "Setiembre"
+
+#: cal.c:54
+msgid "Su"
+msgstr "Do"
+
+#: cal.c:54
+msgid "Th"
+msgstr "Ju"
+
+#: cal.c:54
+msgid "Tu"
+msgstr "Ma"
+
+#: cal.c:54
+msgid "We"
+msgstr "Mi"

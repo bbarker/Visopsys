@@ -1,0 +1,116 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: confedit.c:64
+msgid "Configuration Editor"
+msgstr "Konfigurasyon Editörü"
+
+#: confedit.c:65
+msgid "File"
+msgstr "Dosya"
+
+#: confedit.c:66 confedit.c:370
+msgid "Save"
+msgstr "Kaydet"
+
+#: confedit.c:67 confedit.c:370
+msgid "Quit"
+msgstr "Çik"
+
+#: confedit.c:68
+msgid "Add variable"
+msgstr "Degisken ekle"
+
+#: confedit.c:69
+msgid "Change variable"
+msgstr "Degiskeni degistir"
+
+#: confedit.c:70
+msgid "Delete variable"
+msgstr "Degiskeni sil"
+
+#: confedit.c:109
+msgid "Error"
+msgstr "Hata"
+
+#: confedit.c:122
+#, c-format
+msgid "Error %d reading configuration file."
+msgstr "%d konfigurasyon dosyasi okunurken hata."
+
+#: confedit.c:139
+#, c-format
+msgid "Error %d writing configuration file."
+msgstr "%d konfigurasyon dosyasi yazilirken hata."
+
+#: confedit.c:208
+msgid "Change Variable"
+msgstr "Degiskeni degistir"
+
+#: confedit.c:214
+msgid "Add Variable"
+msgstr "Degisken ekle"
+
+#: confedit.c:230
+msgid "Variable name:"
+msgstr "Degisken adi:"
+
+#: confedit.c:254
+msgid "value:"
+msgstr "deger:"
+
+#: confedit.c:273
+msgid "OK"
+msgstr "Tamam"
+
+#: confedit.c:279 confedit.c:370
+msgid "Cancel"
+msgstr "Iptal"
+
+#: confedit.c:368
+msgid "Unsaved changes"
+msgstr "Kaydedilmeyen degisiklikler"
+
+#: confedit.c:369
+msgid "Quit without saving changes?"
+msgstr "Degisiklikleri kaydetmeden çikmak istiyor musunuz?"
+
+#: confedit.c:612
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalisabilir\n"
+
+#: confedit.c:624
+msgid "Enter filename"
+msgstr "Dosya ismi girin"
+
+#: confedit.c:625
+msgid "Please enter a configuration file to edit:"
+msgstr "Lütfen düzenlemek istediginiz konfigurasyon dosyasini girin:"
+
+#: confedit.c:648
+#, c-format
+msgid "Error %d creating new configuration file."
+msgstr "%d yeni konfigurasyon dosyasi olusturulurken hata."

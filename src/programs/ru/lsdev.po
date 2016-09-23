@@ -1,0 +1,29 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: 2015-05-08 00:02+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: lsdev.c:54
+#, fuzzy
+msgid "System Device Information"
+msgstr "System Device Information"
+
+#: lsdev.c:285
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr ""

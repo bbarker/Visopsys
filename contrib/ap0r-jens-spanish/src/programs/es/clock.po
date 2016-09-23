@@ -1,0 +1,106 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 10:58-0300\n"
+"PO-Revision-Date: 2014-01-22 18:45-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: clock.c:98
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" funciona solamente en modo gráfico\n"
+
+#: clock.c:55
+msgid "Apr "
+msgstr "Abr"
+
+#: clock.c:56
+msgid "Aug "
+msgstr "Ago"
+
+#: clock.c:106
+msgid "Clock"
+msgstr "Reloj"
+
+#: clock.c:57
+msgid "Dec "
+msgstr "Dic"
+
+#: clock.c:55
+msgid "Feb "
+msgstr "Feb"
+
+#: clock.c:53
+msgid "Fri "
+msgstr "Vi"
+
+#: clock.c:55
+msgid "Jan "
+msgstr "Ene"
+
+#: clock.c:56
+msgid "Jul "
+msgstr "Jul"
+
+#: clock.c:56
+msgid "Jun "
+msgstr "Jun"
+
+#: clock.c:55
+msgid "Mar "
+msgstr "Mar"
+
+#: clock.c:55
+msgid "May "
+msgstr "May"
+
+#: clock.c:53
+msgid "Mon "
+msgstr "Lu"
+
+#: clock.c:56
+msgid "Nov "
+msgstr "Nov"
+
+#: clock.c:56
+msgid "Oct "
+msgstr "Oct"
+
+#: clock.c:54
+msgid "Sat "
+msgstr "Sa"
+
+#: clock.c:56
+msgid "Sep "
+msgstr "Set"
+
+#: clock.c:54
+msgid "Sun "
+msgstr "Do"
+
+#: clock.c:53
+msgid "Thu "
+msgstr "Ju"
+
+#: clock.c:53
+msgid "Tue "
+msgstr "Ma"
+
+#: clock.c:53
+msgid "Wed "
+msgstr "Mi"

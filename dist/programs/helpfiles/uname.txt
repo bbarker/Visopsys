@@ -1,0 +1,19 @@
+
+ -- uname --
+
+Prints system information.
+
+Usage:
+  uname
+
+Options:
+-a              : Show all information
+-s              : Show the kernel name
+-n              : Show the network host name
+-r              : Show the kernel release
+-v              : Show the kernel version
+-m              : Show the machine hardware name
+-p              : Show the processor type
+-i              : Show the hardware platform
+-o              : Show the operating system
+

@@ -1,0 +1,100 @@
+##
+##  Visopsys
+##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##
+##  Makefile
+##
+
+ROOT = ../../..
+BUILDDIR = ${ROOT}/build/system/libraries
+INCDIR 	= ../include/ntfs/
+PROGDIR 	= ../ntfsprogs
+SYSINCDIR = ${ROOT}/src/include
+
+include ${ROOT}/Makefile.include
+
+STDDEPS = ${ROOT}/Makefile.include Makefile.visopsys ${INCDIR}/*.h \
+	${SYSINCDIR}/*.h ${SYSINCDIR}/sys/*.h
+INCLUDE = -nostdinc -I${INCDIR} -I${SYSINCDIR}
+CFLAGS = ${OPT} ${ARCH} ${CCODEGEN} ${CWARN} ${INCLUDE} -DHAVE_CONFIG_H ${DEBUG}
+LFLAGS = -nostdlib
+
+ifdef DEBUG
+	override DEBUG = -DDEBUG
+else
+	STRIP = strip -s ${SHAREDLIB}
+endif
+
+NAMES = attrib \
+	attrdef \
+	attrlist \
+	bitmap \
+	boot \
+	bootsect \
+	collate \
+	compress \
+	debug \
+	device \
+	device_io \
+	dir \
+	index \
+	inode \
+	lcnalloc \
+	logfile \
+	logging \
+	mft \
+	mkntfs \
+	mst \
+	ntfsresize \
+	runlist \
+	sd \
+	unistr \
+	upcase \
+	volume
+
+OBJDIR = obj
+OBJS = $(addprefix ${OBJDIR}/, $(addsuffix .o, ${NAMES}))
+PICOBJDIR = picobj
+PICOBJS = $(addprefix ${PICOBJDIR}/, $(addsuffix .o, ${NAMES}))
+LIBRARY = ${BUILDDIR}/libntfs.a
+SONAME = libntfs.so
+SHAREDLIB = ${BUILDDIR}/${SONAME}
+
+# Targets
+
+all: target-dirs ${LIBRARY} ${SHAREDLIB} strip
+
+target-dirs:
+	mkdir -p ${OBJDIR} ${PICOBJDIR} ${BUILDDIR}
+
+${LIBRARY}: ${OBJS}
+	${AR} -rs ${LIBRARY} ${OBJS}
+
+${SHAREDLIB}: ${PICOBJS}
+	${CC} ${ARCH} -shared -nostdlib -Wl,--soname=${SONAME},-z,norelro \
+		${PICOBJS} -static -lgcc -o $@
+
+strip: ${SHAREDLIB}
+	${STRIP}
+
+${OBJDIR}/device_io.o: visopsys_io.c ${STDDEPS}
+	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
+
+${PICOBJDIR}/device_io.o: visopsys_io.c ${STDDEPS}
+	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
+
+${OBJDIR}/%.o: %.c ${STDDEPS}
+	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
+
+${OBJDIR}/%.o: ${PROGDIR}/%.c ${STDDEPS}
+	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
+
+${PICOBJDIR}/%.o: %.c ${STDDEPS}
+	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
+
+${PICOBJDIR}/%.o: ${PROGDIR}/%.c ${STDDEPS}
+	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
+
+clean:
+	rm -Rf *~ *.o core ${OBJDIR} ${PICOBJDIR} ${LIBRARY} ${SHAREDLIB}
+

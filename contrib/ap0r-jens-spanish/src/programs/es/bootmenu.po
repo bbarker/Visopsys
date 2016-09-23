@@ -1,0 +1,205 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 03:25+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bootmenu.c:793
+#, c-format
+msgid ""
+"\n"
+"  [Cursor up/down to select, 'e' edit, '*' default\n"
+"   'd' delete, Enter to accept, 'Q' to quit]"
+msgstr ""
+"\n"
+"  [Cursor arriba/abajo para seleccionar, 'e' edita,\n"
+"   '*' valores por defecto, Enter para aceptar y Esc para salir ]"
+
+#: bootmenu.c:749
+msgid ""
+"\n"
+"There are no chain-loadable operating systems on this disk.\n"
+"\n"
+msgstr ""
+"\n"
+"No existen sistemas operativos con arranque por cadena en este disco.\n"
+"\n"
+
+#: bootmenu.c:734
+#, c-format
+msgid "\"%s\" [Filesystem: %s]"
+msgstr "\"%s\" [Sistema de archivos: %s]"
+
+#: bootmenu.c:559
+msgid "Automatically boot default selection after (seconds)"
+msgstr "Automaticamente iniciar la seleccion por defecto luego de (segundos)"
+
+#: bootmenu.c:498
+msgid "Boot Menu Installer"
+msgstr "Instalador del menu de arranque"
+
+#: bootmenu.c:67
+msgid "Boot menu written."
+msgstr "Menu de arranque escrito."
+
+#: bootmenu.c:392
+msgid "Can't get buffer memory\n"
+msgstr "No se pudo obtener memoria bufer\n"
+
+#: bootmenu.c:691
+#, c-format
+msgid "Can't get disk %s\n"
+msgstr "No se pudo acceder al disco %s\n"
+
+#: bootmenu.c:349
+msgid "Can't get memory for the logical disk list"
+msgstr "No se pudo obtener memoria para la lista de discos logicos"
+
+#: bootmenu.c:708
+msgid "Can't get the list of logical disks"
+msgstr "No se pudo obtener la lista de discos logicos"
+
+#: bootmenu.c:356
+msgid "Can't get the logical disk list\n"
+msgstr "No se pudo obtener la lista de disco logico\n"
+
+#: bootmenu.c:385
+#, c-format
+msgid "Can't open %s file\n"
+msgstr "No se puede abrir el archivo %s\n"
+
+#: bootmenu.c:399
+#, c-format
+msgid "Can't read %s file\n"
+msgstr "No se pudo leer el archivo %s\n"
+
+#: bootmenu.c:638
+#, c-format
+msgid "Can't write MBR %s to %s\n"
+msgstr "No se pudo escribir MBR %s en %s\n"
+
+#: bootmenu.c:626
+msgid "Can't write boot menu\n"
+msgstr "No se pudo escribir el menu de arranque\n"
+
+#: bootmenu.c:861
+msgid "Can't write boot menu or MBR\n"
+msgstr "No se puede escribir el menu de arranque o MBR\n"
+
+#: bootmenu.c:230 bootmenu.c:587
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: bootmenu.c:66
+msgid "Chain-loadable entries for the boot menu:"
+msgstr "Entradas de cadenas cargables para el menu de arranque:"
+
+#: bootmenu.c:542
+msgid "Default"
+msgstr "Por defecto"
+
+#: bootmenu.c:546
+msgid "Delete"
+msgstr "Eliminar"
+
+#: bootmenu.c:434
+#, c-format
+msgid ""
+"Disk %s\n"
+"  Label: %s\n"
+"  Filesystem: %s\n"
+"  Chain-loadable: %s\n"
+"\n"
+msgstr ""
+"Disco %s\n"
+"  Nombre: %s\n"
+"  Sistema de Archivos: %s\n"
+"  Cargable por cadena: %s\n"
+"\n"
+
+#: bootmenu.c:700
+#, c-format
+msgid "Disk %s is not a physical hard disk device\n"
+msgstr "El disco %s no es un disco duro fisico\n"
+
+#: bootmenu.c:869
+msgid "Done"
+msgstr "Listo"
+
+#: bootmenu.c:538
+msgid "Edit"
+msgstr "Editar"
+
+#: bootmenu.c:198
+msgid "Edit entry label"
+msgstr "Editar etiqueta inicial"
+
+#: bootmenu.c:266
+#, c-format
+msgid ""
+"Enter new label (%d characters max.):\n"
+" [%s]\n"
+" ["
+msgstr ""
+"Ingrese nueva etiqueta (%d caracteres max.):\n"
+" [%s]\n"
+" ["
+
+#: bootmenu.c:121
+msgid "Error"
+msgstr "Error"
+
+#: bootmenu.c:224 bootmenu.c:582
+msgid "OK"
+msgstr "OK"
+
+#: bootmenu.c:65
+msgid "Partitions on the disk:"
+msgstr "Particiones en el disco:"
+
+#: bootmenu.c:680
+msgid "Permission Denied"
+msgstr "Permiso denegado"
+
+#: bootmenu.c:61
+msgid ""
+"Visopsys Boot Menu Installer\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr ""
+"Visopsys - Instalador del menu de arranque\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: bootmenu.c:63
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Usted debe ser un usuario con privilegios administrativos para usar este comando.\n"
+"(Intente iniciar sesion con el usuario \"admin\")"
+
+#: bootmenu.c:437
+msgid "no"
+msgstr "No"
+
+#: bootmenu.c:103
+#, c-format
+msgid ""
+"usage:\n"
+"%s <disk name>\n"
+msgstr ""
+"Uso:\n"
+"%s <Nombre de disco>\n"
+
+#: bootmenu.c:437
+msgid "yes"
+msgstr "si"

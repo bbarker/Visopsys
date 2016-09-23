@@ -1,0 +1,90 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ntfsprogs/ntfsresize.c:1030
+msgid "Accounting clusters"
+msgstr "Kümeler sayiliyor"
+
+#: ntfsprogs/ntfsresize.c:1180
+msgid "Checking filesystem consistency"
+msgstr "Dosya sistemi tutarliligi kontrol ediliyor"
+
+#: ntfsprogs/ntfsresize.c:2350
+msgid "Checking for bad sectors"
+msgstr "Bozuk sektörler için kontrol ediliyor"
+
+#: ntfsprogs/ntfsresize.c:1264
+msgid "Collecting resizing constraints"
+msgstr "Boyutlanan kisitlamalar toparlaniyor"
+
+#: ntfsprogs/ntfsresize.c:1369
+msgid "Enlarging attribute header ..."
+msgstr "Bastaki boyut niteligi genisletiliyor..."
+
+#: ntfsprogs/ntfsresize.c:2595
+msgid "Mounting volume"
+msgstr "Disk baglaniyor"
+
+#: ntfsprogs/ntfsresize.c:1791
+#, c-format
+msgid "Relocate record %llu 0x%llx->0x%llx"
+msgstr "%llu 0x%llx->0x%llx kaydini yeniden yerlestir"
+
+#: ntfsprogs/ntfsresize.c:1979
+msgid "Relocating needed data"
+msgstr "Gerekli veri yeniden yerlestiriliyor"
+
+#: ntfsprogs/ntfsresize.c:872
+#, c-format
+msgid "Relocation needed for inode %8lld"
+msgstr "%8lld dügümü için yeniden yerlestirme gerekiyor"
+
+#: ntfsprogs/ntfsresize.c:2693
+msgid "Resetting $LogFile (this might take a while)"
+msgstr "$LogFile resetleniyor (bu biraz zaman alabilir)"
+
+#: ntfsprogs/ntfsresize.c:2678
+msgid "Schedule chkdsk for NTFS consistency check at Windows boot time"
+msgstr "Windows açilisi sirasinda NTFS tutarlilik kontrolü için chkdsk'yi zamanla"
+
+#: ntfsprogs/ntfsresize.c:2472
+msgid "Set up LCN bitmap"
+msgstr "LCN-Bitmap kur"
+
+#: ntfsprogs/ntfsresize.c:3007
+#, c-format
+msgid "Successfully resized NTFS on device '%s'."
+msgstr "'%s' aygiti üzerindeki NTFS basarili bir sekilde yeniden boyutlandirildi."
+
+#: ntfsprogs/ntfsresize.c:3000
+msgid "Syncing device"
+msgstr "Aygit senkronize ediliyor"
+
+#: ntfsprogs/ntfsresize.c:2418
+msgid "Updating $BadClust file"
+msgstr "$BadClust dosyasi güncelleniyor"
+
+#: ntfsprogs/ntfsresize.c:2444
+msgid "Updating $Bitmap file"
+msgstr "$Bitmap dosyasi güncelleniyor"
+
+#: ntfsprogs/ntfsresize.c:2495
+msgid "Updating Boot record"
+msgstr "Boot kaydi güncelleniyor"

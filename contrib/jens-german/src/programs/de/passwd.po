@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:08-0300\n"
+"PO-Revision-Date: 2013-11-09 23:18-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: passwd.c:117
+#, c-format
+msgid ""
+"\n"
+"Passwords do not match.\n"
+"\n"
+msgstr ""
+"\n"
+"Passwörter unterschiedlich.\n"
+"\n"
+
+#: passwd.c:57
+#, c-format
+msgid "%s <username>\n"
+msgstr "%s <Benutzername>\n"
+
+#: passwd.c:112
+msgid "Confirm password: "
+msgstr "Passwortbestätigung:"
+
+#: passwd.c:86
+msgid "Enter current password: "
+msgstr "Geben Sie Ihr aktuelles Passwort ein:"
+
+#: passwd.c:110
+#, c-format
+msgid "Enter new password for %s: "
+msgstr "Geben Sie ein neues Passwort für %s ein:"
+
+#: passwd.c:128
+#, c-format
+msgid "Password changed.\n"
+msgstr "Passwort geändert\n"
+
+#: passwd.c:101
+#, c-format
+msgid "Password incorrect\n"
+msgstr "Passwort inkorrekt\n"
+
+#: passwd.c:56
+#, c-format
+msgid "usage:\n"
+msgstr "Benutzung:\n"

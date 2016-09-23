@@ -1,0 +1,136 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ifconfig.c:115
+#, c-format
+msgid ""
+"%s   Link encap:%s  HWaddr %02x:%02x:%02x:%02x:%02x:%02x\n"
+"       inet addr:%d.%d.%d.%d  Bcast:%d.%d.%d.%d  Mask:%d.%d.%d.%d\n"
+"       RX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       TX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       %s, %s collisions:%u txqueuelen:%u Interrupt:%d"
+msgstr ""
+"%s   Link encap:%s  HWaddr %02x:%02x:%02x:%02x:%02x:%02x\n"
+"       inet addr:%d.%d.%d.%d  Bcast:%d.%d.%d.%d  Mask:%d.%d.%d.%d\n"
+"       RX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       TX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       %s, %s collisions:%u txqueuelen:%u Interrupt:%d"
+
+#: ifconfig.c:100
+#, c-format
+msgid "Can't get info for device %s"
+msgstr "%s aygiti için bilgi alinamiyor"
+
+#: ifconfig.c:521
+msgid "Can't get the count of network devices"
+msgstr "Ag aygitlarinin sayisi alinamiyor"
+
+#: ifconfig.c:482
+msgid "Cancel"
+msgstr "Iptal"
+
+#: ifconfig.c:135
+msgid "DOWN"
+msgstr "ASAGI"
+
+#: ifconfig.c:197
+msgid "Disable"
+msgstr "Devre disi birak"
+
+#: ifconfig.c:399
+msgid "Domain name"
+msgstr "Alan adi"
+
+#: ifconfig.c:197 ifconfig.c:364
+msgid "Enable"
+msgstr "Etkinlestir"
+
+#: ifconfig.c:370
+msgid "Enabled at startup"
+msgstr "Sistem açilisinda etkin"
+
+#: ifconfig.c:85
+msgid "Error"
+msgstr "Hata"
+
+#: ifconfig.c:107
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: ifconfig.c:395
+msgid "Host name"
+msgstr "Saglayici adi"
+
+#: ifconfig.c:282
+msgid "Initializing networking"
+msgstr "Ag etkinlestiriliyor"
+
+#: ifconfig.c:134
+msgid "LINK"
+msgstr "LINK"
+
+#: ifconfig.c:134
+msgid "NOLINK"
+msgstr "LINK YOK"
+
+#: ifconfig.c:338
+msgid "Network Devices"
+msgstr "Ag Aygitlari"
+
+#: ifconfig.c:193
+#, c-format
+msgid "Networking is %s"
+msgstr "Ag %s"
+
+#: ifconfig.c:360
+msgid "Networking is disabled"
+msgstr "Ag devre disi birakildi"
+
+#: ifconfig.c:53
+msgid "No supported network devices."
+msgstr "Desteklenen ag aygiti yok."
+
+#: ifconfig.c:475
+msgid "OK"
+msgstr "Tamam"
+
+#: ifconfig.c:283
+msgid "One moment please..."
+msgstr "Bir saniye lütfen..."
+
+#: ifconfig.c:281
+msgid "Shutting down networking"
+msgstr "Ag kapatiliyor"
+
+#: ifconfig.c:135
+msgid "UP"
+msgstr "YUKARI"
+
+#: ifconfig.c:110
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+#: ifconfig.c:194
+msgid "disabled"
+msgstr "devre disi"
+
+#: ifconfig.c:194
+msgid "enabled"
+msgstr "etkin"

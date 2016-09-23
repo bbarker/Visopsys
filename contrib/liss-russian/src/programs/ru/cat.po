@@ -1,0 +1,27 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: cat\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 10:59-0300\n"
+"PO-Revision-Date: 2015-05-08 00:55+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: cat.c:54
+#, c-format
+msgid ""
+"usage:\n"
+"%s <file1> [file2] [...]\n"
+msgstr ""
+"использование:\n"
+"%s <файл1> [файл2] [...]\n"

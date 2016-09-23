@@ -1,0 +1,8 @@
+
+ -- date --
+
+Print the date and time.
+
+Usage:
+  date
+

@@ -1,0 +1,950 @@
+Index: libntfs/Makefile.visopsys
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/Makefile.visopsys,v
+retrieving revision 1.16
+diff -u -r1.16 Makefile.visopsys
+--- libntfs/Makefile.visopsys	2 Jan 2009 11:43:11 -0000	1.16
++++ libntfs/Makefile.visopsys	11 May 2009 00:00:20 -0000
+@@ -21,8 +21,10 @@
+ LFLAGS		= -nostdlib
+ 
+ NAMES	= attrib \
++	attrdef \
+ 	attrlist \
+ 	bitmap \
++	boot \
+ 	bootsect \
+ 	collate \
+ 	compress \
+@@ -36,10 +38,13 @@
+ 	logfile \
+ 	logging \
+ 	mft \
++	mkntfs \
+ 	mst \
+ 	ntfsresize \
+ 	runlist \
++	sd \
+ 	unistr \
++	upcase \
+ 	volume
+ 
+ OBJDIR = obj
+@@ -70,12 +75,42 @@
+ ${PICOBJDIR}/device_io.o: visopsys_io.c ${STDDEPS}
+ 	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
+ 
++${OBJDIR}/attrdef.o: ${PROGDIR}/attrdef.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/attrdef.o: ${PROGDIR}/attrdef.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
++${OBJDIR}/boot.o: ${PROGDIR}/boot.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/boot.o: ${PROGDIR}/boot.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
++${OBJDIR}/mkntfs.o: ${PROGDIR}/mkntfs.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/mkntfs.o: ${PROGDIR}/mkntfs.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
+ ${OBJDIR}/ntfsresize.o: ${PROGDIR}/ntfsresize.c ${STDDEPS}
+ 	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
+ 
+ ${PICOBJDIR}/ntfsresize.o: ${PROGDIR}/ntfsresize.c ${STDDEPS}
+ 	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
+ 
++${OBJDIR}/sd.o: ${PROGDIR}/sd.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/sd.o: ${PROGDIR}/sd.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
++${OBJDIR}/upcase.o: ${PROGDIR}/upcase.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/upcase.o: ${PROGDIR}/upcase.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
+ ${OBJDIR}/%.o: %.c ${STDDEPS}
+ 	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
+ 
+Index: libntfs/device.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/device.c,v
+retrieving revision 1.6
+diff -u -r1.6 device.c
+--- libntfs/device.c	29 Jan 2007 16:39:48 -0000	1.6
++++ libntfs/device.c	10 May 2009 22:25:56 -0000
+@@ -326,7 +326,6 @@
+ 	return count;
+ }
+ 
+-#ifndef __VISOPSYS__
+ /**
+  * ntfs_mst_pwrite - multi sector transfer (mst) positioned write
+  * @dev:	device to write to
+@@ -393,6 +392,7 @@
+ 	return written / bksize;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_cluster_read - read ntfs clusters
+  * @vol:	volume to read from
+@@ -554,7 +554,6 @@
+ 	return (low + 1LL) / block_size;
+ }
+ 
+-#ifndef __VISOPSYS__
+ /**
+  * ntfs_device_partition_start_sector_get - get starting sector of a partition
+  * @dev:	open device
+@@ -689,7 +688,6 @@
+ #endif
+ 	return -1;
+ }
+-#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_device_block_size_set - set block size of a device
+Index: libntfs/mft.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/mft.c,v
+retrieving revision 1.6
+diff -u -r1.6 mft.c
+--- libntfs/mft.c	29 Jan 2007 16:39:48 -0000	1.6
++++ libntfs/mft.c	10 May 2009 22:26:33 -0000
+@@ -1938,6 +1938,7 @@
+ 
+ 
+ #endif /* NTFS_RICH */
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_mft_usn_dec - Decrement USN by one
+@@ -1961,5 +1962,3 @@
+ 
+ 	return 0;
+ }
+-
+-#endif /* __VISOPSYS__ */
+Index: libntfs/visopsys_io.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/libntfs/visopsys_io.c,v
+retrieving revision 1.14
+diff -u -r1.14 visopsys_io.c
+--- libntfs/visopsys_io.c	2 Jan 2009 11:43:11 -0000	1.14
++++ libntfs/visopsys_io.c	10 May 2009 23:57:35 -0000
+@@ -313,7 +313,7 @@
+   if ((fd->position % (s64) fd->disk.sectorSize) ||
+       (count % (s64) fd->disk.sectorSize))
+     {
+-      Vdebug("Doing off-kilter read");
++      Vdebug("Doing off-kilter read\n");
+ 
+       saveBuff = buff;
+ 
+@@ -396,7 +396,7 @@
+   if ((fd->position % (s64) fd->disk.sectorSize) ||
+       (count % (s64) fd->disk.sectorSize))
+     {
+-      Vdebug("Doing off-kilter write");
++      Vdebug("Doing off-kilter write\n");
+ 
+       saveBuff = (void *) buff;
+ 
+--- ../ntfsprogs-1.13.1/ntfsprogs/mkntfs.c	2009-05-11 02:10:50.000000000 +0100
++++ ntfsprogs/mkntfs.c	2009-05-11 01:57:01.000000000 +0100
+@@ -27,6 +27,8 @@
+  * along with this program (in the main directory of the Linux-NTFS source
+  * in the file COPYING); if not, write to the Free Software Foundation,
+  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 05/2009 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ /*
+@@ -85,8 +87,10 @@
+ #ifdef HAVE_GETOPT_H
+ #include <getopt.h>
+ #else
++#ifndef __VISOPSYS__
+ 	extern char *optarg;
+ 	extern int optind;
++#endif /* __VISOPSYS__ */
+ #endif
+ 
+ #ifdef HAVE_LINUX_MAJOR_H
+@@ -128,7 +132,12 @@
+ #	endif
+ #endif
+ 
++#include <sys/api.h>
++#include <sys/ntfs.h>
++
++#ifndef __VISOPSYS__
+ #include "security.h"
++#endif /* __VISOPSYS__ */
+ #include "types.h"
+ #include "attrib.h"
+ #include "bitmap.h"
+@@ -138,13 +147,17 @@
+ #include "mft.h"
+ #include "mst.h"
+ #include "runlist.h"
++#ifndef __VISOPSYS__
+ #include "utils.h"
++#endif /* __VISOPSYS__ */
+ #include "ntfstime.h"
+ #include "sd.h"
+ #include "upcase.h"
+ #include "boot.h"
+ #include "attrdef.h"
++#ifndef __VISOPSYS__
+ #include "version.h"
++#endif /* __VISOPSYS__ */
+ #include "logging.h"
+ 
+ #ifdef NO_NTFS_DEVICE_DEFAULT_IO_OPS
+@@ -156,7 +169,13 @@
+ /* Page size on ia32. Can change to 8192 on Alpha. */
+ #define NTFS_PAGE_SIZE	4096
+ 
++// Goes in front of all the error messages
++#define ERR_PREFIX      "ERROR: "
++
++
++#ifndef __VISOPSYS__
+ static char EXEC_NAME[] = "mkntfs";
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * global variables
+@@ -187,26 +206,123 @@
+  * struct mkntfs_options
+  */
+ static struct mkntfs_options {
+-	char *dev_name;			/* Name of the device, or file, to use */
+-	BOOL enable_compression;	/* -C, enables compression of all files on the volume by default. */
++	const char *dev_name;		/* Name of the device, or file, to use */
++	//BOOL enable_compression;	/* -C, enables compression of all files on the volume by default. */
+ 	BOOL quick_format;		/* -f or -Q, fast format, don't zero the volume first. */
+ 	BOOL force;			/* -F, force fs creation. */
+ 	long heads;			/* -H, number of heads on device */
+-	BOOL disable_indexing;		/* -I, disables indexing of file contents on the volume by default. */
+-	BOOL no_action;			/* -n, do not write to device, only display what would be done. */
++	//BOOL disable_indexing;		/* -I, disables indexing of file contents on the volume by default. */
++	//BOOL no_action;			/* -n, do not write to device, only display what would be done. */
+ 	long long part_start_sect;	/* -p, start sector of partition on parent device */
+ 	long sector_size;		/* -s, in bytes, power of 2, default is 512 bytes. */
+ 	long sectors_per_track;		/* -S, number of sectors per track on device */
+-	BOOL use_epoch_time;		/* -T, fake the time to be 00:00:00 UTC, Jan 1, 1970. */
++	//BOOL use_epoch_time;		/* -T, fake the time to be 00:00:00 UTC, Jan 1, 1970. */
+ 	long mft_zone_multiplier;	/* -z, value from 1 to 4. Default is 1. */
+ 	long long num_sectors;		/* size of device in sectors */
+-	long cluster_size;		/* -c, format with this cluster-size */
++	//long cluster_size;		/* -c, format with this cluster-size */
+ 	u8 ver_major;			/* -N, ntfs version to create */
+ 	u8 ver_minor;
+-	char *label;			/* -L, volume label */
++	const char *label;		/* -L, volume label */
++	progress *prog;
+ } opts;
+ 
+ 
++static int progressPercentages[] = {
++  75, // RSZPCNT_ZERO
++  25  // RSZPCNT_FILES
++};
++
++#define RSZPCNT_ZERO         0
++#define RSZPCNT_FILES        1
++
++static void format_progress_update(int myPercentIndex, u64 current, u64 total)
++{
++  unsigned finished = 0;
++  int count;
++
++  if (opts.prog && (lockGet(&opts.prog->progLock) >= 0))
++    {
++      for (count = 0; count < myPercentIndex; count ++)
++	finished += progressPercentages[count];
++
++      finished +=
++	(unsigned) ((current * progressPercentages[myPercentIndex]) / total);
++      if (finished >= 100)
++	finished = 99;
++
++      opts.prog->finished = finished;
++      opts.prog->percentFinished = finished;
++
++      lockRelease(&opts.prog->progLock);
++    }
++}
++
++__attribute__((format(printf, 1, 2)))
++static void progress_message(const char *fmt, ...)
++{
++	va_list ap;
++	char tmp[PROGRESS_MAX_MESSAGELEN];
++	int length = 0;
++
++	va_start(ap, fmt);
++	vsprintf(tmp, fmt, ap);
++	va_end(ap);
++
++	if (opts.prog && (lockGet(&opts.prog->progLock) >= 0))
++	  {
++	    length = min((strlen(tmp) + 1), PROGRESS_MAX_MESSAGELEN);
++	    if (tmp[length - 1] == '\n')
++	      tmp[length - 1] ='\0';
++	    strncpy((char *) opts.prog->statusMessage, tmp, length);
++	    lockRelease(&opts.prog->progLock);
++	  }
++
++	ntfs_log_debug("%s\n", tmp);
++}
++
++__attribute__((format(printf, 2, 3)))
++static void _error(const char *function, const char *fmt, ...)
++{
++	va_list ap;
++	char tmp[PROGRESS_MAX_MESSAGELEN];
++	int length = 0;
++
++	strcpy(tmp, ERR_PREFIX);
++
++	if (function)
++	  sprintf((tmp + strlen(tmp)), "%s: ", function);
++
++	va_start(ap, fmt);
++	vsprintf((tmp + strlen(tmp)), fmt, ap);
++	va_end(ap);
++
++	if (opts.prog && (lockGet(&opts.prog->progLock) >= 0))
++	  {
++	    length = min((strlen(tmp) + 1), PROGRESS_MAX_MESSAGELEN);
++	    if (tmp[length - 1] == '\n')
++	      tmp[length - 1] ='\0';
++	    strncpy((char *) opts.prog->statusMessage, tmp, length);
++	    opts.prog->error = 1;
++
++	    lockRelease(&opts.prog->progLock);
++
++	    while (opts.prog->error)
++	      multitaskerYield();
++	  }
++
++	ntfs_log_trace("%s\n", tmp);
++}
++
++#ifdef ntfs_log_error
++#undef ntfs_log_error
++#endif
++#ifdef DEBUG
++#define ntfs_log_error(f, a...) _error(__FUNCTION__, f, ##a)
++#else
++#define ntfs_log_error(f, a...) _error(NULL, f, ##a)
++#endif
++
++#ifndef __VISOPSYS__
+ /**
+  * mkntfs_license
+  */
+@@ -320,6 +436,7 @@
+ 		return TRUE;
+ 	}
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * mkntfs_init_options
+@@ -332,7 +449,7 @@
+ 	memset(opts2, 0, sizeof(*opts2));
+ 
+ 	/* Mark all the numeric options as "unset". */
+-	opts2->cluster_size		= -1;
++	//opts2->cluster_size		= -1;
+ 	opts2->heads			= -1;
+ 	opts2->mft_zone_multiplier	= -1;
+ 	opts2->num_sectors		= -1;
+@@ -341,6 +458,8 @@
+ 	opts2->sectors_per_track	= -1;
+ }
+ 
++
++#ifndef __VISOPSYS__
+ /**
+  * mkntfs_parse_options
+  */
+@@ -517,14 +636,14 @@
+ 
+ 	return (!err && !ver && !lic);
+ }
+-
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * mkntfs_time
+  */
+ static time_t mkntfs_time(void)
+ {
+-	if (!opts.use_epoch_time)
++	//if (!opts.use_epoch_time)
+ 		return time(NULL);
+ 	return 0;
+ }
+@@ -573,8 +692,8 @@
+ 	long long bytes_written, total;
+ 	int retry;
+ 
+-	if (opts.no_action)
+-		return count;
++	//if (opts.no_action)
++		//return count;
+ 	total = 0LL;
+ 	retry = 0;
+ 	do {
+@@ -619,8 +738,8 @@
+ 
+ 	if (inited_size)
+ 		*inited_size = 0LL;
+-	if (opts.no_action)
+-		return val_len;
++	//if (opts.no_action)
++		//return val_len;
+ 	total = 0LL;
+ 	delta = 0LL;
+ 	for (i = 0; rl[i].length; i++) {
+@@ -688,6 +807,7 @@
+ }
+ 
+ 
++#ifndef __VISOPSYS__
+ /**
+  * dump_resident_attr_val
+  */
+@@ -1049,7 +1169,7 @@
+ 	};
+ 	printf("-- End of attributes. --\n");
+ }
+-
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * make_room_for_attribute - make room for an attribute inside an mft record
+@@ -1965,7 +2085,6 @@
+ 	return err;
+ }
+ 
+-
+ /**
+  * add_attr_std_info
+  *
+@@ -2383,7 +2502,6 @@
+ 	return err;
+ }
+ 
+-
+ /**
+  * upgrade_to_large_index
+  *
+@@ -3328,20 +3446,19 @@
+ 	}
+ 
+ 	/* Free any memory we've used */
+-	free(g_bad_blocks);	g_bad_blocks	= NULL;
+-	free(g_buf);		g_buf		= NULL;
+-	free(g_index_block);	g_index_block	= NULL;
+-	free(g_lcn_bitmap);	g_lcn_bitmap	= NULL;
+-	free(g_mft_bitmap);	g_mft_bitmap	= NULL;
+-	free(g_rl_bad);		g_rl_bad	= NULL;
+-	free(g_rl_boot);	g_rl_boot	= NULL;
+-	free(g_rl_logfile);	g_rl_logfile	= NULL;
+-	free(g_rl_mft);		g_rl_mft	= NULL;
+-	free(g_rl_mft_bmp);	g_rl_mft_bmp	= NULL;
+-	free(g_rl_mftmirr);	g_rl_mftmirr	= NULL;
++	if (g_bad_blocks) free(g_bad_blocks); g_bad_blocks = NULL;
++	if (g_buf) free(g_buf);	g_buf = NULL;
++	if (g_index_block) free(g_index_block); g_index_block = NULL;
++	if (g_lcn_bitmap) free(g_lcn_bitmap); g_lcn_bitmap = NULL;
++	if (g_mft_bitmap) free(g_mft_bitmap); g_mft_bitmap = NULL;
++	if (g_rl_bad) free(g_rl_bad); g_rl_bad = NULL;
++	if (g_rl_boot) free(g_rl_boot); g_rl_boot = NULL;
++	if (g_rl_logfile) free(g_rl_logfile); g_rl_logfile = NULL;
++	if (g_rl_mft) free(g_rl_mft); g_rl_mft = NULL;
++	if (g_rl_mft_bmp) free(g_rl_mft_bmp); g_rl_mft_bmp = NULL;
++	if (g_rl_mftmirr) free(g_rl_mftmirr); g_rl_mftmirr = NULL;
+ }
+ 
+-
+ /**
+  * mkntfs_open_partition -
+  */
+@@ -3349,7 +3466,7 @@
+ {
+ 	BOOL result = FALSE;
+ 	int i;
+-	struct stat sbuf;
++	//struct stat sbuf;
+ 	unsigned long mnt_flags;
+ 
+ 	/*
+@@ -3363,12 +3480,12 @@
+ 	}
+ 
+ 	/* Open the device for reading or reading and writing. */
+-	if (opts.no_action) {
+-		ntfs_log_quiet("Running in READ-ONLY mode!\n");
+-		i = O_RDONLY;
+-	} else {
++	//if (opts.no_action) {
++		//ntfs_log_quiet("Running in READ-ONLY mode!\n");
++		//i = O_RDONLY;
++	//} else {
+ 		i = O_RDWR;
+-	}
++	//}
+ 	if (vol->dev->d_ops->open(vol->dev, i)) {
+ 		if (errno == ENOENT)
+ 			ntfs_log_error("The device doesn't exist; did you specify it correctly?\n");
+@@ -3377,6 +3494,7 @@
+ 		goto done;
+ 	}
+ 	/* Verify we are dealing with a block device. */
++	/*
+ 	if (vol->dev->d_ops->stat(vol->dev, &sbuf)) {
+ 		ntfs_log_perror("Error getting information about %s", vol->dev->d_name);
+ 		goto done;
+@@ -3420,6 +3538,8 @@
+ 		ntfs_log_warning("mkntfs forced anyway.\n");
+ #endif
+ 	}
++	*/
++
+ 	/* Make sure the file system is not mounted. */
+ 	if (ntfs_check_if_mounted(vol->dev->d_name, &mnt_flags)) {
+ 		ntfs_log_perror("Failed to determine whether %s is mounted", vol->dev->d_name);
+@@ -3439,7 +3559,7 @@
+ /**
+  * mkntfs_get_page_size - detect the system's memory page size.
+  */
+-static long mkntfs_get_page_size()
++static long mkntfs_get_page_size(void)
+ {
+ 	long page_size;
+ #ifdef _SC_PAGESIZE
+@@ -3654,6 +3774,7 @@
+ 	vol->cluster_size_bits = ffs(vol->cluster_size) - 1;
+ 	ntfs_log_debug("cluster size = %u bytes\n",
+ 			(unsigned int)vol->cluster_size);
++	/*
+ 	if (vol->cluster_size > 4096) {
+ 		if (opts.enable_compression) {
+ 			if (!opts.force) {
+@@ -3669,6 +3790,7 @@
+ 				"Compression has been disabled for this "
+ 				"volume.\n");
+ 	}
++	*/
+ 	vol->nr_clusters = volume_size / vol->cluster_size;
+ 	/*
+ 	 * Check the cluster_size and num_sectors for consistency with
+@@ -4073,13 +4195,13 @@
+ 
+ 	volume_size = g_vol->nr_clusters << g_vol->cluster_size_bits;
+ 
+-	ntfs_log_progress("Initializing device with zeroes:   0%%");
++	progress_message("Initializing device with zeroes");
+ 	mid_clust = (volume_size >> 1) / g_vol->cluster_size;
+ 	for (position = 0; position < (unsigned long long)g_vol->nr_clusters;
+ 			position++) {
+ 		if (!(position % (int)(progress_inc+1))) {
+-			ntfs_log_progress("\b\b\b\b%3.0f%%", position /
+-					progress_inc);
++		  format_progress_update(RSZPCNT_ZERO, (u64) position,
++					 (u64) g_vol->nr_clusters);
+ 		}
+ 		bw = mkntfs_write(g_vol->dev, g_buf, g_vol->cluster_size);
+ 		if (bw != (ssize_t)g_vol->cluster_size) {
+@@ -4115,7 +4237,7 @@
+ 					g_vol->cluster_size, SEEK_SET);
+ 		}
+ 	}
+-	ntfs_log_progress("\b\b\b\b100%%");
++	//ntfs_log_progress("\b\b\b\b100%%");
+ 	position = (volume_size & (g_vol->cluster_size - 1)) /
+ 			opts.sector_size;
+ 	for (i = 0; (unsigned long)i < position; i++) {
+@@ -4138,7 +4260,7 @@
+ 					opts.sector_size, SEEK_CUR);
+ 		}
+ 	}
+-	ntfs_log_progress(" - Done.\n");
++	//ntfs_log_progress(" - Done.\n");
+ 	return TRUE;
+ }
+ 
+@@ -4214,7 +4336,8 @@
+ 	int i, err;
+ 	u8 *sd;
+ 
+-	ntfs_log_verbose("Creating $Volume (mft record 3)\n");
++	progress_message("Creating $Volume (mft record 3)\n");
++	format_progress_update(RSZPCNT_FILES, 1, 25);
+ 	m = (MFT_RECORD*)(g_buf + 3 * g_vol->mft_record_size);
+ 	err = create_hardlink(g_index_block, root_ref, m,
+ 			MK_LE_MREF(FILE_Volume, FILE_Volume), 0LL, 0LL,
+@@ -4253,7 +4376,8 @@
+ 	ssize_t bw;
+ 	int size, e;
+ 
+-	ntfs_log_verbose("Creating backup boot sector.\n");
++	progress_message("Creating backup boot sector.\n");
++	format_progress_update(RSZPCNT_FILES, 2, 25);
+ 	/*
+ 	 * Write the first max(512, opts.sector_size) bytes from buf to the
+ 	 * last sector, but limit that to 8192 bytes of written data since that
+@@ -4368,10 +4492,10 @@
+ 		file_attrs = FILE_ATTR_HIDDEN | FILE_ATTR_SYSTEM;
+ 		if (i == FILE_root) {
+ 			file_attrs |= FILE_ATTR_ARCHIVE;
+-			if (opts.disable_indexing)
+-				file_attrs |= FILE_ATTR_NOT_CONTENT_INDEXED;
+-			if (opts.enable_compression)
+-				file_attrs |= FILE_ATTR_COMPRESSED;
++			//if (opts.disable_indexing)
++				//file_attrs |= FILE_ATTR_NOT_CONTENT_INDEXED;
++			//if (opts.enable_compression)
++				//file_attrs |= FILE_ATTR_COMPRESSED;
+ 		}
+ 
+ 		if (g_vol->major_ver < 3) {
+@@ -4405,7 +4529,8 @@
+ 	/* The root directory mft reference. */
+ 	root_ref = MK_LE_MREF(FILE_root, FILE_root);
+ 	extend_ref = MK_LE_MREF(11,11);
+-	ntfs_log_verbose("Creating root directory (mft record 5)\n");
++	progress_message("Creating root directory (mft record 5)\n");
++	format_progress_update(RSZPCNT_FILES, 3, 25);
+ 	m = (MFT_RECORD*)(g_buf + 5 * g_vol->mft_record_size);
+ 	m->flags |= MFT_RECORD_IS_DIRECTORY;
+ 	m->link_count = cpu_to_le16(le16_to_cpu(m->link_count) + 1);
+@@ -4464,7 +4589,8 @@
+ 	}
+ 	/* dump_mft_record(m); */
+ 	/* Add all other attributes, on a per-file basis for clarity. */
+-	ntfs_log_verbose("Creating $MFT (mft record 0)\n");
++	progress_message("Creating $MFT (mft record 0)\n");
++	format_progress_update(RSZPCNT_FILES, 4, 25);
+ 	m = (MFT_RECORD*)g_buf;
+ 	err = add_attr_data_positioned(m, NULL, 0, 0, 0, g_rl_mft, g_buf,
+ 			g_mft_size);
+@@ -4488,7 +4614,8 @@
+ 	}
+ 	/* dump_mft_record(m); */
+ 
+-	ntfs_log_verbose("Creating $MFTMirr (mft record 1)\n");
++	progress_message("Creating $MFTMirr (mft record 1)\n");
++	format_progress_update(RSZPCNT_FILES, 5, 25);
+ 	m = (MFT_RECORD*)(g_buf + 1 * g_vol->mft_record_size);
+ 	err = add_attr_data_positioned(m, NULL, 0, 0, 0, g_rl_mftmirr, g_buf,
+ 			g_rl_mftmirr[0].length * g_vol->cluster_size);
+@@ -4508,7 +4635,8 @@
+ 		return FALSE;
+ 	}
+ 	/* dump_mft_record(m); */
+-	ntfs_log_verbose("Creating $LogFile (mft record 2)\n");
++	progress_message("Creating $LogFile (mft record 2)\n");
++	format_progress_update(RSZPCNT_FILES, 6, 25);
+ 	m = (MFT_RECORD*)(g_buf + 2 * g_vol->mft_record_size);
+ 	buf_log = malloc(g_logfile_size);
+ 	if (!buf_log) {
+@@ -4536,7 +4664,8 @@
+ 	}
+ 	/* dump_mft_record(m); */
+ 
+-	ntfs_log_verbose("Creating $AttrDef (mft record 4)\n");
++	progress_message("Creating $AttrDef (mft record 4)\n");
++	format_progress_update(RSZPCNT_FILES, 7, 25);
+ 	m = (MFT_RECORD*)(g_buf + 4 * g_vol->mft_record_size);
+ 
+ 	err = add_attr_data(m, NULL, 0, 0, 0, (u8*)g_vol->attrdef, g_vol->attrdef_len);
+@@ -4556,7 +4685,8 @@
+ 		return FALSE;
+ 	}
+ 	/* dump_mft_record(m); */
+-	ntfs_log_verbose("Creating $Bitmap (mft record 6)\n");
++	progress_message("Creating $Bitmap (mft record 6)\n");
++	format_progress_update(RSZPCNT_FILES, 8, 25);
+ 	m = (MFT_RECORD*)(g_buf + 6 * g_vol->mft_record_size);
+ 	/* the data attribute of $Bitmap must be non-resident or otherwise */
+ 	/* windows 2003 will regard the volume as corrupt (ERSO) */
+@@ -4583,7 +4713,8 @@
+ 	}
+ 	/* dump_mft_record(m); */
+ 
+-	ntfs_log_verbose("Creating $Boot (mft record 7)\n");
++	progress_message("Creating $Boot (mft record 7)\n");
++	format_progress_update(RSZPCNT_FILES, 9, 25);
+ 	m = (MFT_RECORD*)(g_buf + 7 * g_vol->mft_record_size);
+ 	bs = ntfs_calloc(1, 8192);
+ 	if (!bs)
+@@ -4686,7 +4817,8 @@
+ 	free(bs);
+ 	if (!create_file_volume(m, root_ref, volume_flags))
+ 		return FALSE;
+-	ntfs_log_verbose("Creating $BadClus (mft record 8)\n");
++	progress_message("Creating $BadClus (mft record 8)\n");
++	format_progress_update(RSZPCNT_FILES, 10, 25);
+ 	m = (MFT_RECORD*)(g_buf + 8 * g_vol->mft_record_size);
+ 	/* FIXME: This should be IGNORE_CASE */
+ 	/* Create a sparse named stream of size equal to the volume size. */
+@@ -4713,7 +4845,8 @@
+ 	/* dump_mft_record(m); */
+ 	/* create $Quota (1.2) or $Secure (3.0+) */
+ 	if (g_vol->major_ver < 3) {
+-		ntfs_log_verbose("Creating $Quota (mft record 9)\n");
++		progress_message("Creating $Quota (mft record 9)\n");
++		format_progress_update(RSZPCNT_FILES, 11, 25);
+ 		m = (MFT_RECORD*)(g_buf + 9 * g_vol->mft_record_size);
+ 		err = add_attr_data(m, NULL, 0, 0, 0, NULL, 0);
+ 		if (!err)
+@@ -4731,7 +4864,8 @@
+ 			return FALSE;
+ 		}
+ 	} else {
+-		ntfs_log_verbose("Creating $Secure (mft record 9)\n");
++		progress_message("Creating $Secure (mft record 9)\n");
++		format_progress_update(RSZPCNT_FILES, 12, 25);
+ 		m = (MFT_RECORD*)(g_buf + 9 * g_vol->mft_record_size);
+ 		m->flags |= MFT_RECORD_IS_VIEW_INDEX;
+ 		if (!err)
+@@ -4789,7 +4923,8 @@
+ 		}
+ 	}
+ 	/* dump_mft_record(m); */
+-	ntfs_log_verbose("Creating $UpCase (mft record 0xa)\n");
++	progress_message("Creating $UpCase (mft record 0xa)\n");
++	format_progress_update(RSZPCNT_FILES, 13, 25);
+ 	m = (MFT_RECORD*)(g_buf + 0xa * g_vol->mft_record_size);
+ 	err = add_attr_data(m, NULL, 0, 0, 0, (u8*)g_vol->upcase,
+ 			g_vol->upcase_len << 1);
+@@ -4812,8 +4947,9 @@
+ 	/* dump_mft_record(m); */
+ 
+ 	if (g_vol->major_ver < 3) {
+-		ntfs_log_verbose("Creating empty record, marked as in use "
++		progress_message("Creating empty record, marked as in use "
+ 			"(mft record 11)\n");
++		format_progress_update(RSZPCNT_FILES, 14, 25);
+ 		m = (MFT_RECORD*)(g_buf + 11 * g_vol->mft_record_size);
+ 		err = add_attr_data(m, NULL, 0, 0, 0, NULL, 0);
+ 		if (!err) {
+@@ -4827,7 +4963,8 @@
+ 		}
+ 		/* dump_mft_record(m); */
+ 	} else {
+-		ntfs_log_verbose("Creating $Extend (mft record 11)\n");
++		progress_message("Creating $Extend (mft record 11)\n");
++		format_progress_update(RSZPCNT_FILES, 15, 25);
+ 		/*
+ 		 * $Extends index must be resident. Otherwise, w2k3 will
+ 		 * regard the volume as corrupt. (ERSO)
+@@ -4852,7 +4989,8 @@
+ 	}
+ 	/* NTFS 1.2 reserved system files (mft records 0xc-0xf) */
+ 	for (i = 0xc; i < 0x10; i++) {
+-		ntfs_log_verbose("Creating system file (mft record 0x%x)\n", i);
++		progress_message("Creating system file (mft record 0x%x)\n", i);
++		format_progress_update(RSZPCNT_FILES, 16, 25);
+ 		m = (MFT_RECORD*)(g_buf + i * g_vol->mft_record_size);
+ 		err = add_attr_data(m, NULL, 0, 0, 0, NULL, 0);
+ 		if (!err) {
+@@ -4871,7 +5009,8 @@
+ 	if (g_vol->major_ver >= 3) {
+ 		extend_flags = FILE_ATTR_HIDDEN | FILE_ATTR_SYSTEM |
+ 			FILE_ATTR_ARCHIVE | FILE_ATTR_VIEW_INDEX_PRESENT;
+-		ntfs_log_verbose("Creating $Quota (mft record 24)\n");
++		progress_message("Creating $Quota (mft record 24)\n");
++		format_progress_update(RSZPCNT_FILES, 17, 25);
+ 		m = (MFT_RECORD*)(g_buf + 24 * g_vol->mft_record_size);
+ 		m->flags |= MFT_RECORD_IS_4;
+ 		m->flags |= MFT_RECORD_IS_VIEW_INDEX;
+@@ -4895,7 +5034,8 @@
+ 			return FALSE;
+ 		}
+ 
+-		ntfs_log_verbose("Creating $ObjId (mft record 25)\n");
++		progress_message("Creating $ObjId (mft record 25)\n");
++		format_progress_update(RSZPCNT_FILES, 18, 25);
+ 		m = (MFT_RECORD*)(g_buf + 25 * g_vol->mft_record_size);
+ 		m->flags |= MFT_RECORD_IS_4;
+ 		m->flags |= MFT_RECORD_IS_VIEW_INDEX;
+@@ -4915,7 +5055,8 @@
+ 			return FALSE;
+ 		}
+ 
+-		ntfs_log_verbose("Creating $Reparse (mft record 26)\n");
++		progress_message("Creating $Reparse (mft record 26)\n");
++		format_progress_update(RSZPCNT_FILES, 19, 25);
+ 		m = (MFT_RECORD*)(g_buf + 26 * g_vol->mft_record_size);
+ 		m->flags |= MFT_RECORD_IS_4;
+ 		m->flags |= MFT_RECORD_IS_VIEW_INDEX;
+@@ -4941,7 +5082,7 @@
+ /**
+  * mkntfs_redirect
+  */
+-static int mkntfs_redirect(struct mkntfs_options *opts2)
++static int _format(void)
+ {
+ 	int result = 1;
+ 	ntfs_attr_search_ctx *ctx = NULL;
+@@ -4950,10 +5091,6 @@
+ 	MFT_RECORD *m;
+ 	int i, err;
+ 
+-	if (!opts2) {
+-		ntfs_log_error("Internal error: invalid parameters to mkntfs_options.\n");
+-		goto done;
+-	}
+ 	/* Initialize the random number generator with the current time. */
+ 	srandom(mkntfs_time());
+ 	/* Allocate and initialize ntfs_volume structure g_vol. */
+@@ -4978,8 +5115,8 @@
+ 		g_vol->major_ver = 3;
+ 		g_vol->minor_ver = 1;
+ 	}
+-	if (opts.cluster_size >= 0)
+-		g_vol->cluster_size = opts.cluster_size;
++	//if (opts.cluster_size >= 0)
++		//g_vol->cluster_size = opts.cluster_size;
+ 	/* Length is in unicode characters. */
+ 	g_vol->upcase_len = 65536;
+ 	g_vol->upcase = malloc(g_vol->upcase_len * sizeof(ntfschar));
+@@ -5040,6 +5177,9 @@
+ 		if (!mkntfs_fill_device_with_zeroes())
+ 			goto done;
+ 	}
++	else
++	  format_progress_update(RSZPCNT_ZERO, 1, 1);
++
+ 	/* Create NTFS volume structures. */
+ 	if (!mkntfs_create_root_structures())
+ 		goto done;
+@@ -5056,12 +5196,14 @@
+ 	 *   applicable). Possibly should move this as far to the top as
+ 	 *   possible and update during each subsequent c&w of each system file.
+ 	 */
+-	ntfs_log_verbose("Syncing root directory index record.\n");
++	progress_message("Syncing root directory index record.\n");
++	format_progress_update(RSZPCNT_FILES, 20, 25);
+ 	if (!mkntfs_sync_index_record(g_index_block, (MFT_RECORD*)(g_buf + 5 *
+ 			g_vol->mft_record_size), NTFS_INDEX_I30, 4))
+ 		goto done;
+ 
+-	ntfs_log_verbose("Syncing $Bitmap.\n");
++	progress_message("Syncing $Bitmap.\n");
++	format_progress_update(RSZPCNT_FILES, 21, 25);
+ 	m = (MFT_RECORD*)(g_buf + 6 * g_vol->mft_record_size);
+ 
+ 	ctx = ntfs_attr_get_search_ctx(NULL, m);
+@@ -5098,11 +5240,12 @@
+ 	 * No need to sync $MFT/$BITMAP as that has never been modified since
+ 	 * its creation.
+ 	 */
+-	ntfs_log_verbose("Syncing $MFT.\n");
++	progress_message("Syncing $MFT.\n");
++	format_progress_update(RSZPCNT_FILES, 22, 25);
+ 	pos = g_mft_lcn * g_vol->cluster_size;
+ 	lw = 1;
+ 	for (i = 0; i < g_mft_size / (s32)g_vol->mft_record_size; i++) {
+-		if (!opts.no_action)
++		//if (!opts.no_action)
+ 			lw = ntfs_mst_pwrite(g_vol->dev, pos, 1, g_vol->mft_record_size, g_buf + i * g_vol->mft_record_size);
+ 		if (lw != 1) {
+ 			ntfs_log_error("ntfs_mst_pwrite: %s\n", lw == -1 ?
+@@ -5111,7 +5254,8 @@
+ 		}
+ 		pos += g_vol->mft_record_size;
+ 	}
+-	ntfs_log_verbose("Updating $MFTMirr.\n");
++	progress_message("Updating $MFTMirr.\n");
++	format_progress_update(RSZPCNT_FILES, 23, 25);
+ 	pos = g_mftmirr_lcn * g_vol->cluster_size;
+ 	lw = 1;
+ 	for (i = 0; i < g_rl_mftmirr[0].length * g_vol->cluster_size / g_vol->mft_record_size; i++) {
+@@ -5126,7 +5270,7 @@
+ 			ntfs_log_error("ntfs_mft_usn_dec");
+ 			goto done;
+ 		}
+-		if (!opts.no_action)
++		//if (!opts.no_action)
+ 			lw = ntfs_mst_pwrite(g_vol->dev, pos, 1, g_vol->mft_record_size, g_buf + i * g_vol->mft_record_size);
+ 		if (lw != 1) {
+ 			ntfs_log_error("ntfs_mst_pwrite: %s\n", lw == -1 ?
+@@ -5135,7 +5279,8 @@
+ 		}
+ 		pos += g_vol->mft_record_size;
+ 	}
+-	ntfs_log_verbose("Syncing device.\n");
++	progress_message("Syncing device.\n");
++	format_progress_update(RSZPCNT_FILES, 24, 25);
+ 	if (g_vol->dev->d_ops->sync(g_vol->dev)) {
+ 		ntfs_log_error("Syncing device. FAILED");
+ 		goto done;
+@@ -5149,6 +5294,7 @@
+ }
+ 
+ 
++#ifndef __VISOPSYS__
+ /**
+  * main - Begin here
+  *
+@@ -5173,4 +5319,41 @@
+ done:
+ 	return result;
+ }
++#endif /* __VISOPSYS__ */
++
++int ntfsFormat(const char *diskName, const char *volName, int longFormat,
++	       progress *prog)
++{
++  int status = 0;
+ 
++  mkntfs_init_options(&opts);			/* Set up the options */
++
++  opts.dev_name = diskName;
++  //opts.enable_compression = TRUE;
++  opts.force = TRUE;
++  opts.quick_format = (longFormat? FALSE : TRUE);
++  opts.ver_major = 1;
++  opts.ver_minor = 2;
++  //opts->ver_major = 3;
++  //opts->ver_minor = 1;
++  opts.label = volName;
++  opts.prog = prog;
++
++  status = _format();
++
++  if (status >= 0)
++    {
++      progress_message("Successfully formatted NTFS on device '%s'.",
++		       diskName);
++      format_progress_update(RSZPCNT_FILES, 25, 25);
++    }
++
++  if (prog && (lockGet(&prog->progLock) >= 0))
++    {
++      prog->finished = prog->total;
++      prog->percentFinished = 100;
++      lockRelease(&prog->progLock);
++    }
++
++  return (status);
++}

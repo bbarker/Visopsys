@@ -1,0 +1,37 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: 2015-05-07 23:57+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: adduser.c:55
+msgid "usage:\n"
+msgstr "Использование:\n"
+
+#: adduser.c:56
+#, c-format
+msgid "%s <username>\n"
+msgstr "%s <имя_пользователя>\n"
+
+#: adduser.c:79
+#, c-format
+msgid "User %s already exists.\n"
+msgstr "Пользователь %s уже существует.\n"
+
+#: adduser.c:103
+msgid "User added.\n"
+msgstr "Пользователь добавлен.\n"

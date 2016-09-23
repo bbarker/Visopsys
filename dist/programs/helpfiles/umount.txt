@@ -1,0 +1,16 @@
+
+ -- umount --
+
+Unmount a filesystem.
+
+Usage:
+  umount <mount_point>
+
+This command will unmount (disconnect, make unusable) the filesystem mounted
+at the mount point specified as a parameter.
+
+Example:
+  umount /C
+
+This will synchronize and unmount the logical disk mounted at /C.
+

@@ -1,0 +1,175 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: computer.c:694
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Der Befehl \"%s\" funktioniert nur im Grafik-Modus\n"
+
+#: computer.c:445
+msgid " (read only)"
+msgstr " (Nur Lese-Rechte)"
+
+#: computer.c:428
+#, c-format
+msgid "%u cylinders, %u heads, %u sectors\n"
+msgstr "%u Zylinder, %u Köpfe, %u Sektoren\n"
+
+#: computer.c:75
+msgid "Browse"
+msgstr "Durchsuchen"
+
+#: computer.c:424
+msgid "CD-ROM\n"
+msgstr "CD-ROM\n"
+
+#: computer.c:595
+#, c-format
+msgid "Can't load icon image %s"
+msgstr "Das Bild für das Icon kann nicht geladen werden %s"
+
+#: computer.c:215
+#, c-format
+msgid "Can't mount %s on %s"
+msgstr "%s konnte nicht mit %s verbunden werden"
+
+#: computer.c:56
+msgid "Computer"
+msgstr "Computer"
+
+#: computer.c:652
+msgid "Disk"
+msgstr "Disk"
+
+#: computer.c:381
+#, c-format
+msgid "Disk %s is not mounted"
+msgstr "Disk %s ist nicht verbunden"
+
+#: computer.c:310
+#, c-format
+msgid "Disk is already mounted as %s"
+msgstr "Disk ist bereits als %s verbunden"
+
+#: computer.c:106
+msgid "Error"
+msgstr "Fehler"
+
+#: computer.c:275 computer.c:352
+msgid "Error launching file browser"
+msgstr "Fehler beim Start des Datei-Browsers"
+
+#: computer.c:138
+msgid "Error re-reading disk info"
+msgstr "Fehler beim Wiedereinlesen der Disk-Informationen"
+
+#: computer.c:484 computer.c:527
+msgid "Error spawning browser thread"
+msgstr "Fehler beim erstellen von Browser-Einträgen"
+
+#: computer.c:493
+msgid "Error spawning mount as thread"
+msgstr "Fehler beim erstellen des Eintrags in Bezug auf die Verbindung"
+
+#: computer.c:511
+msgid "Error spawning properties thread"
+msgstr "Fehler beim erstellen von Einstellungs-Einträgen"
+
+#: computer.c:502
+msgid "Error spawning unmount thread"
+msgstr "Fehler beim erstellen des Eintrags in Bezug auf die getrennte Verbindung"
+
+#: computer.c:390
+#, c-format
+msgid "Error unmounting %s"
+msgstr "Fehler beim trennen der Verbindung von %s"
+
+#: computer.c:212
+#, c-format
+msgid "Filesystem on %s is not supported for browsing"
+msgstr "Das Dateisystem auf %s wird nicht zum Durchsuchen untersützt"
+
+#: computer.c:439
+#, c-format
+msgid "Filesystem type: %s\n"
+msgstr "Art des Dateisystems: %s\n"
+
+#: computer.c:417
+msgid "Fixed "
+msgstr "Fixiert "
+
+#: computer.c:555
+msgid "Memory allocation error"
+msgstr "Fehler bei der Speicheraufteilung"
+
+#: computer.c:76
+msgid "Mount as..."
+msgstr "Verbunden als..."
+
+#: computer.c:332
+msgid "Mount point"
+msgstr "Verbindungspunkt"
+
+#: computer.c:443
+#, c-format
+msgid "Mounted as %s%s\n"
+msgstr "Verbunden als %s%s\n"
+
+#: computer.c:254 computer.c:320
+#, c-format
+msgid "No media in disk %s"
+msgstr "Keine Dateien auf der Disk %s"
+
+#: computer.c:436
+#, c-format
+msgid "Partition type: %s\n"
+msgstr "Art der Partition: %s\n"
+
+#: computer.c:333
+msgid "Please enter the mount point"
+msgstr "Bitte geben Sie den Verbindungspunkt ein"
+
+#: computer.c:78 computer.c:447
+msgid "Properties"
+msgstr "Eigenschaften"
+
+#: computer.c:419
+msgid "Removable "
+msgstr "Entfernbar "
+
+#: computer.c:432
+#, c-format
+msgid "Size: %llu MB\n"
+msgstr "Größe: %llu MB\n"
+
+#: computer.c:77
+msgid "Unmount"
+msgstr "Verbindung trennen"
+
+#: computer.c:422
+msgid "floppy\n"
+msgstr "Laufwerk\n"
+
+#: computer.c:426
+msgid "hard disk\n"
+msgstr "Festplatte\n"

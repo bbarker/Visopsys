@@ -1,0 +1,357 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fontutil\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: 2015-05-08 02:51+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: fontutil.c:95
+msgid "Font Editor"
+msgstr ""
+
+#: fontutil.c:130
+msgid "usage:\n"
+msgstr "использование:\n"
+
+#: fontutil.c:131
+#, c-format
+msgid "  %s [options] [VBF_file]\n"
+msgstr ""
+
+#: fontutil.c:132
+#, c-format
+msgid "  (type 'help %s' for options help)\n"
+msgstr ""
+
+#: fontutil.c:150
+msgid "Error"
+msgstr ""
+
+#: fontutil.c:152
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+
+#: fontutil.c:186 fontutil.c:227 fontutil.c:254
+#, fuzzy, c-format
+msgid "Can't seek %s"
+msgstr "Не могу найти %s\n"
+
+#: fontutil.c:196 fontutil.c:236
+#, fuzzy, c-format
+msgid "Can't read %s"
+msgstr "Не могу прочитать %s\n"
+
+#: fontutil.c:202
+#, c-format
+msgid "%s is not a VBF font file"
+msgstr ""
+
+#: fontutil.c:216
+#, c-format
+msgid "Unsupported VBF version %d.%d"
+msgstr ""
+
+#: fontutil.c:262
+#, fuzzy, c-format
+msgid "Can't write %s"
+msgstr "Не могу записать %s\n"
+
+#: fontutil.c:278
+#, c-format
+msgid "Update VBF header of %s\n"
+msgstr ""
+
+#: fontutil.c:286
+#, fuzzy, c-format
+msgid "Can't open %s for reading/writing"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:299
+msgid "Can't update an older VBF file.  Convert with -x?"
+msgstr ""
+
+#: fontutil.c:306
+#, c-format
+msgid "Font family: now %s (was %s)\n"
+msgstr ""
+
+#: fontutil.c:315
+#, c-format
+msgid "Flags: now 0x%x (was 0x%x)\n"
+msgstr ""
+
+#: fontutil.c:323
+#, c-format
+msgid "Points: now %d (was %d)\n"
+msgstr ""
+
+#: fontutil.c:330
+#, c-format
+msgid "Character set: now %s (was %s)\n"
+msgstr ""
+
+#: fontutil.c:340
+msgid "Memory error"
+msgstr ""
+
+#: fontutil.c:351 fontutil.c:433 fontutil.c:508
+#, c-format
+msgid "Couldn't read character codes of %s"
+msgstr ""
+
+#: fontutil.c:381 fontutil.c:564
+#, c-format
+msgid "Couldn't write character codes for %s"
+msgstr ""
+
+#: fontutil.c:410
+msgid "Not a version 1 VBF file"
+msgstr ""
+
+#: fontutil.c:423 fontutil.c:498 fontutil.c:1065
+msgid "Couldn't get memory for character codes or data"
+msgstr ""
+
+#: fontutil.c:443
+#, c-format
+msgid "Couldn't read glyph data of %s"
+msgstr ""
+
+#: fontutil.c:485
+msgid "Can't read an older VBF file.  Convert with -x?"
+msgstr ""
+
+#: fontutil.c:518
+#, c-format
+msgid "Couldn't read character data of %s"
+msgstr ""
+
+#: fontutil.c:573
+#, c-format
+msgid "Couldn't write glyph data for %s"
+msgstr ""
+
+#: fontutil.c:620
+#, c-format
+msgid "Glyph %d does not exist in font file"
+msgstr ""
+
+#: fontutil.c:658 fontutil.c:1656
+#, fuzzy, c-format
+msgid "Can't open %s for reading"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:741
+#, c-format
+msgid "Import font from %s to VBF file %s\n"
+msgstr ""
+
+#: fontutil.c:753
+#, c-format
+msgid "Couldn't load font image file %s"
+msgstr ""
+
+#: fontutil.c:759
+#, c-format
+msgid "Image width (%d) of %s is not a multiple of %d"
+msgstr ""
+
+#: fontutil.c:767
+#, c-format
+msgid "Image height (%d) of %s is not a multiple of %d"
+msgstr ""
+
+#: fontutil.c:778
+#, fuzzy, c-format
+msgid "Can't open font file %s for writing"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:808 fontutil.c:955
+#, c-format
+msgid "%d glyphs size %dx%d\n"
+msgstr ""
+
+#: fontutil.c:819
+msgid "Couldn't allocate memory"
+msgstr ""
+
+#: fontutil.c:886 fontutil.c:950
+msgid "Couldn't get a new image"
+msgstr ""
+
+#: fontutil.c:919
+#, c-format
+msgid "Export font from VBF file %s to %s\n"
+msgstr ""
+
+#: fontutil.c:931
+#, fuzzy, c-format
+msgid "Can't open font file %s for reading"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:983
+#, c-format
+msgid "Couldn't save font image file %s"
+msgstr ""
+
+#: fontutil.c:1016
+#, c-format
+msgid "Add glyph %u from %s to VBF file %s\n"
+msgstr ""
+
+#: fontutil.c:1028
+#, c-format
+msgid "Couldn't load glyph image file %s"
+msgstr ""
+
+#: fontutil.c:1037 fontutil.c:1149
+#, fuzzy, c-format
+msgid "Can't open destination file %s for writing"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:1140
+#, c-format
+msgid "Remove glyph %d from VBF file %s\n"
+msgstr ""
+
+#: fontutil.c:1162
+#, c-format
+msgid "Glyph %d does not exist in font file %s"
+msgstr ""
+
+#: fontutil.c:1226
+#, c-format
+msgid "Convert VBF V1 file %s to VBF V2 (%s)\n"
+msgstr ""
+
+#: fontutil.c:1236
+#, fuzzy, c-format
+msgid "Can't open source file %s for reading"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:1250
+#, c-format
+msgid "Glyph size %dx%d\n"
+msgstr ""
+
+#: fontutil.c:1265
+#, c-format
+msgid "%d ASCII glyphs, %d %s glyphs\n"
+msgstr ""
+
+#: fontutil.c:1284
+msgid "Can't get memory for output files"
+msgstr ""
+
+#: fontutil.c:1301 fontutil.c:1303
+#, c-format
+msgid "Creating %s (%u bytes)\n"
+msgstr ""
+
+#: fontutil.c:1313
+#, fuzzy
+msgid "Can't open destination file(s) for writing"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:1376 fontutil.c:1393
+#, fuzzy, c-format
+msgid "Can't write destination file %s"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:1777
+#, fuzzy, c-format
+msgid "Can't open %s for writing"
+msgstr "Не могу открыть файл %s для записи\n"
+
+#: fontutil.c:1884
+msgid "No supported font files found"
+msgstr ""
+
+#: fontutil.c:1942
+msgid "Save"
+msgstr ""
+
+#: fontutil.c:1989
+msgid "Couldn't get working memory"
+msgstr ""
+
+#: fontutil.c:2008 fontutil.c:2207
+#, c-format
+msgid "Missing parameter for %s option"
+msgstr ""
+
+#: fontutil.c:2014 fontutil.c:2213
+#, fuzzy, c-format
+msgid "Unknown option '%c'"
+msgstr "Неизвестная опция '%c'\n"
+
+#: fontutil.c:2044
+msgid "Missing code argument for '-a' option"
+msgstr ""
+
+#: fontutil.c:2057
+msgid "Missing charset argument for '-c' option"
+msgstr ""
+
+#: fontutil.c:2079
+msgid "Missing image filename argument for '-e' option"
+msgstr ""
+
+#: fontutil.c:2092
+msgid "Missing filename argument for '-f' option"
+msgstr ""
+
+#: fontutil.c:2104
+msgid "Missing image filename argument for '-i' option"
+msgstr ""
+
+#: fontutil.c:2117
+msgid "Missing family name argument for '-n' option"
+msgstr ""
+
+#: fontutil.c:2132
+msgid "Missing points argument for '-p' option"
+msgstr ""
+
+#: fontutil.c:2146
+msgid "Missing code argument for '-r' option"
+msgstr ""
+
+#: fontutil.c:2159
+msgid "Missing style argument for '-s' option"
+msgstr ""
+
+#: fontutil.c:2178
+#, c-format
+msgid "Unknown style argument %s"
+msgstr ""
+
+#: fontutil.c:2197
+msgid "Missing filename argument for '-x' option"
+msgstr ""
+
+#: fontutil.c:2244
+msgid "Missing image file (-f) argument to add (-a) operation"
+msgstr ""
+
+#: fontutil.c:2258
+msgid "No operation specified"
+msgstr ""

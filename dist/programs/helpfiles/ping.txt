@@ -1,0 +1,16 @@
+
+ -- ping --
+
+'Ping' a host on the network.
+
+Usage:
+  ping [-T] <address | hostname>
+
+This command will send 'echo request' (ping) packets across the network to
+the requested host, and show information about any response acquired from
+that host.  The most common usage of this command is to test network
+connectivity.
+
+Options:
+-T              : Force text mode operation
+

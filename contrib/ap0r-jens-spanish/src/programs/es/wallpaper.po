@@ -1,0 +1,42 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 02:26+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: wallpaper.c:71
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" solamente funciona en modo grafico\n"
+
+#: wallpaper.c:85
+msgid "Enter filename"
+msgstr "Nombre de archivo"
+
+#: wallpaper.c:107
+#, c-format
+msgid "File not found\n"
+msgstr "Archivo no encontrado\n"
+
+#: wallpaper.c:94
+#, c-format
+msgid "No filename specified\n"
+msgstr "Archivo no especificado\n"
+
+#: wallpaper.c:86
+msgid "Please choose the background image:"
+msgstr "Elija la imagen de fondo:"

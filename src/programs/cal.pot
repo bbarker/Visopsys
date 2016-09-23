@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: cal.c:55
+msgid "Calendar"
+msgstr ""
+
+#: cal.c:58
+msgid "Mo"
+msgstr ""
+
+#: cal.c:59
+msgid "Tu"
+msgstr ""
+
+#: cal.c:60
+msgid "We"
+msgstr ""
+
+#: cal.c:61
+msgid "Th"
+msgstr ""
+
+#: cal.c:62
+msgid "Fr"
+msgstr ""
+
+#: cal.c:63
+msgid "Sa"
+msgstr ""
+
+#: cal.c:64
+msgid "Su"
+msgstr ""
+
+#: cal.c:68
+msgid "January"
+msgstr ""
+
+#: cal.c:69
+msgid "February"
+msgstr ""
+
+#: cal.c:70
+msgid "March"
+msgstr ""
+
+#: cal.c:71
+msgid "April"
+msgstr ""
+
+#: cal.c:72
+msgid "May"
+msgstr ""
+
+#: cal.c:73
+msgid "June"
+msgstr ""
+
+#: cal.c:74
+msgid "July"
+msgstr ""
+
+#: cal.c:75
+msgid "August"
+msgstr ""
+
+#: cal.c:76
+msgid "September"
+msgstr ""
+
+#: cal.c:77
+msgid "October"
+msgstr ""
+
+#: cal.c:78
+msgid "November"
+msgstr ""
+
+#: cal.c:79
+msgid "December"
+msgstr ""
+
+#: cal.c:360
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr ""

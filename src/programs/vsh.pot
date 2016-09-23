@@ -1,0 +1,69 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: vsh.c:196 vsh.c:215
+#, c-format
+msgid "Usage: %s <file1> [file2] [...]\n"
+msgstr ""
+
+#: vsh.c:231 vsh.c:248
+#, c-format
+msgid "Usage: %s <source file> <destination file>\n"
+msgstr ""
+
+#: vsh.c:283 vsh.c:324
+#, c-format
+msgid "Usage: %s <variable_name>\n"
+msgstr ""
+
+#: vsh.c:292
+msgid "Shouldn't set an env variable that long\n"
+msgstr ""
+
+#: vsh.c:305
+#, c-format
+msgid "Usage: %s <variable_name> <variable_value>\n"
+msgstr ""
+
+#: vsh.c:360
+#, c-format
+msgid "Unknown command \"%s\".\n"
+msgstr ""
+
+#: vsh.c:664
+msgid "logout\n"
+msgstr ""
+
+#: vsh.c:789
+msgid ""
+"\n"
+"Visopsys Shell.\n"
+msgstr ""
+
+#: vsh.c:790
+msgid "Type \"help\" for commands.\n"
+msgstr ""
+
+#: vsh.c:805
+msgid "Can't determine current directory\n"
+msgstr ""
+
+#: vsh.c:818
+msgid "exiting.\n"
+msgstr ""

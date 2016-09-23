@@ -1,0 +1,115 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: confedit.c:498
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalisabilir\n"
+
+#: confedit.c:189
+msgid "Add Variable"
+msgstr "Degisken ekle"
+
+#: confedit.c:455
+msgid "Add variable"
+msgstr "Degisken ekle"
+
+#: confedit.c:245 confedit.c:329
+msgid "Cancel"
+msgstr "Iptal"
+
+#: confedit.c:184
+msgid "Change Variable"
+msgstr "Degiskeni degistir"
+
+#: confedit.c:462
+msgid "Change variable"
+msgstr "Degiskeni degistir"
+
+#: confedit.c:409
+msgid "Configuration Editor"
+msgstr "Konfigurasyon Editörü"
+
+#: confedit.c:469
+msgid "Delete variable"
+msgstr "Degiskeni sil"
+
+#: confedit.c:510
+msgid "Enter filename"
+msgstr "Dosya ismi girin"
+
+#: confedit.c:97
+msgid "Error"
+msgstr "Hata"
+
+#: confedit.c:532
+#, c-format
+msgid "Error %d creating new configuration file."
+msgstr "%d yeni konfigurasyon dosyasi olusturulurken hata."
+
+#: confedit.c:110
+#, c-format
+msgid "Error %d reading configuration file."
+msgstr "%d konfigurasyon dosyasi okunurken hata."
+
+#: confedit.c:127
+#, c-format
+msgid "Error %d writing configuration file."
+msgstr "%d konfigurasyon dosyasi yazilirken hata."
+
+#: confedit.c:418
+msgid "File"
+msgstr "Dosya"
+
+#: confedit.c:239
+msgid "OK"
+msgstr "Tamam"
+
+#: confedit.c:511
+msgid "Please enter a configuration file to edit:"
+msgstr "Lütfen düzenlemek istediginiz konfigurasyon dosyasini girin:"
+
+#: confedit.c:80 confedit.c:329
+msgid "Quit"
+msgstr "Çik"
+
+#: confedit.c:328
+msgid "Quit without saving changes?"
+msgstr "Degisiklikleri kaydetmeden çikmak istiyor musunuz?"
+
+#: confedit.c:79 confedit.c:329
+msgid "Save"
+msgstr "Kaydet"
+
+#: confedit.c:327
+msgid "Unsaved changes"
+msgstr "Kaydedilmeyen degisiklikler"
+
+#: confedit.c:203
+msgid "Variable name:"
+msgstr "Degisken adi:"
+
+#: confedit.c:224
+msgid "value:"
+msgstr "deger:"

@@ -1,0 +1,14 @@
+
+ -- unzip --
+
+Decompress and extract files from a compressed archive file.
+
+Usage:
+  unzip [-p] <file1> [file2] [...]
+
+Each archive file name listed after the command name will be extracted in
+sequence.
+
+Options:
+-p         : show a progress indicator
+

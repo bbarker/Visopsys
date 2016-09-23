@@ -1,0 +1,21 @@
+
+ -- defrag --
+
+This command will defragment a filesystem.
+
+Usage:
+  defrag [-s] [-T] [disk_name]
+
+The 'defrag' program is interactive, and operates in both text and graphics
+modes.  The -T option forces defrag to operate in text-only mode.  The -s
+option forces 'silent' mode (i.e. no unnecessary output or status messages
+are printed/displayed).
+
+The last (optional) parameter is the name of a (logical) disk to defragment
+(use the 'disks' command to list the disks).  A defrag can only proceed if
+the driver for the requested filesystem type supports this functionality.
+
+Options:
+-s         : Silent mode
+-T         : Force text mode operation
+

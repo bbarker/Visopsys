@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: zip.c:72
+#, c-format
+msgid ""
+"usage:\n"
+"%s [-p] <file1> [file2] [...]\n"
+"%s [-p] -a <archive> <file1> [file2] [...]\n"
+"%s [-p] -d <archive> <member1> [member2] [...]\n"
+"%s [-p] -i <archive>\n"
+msgstr ""
+
+#: zip.c:101
+#, c-format
+msgid "Member name: %s\n"
+msgstr ""
+
+#: zip.c:103
+#, c-format
+msgid "Comment: %s\n"
+msgstr ""
+
+#: zip.c:105
+#, c-format
+msgid "Modification time: %s\n"
+msgstr ""
+
+#: zip.c:106
+#, c-format
+msgid "Offset: %u\n"
+msgstr ""
+
+#: zip.c:107
+#, c-format
+msgid "Size: %u\n"
+msgstr ""
+
+#: zip.c:108
+#, c-format
+msgid "Data offset: %u\n"
+msgstr ""
+
+#: zip.c:109
+#, c-format
+msgid "Compressed size: %u\n"
+msgstr ""
+
+#: zip.c:110
+#, c-format
+msgid ""
+"Decompressed size: %u\n"
+"\n"
+msgstr ""
+
+#: zip.c:143
+msgid "Missing archive argument for '-a' option\n"
+msgstr ""
+
+#: zip.c:156
+msgid "Missing archive argument for '-d' option\n"
+msgstr ""
+
+#: zip.c:169
+msgid "Missing archive argument for '-i' option\n"
+msgstr ""
+
+#: zip.c:184
+#, c-format
+msgid "Missing parameter for %s option\n"
+msgstr ""
+
+#: zip.c:190
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr ""
+
+#: zip.c:198
+msgid "The -a, -d, and -i options are mutually exclusive\n"
+msgstr ""

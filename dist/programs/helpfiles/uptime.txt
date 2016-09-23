@@ -1,0 +1,9 @@
+
+ -- uptime --
+
+Prints the number of days, minutes, and seconds since the system was
+booted.
+
+Usage:
+  uptime
+

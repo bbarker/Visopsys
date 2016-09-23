@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: reboot\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:09-0300\n"
+"PO-Revision-Date: 2014-08-13 22:19+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: reboot.c:76
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Can't seem to eject.  Try pushing the 'eject' button now.\n"
+msgstr ""
+"\n"
+"\n"
+"Похоже, не удается извлечь.  Попробуйте сейчас нажать кноку \"Извлечь\".\n"
+
+#: reboot.c:66
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Unable to unlock the media door\n"
+msgstr ""
+"\n"
+"\n"
+"Невозможно открыть дверцу устройства\n"
+
+#: reboot.c:63
+#, c-format
+msgid ""
+"\n"
+"Ejecting, please wait... "
+msgstr ""
+"\n"
+"Извлечение, подождите... "
+
+#: reboot.c:122
+#, c-format
+msgid "Use \"%s -f\" to force.\n"
+msgstr "Используйте \"%s -f\" для принудительной перезагрузки.\n"

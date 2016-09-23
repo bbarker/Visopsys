@@ -1,0 +1,46 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: wallpaper.c:71
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalisabilir\n"
+
+#: wallpaper.c:85
+msgid "Enter filename"
+msgstr "Dosya ismini girin"
+
+#: wallpaper.c:107
+#, c-format
+msgid "File not found\n"
+msgstr "Dosya bulunamadi\n"
+
+#: wallpaper.c:94
+#, c-format
+msgid "No filename specified\n"
+msgstr "Hiç dosya ismi belirtilmedi\n"
+
+#: wallpaper.c:86
+msgid "Please choose the background image:"
+msgstr "Lütfen arkaplan resmi seçin:"

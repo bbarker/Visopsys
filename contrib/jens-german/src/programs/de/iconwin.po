@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:03-0300\n"
+"PO-Revision-Date: 2013-11-08 21:14-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: iconwin.c:324
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Der Kommando \"%s\" funktioniert nur im Grafikmodus\n"
+
+#: iconwin.c:106
+#, c-format
+msgid "Can't locate configuration file %s"
+msgstr "Konfigurationsdatei %s nicht gefunden"
+
+#: iconwin.c:353
+#, c-format
+msgid "Config file %s specifies no valid icons"
+msgstr "Konfigurationsdatei %s spezifiziert ungültige Icons"
+
+#: iconwin.c:256
+#, c-format
+msgid "Couldn't execute command \"%s\""
+msgstr "Kommando \"%s\" kann nicht ausgeführt werden"
+
+#: iconwin.c:90
+msgid "Error"
+msgstr "Fehler"
+
+#: iconwin.c:160
+msgid "Memory allocation error"
+msgstr "Fehler bei der Speicherzuweisung"
+
+#: iconwin.c:338
+#, c-format
+msgid ""
+"usage:\n"
+"%s <config_file>\n"
+msgstr ""
+"Benutzung:\n"
+"%s <Konfig_file>\n"

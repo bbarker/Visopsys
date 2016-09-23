@@ -1,0 +1,50 @@
+Hi, There is a small bug in multitasker.c which lowering the
+performence. I'm talking about fpuExceptionHandler() function. Here's
+fixed version of this function:
+
+static int fpuExceptionHandler(void)
+{
+ // This function gets called when a EXCEPTION_DEVNOTAVAIL (7) exception
+ // occurs.  It can happen under two circumstances:
+ // CR0[EM] is set: No FPU is present.  We can implement emulation here
+ //     later in this case, if we want.
+ // CR0[TS] and CR0[MP] are set: A task switch has occurred since the
+ //     last FP operation, and we need to restore the state.
+
+ int status = 0;
+
+ if (fpuProcess != kernelCurrentProcess->processId)
+   {
+     // Some other process has been using the FPU, or it has not been
+     // used at all.  Figure out whether we should restore the state
+     // or else initialize the FPU for this process.
+
+     if (kernelCurrentProcess->fpuStateValid)
+       // Restore the FPU state
+       kernelProcessorFpuStateRestore(kernelCurrentProcess->fpuState);
+
+     else
+       {
+         // The process has not previously used the FPU.  Initialize it
+         // and remember that from now on we have to save FPU state.
+         kernelProcessorFpuInit();
+         kernelCurrentProcess->fpuInUse = 1;
+       }
+
+     fpuProcess = kernelCurrentProcess->processId;
+   }
+
+// *** clear task switched in each exception call, now there is
+// no need to call exception handler twice by one instruction, in case
+// if fpu wasn't initialized yet - fixed by Greg (reqst@o2.pl)
+
+   kernelProcessorClearTaskSwitched();
+
+ return (status = 0);
+}
+
+
+Please replay if u will agree my change in mutlitasker.c.
+
+Best regards
+Greg

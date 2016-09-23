@@ -1,0 +1,383 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:04-0300\n"
+"PO-Revision-Date: 2014-01-22 17:21-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: install.c:120
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+
+#: install.c:329
+#, c-format
+msgid ""
+"\n"
+"%s (y/n): "
+msgstr ""
+"\n"
+"%s (y/n): "
+
+#: install.c:1254
+#, c-format
+msgid ""
+"\n"
+"Installing...\n"
+msgstr ""
+"\n"
+"Instalando...\n"
+
+#: install.c:99
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue. "
+msgstr ""
+"\n"
+"Presione una tecla para continuar."
+
+#: install.c:147
+#, c-format
+msgid "%s  Quitting."
+msgstr "%s Cerrando."
+
+#: install.c:1141
+msgid "Basic"
+msgstr "Básico"
+
+#: install.c:266
+msgid "Basic install"
+msgstr "Instalación básica"
+
+#: install.c:248
+msgid "Can't create window!"
+msgstr "No se puede crear la ventana!"
+
+#: install.c:1042
+msgid "Can't determine the root disk."
+msgstr "No se puede determinar el disco raíz."
+
+#: install.c:674
+#, c-format
+msgid "Can't install a boot sector for filesystem type \"%s\""
+msgstr ""
+"No se puede instalar un sector de arranque el el tipo de sistema de archivos "
+"\"%s\""
+
+#: install.c:732
+#, c-format
+msgid "Can't open install file \"%s\""
+msgstr "No se puede abrir el archivo de instalación \"%s\""
+
+#: install.c:547
+#, c-format
+msgid "Can't open source file \"%s\""
+msgstr "El archivo de fuentes \"%s\" no se puede abrir"
+
+#: install.c:417 install.c:885
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: install.c:571
+msgid "Choose Filesystem Type"
+msgstr "Seleccione un tipo de sistema de archivos"
+
+#: install.c:391
+msgid "Choose Installation Disk"
+msgstr "Seleccione un disco de instalación"
+
+#: install.c:278
+msgid "Choose filesystem type"
+msgstr "Seleccione un tipo de sistema de archivos"
+
+#: install.c:574
+msgid "Choose the filesystem type:"
+msgstr "Seleccione el tipo de sistema de archivos:"
+
+#: install.c:151
+msgid "Complete"
+msgstr "Completo"
+
+#: install.c:857
+msgid "Confirm password:"
+msgstr "Confirmar contraseña:"
+
+#: install.c:959
+msgid "Confirm password: "
+msgstr "Confirmar contraseña:"
+
+#: install.c:325
+msgid "Confirmation"
+msgstr "Confirmación"
+
+#: install.c:736
+#, c-format
+msgid "Copying %s files...  "
+msgstr "Copiando%s archivos..."
+
+#: install.c:659
+msgid "Copying boot sector...  "
+msgstr "Copiando sector de arranque..."
+
+#: install.c:1208
+msgid "Couldn't copy the boot sector."
+msgstr "No se puede copiar el sector de arranque."
+
+#: install.c:568 install.c:579
+msgid "Default"
+msgstr "Estánder"
+
+#: install.c:1093
+#, c-format
+msgid ""
+"Disk %s is too small (%dK) to install Visopsys\n"
+"(%dK required)"
+msgstr ""
+"Disco %s demasiado pequeño (%dK) para instalar Visopsys\n"
+"(%dK son necesarios)"
+
+#: install.c:705 install.c:804 install.c:1201 install.c:1215 install.c:1282
+msgid "Done\n"
+msgstr "Listo\n"
+
+#: install.c:118
+msgid "Error"
+msgstr "Error"
+
+#: install.c:700
+#, c-format
+msgid "Error %d copying boot sector \"%s\" to disk %s"
+msgstr "Error %d al copiar el sector de arranque\"%s\" al disco %s"
+
+#: install.c:1199
+msgid "Error rescanning disk after format."
+msgstr "Errores al re-escanear el disco después de formatear."
+
+#: install.c:1220
+msgid "Error rescanning disk after mount."
+msgstr "Errores al re-escanear el disco después de desmontar."
+
+#: install.c:1194
+msgid "Errors during format."
+msgstr "Errores al formatear."
+
+#: install.c:270
+#, c-format
+msgid "Format %s (erases all data!)"
+msgstr "Formateando %s (borra todos los datos!)"
+
+#: install.c:1179
+msgid "Formatting..."
+msgstr "Formateando..."
+
+#: install.c:1176
+msgid "Formatting... "
+msgstr "Formateando..."
+
+#: install.c:1141
+msgid "Full"
+msgstr "Completo"
+
+#: install.c:266
+msgid "Full install"
+msgstr "Instalación completa"
+
+#: install.c:246 install.c:294
+msgid "Install"
+msgstr "Instalar"
+
+#: install.c:75
+msgid "Installation cancelled."
+msgstr "Instalación cancelada."
+
+#: install.c:1295
+msgid "Installation successful."
+msgstr "Instalado exitosamente."
+
+#: install.c:1156
+#, c-format
+msgid "Installing on disk %s.  Are you SURE?"
+msgstr "Instalando en el disco %s. Está SEGURO?"
+
+#: install.c:183
+msgid "Memory allocation error."
+msgstr "Error de memoria."
+
+#: install.c:759
+#, c-format
+msgid "Missing file \"%s\""
+msgstr "Archivo \"%s\" faltante"
+
+#: install.c:1211
+msgid "Mounting target disk...  "
+msgstr "Montando disco de destino"
+
+#: install.c:845
+msgid "New password:"
+msgstr "Nueva contraseña:"
+
+#: install.c:958
+msgid "New password: "
+msgstr "Nueva contraseña:"
+
+#: install.c:344
+#, c-format
+msgid "No\n"
+msgstr "No\n"
+
+#: install.c:898 install.c:913
+msgid "No password set.  It will be blank."
+msgstr "Ninguna contraseña seleccionada. Sin contraseña."
+
+#: install.c:406 install.c:879
+msgid "OK"
+msgstr "OK"
+
+#: install.c:74
+msgid "Partition disks..."
+msgstr "Particionando discos..."
+
+#: install.c:868 install.c:965
+msgid "Passwords do not match"
+msgstr "Contraseñas desiguales"
+
+#: install.c:72
+msgid "Please choose a password for the 'admin' account"
+msgstr "Seleccione una contraseña para la cuenta de 'admin'"
+
+#: install.c:1140
+msgid "Please choose the install type:"
+msgstr "Seleccione el tipo de instalación:"
+
+#: install.c:70
+msgid "Please choose the volume on which to install:"
+msgstr "Seleccione el volumen en el cual instalar:"
+
+#: install.c:300
+msgid "Quit"
+msgstr "Cerrar"
+
+#: install.c:829
+msgid "Set Administrator Password"
+msgstr "Configurar contraseña del administrador"
+
+#: install.c:572
+msgid "Supported types:"
+msgstr "Tipos soportados:"
+
+#: install.c:631
+#, c-format
+msgid ""
+"The disk is mounted as %s.  It must be unmounted\n"
+"before continuing.  Unmount?"
+msgstr ""
+"El disco se montó como %s.  La conección debe cortarse\n"
+"antes de continuar.  Cortar conección?"
+
+#: install.c:1230
+#, c-format
+msgid ""
+"The filesystem on disk %s is too small (%lluK) for\n"
+"the selected Visopsys installation (%uK required)."
+msgstr ""
+"El sistema de archivos en el disco %s es demasiado pequeño (%lluK) para\n"
+"el tipo de instalación seleccionado (%uK necesarios)."
+
+#: install.c:1237
+#, c-format
+msgid ""
+"There MAY not be enough free space on disk %s (%lluK) for the\n"
+"selected Visopsys installation (%uK required).  Continue?"
+msgstr ""
+"PUEDE ser que en el disco %s (%lluK) no hay suficiente memoria\n"
+"para el tipo de instalación seleccionado (%uK necesarios).  Continuar?"
+
+#: install.c:1287
+msgid "Unable to copy files."
+msgstr "No se pueden copiar los archivos."
+
+#: install.c:987
+msgid "Unable to create the password file"
+msgstr "No se puede crear el archivo de contraseñas"
+
+#: install.c:666
+#, c-format
+msgid "Unable to determine the filesystem type on disk \"%s\""
+msgstr ""
+"No se puede determinar el tipo de sistema de ficheros en el disco \"%s\""
+
+#: install.c:687
+#, c-format
+msgid "Unable to find the boot sector file \"%s\""
+msgstr "El archivo del sector de arranque \"%s\" no se pudo encontar"
+
+#: install.c:188
+msgid "Unable to get disk information."
+msgstr "Información de disco no disponible."
+
+#: install.c:1214
+msgid "Unable to mount the target disk."
+msgstr "No se puede montar el disco de destino."
+
+#: install.c:995
+msgid "Unable to set the \"admin\" password"
+msgstr "La contraseña de \"admin\" no se puede configurar"
+
+#: install.c:642
+#, c-format
+msgid "Unable to unmount %s"
+msgstr "El disco %s no se puede desmontar"
+
+#: install.c:1229 install.c:1245 install.c:1281
+msgid "Unable to unmount the target disk."
+msgstr "No se puede desmontar el disco de destino."
+
+#: install.c:1279
+msgid "Unmounting target disk...  "
+msgstr "Desmontando disco de destino..."
+
+#: install.c:68
+msgid ""
+"Visopsys Installer\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr ""
+"Instalador de Visopsys\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: install.c:338
+#, c-format
+msgid "Yes\n"
+msgstr "Sí\n"
+
+#: install.c:1035
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")."
+msgstr ""
+"Necesita derechos especiales para usar este comando.\n"
+"(Intente ingresar como \"admin\")"
+
+#: install.c:261
+#, c-format
+msgid "[ Installing on disk %s ]"
+msgstr "[ Instalando en el disco %s ]"

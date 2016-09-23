@@ -1,0 +1,92 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: ping\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:37+0100\n"
+"PO-Revision-Date: 2014-08-13 22:35+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: ping.c:402
+#, c-format
+msgid ""
+"\n"
+"--- %d.%d.%d.%d ping statistics ---\n"
+msgstr ""
+
+#: ping.c:160
+#, c-format
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
+msgstr "%d байт от %d.%d.%d.%d: icmp_seq=%d ttl=%d время=X ms\n"
+
+#: ping.c:404
+#, c-format
+msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
+msgstr "%d пакетов отправлено, %d получено, %d%% потеряно, время Xms\n"
+
+#: ping.c:288
+msgid "Enter Address"
+msgstr "Введите адрес"
+
+#: ping.c:289
+msgid "Enter the network address to ping:"
+msgstr "Введите адрес для пинга:"
+
+#: ping.c:84
+msgid "Error"
+msgstr "Ошибка"
+
+#: ping.c:344
+msgid "Error opening network connection"
+msgstr "Ошибка открытия сетевого соединения"
+
+#: ping.c:384
+msgid "Error pinging host"
+msgstr "Ошибка пингования хоста"
+
+#: ping.c:362
+msgid "Error setting signal handler"
+msgstr ""
+
+#: ping.c:375
+msgid "Error starting response thread"
+msgstr ""
+
+#: ping.c:325
+msgid "Memory allocation error"
+msgstr "Ошибка распределения памяти"
+
+#: ping.c:272
+msgid "Networking is not currently enabled"
+msgstr "Сеть не запущена"
+
+#: ping.c:193
+msgid "Ping"
+msgstr ""
+
+#: ping.c:348
+#, c-format
+msgid "Ping %d.%d.%d.%d %d bytes of data\n"
+msgstr "Ping %d.%d.%d.%d %d байт данных\n"
+
+#: ping.c:226
+msgid "Stop"
+msgstr "Стоп"
+
+#: ping.c:92
+#, c-format
+msgid ""
+"usage:\n"
+"%s [-T] <address | hostname>\n"
+msgstr ""
+"использование:\n"
+"%s [-T] <адрес | хост>\n"

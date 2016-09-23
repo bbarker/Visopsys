@@ -1,0 +1,12 @@
+
+ -- cd --
+
+Change the current directory.
+
+Usage:
+  cd [directory_name]
+
+The (optional) directory name can be either an absolute pathname, or a
+relative one.  If no directory name is specified, the user's 'default'
+directory will be used
+

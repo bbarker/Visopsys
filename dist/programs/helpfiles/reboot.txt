@@ -1,0 +1,19 @@
+
+ -- reboot --
+
+A command for rebooting the computer.
+
+Usage:
+  reboot [-e] [-f]
+
+This command causes the system to reboot.  If the (optional) '-e' parameter
+is supplied, then 'reboot' will attempt to eject the boot medium (if
+applicable, such as a CD-ROM).  If the (optional) '-f' parameter is
+supplied, then it will attempt to ignore errors and reboot regardless.
+Use this flag with caution if filesystems do not appear to be unmounting
+correctly; you may need to back up unsaved data before rebooting.
+
+Options:
+-e  : Eject the boot medium.
+-f  : Force reboot and ignore errors.
+

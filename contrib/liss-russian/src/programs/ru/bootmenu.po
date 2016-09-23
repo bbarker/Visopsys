@@ -1,0 +1,204 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: bootmenu\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 03:25+0100\n"
+"PO-Revision-Date: 2015-05-08 00:54+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: bootmenu.c:793
+#, c-format
+msgid ""
+"\n"
+"  [Cursor up/down to select, 'e' edit, '*' default\n"
+"   'd' delete, Enter to accept, 'Q' to quit]"
+msgstr ""
+"\n"
+"  [Выбор - стрелки вверх/вниз, 'e' - редактировать, '*' - по умолчанию\n"
+"   'd' - удалить, Enter - принять, 'Q' - выход]"
+
+#: bootmenu.c:749
+msgid ""
+"\n"
+"There are no chain-loadable operating systems on this disk.\n"
+"\n"
+msgstr ""
+
+#: bootmenu.c:734
+#, c-format
+msgid "\"%s\" [Filesystem: %s]"
+msgstr "\"%s\" [файловая система: %s]"
+
+#: bootmenu.c:559
+msgid "Automatically boot default selection after (seconds)"
+msgstr "Автоматическая загрузка выбранного элемента через (секунд)"
+
+#: bootmenu.c:498
+msgid "Boot Menu Installer"
+msgstr "Установщик загрузочного меню"
+
+#: bootmenu.c:67
+msgid "Boot menu written."
+msgstr "Загрузочное меню записано"
+
+#: bootmenu.c:392
+msgid "Can't get buffer memory\n"
+msgstr "Не могу получить буфер памяти\n"
+
+#: bootmenu.c:691
+#, fuzzy, c-format
+msgid "Can't get disk %s\n"
+msgstr "Не могу получить диск\n"
+
+#: bootmenu.c:349
+msgid "Can't get memory for the logical disk list"
+msgstr "Не могу получить память для списка логических дисков"
+
+#: bootmenu.c:708
+msgid "Can't get the list of logical disks"
+msgstr "Не могу получить список логических дисков"
+
+#: bootmenu.c:356
+msgid "Can't get the logical disk list\n"
+msgstr "Не могу получить список логических дисков\n"
+
+#: bootmenu.c:385
+#, c-format
+msgid "Can't open %s file\n"
+msgstr "Не могу открыть файл %s\n"
+
+#: bootmenu.c:399
+#, c-format
+msgid "Can't read %s file\n"
+msgstr "Не могу прочитать файл %s\n"
+
+#: bootmenu.c:638
+#, c-format
+msgid "Can't write MBR %s to %s\n"
+msgstr "Не могу записать MBR %s на %s\n"
+
+#: bootmenu.c:626
+msgid "Can't write boot menu\n"
+msgstr "Не могу записать загрузочное меню\n"
+
+#: bootmenu.c:861
+msgid "Can't write boot menu or MBR\n"
+msgstr "Не могу записать меню или MBR\n"
+
+#: bootmenu.c:230 bootmenu.c:587
+msgid "Cancel"
+msgstr "Отмена"
+
+#: bootmenu.c:66
+msgid "Chain-loadable entries for the boot menu:"
+msgstr "Вторично-загружаемые элементы для загрузочного меню:"
+
+#: bootmenu.c:542
+msgid "Default"
+msgstr "По умолчанию"
+
+#: bootmenu.c:546
+msgid "Delete"
+msgstr "Удалить"
+
+#: bootmenu.c:434
+#, c-format
+msgid ""
+"Disk %s\n"
+"  Label: %s\n"
+"  Filesystem: %s\n"
+"  Chain-loadable: %s\n"
+"\n"
+msgstr ""
+"Диск %s\n"
+"  Метка: %s\n"
+"  Файловая системя: %s\n"
+"  Chain-loadable: %s\n"
+"\n"
+
+#: bootmenu.c:700
+#, c-format
+msgid "Disk %s is not a physical hard disk device\n"
+msgstr "Диск  %s не физический носитель\n"
+
+#: bootmenu.c:869
+msgid "Done"
+msgstr "Готово"
+
+#: bootmenu.c:538
+msgid "Edit"
+msgstr "Правка"
+
+#: bootmenu.c:198
+msgid "Edit entry label"
+msgstr "Редактировать метку элемента"
+
+#: bootmenu.c:266
+#, c-format
+msgid ""
+"Enter new label (%d characters max.):\n"
+" [%s]\n"
+" ["
+msgstr ""
+"Введите новую метку (макс. символов %d):\n"
+" [%s]\n"
+" ["
+
+#: bootmenu.c:121
+msgid "Error"
+msgstr "Ошибка"
+
+#: bootmenu.c:224 bootmenu.c:582
+msgid "OK"
+msgstr "ОК"
+
+#: bootmenu.c:65
+msgid "Partitions on the disk:"
+msgstr "Разделы на диске:"
+
+#: bootmenu.c:680
+msgid "Permission Denied"
+msgstr "Доступ запрещен"
+
+#: bootmenu.c:61
+msgid ""
+"Visopsys Boot Menu Installer\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr ""
+"Visopsys Boot Menu Installer\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: bootmenu.c:63
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+
+#: bootmenu.c:437
+msgid "no"
+msgstr "нет"
+
+#: bootmenu.c:103
+#, c-format
+msgid ""
+"usage:\n"
+"%s <disk name>\n"
+msgstr ""
+"использование:\n"
+"%s <имя_диска>\n"
+
+#: bootmenu.c:437
+msgid "yes"
+msgstr "да"

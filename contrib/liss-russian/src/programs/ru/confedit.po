@@ -1,0 +1,115 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: confedit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:45+0100\n"
+"PO-Revision-Date: 2015-05-08 01:13+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: confedit.c:498
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда  \"%s\" работает только в графическом режиме\n"
+
+#: confedit.c:189
+msgid "Add Variable"
+msgstr "Добавить Переменную"
+
+#: confedit.c:455
+msgid "Add variable"
+msgstr "Добавить переменную"
+
+#: confedit.c:245 confedit.c:329
+msgid "Cancel"
+msgstr "Отмена"
+
+#: confedit.c:184
+msgid "Change Variable"
+msgstr "Изменить Переменную"
+
+#: confedit.c:462
+msgid "Change variable"
+msgstr "Изменить переменную"
+
+#: confedit.c:409
+msgid "Configuration Editor"
+msgstr "Редактор конфигурации"
+
+#: confedit.c:469
+msgid "Delete variable"
+msgstr "Удалить переменную"
+
+#: confedit.c:510
+msgid "Enter filename"
+msgstr "Введите имя файла"
+
+#: confedit.c:97
+msgid "Error"
+msgstr "Ошибка"
+
+#: confedit.c:532
+#, c-format
+msgid "Error %d creating new configuration file."
+msgstr "Ошибка %d создания нового конфигурационного файла."
+
+#: confedit.c:110
+#, c-format
+msgid "Error %d reading configuration file."
+msgstr "Ошибка %d чтения конфигурационного файла."
+
+#: confedit.c:127
+#, c-format
+msgid "Error %d writing configuration file."
+msgstr "Ошибка %d записи конфигурационного файла."
+
+#: confedit.c:418
+msgid "File"
+msgstr "Файл"
+
+#: confedit.c:239
+msgid "OK"
+msgstr "ОК"
+
+#: confedit.c:511
+msgid "Please enter a configuration file to edit:"
+msgstr "Введите конфигурационный файл для редактирования:"
+
+#: confedit.c:80 confedit.c:329
+msgid "Quit"
+msgstr "Выход"
+
+#: confedit.c:328
+msgid "Quit without saving changes?"
+msgstr "Выйти не сохраняя изменения?"
+
+#: confedit.c:79 confedit.c:329
+msgid "Save"
+msgstr "Сохранить"
+
+#: confedit.c:327
+msgid "Unsaved changes"
+msgstr "Несохраненные изменения"
+
+#: confedit.c:203
+msgid "Variable name:"
+msgstr "Имя переменной:"
+
+#: confedit.c:224
+msgid "value:"
+msgstr "значение:"

@@ -1,0 +1,18 @@
+
+ -- filebrowse --
+
+A graphical program for navigating the file system.
+
+Usage:
+  filebrowse [start_dir]
+
+The filebrowse program is interactive, and may only be used in graphics
+mode.  It displays a window with icons representing files and directories.
+Clicking on a directory (folder) icon will change to that directory and
+repopulate the window with its contents.  Clicking on any other icon will
+cause filebrowse to attempt to 'use' the file in a default way, which will
+be a different action depending on the file type.  For example, if you
+click on an image or document, filebrowse will attempt to display it using
+the 'view' command.  In the case of clicking on an executable program,
+filebrowse will attempt to execute it -- etc.
+

@@ -1,0 +1,180 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 02:26+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sysdiag.c:118
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue%s"
+msgstr ""
+"\n"
+"Presione cualquier tecla para continuar%s"
+
+#: sysdiag.c:404 sysdiag.c:613
+#, c-format
+msgid ""
+"\n"
+"[ Press 'Q' to cancel ]\n"
+msgstr ""
+"\n"
+"[ Presione 'Q' para cancelar ]\n"
+
+#: sysdiag.c:65
+#, c-format
+msgid "%d errors"
+msgstr "%d errores"
+
+#: sysdiag.c:155
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: sysdiag.c:118
+msgid ", or 'q' to quit"
+msgstr ", o 'q' para salir"
+
+#: sysdiag.c:305
+#, c-format
+msgid "Disk read error at sector %llu\n"
+msgstr "Error de lectura en sector %llu\n"
+
+#: sysdiag.c:837 sysdiag.c:923
+msgid "Disk test"
+msgstr "Prueba de disco"
+
+#: sysdiag.c:309
+#, c-format
+msgid "Disk write error at sector %llu\n"
+msgstr "Error de escritura en sector %llu\n"
+
+#: sysdiag.c:977
+msgid "Do you want to do a disk test, or a memory test?\n"
+msgstr "Quiere realizar una prueba de memoria o de disco?\n"
+
+#: sysdiag.c:55
+msgid ""
+"Do you want to do a read-only test, or a read-write test?\n"
+"A read-only test is faster and guaranteed to be data-safe,\n"
+"however it is less thorough.  A read-write test takes\n"
+"longer and is more thorough, but can potentially cause\n"
+"some data loss if your disk is failing."
+msgstr ""
+"Quiere realizar una prueba de solo lectura, o lectoescritura?\n"
+"La prueba de lectura es rapida y sin riesgos para la informacion,\n"
+"Una prueba de lectoescritura es mas lenta y mucho mas profunda\n"
+"sin embargo existe el riesgo de que cause perdidas de datos si su\n"
+"disco esta fallando."
+
+#: sysdiag.c:264
+msgid "Do you want to view the results?\n"
+msgstr "Desea ver los resultados?\n"
+
+#: sysdiag.c:141
+msgid "Error"
+msgstr "Error"
+
+#: sysdiag.c:64
+msgid "Error performing test"
+msgstr "Error al probar"
+
+#: sysdiag.c:313
+#, c-format
+msgid "Memory error at %llu\n"
+msgstr "Error de memoria en %llu\n"
+
+#: sysdiag.c:837 sysdiag.c:924
+msgid "Memory test"
+msgstr "Prueba de memoria"
+
+#: sysdiag.c:60
+#, c-format
+msgid "Performing %s test on disk %s"
+msgstr "Realizando prueba %s en el disco %s"
+
+#: sysdiag.c:61
+#, c-format
+msgid "Performing memory test of %uMB - %uMB in use"
+msgstr "Prueba de memoria de %uMB - %uMB en uso"
+
+#: sysdiag.c:208
+msgid "Please choose the disk to test:"
+msgstr "Por favor elija el disco a probar:"
+
+#: sysdiag.c:220 sysdiag.c:904
+msgid "Quit"
+msgstr "Salir"
+
+#: sysdiag.c:869 sysdiag.c:928
+msgid "Read-only"
+msgstr "Solo lectura"
+
+#: sysdiag.c:869 sysdiag.c:929
+msgid "Read-write"
+msgstr "Lectoescritura"
+
+#: sysdiag.c:51
+msgid "System Diagnostics"
+msgstr "Diagnostico de sistema"
+
+#: sysdiag.c:898
+msgid "Test"
+msgstr "Prueba"
+
+#: sysdiag.c:62
+msgid "Test cancelled"
+msgstr "Prueba cancelada"
+
+#: sysdiag.c:63
+msgid "Test completed"
+msgstr "Prueba completada"
+
+#: sysdiag.c:276
+msgid "Test results"
+msgstr "Resultados"
+
+#: sysdiag.c:487
+#, c-format
+msgid "Testing disk sectors %llu/%llu"
+msgstr "Probando los sectores %llu/%llu"
+
+#: sysdiag.c:697
+#, c-format
+msgid "Testing memory MB %llu/%llu"
+msgstr "Probando memoria %llu/%llu MB"
+
+#: sysdiag.c:219
+msgid "View results"
+msgstr "Ver resultados"
+
+#: sysdiag.c:52
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Debe tener privilegios para usar ese comando.\n"
+"(Inicie sesion con el usuario \"admin\")"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "read-only"
+msgstr "solo lectura"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "lectoescritura"
+msgstr "Lesen-Schreiben"

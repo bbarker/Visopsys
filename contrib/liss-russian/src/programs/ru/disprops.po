@@ -1,0 +1,115 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: disprops\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:50+0100\n"
+"PO-Revision-Date: 2015-05-08 02:40+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: disprops.c:565
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда  \"%s\" работает только в графическом режиме\n"
+
+#: disprops.c:113
+#, c-format
+msgid " %d x %d, %d bit "
+msgstr " %d x %d, %d bit "
+
+#: disprops.c:397
+msgid "Background"
+msgstr "Фон"
+
+#: disprops.c:438
+msgid "Background wallpaper:"
+msgstr "Обои:"
+
+#: disprops.c:485
+msgid "Boot in graphics mode"
+msgstr "Загружать в графическом режиме"
+
+#: disprops.c:531
+msgid "Cancel"
+msgstr "Отмена"
+
+#: disprops.c:410
+msgid "Change"
+msgstr "Изменить"
+
+#: disprops.c:301
+msgid "Changed"
+msgstr "Изменено"
+
+#: disprops.c:452
+msgid "Choose"
+msgstr "Выбрать"
+
+#: disprops.c:388
+msgid "Colors:"
+msgstr "Цвета:"
+
+#: disprops.c:397
+msgid "Desktop"
+msgstr "Рабочий стол"
+
+#: disprops.c:347
+msgid "Display Settings"
+msgstr "Параметры дисплея"
+
+#: disprops.c:306
+msgid "Error"
+msgstr "Ошибка"
+
+#: disprops.c:305
+#, c-format
+msgid "Error %d setting mode"
+msgstr "Ошибка %d назначения режима"
+
+#: disprops.c:397
+msgid "Foreground"
+msgstr "Передник"
+
+#: disprops.c:480
+msgid "Miscellaneous:"
+msgstr "Разное:"
+
+#: disprops.c:525
+msgid "OK"
+msgstr "ОК"
+
+#: disprops.c:366
+msgid "Screen resolution:"
+msgstr "Разрешение экрана:"
+
+#: disprops.c:493
+msgid "Show a clock on the desktop"
+msgstr "Показывать часы на рабочем столе"
+
+#: disprops.c:297
+#, c-format
+msgid ""
+"The resolution has been changed to %dx%d, %dbpp\n"
+"This will take effect after you reboot."
+msgstr ""
+"Разрешение изменено на %dx%d, %dbpp\n"
+"Изменения вступят в силу после перезагрузки."
+
+#: disprops.c:458
+msgid "Use background wallpaper"
+msgstr "Использовать обои"

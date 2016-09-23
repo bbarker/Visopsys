@@ -1,0 +1,135 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:47+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ifconfig.c:115
+#, c-format
+msgid ""
+"%s   Link encap:%s  HWaddr %02x:%02x:%02x:%02x:%02x:%02x\n"
+"       inet addr:%d.%d.%d.%d  Bcast:%d.%d.%d.%d  Mask:%d.%d.%d.%d\n"
+"       RX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       TX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       %s, %s collisions:%u txqueuelen:%u Interrupt:%d"
+msgstr ""
+"%s   Link encap:%s  HWaddr %02x:%02x:%02x:%02x:%02x:%02x\n"
+"       inet addr:%d.%d.%d.%d  Bcast:%d.%d.%d.%d  Mask:%d.%d.%d.%d\n"
+"       RX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       TX packets:%u errors:%u dropped:%u overruns:%u\n"
+"       %s, %s collisions:%u txqueuelen:%u Interrupt:%d"
+
+#: ifconfig.c:100
+#, c-format
+msgid "Can't get info for device %s"
+msgstr "Zu dem Gerät %s konnten keine Informationen bekommen werden"
+
+#: ifconfig.c:521
+msgid "Can't get the count of network devices"
+msgstr "Die Anzahl der Netzlaufwerke konnte nicht ermittelt werden"
+
+#: ifconfig.c:482
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: ifconfig.c:135
+msgid "DOWN"
+msgstr "RUNTER"
+
+#: ifconfig.c:197
+msgid "Disable"
+msgstr "Deaktivieren"
+
+#: ifconfig.c:399
+msgid "Domain name"
+msgstr "Name der Domäne"
+
+#: ifconfig.c:197 ifconfig.c:364
+msgid "Enable"
+msgstr "Aktivieren"
+
+#: ifconfig.c:370
+msgid "Enabled at startup"
+msgstr "Aktivieren bei Systemstart"
+
+#: ifconfig.c:85
+msgid "Error"
+msgstr "Fehler"
+
+#: ifconfig.c:107
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: ifconfig.c:395
+msgid "Host name"
+msgstr "Hostname"
+
+#: ifconfig.c:282
+msgid "Initializing networking"
+msgstr "Netzwerk wird initialisiert"
+
+#: ifconfig.c:134
+msgid "LINK"
+msgstr "LINK"
+
+#: ifconfig.c:134
+msgid "NOLINK"
+msgstr "KEIN LINK"
+
+#: ifconfig.c:338
+msgid "Network Devices"
+msgstr "Netzlaufwerke"
+
+#: ifconfig.c:193
+#, c-format
+msgid "Networking is %s"
+msgstr "Netzwerk %s"
+
+#: ifconfig.c:360
+msgid "Networking is disabled"
+msgstr "Netzwerk deaktiviert"
+
+#: ifconfig.c:53
+msgid "No supported network devices."
+msgstr "Keine unterstützten Netzlaufwerke."
+
+#: ifconfig.c:475
+msgid "OK"
+msgstr "OK"
+
+#: ifconfig.c:283
+msgid "One moment please..."
+msgstr "Einen Moment bitte..."
+
+#: ifconfig.c:281
+msgid "Shutting down networking"
+msgstr "Das Netzwerk wird getrennt"
+
+#: ifconfig.c:135
+msgid "UP"
+msgstr "OBEN"
+
+#: ifconfig.c:110
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: ifconfig.c:194
+msgid "disabled"
+msgstr "deaktivert"
+
+#: ifconfig.c:194
+msgid "enabled"
+msgstr "aktiviert"

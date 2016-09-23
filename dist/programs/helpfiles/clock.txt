@@ -1,0 +1,10 @@
+
+ -- clock --
+
+Show a simple clock in the taskbar menu of the window shell.
+
+Usage:
+  clock
+
+(Only available in graphics mode)
+

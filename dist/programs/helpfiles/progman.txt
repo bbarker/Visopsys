@@ -1,0 +1,15 @@
+
+ -- progman --
+
+Also known as the "Program Manager", progman is used to manage processes.
+
+Usage:
+  progman
+
+(Only available in graphics mode)
+
+The progman program is interactive, and shows a constantly-updated list of
+running processes and threads, including statistics such as CPU and memory
+usage.  It is a graphical utility combining the same functionalities as the
+'ps', 'mem', 'kill', and 'renice' command-line programs.
+

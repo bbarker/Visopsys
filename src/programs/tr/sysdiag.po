@@ -1,0 +1,184 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sysdiag.c:54
+msgid "System Diagnostics"
+msgstr "Sistem Tanilama"
+
+#: sysdiag.c:55 sysdiag.c:1023
+msgid "Disk test"
+msgstr "Disk testi"
+
+#: sysdiag.c:56 sysdiag.c:1024
+msgid "Memory test"
+msgstr "Bellek testi"
+
+#: sysdiag.c:57 sysdiag.c:1028
+msgid "Read-only"
+msgstr "Sadece-okunabilir"
+
+#: sysdiag.c:58 sysdiag.c:1029
+msgid "Read-write"
+msgstr "Okunabilir-yazilabilir"
+
+#: sysdiag.c:59
+msgid "Test"
+msgstr "Test"
+
+#: sysdiag.c:60 sysdiag.c:235
+msgid "Quit"
+msgstr "Çik"
+
+#: sysdiag.c:61
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Bu komutu kullanabilmek için ayricalikli kullanici olmaniz gerekiyor.\n"
+"(\"admin\" kullanicisi olarak oturum açmayi deneyin)"
+
+#: sysdiag.c:64
+msgid ""
+"Do you want to do a read-only test, or a read-write test?\n"
+"A read-only test is faster and guaranteed to be data-safe,\n"
+"however it is less thorough.  A read-write test takes\n"
+"longer and is more thorough, but can potentially cause\n"
+"some data loss if your disk is failing."
+msgstr ""
+"sadece-okunabilir test mi yoksa, okuma-yazma testi mi istiyorsunuz?\n"
+"Sadece-okunabilir testi hizli ve veri güvenligi garantidir,\n"
+"yinede tam test degildir. Okuma-yazma testi biraz daha \n"
+"uzun sürer ve tam testtir, ancak potansiyel olarak eger\n"
+"diskte problem varsa, veri kaybi olabilir."
+
+#: sysdiag.c:69
+#, c-format
+msgid "Performing %s test on disk %s"
+msgstr "%s testi, %s diski üzerinde gerçeklestiriliyor..."
+
+#: sysdiag.c:70
+#, c-format
+msgid "Performing memory test of %uMB - %uMB in use"
+msgstr "Bellek testi gerçeklestiriliyor %uMB - %uMB (kullanimda)"
+
+#: sysdiag.c:71
+msgid "Test cancelled"
+msgstr "Test iptal edildi"
+
+#: sysdiag.c:72
+msgid "Test completed"
+msgstr "Test tamamlandi"
+
+#: sysdiag.c:73
+msgid "Error performing test"
+msgstr "Test gerçeklestirilirken hata"
+
+#: sysdiag.c:74
+#, c-format
+msgid "%d errors"
+msgstr "%d hata"
+
+#: sysdiag.c:128
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue%s"
+msgstr ""
+"\n"
+"Devam etmek için bir tusa basin%s"
+
+#: sysdiag.c:129
+msgid ", or 'q' to quit"
+msgstr ", veya çikmak için 'q'"
+
+#: sysdiag.c:153
+msgid "Error"
+msgstr "Iptal"
+
+#: sysdiag.c:168
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+msgstr ""
+"%s\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+
+#: sysdiag.c:223
+msgid "Please choose the disk to test:"
+msgstr "Lütfen test etmek istediginiz diski seçin:"
+
+#: sysdiag.c:234
+msgid "View results"
+msgstr "Sonuçlari göster"
+
+#: sysdiag.c:278
+msgid "Do you want to view the results?\n"
+msgstr "Sonuçlari görmek istiyor musunuz?\n"
+
+#: sysdiag.c:292
+msgid "Test results"
+msgstr "Test sonuçlari"
+
+#: sysdiag.c:324
+#, c-format
+msgid "Disk read error at sector %llu\n"
+msgstr "Sektör %llu 'da okuma hatasi\n"
+
+#: sysdiag.c:328
+#, c-format
+msgid "Disk write error at sector %llu\n"
+msgstr "Sektör %llu 'da yazma hatasi\n"
+
+#: sysdiag.c:332
+#, c-format
+msgid "Memory error at %llu\n"
+msgstr "%llu 'de bellek hatasi\n"
+
+#: sysdiag.c:426 sysdiag.c:437
+msgid "read-write"
+msgstr "okunabilir-yazilabilir"
+
+#: sysdiag.c:426 sysdiag.c:437
+msgid "read-only"
+msgstr "sadece-okunabilir"
+
+#: sysdiag.c:428 sysdiag.c:675
+msgid ""
+"\n"
+"[ Press 'Q' to cancel ]\n"
+msgstr ""
+"\n"
+"[ Iptal etmek için 'Q' ya basin ]\n"
+
+#: sysdiag.c:547
+#, c-format
+msgid "Testing disk sectors %llu/%llu"
+msgstr "Disk sektörleri test ediliyor %llu/%llu"
+
+#: sysdiag.c:763
+#, c-format
+msgid "Testing memory MB %llu/%llu"
+msgstr "Bellek test ediliyor (MB) %llu/%llu"
+
+#: sysdiag.c:1074
+msgid "Do you want to do a disk test, or a memory test?\n"
+msgstr "Disk testi mi yoksa bellek testi mi yapmak istiyorsunuz?\n"

@@ -1,0 +1,27 @@
+##
+##  Visopsys
+##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##
+##  Makefile
+##
+
+BUILDDIR = ../../build/system/libraries
+
+all:
+	mkdir -p ${BUILDDIR}
+	${MAKE} -C libntfs -f Makefile.visopsys DEBUG=${DEBUG}
+	${MAKE} -C de
+	${MAKE} -C es
+	${MAKE} -C ru
+	${MAKE} -C tr
+
+clean:
+	rm -f *~ *.o core
+	${MAKE} -C include/ntfs -f Makefile.visopsys clean
+	${MAKE} -C libntfs -f Makefile.visopsys clean
+	${MAKE} -C ntfsprogs -f Makefile.visopsys clean
+	${MAKE} -C de clean
+	${MAKE} -C es clean
+	${MAKE} -C ru clean
+	${MAKE} -C tr clean
+

@@ -1,0 +1,93 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: windowFileList.c:245 windowFileList.c:269
+msgid "(up)"
+msgstr "(yukari)"
+
+#: windowColorDialog.c:162
+msgid "Blue"
+msgstr "Mavi"
+
+#: windowFileList.c:501
+#, c-format
+msgid "Can't change to directory %s"
+msgstr "%s klasörü açilamiyor"
+
+#: windowFileList.c:311
+#, c-format
+msgid "Can't get directory \"%s\" file count"
+msgstr "Klasörün \"%s\" dosya sayisi alinamiyor"
+
+#: windowFileList.c:580
+#, c-format
+msgid "Can't locate configuration file %s"
+msgstr "%s konfigurasyon dosyasi bulunamadi"
+
+#: windowColorDialog.c:218 windowFileDialog.c:199 windowNumberDialog.c:157
+#: windowProgressDialog.c:238 windowPromptDialog.c:111 windowQueryDialog.c:58
+#: windowRadioDialog.c:152
+msgid "Cancel"
+msgstr "Iptal"
+
+#: windowColorDialog.c:32
+msgid "Color Chooser"
+msgstr "Renk Seçici"
+
+#: windowProgressDialog.c:110
+msgid "Confirmation"
+msgstr "Dogrulama"
+
+#: windowFileList.c:166 windowProgressDialog.c:122
+msgid "Error"
+msgstr "Hata"
+
+#: windowFileList.c:525
+#, c-format
+msgid "Error deleting file %s"
+msgstr "%s dosyasi silinirken hata olustu"
+
+#: windowFileList.c:335
+#, c-format
+msgid "Error reading files in \"%s\""
+msgstr "\"%s\" içindeki dosyalar okunurken hata olustu"
+
+#: windowColorDialog.c:151
+msgid "Green"
+msgstr "Yesil"
+
+#: windowFileList.c:322
+msgid "Memory allocation error"
+msgstr "Bellek ayirma hatasi"
+
+#: windowFileList.c:375
+msgid "Memory allocation error creating icon parameters"
+msgstr ""
+"Ikon parametreleri olusturulurken bellek ayirma hatasi"
+
+#: windowColorDialog.c:209 windowFileDialog.c:187 windowNumberDialog.c:150
+#: windowOkDialog.c:108 windowPromptDialog.c:104 windowQueryDialog.c:58
+#: windowRadioDialog.c:141
+msgid "OK"
+msgstr "Tamam"
+
+#: windowColorDialog.c:139
+msgid "Red"
+msgstr "Kirmizi"

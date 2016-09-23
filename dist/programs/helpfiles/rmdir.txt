@@ -1,0 +1,11 @@
+
+ -- rmdir --
+
+Remove (delete) one or more empty directories.
+
+Usage:
+  rmdir <directory1> [directory2] [...]
+
+This command will remove one or more empty directories.  It will not remove
+regular files.  To remove a file, use the 'rm' command.
+

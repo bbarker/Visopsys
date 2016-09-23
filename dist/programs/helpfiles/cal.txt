@@ -1,0 +1,14 @@
+
+ -- cal --
+
+Display the days of the current calendar month.
+
+Usage:
+  cal [-T]
+
+In graphics mode, the program is interactive and allows the user to change
+the month and year to display.
+
+Options:
+-T              : Force text mode operation
+

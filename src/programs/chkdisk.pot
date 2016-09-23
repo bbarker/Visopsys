@@ -1,0 +1,46 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: chkdisk.c:58
+msgid "usage:\n"
+msgstr ""
+
+#: chkdisk.c:59
+#, c-format
+msgid "%s <disk_name>\n"
+msgstr ""
+
+#: chkdisk.c:91
+msgid ""
+"\n"
+"Visopsys CHKDISK Utility\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"\n"
+msgstr ""
+
+#: chkdisk.c:103
+msgid ""
+"\n"
+"The filesystem may contain errors.\n"
+"Do you want to try to repair it? (y/n): "
+msgstr ""
+
+#: chkdisk.c:116
+msgid "Filesystem consistency check failed.\n"
+msgstr ""

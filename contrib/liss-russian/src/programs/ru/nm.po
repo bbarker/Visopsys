@@ -1,0 +1,47 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nm\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:08-0300\n"
+"PO-Revision-Date: 2014-08-13 22:41+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: nm.c:118
+#, c-format
+msgid "\"%s\" is not a dynamic library or executable\n"
+msgstr "\"%s\" - не динамическая библиотека или исполняемый файл\n"
+
+#: nm.c:104
+#, c-format
+msgid "Can't load file \"%s\"\n"
+msgstr "Не могу загрузить файл \"%s\"\n"
+
+#: nm.c:111
+#, c-format
+msgid "File type of \"%s\" is unknown\n"
+msgstr "Тип файла \"%s\" неизвестен\n"
+
+#: nm.c:131
+#, c-format
+msgid "Unable to get dynamic symbols from \"%s\".\n"
+msgstr "Невозможно получить динамические символы из \"%s\".\n"
+
+#: nm.c:58
+#, c-format
+msgid ""
+"usage:\n"
+"%s <file1> [file2] [...]\n"
+msgstr ""
+"использование:\n"
+"%s <файл1> [файл2] [...]\n"

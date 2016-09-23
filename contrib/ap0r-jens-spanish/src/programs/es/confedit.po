@@ -1,0 +1,114 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:45+0100\n"
+"PO-Revision-Date: 2014-01-22 18:30-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: confedit.c:498
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" funciona solamente en modo gráfico\n"
+
+#: confedit.c:189
+msgid "Add Variable"
+msgstr "Agregar variable"
+
+#: confedit.c:455
+msgid "Add variable"
+msgstr "Agregar variable"
+
+#: confedit.c:245 confedit.c:329
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: confedit.c:184
+msgid "Change Variable"
+msgstr "Cambiar variable"
+
+#: confedit.c:462
+msgid "Change variable"
+msgstr "Cambiar variable"
+
+#: confedit.c:409
+msgid "Configuration Editor"
+msgstr "Editor de configuración"
+
+#: confedit.c:469
+msgid "Delete variable"
+msgstr "Borrar variable"
+
+#: confedit.c:510
+msgid "Enter filename"
+msgstr "Ingresar nombre del archivo"
+
+#: confedit.c:97
+msgid "Error"
+msgstr "Error"
+
+#: confedit.c:532
+#, c-format
+msgid "Error %d creating new configuration file."
+msgstr "Error %d al crear un nuevo archivo de configuración."
+
+#: confedit.c:110
+#, c-format
+msgid "Error %d reading configuration file."
+msgstr "Error %d al leer el archivo de configuración."
+
+#: confedit.c:127
+#, c-format
+msgid "Error %d writing configuration file."
+msgstr "Error %d al escribir el archivo de configuración."
+
+#: confedit.c:418
+msgid "File"
+msgstr "Archivo"
+
+#: confedit.c:239
+msgid "OK"
+msgstr "OK"
+
+#: confedit.c:511
+msgid "Please enter a configuration file to edit:"
+msgstr "Por favor, ingrese un archivo de configuración para editar:"
+
+#: confedit.c:80 confedit.c:329
+msgid "Quit"
+msgstr "Salir"
+
+#: confedit.c:328
+msgid "Quit without saving changes?"
+msgstr "Salir sin guardar?"
+
+#: confedit.c:79 confedit.c:329
+msgid "Save"
+msgstr "Guardar"
+
+#: confedit.c:327
+msgid "Unsaved changes"
+msgstr "Cambios no guardados"
+
+#: confedit.c:203
+msgid "Variable name:"
+msgstr "Nombre de variable:"
+
+#: confedit.c:224
+msgid "value:"
+msgstr "Valor:"

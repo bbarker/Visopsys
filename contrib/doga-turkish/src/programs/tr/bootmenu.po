@@ -1,0 +1,210 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bootmenu.c:793
+#, c-format
+msgid ""
+"\n"
+"  [Cursor up/down to select, 'e' edit, '*' default\n"
+"   'd' delete, Enter to accept, 'Q' to quit]"
+msgstr ""
+"\n"
+"  [Seçmek için Yukari/asagi tuslarini kullanin,\n"
+"   Düzenlemek için \"e\" , Varsayilan için \"*\" \n"
+"   Silmek için \"d\", Kabul etmek için \"Enter\", Çikmak için \"q\"]"
+
+#: bootmenu.c:749
+msgid ""
+"\n"
+"There are no chain-loadable operating systems on this disk.\n"
+"\n"
+msgstr ""
+"\n"
+"Bu disk üzerinde hiç zincir-yüklemeli isletim sistemi bulunmuyor.\n"
+"\n"
+
+#: bootmenu.c:734
+#, c-format
+msgid "\"%s\" [Filesystem: %s]"
+msgstr "\"%s\" [Dosya sistemi: %s]"
+
+#: bootmenu.c:559
+msgid "Automatically boot default selection after (seconds)"
+msgstr "Otomatik olarak varsayilan seçim boot edilecek (saniye)"
+
+#: bootmenu.c:498
+msgid "Boot Menu Installer"
+msgstr "Boot Menü yukleyicisi"
+
+#: bootmenu.c:67
+msgid "Boot menu written."
+msgstr "Boot menüsü yazildi"
+
+#: bootmenu.c:392
+msgid "Can't get buffer memory\n"
+msgstr "Korumali bellek alinamiyor\n"
+
+#: bootmenu.c:691
+#, c-format
+msgid "Can't get disk %s\n"
+msgstr "Disk %s alinamiyor\n"
+
+#: bootmenu.c:349
+msgid "Can't get memory for the logical disk list"
+msgstr "Mantiksal disk listesi için bellek alinamiyor"
+
+#: bootmenu.c:708
+msgid "Can't get the list of logical disks"
+msgstr "Mantiksal disklerin listesi alinamiyor"
+
+#: bootmenu.c:356
+msgid "Can't get the logical disk list\n"
+msgstr "Mantiksal disk listesi alinamiyor\n"
+
+#: bootmenu.c:385
+#, c-format
+msgid "Can't open %s file\n"
+msgstr "%s dosyasi açilamiyor\n"
+
+#: bootmenu.c:399
+#, c-format
+msgid "Can't read %s file\n"
+msgstr "%s dosyasi okunamiyor\n"
+
+#: bootmenu.c:638
+#, c-format
+msgid "Can't write MBR %s to %s\n"
+msgstr "MBR %s 'den %s 'ye yazilamiyor\n"
+
+#: bootmenu.c:626
+msgid "Can't write boot menu\n"
+msgstr "Boot menü yazilamiyor\n"
+
+#: bootmenu.c:861
+msgid "Can't write boot menu or MBR\n"
+msgstr "Boot menüye yada MBR'ye yazilamiyor\n"
+
+#: bootmenu.c:230 bootmenu.c:587
+msgid "Cancel"
+msgstr "Iptal"
+
+#: bootmenu.c:66
+msgid "Chain-loadable entries for the boot menu:"
+msgstr "Boot menü için zincir-yüklemeli girdiler:"
+
+#: bootmenu.c:542
+msgid "Default"
+msgstr "Varsayilan"
+
+#: bootmenu.c:546
+msgid "Delete"
+msgstr "Sil"
+
+#: bootmenu.c:434
+#, c-format
+msgid ""
+"Disk %s\n"
+"  Label: %s\n"
+"  Filesystem: %s\n"
+"  Chain-loadable: %s\n"
+"\n"
+msgstr ""
+"Disk %s\n"
+"  Ismi: %s\n"
+"  Dosya sistemi: %s\n"
+"  zincir-yüklemelilik: %s\n"
+"\n"
+
+#: bootmenu.c:700
+#, c-format
+msgid "Disk %s is not a physical hard disk device\n"
+msgstr "Disk %s fiziksel hard disk aygiti degil\n"
+
+#: bootmenu.c:869
+msgid "Done"
+msgstr "Bitti"
+
+#: bootmenu.c:538
+msgid "Edit"
+msgstr "Düzenle"
+
+#: bootmenu.c:198
+msgid "Edit entry label"
+msgstr "Isim girdisini düzenle"
+
+#: bootmenu.c:266
+#, c-format
+msgid ""
+"Enter new label (%d characters max.):\n"
+" [%s]\n"
+" ["
+msgstr ""
+"Yeni ismi girin (En fazla %d karakter.):\n"
+" [%s]\n"
+" ["
+
+#: bootmenu.c:121
+msgid "Error"
+msgstr "Hata"
+
+#: bootmenu.c:224 bootmenu.c:582
+msgid "OK"
+msgstr "Tamam"
+
+#: bootmenu.c:65
+msgid "Partitions on the disk:"
+msgstr "Disk üzerindeki Bölümler:"
+
+#: bootmenu.c:680
+msgid "Permission Denied"
+msgstr "Erisim Reddedildi"
+
+#: bootmenu.c:61
+msgid ""
+"Visopsys Boot Menu Installer\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr ""
+"Visopsys Boot Menü Yükleyici\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: bootmenu.c:63
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Bu komutu kullanabilmek için ayricalikli kullanici olmalisiniz.\n"
+"(\"admin\" kullanicisi olarak giris yapmayi deneyin)"
+
+#: bootmenu.c:437
+msgid "no"
+msgstr "hayir"
+
+#: bootmenu.c:103
+#, c-format
+msgid ""
+"usage:\n"
+"%s <disk name>\n"
+msgstr ""
+"Kullanim:\n"
+"%s <disk ismi>\n"
+
+#: bootmenu.c:437
+msgid "yes"
+msgstr "evet"

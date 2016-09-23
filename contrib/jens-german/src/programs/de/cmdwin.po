@@ -1,0 +1,36 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:12+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: cmdwin.c:87
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Der Befehl \"%s\" funktioniert nur im Grafik-Modus\n"
+
+#: cmdwin.c:106
+msgid "Command Window"
+msgstr "Kommandozeile"
+
+#: cmdwin.c:100
+#, c-format
+msgid "Unable to load shell\n"
+msgstr "Der Explorer konnte nicht geladen werden\n"

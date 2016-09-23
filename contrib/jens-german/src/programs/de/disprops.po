@@ -1,0 +1,114 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:50+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: disprops.c:565
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Der Befehl \"%s\" funktioniert nur im Grafik-Modus\n"
+
+#: disprops.c:113
+#, c-format
+msgid " %d x %d, %d bit "
+msgstr " %d x %d, %d Bit "
+
+#: disprops.c:397
+msgid "Background"
+msgstr "Hintergrund"
+
+#: disprops.c:438
+msgid "Background wallpaper:"
+msgstr "Hintergrundbild:"
+
+#: disprops.c:485
+msgid "Boot in graphics mode"
+msgstr "Im Grafik-Modus starten"
+
+#: disprops.c:531
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: disprops.c:410
+msgid "Change"
+msgstr "Ändern"
+
+#: disprops.c:301
+msgid "Changed"
+msgstr "Geändert"
+
+#: disprops.c:452
+msgid "Choose"
+msgstr "Auswahl"
+
+#: disprops.c:388
+msgid "Colors:"
+msgstr "Farben:"
+
+#: disprops.c:397
+msgid "Desktop"
+msgstr "Desktop"
+
+#: disprops.c:347
+msgid "Display Settings"
+msgstr "Bildschirmeinstellungen"
+
+#: disprops.c:306
+msgid "Error"
+msgstr "Fehler"
+
+#: disprops.c:305
+#, c-format
+msgid "Error %d setting mode"
+msgstr "Fehler %d beim einstellen des Modus"
+
+#: disprops.c:397
+msgid "Foreground"
+msgstr "Vordergrund"
+
+#: disprops.c:480
+msgid "Miscellaneous:"
+msgstr "Verschiedenes:"
+
+#: disprops.c:525
+msgid "OK"
+msgstr "OK"
+
+#: disprops.c:366
+msgid "Screen resolution:"
+msgstr "Bildschirmauflösung:"
+
+#: disprops.c:493
+msgid "Show a clock on the desktop"
+msgstr "Auf dem Desktop eine Uhr anzeigen"
+
+#: disprops.c:297
+#, c-format
+msgid ""
+"The resolution has been changed to %dx%d, %dbpp\n"
+"This will take effect after you reboot."
+msgstr ""
+"Die Auflösung wurde geändert auf %dx%d, %dbpp\n"
+"Die Änderung wird nach dem Neustart wirksam."
+
+#: disprops.c:458
+msgid "Use background wallpaper"
+msgstr "Hintergrundbild verwenden"

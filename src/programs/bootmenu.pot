@@ -1,0 +1,184 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bootmenu.c:62
+msgid "Boot Menu Installer"
+msgstr ""
+
+#: bootmenu.c:67
+msgid ""
+"Visopsys Boot Menu Installer\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin"
+msgstr ""
+
+#: bootmenu.c:69
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+
+#: bootmenu.c:71
+msgid "Partitions on the disk:"
+msgstr ""
+
+#: bootmenu.c:72
+msgid "Chain-loadable entries for the boot menu:"
+msgstr ""
+
+#: bootmenu.c:73
+msgid "Edit"
+msgstr ""
+
+#: bootmenu.c:74
+msgid "Default"
+msgstr ""
+
+#: bootmenu.c:75
+msgid "Delete"
+msgstr ""
+
+#: bootmenu.c:76
+msgid "Automatically boot default selection after (seconds)"
+msgstr ""
+
+#: bootmenu.c:78
+msgid "OK"
+msgstr ""
+
+#: bootmenu.c:79
+msgid "Cancel"
+msgstr ""
+
+#: bootmenu.c:80
+msgid "Boot menu written."
+msgstr ""
+
+#: bootmenu.c:121
+#, c-format
+msgid ""
+"usage:\n"
+"%s <disk name>\n"
+msgstr ""
+
+#: bootmenu.c:139
+msgid "Error"
+msgstr ""
+
+#: bootmenu.c:218
+msgid "Edit entry label"
+msgstr ""
+
+#: bootmenu.c:290
+#, c-format
+msgid ""
+"Enter new label (%d characters max.):\n"
+" [%s]\n"
+" ["
+msgstr ""
+
+#: bootmenu.c:371
+msgid "Can't get memory for the logical disk list"
+msgstr ""
+
+#: bootmenu.c:378
+msgid "Can't get the logical disk list"
+msgstr ""
+
+#: bootmenu.c:409
+#, c-format
+msgid "Can't open %s file"
+msgstr ""
+
+#: bootmenu.c:416
+msgid "Can't get buffer memory"
+msgstr ""
+
+#: bootmenu.c:423
+#, c-format
+msgid "Can't read %s file"
+msgstr ""
+
+#: bootmenu.c:493
+#, c-format
+msgid ""
+"Disk %s\n"
+"  Label: %s\n"
+"  Filesystem: %s\n"
+"  Chain-loadable: %s\n"
+"\n"
+msgstr ""
+
+#: bootmenu.c:496
+msgid "yes"
+msgstr ""
+
+#: bootmenu.c:496
+msgid "no"
+msgstr ""
+
+#: bootmenu.c:700
+msgid "Can't write boot menu"
+msgstr ""
+
+#: bootmenu.c:712
+#, c-format
+msgid "Can't write MBR %s to %s"
+msgstr ""
+
+#: bootmenu.c:753
+msgid "Permission Denied"
+msgstr ""
+
+#: bootmenu.c:764
+#, c-format
+msgid "Can't get disk %s"
+msgstr ""
+
+#: bootmenu.c:773
+#, c-format
+msgid "Disk %s is not a physical hard disk device"
+msgstr ""
+
+#: bootmenu.c:781
+msgid "Can't get the list of logical disks"
+msgstr ""
+
+#: bootmenu.c:836
+#, c-format
+msgid "\"%s\" [Filesystem: %s]"
+msgstr ""
+
+#: bootmenu.c:861
+msgid "There are no chain-loadable operating systems on this disk."
+msgstr ""
+
+#: bootmenu.c:905
+msgid ""
+"\n"
+"  [Cursor up/down to select, 'e' edit, '*' default\n"
+"   'd' delete, Enter to accept, 'Q' to quit]"
+msgstr ""
+
+#: bootmenu.c:972
+msgid "Can't write boot menu or MBR"
+msgstr ""
+
+#: bootmenu.c:980
+msgid "Done"
+msgstr ""

@@ -1,0 +1,22 @@
+
+ -- login --
+
+Log in to the system.
+
+Usage:
+  login [-T] [-f user_name]
+
+This program is interactive, and works in both text and graphics modes.  By
+default, it is the program launched by the kernel after initialization has
+completed.  It prompts for a user name and password, and after successful
+authentication, launches either a shell process (text mode) or a window
+system thread (graphics mode).
+
+In graphics mode, 'login' also displays 'reboot' and 'shut down' buttons.
+If the login program has crashed or been killed, you can start a new instance
+using the [F1] key.
+
+Options:
+-T              : Force text mode operation
+-f <user_name>  : Login as this user, no password.
+

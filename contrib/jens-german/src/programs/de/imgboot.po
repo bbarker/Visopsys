@@ -1,0 +1,165 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:04-0300\n"
+"PO-Revision-Date: 2014-01-22 17:25-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: imgboot.c:97
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"FEHLER: %s\n"
+"\n"
+
+#: imgboot.c:149
+#, c-format
+msgid ""
+"\n"
+"%s (y/n): "
+msgstr ""
+"\n"
+"%s (y/n): "
+
+#: imgboot.c:420
+msgid ""
+"\n"
+"Please select from the following options"
+msgstr ""
+"\n"
+"Bitte wählen Sie eine der folgenden Optionen"
+
+#: imgboot.c:62
+msgid ""
+"  This program is free software; you can redistribute it and/or modify it  \n"
+"  under the terms of the GNU General Public License as published by the\n"
+"  Free Software Foundation; either version 2 of the License, or (at your\n"
+"  option) any later version.\n"
+"\n"
+"  This program is distributed in the hope that it will be useful, but\n"
+"  WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"  the file /system/COPYING.txt for more details."
+msgstr ""
+"  This program is free software; you can redistribute it and/or modify it  \n"
+"  under the terms of the GNU General Public License as published by the\n"
+"  Free Software Foundation; either version 2 of the License, or (at your\n"
+"  option) any later version.\n"
+"\n"
+"  This program is distributed in the hope that it will be useful, but\n"
+"  WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"  the file /system/COPYING.txt for more details."
+
+#: imgboot.c:120
+#, c-format
+msgid "%s  Quitting."
+msgstr "%s  Schliesse."
+
+#: imgboot.c:390
+msgid "Administrator account"
+msgstr "Administrator Konto"
+
+#: imgboot.c:260
+msgid "Can't create window!"
+msgstr "Fenster kann nicht erstellt werden!"
+
+#: imgboot.c:140 imgboot.c:299
+msgid "Continue"
+msgstr "Weiter"
+
+#: imgboot.c:60
+msgid "Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr "Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: imgboot.c:310
+msgid "Don't ask me this again"
+msgstr "Frage mich nicht wieder"
+
+#: imgboot.c:95
+msgid "Error"
+msgstr "Fehler"
+
+#: imgboot.c:292
+msgid "Install"
+msgstr "Installieren"
+
+#: imgboot.c:170
+#, c-format
+msgid "No\n"
+msgstr "Nein\n"
+
+#: imgboot.c:140
+msgid "Reboot"
+msgstr "Neu starten"
+
+#: imgboot.c:139
+msgid "Reboot?"
+msgstr "Neu starten?"
+
+#: imgboot.c:354
+msgid ""
+"This program can only be run as a privileged user.\n"
+"(Try logging in as user \"admin\")."
+msgstr ""
+"Dieses Programm kann nur von einem berechtigtem Benutzer ausgeführt werden.\n"
+"(Versuchen Sie, sich als \"admin\" einzuloggen)."
+
+#: imgboot.c:71
+msgid ""
+"Using the administrator account 'admin'.\n"
+"There is no password set."
+msgstr ""
+"Benutze das 'admin' - Administratorkonto.\n"
+"Kein Passwort konfiguriert."
+
+#: imgboot.c:255
+#, c-format
+msgid "Welcome to %s"
+msgstr "Wilkommen zu %s"
+
+#: imgboot.c:282
+msgid ""
+"Would you like to install Visopsys?\n"
+"(Choose continue to skip installing)"
+msgstr ""
+"Wollen Sie Visopsys installieren?\n"
+"(Wählen Sie Fortfahren wenn nicht)"
+
+#: imgboot.c:70
+msgid "Would you like to reboot now?"
+msgstr "Wollen Sie jetzt neu starten?"
+
+#: imgboot.c:164
+#, c-format
+msgid "Yes\n"
+msgstr "Ja\n"
+
+#: imgboot.c:337
+msgid "o Always continue (never ask)"
+msgstr "o Immer fortfahren (nie fragen)"
+
+#: imgboot.c:336
+msgid "o Continue                   "
+msgstr "o Fortfahren"
+
+#: imgboot.c:335
+msgid "o Install                    "
+msgstr "o Installieren"

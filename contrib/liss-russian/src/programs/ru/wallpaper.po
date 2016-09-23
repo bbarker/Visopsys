@@ -1,0 +1,44 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: wallpaper.po\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 02:26+0100\n"
+"PO-Revision-Date: 2014-07-25 18:14+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: wallpaper.c:71
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда  \"%s\" работает только в графическом режиме\n"
+
+#: wallpaper.c:85
+msgid "Enter filename"
+msgstr "Введите имя файла"
+
+#: wallpaper.c:107
+#, c-format
+msgid "File not found\n"
+msgstr "Файл не найден\n"
+
+#: wallpaper.c:94
+#, c-format
+msgid "No filename specified\n"
+msgstr "Нет соответствующего файла\n"
+
+#: wallpaper.c:86
+msgid "Please choose the background image:"
+msgstr "Выберите фоновое изображение:"

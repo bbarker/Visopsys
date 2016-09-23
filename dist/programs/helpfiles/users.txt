@@ -1,0 +1,13 @@
+
+ -- users --
+
+User manager for creating/deleting user accounts
+
+Usage:
+  users [-p user_name]
+
+The users (User Manager) program is interactive, and may only be used in
+graphics mode.  It can be used to add and delete user accounts, and set
+account passwords.  If '-p user_name' is specified on the command line,
+this command will prompt the user to set the password for the named user.
+

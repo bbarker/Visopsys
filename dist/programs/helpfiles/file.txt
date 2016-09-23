@@ -1,0 +1,17 @@
+
+ -- file --
+
+Show the type of a file.
+
+Usage:
+  file <file1> [file2] [...]
+
+The file command queries the system about its idea of the data type(s) of
+the named file(s).
+
+Example:
+  file /visopsys
+
+Will produce the output:
+  visopsys: ELF binary executable
+

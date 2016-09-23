@@ -1,0 +1,97 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 01:08+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: windowArchiveList.c:55 windowFileList.c:182 windowProgressDialog.c:128
+msgid "Error"
+msgstr "Hata"
+
+#: windowArchiveList.c:78 windowFileList.c:534
+msgid "Memory allocation error creating icon parameters"
+msgstr "Ikon parametreleri olusturulurken bellek ayirma hatasi"
+
+#: windowColorDialog.c:32
+msgid "Color Chooser"
+msgstr "Renk Seçici"
+
+#: windowColorDialog.c:152
+msgid "Red"
+msgstr "Kirmizi"
+
+#: windowColorDialog.c:184
+msgid "Green"
+msgstr "Yesil"
+
+#: windowColorDialog.c:215
+msgid "Blue"
+msgstr "Mavi"
+
+#: windowColorDialog.c:268 windowFileDialog.c:219 windowLanguageDialog.c:199
+#: windowNumberDialog.c:167 windowOkDialog.c:125 windowPromptDialog.c:135
+#: windowQueryDialog.c:57 windowRadioDialog.c:157
+msgid "OK"
+msgstr "Tamam"
+
+#: windowColorDialog.c:278 windowFileDialog.c:229 windowLanguageDialog.c:209
+#: windowNumberDialog.c:172 windowProgressDialog.c:260
+#: windowPromptDialog.c:145 windowQueryDialog.c:57 windowRadioDialog.c:169
+msgid "Cancel"
+msgstr "Iptal"
+
+#: windowFileList.c:393 windowFileList.c:418
+msgid "(up)"
+msgstr "(yukari)"
+
+#: windowFileList.c:468
+#, c-format
+msgid "Can't get directory \"%s\" file count"
+msgstr "Klasörün \"%s\" dosya sayisi alinamiyor"
+
+#: windowFileList.c:479
+msgid "Memory allocation error"
+msgstr "Bellek ayirma hatasi"
+
+#: windowFileList.c:492
+#, c-format
+msgid "Error reading files in \"%s\""
+msgstr "\"%s\" içindeki dosyalar okunurken hata olustu"
+
+#: windowFileList.c:668
+#, c-format
+msgid "Can't change to directory %s"
+msgstr "%s klasörü açilamiyor"
+
+#: windowFileList.c:692
+#, c-format
+msgid "Error deleting file %s"
+msgstr "%s dosyasi silinirken hata olustu"
+
+#: windowFileList.c:746
+#, c-format
+msgid "Can't locate configuration file %s"
+msgstr "%s konfigurasyon dosyasi bulunamadi"
+
+#: windowLanguageDialog.c:36
+msgid "Language Chooser"
+msgstr ""
+
+#: windowProgressDialog.c:117
+msgid "Confirmation"
+msgstr "Dogrulama"

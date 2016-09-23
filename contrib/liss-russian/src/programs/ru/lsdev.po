@@ -1,0 +1,22 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:14+0100\n"
+"PO-Revision-Date: 2015-05-08 00:02+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: \n"
+"Language: ru\n"
+
+#: lsdev.c:152
+#, fuzzy
+msgid "System Device Information"
+msgstr "System Device Information"

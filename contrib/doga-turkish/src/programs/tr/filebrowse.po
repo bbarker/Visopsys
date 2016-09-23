@@ -1,0 +1,65 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: filebrowse.c:322
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"\"%s\" komutu sadece grafik modda çalışabilir\n"
+
+#: filebrowse.c:349
+#, c-format
+msgid "Can't change to directory \"%s\""
+msgstr "\"%s\" klasörü açılamadı"
+
+#: filebrowse.c:358
+msgid "Can't determine current directory"
+msgstr "Mevcut bulunulan klasör belirlenemiyor"
+
+#: filebrowse.c:112
+msgid "Error"
+msgstr "Hata"
+
+#: filebrowse.c:277
+msgid "File"
+msgstr "Dosya"
+
+#: filebrowse.c:268
+msgid "File Browser"
+msgstr "Dosya Gezgini"
+
+#: filebrowse.c:336
+msgid "Memory allocation error"
+msgstr "Bellek ayırma hatası"
+
+#: filebrowse.c:64
+msgid "Quit"
+msgstr "Çık"
+
+#: filebrowse.c:72
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: filebrowse.c:280
+msgid "View"
+msgstr "Görüntüle"

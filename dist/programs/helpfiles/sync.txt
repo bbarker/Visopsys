@@ -1,0 +1,15 @@
+
+ -- sync --
+
+Synchronize (commit) data to all disks.
+
+Usage:
+  sync
+
+This command will cause all pending disk data in memory to be written out
+to the disk.
+
+Disk I/O in Visopsys is usually ansynchronous -- i.e. changes are first
+made in memory, and then committed to disk at an opportune time.  This
+command causes all such data to be committed at once.
+

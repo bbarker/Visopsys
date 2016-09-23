@@ -1,0 +1,15 @@
+
+ -- nm --
+
+Show information about a dynamic library file.
+
+Usage:
+  nm <file1> [file2] [...]
+
+This command is useful to software developers.  For each name listed after
+the command, representing a shared library file (usually ending with a .so
+extension) or dynamically-linked executable, nm will print a catalogue of
+information about its symbols.  Data symbols, functions, sections, and other
+items are shown, along with their bindings (such as 'local', 'global', or
+'weak').
+

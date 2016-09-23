@@ -1,0 +1,12 @@
+
+ -- domainname --
+
+Prints or sets the system's network domain name.
+
+Usage:
+  domainname [name]
+
+If a name parameter is supplied, the domain name will be set to that name.
+Otherwise, the program prints out the current domain name.  If networking
+has not been enabled, this command has no effect.
+

@@ -1,0 +1,278 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: keymap.c:89
+msgid "Keyboard Map"
+msgstr "Klavye Haritasi"
+
+#: keymap.c:90
+msgid "Current:"
+msgstr "Mevcut:"
+
+#: keymap.c:91
+msgid "Name:"
+msgstr "Isim:"
+
+#: keymap.c:92
+#, fuzzy
+msgid "Language:"
+msgstr "kullanim:\n"
+
+#: keymap.c:93
+msgid "Save"
+msgstr "Kaydet"
+
+#: keymap.c:94
+msgid "Set as default"
+msgstr "Varsayilan olarak ayarla"
+
+#: keymap.c:95
+msgid "Close"
+msgstr "Kapat"
+
+#: keymap.c:148
+msgid "usage:\n"
+msgstr "kullanim:\n"
+
+#: keymap.c:149
+#, fuzzy, c-format
+msgid "%s [-T] [-p] [-s file_name] [map_name]\n"
+msgstr "%s [-T] [-s file_name] [map_name]\n"
+
+#: keymap.c:167
+msgid "Error"
+msgstr "Hata"
+
+#: keymap.c:169
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"HATA: %s\n"
+"\n"
+
+#: keymap.c:183 keymap.c:411
+#, c-format
+msgid "Couldn't open file %s"
+msgstr "%s dosyasi açilamiyor"
+
+#: keymap.c:193
+#, c-format
+msgid "Couldn't read file %s"
+msgstr "%s dosyasi okunamiyor"
+
+#: keymap.c:278 keymap.c:329
+#, c-format
+msgid "Couldn't find keyboard map %s"
+msgstr "Klavye haritasi %s bulunamiyor"
+
+#: keymap.c:285
+#, c-format
+msgid "Couldn't set keyboard map to %s"
+msgstr "Klavye haritasi %s'a ayarlanamiyor"
+
+#: keymap.c:292
+msgid "Couldn't get current keyboard map"
+msgstr "Mevcut klavye haritasi alinamiyor"
+
+#: keymap.c:304
+msgid "Couldn't write keyboard map setting"
+msgstr "Klavye haritasi ayarlari yazilamiyor"
+
+#: keymap.c:395
+#, c-format
+msgid ""
+"Can't write %s:\n"
+"Filesystem is read-only"
+msgstr ""
+"%s 'a yazilamiyor:\n"
+"Dosya sistemi sadece-okunabilir(yazma korumali)"
+
+#: keymap.c:420
+#, c-format
+msgid "Couldn't write file %s"
+msgstr "%s dosyasina yazilamiyor"
+
+#: keymap.c:644
+msgid "Save as"
+msgstr "Farkli olarak kaydet"
+
+#: keymap.c:645
+msgid "Choose the output file:"
+msgstr "Çikti dosyasi seçin:"
+
+#: keymap.c:678
+msgid "Saved"
+msgstr "Kaydedildi"
+
+#: keymap.c:678
+msgid "Map saved"
+msgstr "Harita kaydedildi"
+
+#: keymap.c:714
+msgid "Select character"
+msgstr ""
+
+#: keymap.c:950
+msgid "Change key settings"
+msgstr "Tus ayarlarini degistir"
+
+#: keymap.c:970
+#, fuzzy, c-format
+msgid "Scan code: 0x%02x (%s)"
+msgstr "Scan-Code: %d (0x%02x)"
+
+#: keymap.c:979
+msgid "Unicode"
+msgstr ""
+
+#: keymap.c:985
+msgid "Normal"
+msgstr ""
+
+#: keymap.c:988
+#, fuzzy
+msgid "Shift"
+msgstr "Shift kodu:"
+
+#: keymap.c:991
+msgid "AltGr"
+msgstr ""
+
+#: keymap.c:994
+msgid "Shift-AltGr"
+msgstr ""
+
+#: keymap.c:997
+msgid "Ctrl"
+msgstr ""
+
+#: keymap.c:1101
+msgid "OK"
+msgstr "Tamam"
+
+#: keymap.c:1106
+msgid "Cancel"
+msgstr "Iptal"
+
+#: keymap.c:1429
+msgid "1st row"
+msgstr ""
+
+#: keymap.c:1431
+msgid "2nd row"
+msgstr ""
+
+#: keymap.c:1433
+msgid "3rd row"
+msgstr ""
+
+#: keymap.c:1435
+msgid "4th row"
+msgstr ""
+
+#: keymap.c:1437
+msgid "5th row"
+msgstr ""
+
+#: keymap.c:1439
+msgid "6th row"
+msgstr ""
+
+#: keymap.c:1458
+#, c-format
+msgid ""
+"\n"
+"Printing out keymap \"%s\"\n"
+"\n"
+msgstr ""
+
+#: keymap.c:1459
+#, fuzzy
+msgid "Regular map"
+msgstr "Normal Kod:"
+
+#: keymap.c:1461
+#, fuzzy
+msgid "Shift map"
+msgstr "Shift kodu:"
+
+#: keymap.c:1463
+msgid "Ctrl map"
+msgstr ""
+
+#: keymap.c:1465
+msgid "AltGr map"
+msgstr ""
+
+#: keymap.c:1467
+msgid "Shift-AltGr map"
+msgstr ""
+
+#: keymap.c:1503
+msgid "Missing filename argument for -s option\n"
+msgstr "-s seçenegi için eksik dosya ismi argümani\n"
+
+#: keymap.c:1522
+#, c-format
+msgid "Missing parameter for %s option\n"
+msgstr "%s seçenegi için eksik parametre\n"
+
+#: keymap.c:1528
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr "Bilinmeyen seçenek '%c'\n"
+
+#: keymap.c:1633
+msgid " (current)"
+msgstr " (mevcut)"
+
+#~ msgid "ASCII codes:"
+#~ msgstr "ASCII kodlari:"
+
+#~ msgid "Alt Gr code:"
+#~ msgstr "Alt Gr kodu:"
+
+#~ msgid "Backspace"
+#~ msgstr "Silme tusu"
+
+#~ msgid "Ctrl code:"
+#~ msgstr "Ctrl Kodu:"
+
+#~ msgid "Del"
+#~ msgstr "Del"
+
+#~ msgid "Enter"
+#~ msgstr "Enter"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Space"
+#~ msgstr "Bosluk"
+
+#~ msgid "Tab"
+#~ msgstr "Tab"

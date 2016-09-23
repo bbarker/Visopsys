@@ -1,0 +1,51 @@
+
+ -- fontutil --
+
+A program for editing and converting Visopsys fonts.
+
+Usage:
+  fontutil [options] [VBF_file]
+
+Examples:
+  fontutil -a 32 -f space.bmp xterm-normal-10.vbf
+    - Imports space.bmp as character code 32 (space)
+
+  fontutil -c ISO-8859-15 arial-bold-10-iso-8859-15.vbf
+    - Sets the character set to ISO-8859-15
+
+  fontutil -e myfont.bmp myfont.vbf
+    - Exports myfont.vbf to a bitmap image file named myfont.bmp
+
+  fontutil -i myfont.bmp myfont.vbf
+    - Imports the bitmap image file myfont.bmp to myfont.vbf
+
+This command is used for viewing and modifying Visopsys font files.  In
+graphics mode, the program ignores command-line parameters and operates
+interactively, unless text mode is requested with -T.
+
+Options:
+-T              : Force text mode operation
+
+Text mode options:
+-a <code>       : Add a glyph to the font using the supplied code number
+                  Use with a mandatory -f flag to specify the image file
+-c <charset>    : Set the character set.  Also updates the code values.
+-d [code]       : Dump (print) the font data, or else a representation of
+                : the glyph with the supplied code number
+-e <img_file>   : Export the font to the specified image file, which will
+                : consist of a 16x6 grid of glyphs, representing either ASCII
+                : codes 32-127, or charset codes 160-255, organized
+                : left-to-right and top-to-bottom.
+-i <img_file>   : Import a new font from the specified image file, which will
+                : represent a table of glyphs representing either ASCII codes
+                : 32-127, or charset codes 160-255, arranged in a 16x6 grid
+                : read left-to-right and top-to-bottom.
+-f <file_name>  : Used for supplying an extra file name to commands that
+                : require one
+-n <family>     : Set the font family name
+-p <points>     : Set the number of points
+-r <code>       : Remove the glyph with the supplied code number
+-s <style>      : Add a style flag to the font, such as "bold" or "italic"
+-v              : Verbose; print out more information about what's happening
+-x <font_file>  : Convert an older VBF font file to the current version
+

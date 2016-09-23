@@ -1,0 +1,56 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CD-ROM\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: 2015-05-08 00:55+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: cdrom.c:144
+msgid ""
+"\n"
+"\n"
+"Problem getting CD-ROM info\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Проблема при получении информации CD-ROM\n"
+"\n"
+
+#: cdrom.c:158
+msgid ""
+"\n"
+"\n"
+"No CD-ROMS registered\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"CD-ROMS не зарегистрирован\n"
+"\n"
+
+#: cdrom.c:199
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Unknown command \"%s\"\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Неизвестная команда \"%s\"\n"
+"\n"

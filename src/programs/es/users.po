@@ -1,0 +1,152 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: 2014-01-22 04:44-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: users.c:60
+msgid "User Manager"
+msgstr "Administrador de usuarios"
+
+#: users.c:61 users.c:683
+msgid "Add User"
+msgstr "Neuer Benutzer"
+
+#: users.c:62
+msgid "Delete User"
+msgstr "Benutzer löschen"
+
+#: users.c:63
+msgid "Set Password"
+msgstr "Configuar contraseña"
+
+#: users.c:64
+msgid "Set Language"
+msgstr ""
+
+#: users.c:92
+msgid "Error"
+msgstr "Error"
+
+#: users.c:110
+msgid "Error getting user names"
+msgstr "Error al leer nombres de usuarios"
+
+#: users.c:186
+#, c-format
+msgid "User name: %s"
+msgstr "Nombre de usuario: %s"
+
+#: users.c:199
+msgid "Old password:"
+msgstr "Contraseña anterior:"
+
+#: users.c:213
+msgid "New password:"
+msgstr "Nueva contraseña:"
+
+#: users.c:230
+msgid "Confirm password:"
+msgstr "Passwortbestätigung:"
+
+#: users.c:244 users.c:415
+msgid "Passwords do not match"
+msgstr "Contraseñas desiguales"
+
+#: users.c:248
+msgid "Password should be longer"
+msgstr ""
+
+#: users.c:260
+msgid "OK"
+msgstr "OK"
+
+#: users.c:265
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: users.c:409 users.c:514
+msgid "Permission denied"
+msgstr "Permiso denegado"
+
+#: users.c:411
+msgid "Error setting password"
+msgstr "Error al configurar la contraseña"
+
+#: users.c:464
+#, c-format
+msgid "User \"%s\" already exists."
+msgstr "El usuario \"%s\" ya existe."
+
+#: users.c:472
+msgid "Error adding user"
+msgstr "Error al agregar usuario"
+
+#: users.c:482
+msgid "Warning: couldn't create user directory"
+msgstr ""
+
+#: users.c:516
+msgid "Error deleting user"
+msgstr "Error al eliminar usuario"
+
+#: users.c:684
+msgid "Enter the user name:"
+msgstr "Ingrese el nombre de usuario:"
+
+#: users.c:702
+#, c-format
+msgid "Delete user %s?"
+msgstr "Benutzer %s löschen?"
+
+#: users.c:704
+msgid "Delete?"
+msgstr "Löschen?"
+
+#: users.c:708
+msgid "Can't delete the last user"
+msgstr "Der letzte Benutzer kann nicht gelöscht werden"
+
+#: users.c:732
+msgid "Couldn't save the language choice"
+msgstr ""
+
+#: users.c:831
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" funciona solamente en modo gráfico\n"
+
+#: users.c:848
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr ""
+
+#: users.c:888
+#, c-format
+msgid "No such user \"%s\""
+msgstr "No existe el usuario \"%s\""
+
+#: users.c:892
+msgid "Done"
+msgstr "Listo"
+
+#: users.c:892
+msgid "Password set"
+msgstr "Contraseña configurada"

@@ -1,0 +1,184 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sysdiag.c:118
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue%s"
+msgstr ""
+"\n"
+"Devam etmek için bir tusa basin%s"
+
+#: sysdiag.c:404 sysdiag.c:613
+#, c-format
+msgid ""
+"\n"
+"[ Press 'Q' to cancel ]\n"
+msgstr ""
+"\n"
+"[ Iptal etmek için 'Q' ya basin ]\n"
+
+#: sysdiag.c:65
+#, c-format
+msgid "%d errors"
+msgstr "%d hata"
+
+#: sysdiag.c:155
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: sysdiag.c:118
+msgid ", or 'q' to quit"
+msgstr ", veya çikmak için 'q'"
+
+#: sysdiag.c:305
+#, c-format
+msgid "Disk read error at sector %llu\n"
+msgstr "Sektör %llu 'da okuma hatasi\n"
+
+#: sysdiag.c:837 sysdiag.c:923
+msgid "Disk test"
+msgstr "Disk testi"
+
+#: sysdiag.c:309
+#, c-format
+msgid "Disk write error at sector %llu\n"
+msgstr "Sektör %llu 'da yazma hatasi\n"
+
+#: sysdiag.c:977
+msgid "Do you want to do a disk test, or a memory test?\n"
+msgstr "Disk testi mi yoksa bellek testi mi yapmak istiyorsunuz?\n"
+
+#: sysdiag.c:55
+msgid ""
+"Do you want to do a read-only test, or a read-write test?\n"
+"A read-only test is faster and guaranteed to be data-safe,\n"
+"however it is less thorough.  A read-write test takes\n"
+"longer and is more thorough, but can potentially cause\n"
+"some data loss if your disk is failing."
+msgstr ""
+"sadece-okunabilir test mi yoksa, okuma-yazma testi mi istiyorsunuz?\n"
+"Sadece-okunabilir testi hizli ve veri güvenligi garantidir,\n"
+"yinede tam test degildir. Okuma-yazma testi biraz daha \n"
+"uzun sürer ve tam testtir, ancak potansiyel olarak eger\n"
+"diskte problem varsa, veri kaybi olabilir."
+
+#: sysdiag.c:264
+msgid "Do you want to view the results?\n"
+msgstr "Sonuçlari görmek istiyor musunuz?\n"
+
+#: sysdiag.c:141
+msgid "Error"
+msgstr "Iptal"
+
+#: sysdiag.c:64
+msgid "Error performing test"
+msgstr "Test gerçeklestirilirken hata"
+
+#: sysdiag.c:313
+#, c-format
+msgid "Memory error at %llu\n"
+msgstr "%llu 'de bellek hatasi\n"
+
+#: sysdiag.c:837 sysdiag.c:924
+msgid "Memory test"
+msgstr "Bellek testi"
+
+#: sysdiag.c:60
+#, c-format
+msgid "Performing %s test on disk %s"
+msgstr "%s testi, %s diski üzerinde gerçeklestiriliyor..."
+
+#: sysdiag.c:61
+#, c-format
+msgid "Performing memory test of %uMB - %uMB in use"
+msgstr "Bellek testi gerçeklestiriliyor %uMB - %uMB (kullanimda)"
+
+#: sysdiag.c:208
+msgid "Please choose the disk to test:"
+msgstr "Lütfen test etmek istediginiz diski seçin:"
+
+#: sysdiag.c:220 sysdiag.c:904
+msgid "Quit"
+msgstr "Çik"
+
+#: sysdiag.c:869 sysdiag.c:928
+msgid "Read-only"
+msgstr "Sadece-okunabilir"
+
+#: sysdiag.c:869 sysdiag.c:929
+msgid "Read-write"
+msgstr "Okunabilir-yazilabilir"
+
+#: sysdiag.c:51
+msgid "System Diagnostics"
+msgstr "Sistem Tanilama"
+
+#: sysdiag.c:898
+msgid "Test"
+msgstr "Test"
+
+#: sysdiag.c:62
+msgid "Test cancelled"
+msgstr "Test iptal edildi"
+
+#: sysdiag.c:63
+msgid "Test completed"
+msgstr "Test tamamlandi"
+
+#: sysdiag.c:276
+msgid "Test results"
+msgstr "Test sonuçlari"
+
+#: sysdiag.c:487
+#, c-format
+msgid "Testing disk sectors %llu/%llu"
+msgstr "Disk sektörleri test ediliyor %llu/%llu"
+
+#: sysdiag.c:697
+#, c-format
+msgid "Testing memory MB %llu/%llu"
+msgstr "Bellek test ediliyor (MB) %llu/%llu"
+
+#: sysdiag.c:219
+msgid "View results"
+msgstr "Sonuçlari göster"
+
+#: sysdiag.c:52
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Bu komutu kullanabilmek için ayricalikli kullanici olmaniz gerekiyor.\n"
+"(\"admin\" kullanicisi olarak oturum açmayi deneyin)"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "read-only"
+msgstr "sadece-okunabilir"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "read-write"
+msgstr "okunabilir-yazilabilir"

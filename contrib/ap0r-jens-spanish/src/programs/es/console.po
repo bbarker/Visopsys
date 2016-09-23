@@ -1,0 +1,43 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:16+0100\n"
+"PO-Revision-Date: 2014-01-22 18:24-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: console.c:80
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" funciona solamente en modo gráfico\n"
+
+#: console.c:97
+msgid "Cannot open more than one console window!"
+msgstr "No se puede abrir más de una ventana de consola!"
+
+#: console.c:89
+msgid "Console Window"
+msgstr "Ventana de consola"
+
+#: console.c:97 console.c:101
+msgid "Error"
+msgstr "Error"
+
+#: console.c:101
+msgid "Error opening the console window!"
+msgstr "Error al abrir ventana de consola!"

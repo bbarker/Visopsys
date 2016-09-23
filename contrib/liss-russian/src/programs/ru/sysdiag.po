@@ -1,0 +1,183 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: sysdiag\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 02:26+0100\n"
+"PO-Revision-Date: 2015-05-08 02:45+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language: ru\n"
+
+#: sysdiag.c:118
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue%s"
+msgstr ""
+"\n"
+"Нажмите любую клавишу чтобы продолжить%s"
+
+#: sysdiag.c:404 sysdiag.c:613
+#, c-format
+msgid ""
+"\n"
+"[ Press 'Q' to cancel ]\n"
+msgstr ""
+"\n"
+"[ Нажмите 'Q' для отмены ]\n"
+
+#: sysdiag.c:65
+#, c-format
+msgid "%d errors"
+msgstr "%d ошибок"
+
+#: sysdiag.c:155
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: sysdiag.c:118
+msgid ", or 'q' to quit"
+msgstr ", или  'q' чтобы выйти"
+
+#: sysdiag.c:305
+#, c-format
+msgid "Disk read error at sector %llu\n"
+msgstr "Ошибка чтения диска в секторе %llu\n"
+
+#: sysdiag.c:837 sysdiag.c:923
+msgid "Disk test"
+msgstr "Тест диска"
+
+#: sysdiag.c:309
+#, c-format
+msgid "Disk write error at sector %llu\n"
+msgstr "Ошибка записи на диск в сеткоре %llu\n"
+
+#: sysdiag.c:977
+msgid "Do you want to do a disk test, or a memory test?\n"
+msgstr "Хотите провести тести диска или тест памяти?\n"
+
+#: sysdiag.c:55
+msgid ""
+"Do you want to do a read-only test, or a read-write test?\n"
+"A read-only test is faster and guaranteed to be data-safe,\n"
+"however it is less thorough.  A read-write test takes\n"
+"longer and is more thorough, but can potentially cause\n"
+"some data loss if your disk is failing."
+msgstr ""
+"Хотите провести тест с параметром только-чтение,\n"
+"или же с параметром чтение-запись? \n"
+"Тест только чтением гарантирует сохранность данных,\n"
+"но он менее тщательный.  Тест с чтениме-записью \n"
+"более тщательный и требует больше времени,\n"
+"но так же может привести к потере данных."
+
+#: sysdiag.c:264
+msgid "Do you want to view the results?\n"
+msgstr "Вы хотите просмотреть результаты?\n"
+
+#: sysdiag.c:141
+msgid "Error"
+msgstr "Ошибка"
+
+#: sysdiag.c:64
+msgid "Error performing test"
+msgstr "Ошибка выполнения теста"
+
+#: sysdiag.c:313
+#, c-format
+msgid "Memory error at %llu\n"
+msgstr "Ошибка памяти в %llu\n"
+
+#: sysdiag.c:837 sysdiag.c:924
+msgid "Memory test"
+msgstr "Тест памяти"
+
+#: sysdiag.c:60
+#, c-format
+msgid "Performing %s test on disk %s"
+msgstr "Выполняется тест %s диска %s"
+
+#: sysdiag.c:61
+#, c-format
+msgid "Performing memory test of %uMB - %uMB in use"
+msgstr "Выполняется тестирование памяти в %uMB - %uMB занято"
+
+#: sysdiag.c:208
+msgid "Please choose the disk to test:"
+msgstr "Выберите диск для теста:"
+
+#: sysdiag.c:220 sysdiag.c:904
+msgid "Quit"
+msgstr "Выход"
+
+#: sysdiag.c:869 sysdiag.c:928
+msgid "Read-only"
+msgstr "Только чтение"
+
+#: sysdiag.c:869 sysdiag.c:929
+msgid "Read-write"
+msgstr "Чтение-запись"
+
+#: sysdiag.c:51
+msgid "System Diagnostics"
+msgstr "Диагностика системы"
+
+#: sysdiag.c:898
+msgid "Test"
+msgstr "Тест"
+
+#: sysdiag.c:62
+msgid "Test cancelled"
+msgstr "Тест отменен"
+
+#: sysdiag.c:63
+msgid "Test completed"
+msgstr "Тест выполнен"
+
+#: sysdiag.c:276
+msgid "Test results"
+msgstr "Результаты теста"
+
+#: sysdiag.c:487
+#, c-format
+msgid "Testing disk sectors %llu/%llu"
+msgstr "Тест секторов диска %llu/%llu"
+
+#: sysdiag.c:697
+#, c-format
+msgid "Testing memory MB %llu/%llu"
+msgstr "Тест памяти MB %llu/%llu"
+
+#: sysdiag.c:219
+msgid "View results"
+msgstr "Просмотреть результаты"
+
+#: sysdiag.c:52
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Вы должны быть более привелегированным пользователем.\n"
+"(Попробуйте войти как \"admin\")"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "read-only"
+msgstr "только чтение"
+
+#: sysdiag.c:402 sysdiag.c:413
+msgid "lectoescritura"
+msgstr "чтение-запись"

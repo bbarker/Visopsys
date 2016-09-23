@@ -1,0 +1,33 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: renice\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:10-0300\n"
+"PO-Revision-Date: 2014-08-13 22:16+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: renice.c:116
+#, c-format
+msgid "%d changed\n"
+msgstr "%d изменен\n"
+
+#: renice.c:57
+#, c-format
+msgid "%s <priority> <process1> [process2] [...]\n"
+msgstr "%s <приоритет> <процесс1> [процесс2] [...]\n"
+
+#: renice.c:56
+#, c-format
+msgid "usage:\n"
+msgstr "использование:\n"

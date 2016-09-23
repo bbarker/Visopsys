@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:11-0300\n"
+"PO-Revision-Date: 2013-11-09 23:36-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: telnet.c:80
+#, c-format
+msgid "Abort output\n"
+msgstr "Ausgabe abbrechen\n"
+
+#: telnet.c:83
+#, c-format
+msgid "Are You There\n"
+msgstr ""
+
+#: telnet.c:74
+#, c-format
+msgid "Break\n"
+msgstr ""
+
+#: telnet.c:104
+#, c-format
+msgid "DO "
+msgstr ""
+
+#: telnet.c:107
+#, c-format
+msgid "DON'T "
+msgstr ""
+
+#: telnet.c:71
+#, c-format
+msgid "Data Mark\n"
+msgstr ""
+
+#: telnet.c:89
+#, c-format
+msgid "Erase Line\n"
+msgstr "Linie löschen\n"
+
+#: telnet.c:86
+#, c-format
+msgid "Erase character\n"
+msgstr "Charakter löschen\n"
+
+#: telnet.c:92
+#, c-format
+msgid "Go ahead\n"
+msgstr ""
+
+#: telnet.c:77
+#, c-format
+msgid "Interrupt Process\n"
+msgstr "Prozess unterbrechen\n"
+
+#: telnet.c:68
+#, c-format
+msgid "NOP\n"
+msgstr ""
+
+#: telnet.c:95
+#, c-format
+msgid "SB\n"
+msgstr ""
+
+#: telnet.c:65
+#, c-format
+msgid "SE\n"
+msgstr ""
+
+#: telnet.c:98
+#, c-format
+msgid "WILL "
+msgstr ""
+
+#: telnet.c:101
+#, c-format
+msgid "WON'T "
+msgstr ""
+
+#: telnet.c:121
+#, c-format
+msgid "echo\n"
+msgstr ""
+
+#: telnet.c:148 telnet.c:151
+#, c-format
+msgid "environment variables\n"
+msgstr "Systemvariablen\n"
+
+#: telnet.c:145
+#, c-format
+msgid "linemode\n"
+msgstr ""
+
+#: telnet.c:142
+#, c-format
+msgid "remote flow control\n"
+msgstr ""
+
+#: telnet.c:127
+#, c-format
+msgid "status\n"
+msgstr "Status\n"
+
+#: telnet.c:124
+#, c-format
+msgid "suppress go ahead\n"
+msgstr ""
+
+#: telnet.c:139
+#, c-format
+msgid "terminal speed\n"
+msgstr "Schnelligkeit des Terminals\n"
+
+#: telnet.c:133
+#, c-format
+msgid "terminal type\n"
+msgstr "Terminaltyp\n"
+
+#: telnet.c:130
+#, c-format
+msgid "timing mark\n"
+msgstr ""
+
+#: telnet.c:110
+#, c-format
+msgid "unknown code %d\n"
+msgstr "Unbekannter Code %d\n"
+
+#: telnet.c:154
+#, c-format
+msgid "unknown option %d\n"
+msgstr "Unbekannte Option %d\n"
+
+#: telnet.c:44
+#, c-format
+msgid ""
+"usage:\n"
+"%s <address | hostname>\n"
+msgstr ""
+"Benutzung:\n"
+"%s <Addresse | Hostname>\n"
+
+#: telnet.c:136
+#, c-format
+msgid "window size\n"
+msgstr "Fenstergrösse\n"

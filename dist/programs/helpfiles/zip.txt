@@ -1,0 +1,24 @@
+
+ -- zip --
+
+Compress and archive files, and manage archives.
+
+Usage:
+  zip [-p] <file1> [file2] [...]
+    Each file name listed will be packed in its own archive file.
+
+  zip [-p] -a <archive> <file1> [file2] [...]
+    Each file name listed will be added to the archive file.
+
+  zip [-p] -d <archive> <member1> [member2] [...]
+    Each member name listed will be deleted from the archive file.
+
+  zip [-p] -i <archive>
+    Print info about the members of the archive file.
+
+Options:
+-a         : add files to an archive
+-d         : delete members from an archive
+-i         : print info about the archive members
+-p         : show a progress indicator
+

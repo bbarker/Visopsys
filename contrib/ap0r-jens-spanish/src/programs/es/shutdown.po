@@ -1,0 +1,56 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:19+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: shutdown.c:70
+msgid ""
+"Can't seem to eject.  Try pushing\n"
+"the 'eject' button now."
+msgstr ""
+"No se puede expulsar. Intente\n"
+"presionando el boton."
+
+#: shutdown.c:232
+msgid "Eject CD-ROM"
+msgstr "Expulsar CD-ROM"
+
+#: shutdown.c:89
+msgid "Ejecting"
+msgstr "Expulsando"
+
+#: shutdown.c:68
+msgid "Ejecting, please wait..."
+msgstr "Expulsando, por favor espere"
+
+#: shutdown.c:100
+msgid "Error"
+msgstr "Error"
+
+#: shutdown.c:208
+msgid "Reboot"
+msgstr "Reiniciar"
+
+#: shutdown.c:182 shutdown.c:219
+msgid "Shut down"
+msgstr "Apagar"
+
+#: shutdown.c:69
+msgid "Unable to unlock the media door"
+msgstr "No se puede destrabar la puerta de la unidad"
+
+#: shutdown.c:306
+#, c-format
+msgid "Use \"%s -f\" to force.\n"
+msgstr "Use \"%s -f\" para forzar.\n"

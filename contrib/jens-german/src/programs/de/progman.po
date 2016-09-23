@@ -1,0 +1,144 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:54+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: progman.c:596
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Der Befehl \"%s\" funktioniert nur im Grafik-Modus\n"
+
+#: progman.c:220
+msgid "Can't get temporary memory for processes"
+msgstr "Es existiert kein temporärer Speicher für die Prozesse"
+
+#: progman.c:505
+msgid "Disk performance:"
+msgstr "Leistung der Disk: "
+
+#: progman.c:327
+msgid "Enter command"
+msgstr "Befehl eingeben"
+
+#: progman.c:97
+msgid "Error"
+msgstr "Fehler"
+
+#: progman.c:615
+msgid "Error getting memory"
+msgstr "Fehler beim beziehen von Speicher"
+
+#: progman.c:60
+msgid "Free memory: "
+msgstr "Freier Speicher: "
+
+#: progman.c:63
+msgid "K/tick"
+msgstr " K/tick"
+
+#: progman.c:569
+msgid "Kill process"
+msgstr "Prozess beenden"
+
+#: progman.c:58
+msgid "Memory blocks: "
+msgstr "Speicherblöcke: "
+
+#: progman.c:328
+msgid "Please enter a command to run:"
+msgstr "Bitte geben Sie einen Befehl an der ausgeführt werden soll:"
+
+#: progman.c:395
+msgid "Please enter the desired priority"
+msgstr "Bitte geben Sie die gewünschte Priorität an"
+
+#: progman.c:522
+#, c-format
+msgid "Process                   PID PPID UID Pri Priv CPU% STATE   "
+msgstr "Prozess                   PID PPID UID Pri Priv CPU% STATUS   "
+
+#: progman.c:481
+msgid "Program Manager"
+msgstr "Programm-Manager"
+
+#: progman.c:61
+msgid "Read: "
+msgstr "Lesen: "
+
+#: progman.c:556
+msgid "Run program"
+msgstr "Programm ausführen"
+
+#: progman.c:395 progman.c:563
+msgid "Set priority"
+msgstr "Priorität festlegen"
+
+#: progman.c:536
+msgid "Show all sub-processes"
+msgstr "Alle Unter-Prozesse anzeigen"
+
+#: progman.c:357
+msgid "Unable to execute program"
+msgstr "Programm kann nicht gestartet werden"
+
+#: progman.c:458
+msgid "Unable to launch file dialog"
+msgstr "Datei-Fenster kann nicht angezeigt werden"
+
+#: progman.c:59
+msgid "Used memory: "
+msgstr "Belegte Speicher: "
+
+#: progman.c:62
+msgid "Write: "
+msgstr "Schreiben: "
+
+#: progman.c:299
+msgid "finished "
+msgstr "abgeschlossen "
+
+#: progman.c:287
+msgid "ready "
+msgstr "bereit "
+
+#: progman.c:284
+msgid "running "
+msgstr "läuft "
+
+#: progman.c:293
+msgid "sleeping "
+msgstr "im stand-by "
+
+#: progman.c:296
+msgid "stopped "
+msgstr "angehalten "
+
+#: progman.c:305
+msgid "unknown "
+msgstr "unbekannt "
+
+#: progman.c:290
+msgid "waiting "
+msgstr "warte "
+
+#: progman.c:302
+msgid "zombie "
+msgstr "zombie "

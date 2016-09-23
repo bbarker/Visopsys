@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:13-0300\n"
+"PO-Revision-Date: 2013-11-09 23:39-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: vsh.c:722
+#, c-format
+msgid ""
+"\n"
+"Visopsys Shell.\n"
+msgstr ""
+"\n"
+"Visopsys Shell.\n"
+
+#: vsh.c:738
+#, c-format
+msgid "Can't determine current directory\n"
+msgstr "Aktuelles Verzeichnis kann nicht bestimmt werden\n"
+
+#: vsh.c:285
+#, c-format
+msgid "Shouldn't set an env variable that long\n"
+msgstr "Eine Systemvariable sollte nicht zu lang sein\n"
+
+#: vsh.c:723
+#, c-format
+msgid "Type \"help\" for commands.\n"
+msgstr "Schreibe \"help\" für Kommandos.\n"
+
+#: vsh.c:349
+#, c-format
+msgid "Unknown command \"%s\".\n"
+msgstr "Unbekanntes Kommando \"%s\".\n"
+
+#: vsh.c:192 vsh.c:211
+#, c-format
+msgid "Usage: %s <file1> [file2] [...]\n"
+msgstr "Benutzung: %s <Datei1> [Datei2] [...]\n"
+
+#: vsh.c:227 vsh.c:244
+#, c-format
+msgid "Usage: %s <source file> <destination file>\n"
+msgstr "Benutzung: %s <Quellendatei> <Zieldatei>\n"
+
+#: vsh.c:276 vsh.c:317
+#, c-format
+msgid "Usage: %s <variable_name>\n"
+msgstr "Benutzung: %s <Variablen_name>\n"
+
+#: vsh.c:298
+#, c-format
+msgid "Usage: %s <variable_name> <variable_value>\n"
+msgstr "Benutzung: %s <Variablen_name> <Variablen_wert>\n"
+
+#: vsh.c:751
+#, c-format
+msgid "exiting.\n"
+msgstr "schliesse.\n"
+
+#: vsh.c:616
+#, c-format
+msgid "logout\n"
+msgstr "logout\n"

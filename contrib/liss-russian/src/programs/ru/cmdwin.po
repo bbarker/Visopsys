@@ -1,0 +1,37 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: cmdwin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:12+0100\n"
+"PO-Revision-Date: 2015-05-08 00:56+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: cmdwin.c:87
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда  \"%s\" работает только в графическом режиме\n"
+
+#: cmdwin.c:106
+msgid "Command Window"
+msgstr "Командное окно"
+
+#: cmdwin.c:100
+#, c-format
+msgid "Unable to load shell\n"
+msgstr "Невозможно загрузить оболочку\n"

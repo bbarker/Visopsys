@@ -1,0 +1,92 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:37+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ping.c:402
+#, c-format
+msgid ""
+"\n"
+"--- %d.%d.%d.%d ping statistics ---\n"
+msgstr ""
+"\n"
+"--- %d.%d.%d.%d estadisticas de ping ---\n"
+
+#: ping.c:160
+#, c-format
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
+msgstr "%d bytes desde %d.%d.%d.%d: icmp_seq=%d ttl=%d tiempo=X ms\n"
+
+#: ping.c:404
+#, c-format
+msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
+msgstr "%d paquetes transmitidos, %d recibidos, %d%% paquetes perdidos, tiempo Xms\n"
+
+#: ping.c:288
+msgid "Enter Address"
+msgstr "Direccion"
+
+#: ping.c:289
+msgid "Enter the network address to ping:"
+msgstr "Ingrese la direccion de red:"
+
+#: ping.c:84
+msgid "Error"
+msgstr "Error"
+
+#: ping.c:344
+msgid "Error opening network connection"
+msgstr "Error al abrir conexion de red"
+
+#: ping.c:384
+msgid "Error pinging host"
+msgstr "Error al hacer ping al host"
+
+#: ping.c:362
+msgid "Error setting signal handler"
+msgstr "Error preparando el señalero"
+
+#: ping.c:375
+msgid "Error starting response thread"
+msgstr "Error al iniciar hilo de respuesta"
+
+#: ping.c:325
+msgid "Memory allocation error"
+msgstr "Error al reservar memoria"
+
+#: ping.c:272
+msgid "Networking is not currently enabled"
+msgstr "La red no está habilitada"
+
+#: ping.c:193
+msgid "Ping"
+msgstr "Ping"
+
+#: ping.c:348
+#, c-format
+msgid "Ping %d.%d.%d.%d %d bytes of data\n"
+msgstr "Ping %d.%d.%d.%d %d bytes de datos\n"
+
+#: ping.c:226
+msgid "Stop"
+msgstr "Detener"
+
+#: ping.c:92
+#, c-format
+msgid ""
+"usage:\n"
+"%s [-T] <address | hostname>\n"
+msgstr ""
+"Uso:\n"
+"%s [-T] <direccion | host>\n"

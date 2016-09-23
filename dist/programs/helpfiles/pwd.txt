@@ -1,0 +1,8 @@
+
+ -- pwd --
+
+Print the current directory.
+
+Usage:
+  pwd
+

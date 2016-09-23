@@ -1,0 +1,8 @@
+
+ -- snake --
+
+A 'Snake' game.
+
+Usage:
+  snake
+

@@ -1,0 +1,11 @@
+
+ -- imgboot --
+
+The program launched at first system boot.
+
+Usage:
+  imgboot [-T]
+
+This program is the default 'first boot' program on Visopsys floppy or
+CD-ROM image files that asks if you want to 'install' or 'run now'.
+

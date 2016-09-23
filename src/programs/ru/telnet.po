@@ -1,0 +1,138 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: telnet\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: 2015-05-08 01:38+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: telnet.c:45
+#, c-format
+msgid ""
+"usage:\n"
+"%s <address | hostname>\n"
+msgstr ""
+"использование:\n"
+"%s <адрес | имя_хоста>\n"
+
+#: telnet.c:66
+msgid "SE\n"
+msgstr ""
+
+#: telnet.c:70
+msgid "NOP\n"
+msgstr ""
+
+#: telnet.c:74
+msgid "Data Mark\n"
+msgstr "Метка данных\n"
+
+#: telnet.c:78
+msgid "Break\n"
+msgstr "Прервать\n"
+
+#: telnet.c:82
+msgid "Interrupt Process\n"
+msgstr "Прервать процесс\n"
+
+#: telnet.c:86
+msgid "Abort output\n"
+msgstr ""
+
+#: telnet.c:90
+msgid "Are You There\n"
+msgstr "Вы там?\n"
+
+#: telnet.c:94
+msgid "Erase character\n"
+msgstr "Стереть символ\n"
+
+#: telnet.c:98
+msgid "Erase Line\n"
+msgstr "Стереть строку\n"
+
+#: telnet.c:102
+msgid "Go ahead\n"
+msgstr ""
+
+#: telnet.c:106
+msgid "SB\n"
+msgstr ""
+
+#: telnet.c:110
+msgid "WILL "
+msgstr ""
+
+#: telnet.c:114
+msgid "WON'T "
+msgstr ""
+
+#: telnet.c:118
+msgid "DO "
+msgstr ""
+
+#: telnet.c:122
+msgid "DON'T "
+msgstr ""
+
+#: telnet.c:126
+#, c-format
+msgid "unknown code %d\n"
+msgstr "неизвестный код %d\n"
+
+#: telnet.c:137
+msgid "echo\n"
+msgstr ""
+
+#: telnet.c:141
+msgid "suppress go ahead\n"
+msgstr ""
+
+#: telnet.c:145
+msgid "status\n"
+msgstr "статус\n"
+
+#: telnet.c:149
+msgid "timing mark\n"
+msgstr "временная метка\n"
+
+#: telnet.c:153
+msgid "terminal type\n"
+msgstr "тип терминала\n"
+
+#: telnet.c:157
+msgid "window size\n"
+msgstr "размер окна\n"
+
+#: telnet.c:161
+msgid "terminal speed\n"
+msgstr "скорость терминала\n"
+
+#: telnet.c:165
+msgid "remote flow control\n"
+msgstr "дистанционное управление потоком\n"
+
+#: telnet.c:169
+msgid "linemode\n"
+msgstr ""
+
+#: telnet.c:173 telnet.c:177
+msgid "environment variables\n"
+msgstr "переменные окружения\n"
+
+#: telnet.c:181
+#, c-format
+msgid "unknown option %d\n"
+msgstr "неизвестная опция %d\n"

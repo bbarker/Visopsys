@@ -1,0 +1,25 @@
+
+ -- mount --
+
+Mount a filesystem.
+
+Usage:
+  mount <disk> [mount_point]
+
+This command will mount (make usable) the filesystem on the specified logical
+disk.  Available logical disks can be listed using the 'disks' command.
+The second parameter is a location (the mount point) where the contents of
+the filesystem should be mounted.  The mount point parameter is optional if
+it is listed in the mount configuration file (usually located at
+/system/config/mount.conf).
+
+Example:
+  mount cd0 /cdrom
+
+This will mount the first CD-ROM device, and make its contents accessible
+in the /cdrom subdirectory.
+
+Note that the mount point parameter should specify a name that does *not*
+exist.  This is the opposite of the UNIX mount command behaviour.  The
+example above will fail if there is already a file or directory called /cdrom.
+

@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:00-0300\n"
+"PO-Revision-Date: 2013-11-02 13:15-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: defrag.c:260
+#, c-format
+msgid ""
+"\n"
+"%s (I)gnore/(U)nmount/(C)ancel?: "
+msgstr ""
+"\n"
+"%s (I) Ignorieren/(U) Trennen/(C) Abbrechen?: "
+
+#: defrag.c:104
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue. "
+msgstr ""
+"\n"
+"Drücke eine Taste zum Fortfahren. "
+
+#: defrag.c:430
+#, c-format
+msgid ""
+"\n"
+"Quitting.\n"
+msgstr ""
+"\n"
+"Abbrechen...\n"
+
+#: defrag.c:353
+#, c-format
+msgid ""
+"\n"
+"Visopsys DEFRAG Utility\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"\n"
+"Visopsys DEFRAG Werkzeug\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: defrag.c:190 defrag.c:256
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: defrag.c:281
+#, c-format
+msgid "Cancel\n"
+msgstr "Abbrechen\n"
+
+#: defrag.c:171
+msgid "Choose Disk"
+msgstr "Wähle eine Disk"
+
+#: defrag.c:74
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+#: defrag.c:453
+#, c-format
+msgid "Defragmentation complete"
+msgstr "Defragmentation abgeschlossen"
+
+#: defrag.c:426
+#, c-format
+msgid "Defragmenting disk %s.  Are you sure?"
+msgstr "Defragmentire Disk %s. Sind Sie sicher?"
+
+#: defrag.c:419
+#, c-format
+msgid "Defragmenting the filesystem type \"%s\" is not supported"
+msgstr "Defragmentierung des Dateisystem-typs \"%s\" ist nicht unterstützt"
+
+#: defrag.c:442
+msgid "Defragmenting..."
+msgstr "Defragmentiere..."
+
+#: defrag.c:255
+msgid "Disk is mounted"
+msgstr "Disk verbunden"
+
+#: defrag.c:126
+msgid "Error"
+msgstr "Fehler"
+
+#: defrag.c:347
+msgid "Error getting disks info"
+msgstr "Fehler beim Aufrufen der Disk Info"
+
+#: defrag.c:411
+#, c-format
+msgid "Error getting info for disk \"%s\""
+msgstr "Fehler beim Aufrufen der Info für die Disk \"%s\""
+
+#: defrag.c:256
+msgid "Ignore"
+msgstr "Ignorieren"
+
+#: defrag.c:269
+#, c-format
+msgid "Ignore\n"
+msgstr "Ignorieren\n"
+
+#: defrag.c:186
+msgid "OK"
+msgstr "OK"
+
+#: defrag.c:455
+msgid "Success"
+msgstr "Fertig"
+
+#: defrag.c:249
+#, c-format
+msgid ""
+"The disk is mounted as %s.  It is STRONGLY recommended\n"
+"that you unmount before continuing"
+msgstr ""
+"Die Disk wurde als %s verbunden. Es wird SEHR empfohlen\n"
+"diese erst zu trennen"
+
+#: defrag.c:300
+#, c-format
+msgid "Unable to unmount %s"
+msgstr "%s kann nicht getrennt werden"
+
+#: defrag.c:401
+#, c-format
+msgid "Unknown filesystem type on disk \"%s\""
+msgstr "Unbekannter Dateisystem-typ auf der Disk \"%s\""
+
+#: defrag.c:256
+msgid "Unmount"
+msgstr "Trennen"
+
+#: defrag.c:275
+#, c-format
+msgid "Unmount\n"
+msgstr "Trennen\n"
+
+#: defrag.c:373
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Sie müssen ein Benutzer mit bestimmten Rechten sein.\n"
+"(Versuchen Sie, sich als \"admin\" anzumelden)"

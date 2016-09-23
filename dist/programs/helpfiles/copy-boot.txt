@@ -1,0 +1,16 @@
+
+ -- copy-boot --
+
+Write a Visopsys boot sector.
+
+Usage:
+  copy-boot <image> <disk>
+
+The copy-boot command copies the named boot sector image to the named
+physical disk.  Not useful to most users under normal circumstances.  It
+is used, for example, by the installation program.  It could also be useful
+in a system rescue situation.
+
+Example:
+  copy-boot /system/boot/bootsect.fat32 hd0
+

@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: 2014-01-22 18:39-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: calc.c:48
+msgid "Calculator"
+msgstr "Taschenrechner"
+
+#: calc.c:230 calc.c:253
+msgid "Division by zero"
+msgstr "Teilung durch Null"
+
+#: calc.c:231 calc.c:254
+msgid "Error: division by zero!"
+msgstr "Fehler: Teilung durch Null!"
+
+#: calc.c:341 calc.c:349
+msgid "Invalid number"
+msgstr "Ungültige Zahl"
+
+#: calc.c:342
+msgid "Negative number!"
+msgstr "Negative Zahl!"
+
+#: calc.c:350
+msgid "Number is not integer!"
+msgstr "Zahl ist kein Integer!"
+
+#: calc.c:533
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Das Kommando \"%s\" funktioniert nur im Grafik-modus\n"

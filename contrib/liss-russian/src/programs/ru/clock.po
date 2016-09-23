@@ -1,0 +1,107 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: clock\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 10:58-0300\n"
+"PO-Revision-Date: 2015-05-08 00:55+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: clock.c:98
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда  \"%s\" работает только в графическом режиме\n"
+
+#: clock.c:55
+msgid "Apr "
+msgstr "Апр"
+
+#: clock.c:56
+msgid "Aug "
+msgstr "Авг"
+
+#: clock.c:106
+msgid "Clock"
+msgstr "Часы"
+
+#: clock.c:57
+msgid "Dec "
+msgstr "Дек"
+
+#: clock.c:55
+msgid "Feb "
+msgstr "Фев"
+
+#: clock.c:53
+msgid "Fri "
+msgstr "Пт"
+
+#: clock.c:55
+msgid "Jan "
+msgstr "Янв"
+
+#: clock.c:56
+msgid "Jul "
+msgstr "Июль"
+
+#: clock.c:56
+msgid "Jun "
+msgstr "Июнь"
+
+#: clock.c:55
+msgid "Mar "
+msgstr "Март"
+
+#: clock.c:55
+msgid "May "
+msgstr "Май"
+
+#: clock.c:53
+msgid "Mon "
+msgstr "Пн"
+
+#: clock.c:56
+msgid "Nov "
+msgstr "Ноя"
+
+#: clock.c:56
+msgid "Oct "
+msgstr "Окт"
+
+#: clock.c:54
+msgid "Sat "
+msgstr "Сб"
+
+#: clock.c:56
+msgid "Sep "
+msgstr "Сен"
+
+#: clock.c:54
+msgid "Sun "
+msgstr "Вс"
+
+#: clock.c:53
+msgid "Thu "
+msgstr "Чт"
+
+#: clock.c:53
+msgid "Tue "
+msgstr "Вт"
+
+#: clock.c:53
+msgid "Wed "
+msgstr "Ср"

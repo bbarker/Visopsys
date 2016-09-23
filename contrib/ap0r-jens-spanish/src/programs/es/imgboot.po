@@ -1,0 +1,165 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:04-0300\n"
+"PO-Revision-Date: 2014-01-22 17:27-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: imgboot.c:97
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+
+#: imgboot.c:149
+#, c-format
+msgid ""
+"\n"
+"%s (y/n): "
+msgstr ""
+"\n"
+"%s (y/n): "
+
+#: imgboot.c:420
+msgid ""
+"\n"
+"Please select from the following options"
+msgstr ""
+"\n"
+"Por favor, seleccione una de las opciones siguientes"
+
+#: imgboot.c:62
+msgid ""
+"  This program is free software; you can redistribute it and/or modify it  \n"
+"  under the terms of the GNU General Public License as published by the\n"
+"  Free Software Foundation; either version 2 of the License, or (at your\n"
+"  option) any later version.\n"
+"\n"
+"  This program is distributed in the hope that it will be useful, but\n"
+"  WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"  the file /system/COPYING.txt for more details."
+msgstr ""
+"  This program is free software; you can redistribute it and/or modify it  \n"
+"  under the terms of the GNU General Public License as published by the\n"
+"  Free Software Foundation; either version 2 of the License, or (at your\n"
+"  option) any later version.\n"
+"\n"
+"  This program is distributed in the hope that it will be useful, but\n"
+"  WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"  the file /system/COPYING.txt for more details."
+
+#: imgboot.c:120
+#, c-format
+msgid "%s  Quitting."
+msgstr "%s Cerrando."
+
+#: imgboot.c:390
+msgid "Administrator account"
+msgstr "Cuenta de administrador"
+
+#: imgboot.c:260
+msgid "Can't create window!"
+msgstr "No se puede crear la ventana!"
+
+#: imgboot.c:140 imgboot.c:299
+msgid "Continue"
+msgstr "Continuar"
+
+#: imgboot.c:60
+msgid "Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr "Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: imgboot.c:310
+msgid "Don't ask me this again"
+msgstr "No preguntar de nuevo"
+
+#: imgboot.c:95
+msgid "Error"
+msgstr "Error"
+
+#: imgboot.c:292
+msgid "Install"
+msgstr "Instalar"
+
+#: imgboot.c:170
+#, c-format
+msgid "No\n"
+msgstr "No\n"
+
+#: imgboot.c:140
+msgid "Reboot"
+msgstr "Reiniciar"
+
+#: imgboot.c:139
+msgid "Reboot?"
+msgstr "Reiniciar?"
+
+#: imgboot.c:354
+msgid ""
+"This program can only be run as a privileged user.\n"
+"(Try logging in as user \"admin\")."
+msgstr ""
+"Necesita derechos especiales para usar este comando.\n"
+"(Intente ingresar como \"admin\")"
+
+#: imgboot.c:71
+msgid ""
+"Using the administrator account 'admin'.\n"
+"There is no password set."
+msgstr ""
+"Use la cuenta del administardor 'admin'.\n"
+"Sin contraseña configurada."
+
+#: imgboot.c:255
+#, c-format
+msgid "Welcome to %s"
+msgstr "Bienvenido a %s"
+
+#: imgboot.c:282
+msgid ""
+"Would you like to install Visopsys?\n"
+"(Choose continue to skip installing)"
+msgstr ""
+"Desea instalar Visopsys?\n"
+"(Seleccione Continuar si No)"
+
+#: imgboot.c:70
+msgid "Would you like to reboot now?"
+msgstr "Desea reiniciar el equipo ahora?"
+
+#: imgboot.c:164
+#, c-format
+msgid "Yes\n"
+msgstr "Sí\n"
+
+#: imgboot.c:337
+msgid "o Always continue (never ask)"
+msgstr "o Continuar siempre (no preguntar más)"
+
+#: imgboot.c:336
+msgid "o Continue                   "
+msgstr "o Continuar"
+
+#: imgboot.c:335
+msgid "o Install                    "
+msgstr "o Instalar"

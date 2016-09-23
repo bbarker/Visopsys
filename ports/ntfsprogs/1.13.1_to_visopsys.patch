@@ -1,0 +1,4189 @@
+diff -urN ../ntfsprogs-1.13.1/include/ntfs/config.h ./include/ntfs/config.h
+--- ../ntfsprogs-1.13.1/include/ntfs/config.h	1970-01-01 01:00:00.000000000 +0100
++++ ./include/ntfs/config.h	2007-01-30 20:47:21.000000000 +0000
+@@ -0,0 +1,66 @@
++// 
++//  Visopsys
++//  Copyright (C) 1998-2011 J. Andrew McLaughlin
++//  
++//  This library is free software; you can redistribute it and/or modify it
++//  under the terms of the GNU Lesser General Public License as published by
++//  the Free Software Foundation; either version 2.1 of the License, or (at
++//  your option) any later version.
++//
++//  This library is distributed in the hope that it will be useful, but
++//  WITHOUT ANY WARRANTY; without even the implied warranty of
++//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
++//  General Public License for more details.
++//
++//  You should have received a copy of the GNU Lesser General Public License
++//  along with this library; if not, write to the Free Software Foundation,
++//  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++//
++//  config.h
++//
++
++#define __VISOPSYS__
++
++#define HAVE_BASENAME               1
++#define HAVE_CTYPE_H                1
++#define HAVE_ENDIAN_H               1
++#define HAVE_ERRNO_H                1
++#define HAVE_FCNTL_H                1
++#define HAVE_FEATURES_H             1
++#define HAVE_LIBGEN_H               1
++#define HAVE_LIMITS_H               1
++#define HAVE_LOCALE_H               1
++#define HAVE_MEMMOVE                1
++#define HAVE_MEMSET                 1
++#define HAVE_REALPATH               1
++#define HAVE_SETLOCALE              1
++#define HAVE_STDARG_H               1
++#define HAVE_STDDEF_H               1
++#define HAVE_STDINT_H               1
++#define HAVE_STDIO_H                1
++#define HAVE_STDLIB_H               1
++#define HAVE_STRCASECMP             1
++#define HAVE_STRCHR                 1
++#define HAVE_STRDUP                 1
++#define HAVE_STRERROR               1
++#define HAVE_STRING_H               1
++#define HAVE_STRNLEN                1
++#define HAVE_STRUCT_STAT_ST_BLOCKS  1
++#define HAVE_STRUCT_STAT_ST_RDEV    1
++#define HAVE_SYS_STAT_H             1
++#define HAVE_SYS_TYPES_H            1
++#define HAVE_TIME_H                 1
++#define HAVE_UNISTD_H               1
++#define HAVE_VPRINTF                1
++#define HAVE_WCHAR_H                1
++
++#define PACKAGE                     "ntfsprogs"
++#define PACKAGE_BUGREPORT           "linux-ntfs-dev@lists.sourceforge.net"
++#define PACKAGE_NAME                PACKAGE
++#define PACKAGE_VERSION             "1.13.1"
++#define PACKAGE_STRING              PACKAGE_NAME " " PACKAGE_VERSION
++#define PACKAGE_TARNAME             PACKAGE_NAME
++#define STDC_HEADERS                1
++#define VERSION                     PACKAGE_VERSION
++#define WORDS_LITTLEENDIAN          1
++#define _FILE_OFFSET_BITS           32
+diff -urN ../ntfsprogs-1.13.1/include/ntfs/device_io.h ./include/ntfs/device_io.h
+--- ../ntfsprogs-1.13.1/include/ntfs/device_io.h	2007-01-31 01:51:27.000000000 +0000
++++ ./include/ntfs/device_io.h	2007-01-30 20:47:21.000000000 +0000
+@@ -17,6 +17,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifndef _NTFS_DEVICE_IO_H
+@@ -28,12 +30,12 @@
+ 
+ #ifndef NO_NTFS_DEVICE_DEFAULT_IO_OPS
+ 
+-#ifndef __CYGWIN32__
++#if !defined(__CYGWIN32__) && !defined(__VISOPSYS__)
+ 
+ /* Not on Cygwin; use standard Unix style low level device operations. */
+ #define ntfs_device_default_io_ops ntfs_device_unix_io_ops
+ 
+-#else /* __CYGWIN32__ */
++#else
+ 
+ #ifndef HDIO_GETGEO
+ #	define HDIO_GETGEO	0x301
+@@ -60,11 +62,22 @@
+ #	define BLKBSZSET	0x40041271
+ #endif
+ 
++#if defined(__VISOPSYS__)
++
++#ifdef BLKGETSIZE64
++#undef BLKGETSIZE64
++#endif
++
++#define ntfs_device_default_io_ops ntfs_device_visopsys_io_ops
++
++#else /* __CYGWIN32__ */
++
+ /* On Cygwin; use Win32 low level device operations. */
+ #define ntfs_device_default_io_ops ntfs_device_win32_io_ops
+ 
+-#endif /* __CYGWIN32__ */
++#endif /* __VISOPSYS__ */
+ 
++#endif /* __CYGWIN32__ || __VISOPSYS__ */
+ 
+ /* Forward declaration. */
+ struct ntfs_device_operations;
+diff -urN ../ntfsprogs-1.13.1/include/ntfs/inode.h ./include/ntfs/inode.h
+--- ../ntfsprogs-1.13.1/include/ntfs/inode.h	2007-01-31 01:51:28.000000000 +0000
++++ ./include/ntfs/inode.h	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifndef _NTFS_INODE_H
+@@ -31,6 +33,7 @@
+ #include "layout.h"
+ #include "support.h"
+ #include "volume.h"
++#include <time.h>
+ 
+ /**
+  * enum ntfs_inode_state_bits -
+diff -urN ../ntfsprogs-1.13.1/include/ntfs/logfile.h ./include/ntfs/logfile.h
+--- ../ntfsprogs-1.13.1/include/ntfs/logfile.h	2007-01-31 01:51:28.000000000 +0000
++++ ./include/ntfs/logfile.h	2007-01-30 22:54:25.000000000 +0000
+@@ -389,6 +389,6 @@
+ 
+ extern BOOL ntfs_check_logfile(ntfs_attr *log_na, RESTART_PAGE_HEADER **rp);
+ extern BOOL ntfs_is_logfile_clean(ntfs_attr *log_na, RESTART_PAGE_HEADER *rp);
+-extern int ntfs_empty_logfile(ntfs_attr *na);
++extern int ntfs_empty_logfile(ntfs_attr *na, progress *, int);
+ 
+ #endif /* defined _NTFS_LOGFILE_H */
+diff -urN ../ntfsprogs-1.13.1/include/ntfs/Makefile.visopsys ./include/ntfs/Makefile.visopsys
+--- ../ntfsprogs-1.13.1/include/ntfs/Makefile.visopsys	1970-01-01 01:00:00.000000000 +0100
++++ ./include/ntfs/Makefile.visopsys	2007-01-30 20:47:21.000000000 +0000
+@@ -0,0 +1,9 @@
++## 
++##  Visopsys
++##  Copyright (C) 1998-2011 J. Andrew McLaughlin
++##  
++##  Makefile
++##
++
++clean:
++	rm -f *~
+diff -urN ../ntfsprogs-1.13.1/include/ntfs/volume.h ./include/ntfs/volume.h
+--- ../ntfsprogs-1.13.1/include/ntfs/volume.h	2007-01-31 01:51:28.000000000 +0000
++++ ./include/ntfs/volume.h	2007-01-30 22:54:46.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifndef _NTFS_VOLUME_H
+@@ -41,6 +43,8 @@
+ #include <mntent.h>
+ #endif
+ 
++#include <sys/progress.h>
++
+ /*
+  * Under Cygwin, DJGPP and FreeBSD we do not have MS_RDONLY and MS_NOATIME,
+  * so we define them ourselves.
+@@ -80,7 +84,7 @@
+ 	NTFS_MF_READONLY	= 4,	/* Device is mounted read-only. */
+ } ntfs_mount_flags;
+ 
+-extern int ntfs_check_if_mounted(const char *file, unsigned long *mnt_flags);
++extern int ntfs_check_if_mounted(const char *filenm, unsigned long *mnt_flags);
+ 
+ /**
+  * enum ntfs_volume_state_bits -
+@@ -224,9 +228,10 @@
+ extern int ntfs_umount(ntfs_volume *vol, const BOOL force);
+ 
+ extern int ntfs_version_is_supported(ntfs_volume *vol);
+-extern int ntfs_logfile_reset(ntfs_volume *vol);
++extern int ntfs_logfile_reset(ntfs_volume *vol, progress *, int);
+ 
+ extern int ntfs_volume_write_flags(ntfs_volume *vol, const u16 flags);
++extern void progress_update(progress *, int, u64, u64);
+ 
+ #ifdef NTFS_RICH
+ 
+diff -urN ../ntfsprogs-1.13.1/libntfs/attrib.c ./libntfs/attrib.c
+--- ../ntfsprogs-1.13.1/libntfs/attrib.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/attrib.c	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -613,6 +615,7 @@
+ 	goto out_now;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_attr_vcn_to_lcn - convert a vcn into a lcn given an ntfs attribute
+  * @na:		ntfs attribute whose runlist to use for conversion
+@@ -663,6 +666,7 @@
+ 	/* lcn contains the appropriate error code. */
+ 	return lcn;
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_attr_find_vcn - find a vcn in the runlist of an ntfs attribute
+@@ -2953,6 +2957,7 @@
+ 	return 0;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_attr_add - add attribute to inode
+  * @ni:		opened ntfs inode to which add attribute
+@@ -3234,6 +3239,7 @@
+ 	/* Done. */
+ 	return ret;
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_attr_record_resize - resize an attribute record
+@@ -4993,6 +4999,7 @@
+ 	return ret;
+ }
+ 	
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_attr_readall - read the entire data from an ntfs attribute
+  * @ni:		open ntfs inode in which the ntfs attribute resides
+@@ -5043,3 +5050,4 @@
+ 	return ret;
+ }
+ 
++#endif /* __VISOPSYS__ */
+diff -urN ../ntfsprogs-1.13.1/libntfs/bitmap.c ./libntfs/bitmap.c
+--- ../ntfsprogs-1.13.1/libntfs/bitmap.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/bitmap.c	2007-01-30 20:47:21.000000000 +0000
+@@ -18,6 +18,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -231,6 +233,7 @@
+ }
+ 
+ 
++#ifndef __VISOPSYS__
+ #ifdef NTFS_RICH
+ 
+ #include "layout.h"
+@@ -671,4 +674,5 @@
+ 
+ 
+ #endif /* NTFS_RICH */
++#endif /* __VISOPSYS__ */
+ 
+diff -urN ../ntfsprogs-1.13.1/libntfs/device.c ./libntfs/device.c
+--- ../ntfsprogs-1.13.1/libntfs/device.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/device.c	2007-01-30 20:47:21.000000000 +0000
+@@ -17,6 +17,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -324,6 +326,7 @@
+ 	return count;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_mst_pwrite - multi sector transfer (mst) positioned write
+  * @dev:	device to write to
+@@ -458,6 +461,7 @@
+ 	}
+ 	return bw >> vol->cluster_size_bits;
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_device_offset_valid - test if a device offset is valid
+@@ -550,6 +554,7 @@
+ 	return (low + 1LL) / block_size;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_device_partition_start_sector_get - get starting sector of a partition
+  * @dev:	open device
+@@ -684,6 +689,7 @@
+ #endif
+ 	return -1;
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_device_block_size_set - set block size of a device
+diff -urN ../ntfsprogs-1.13.1/libntfs/device_io.c ./libntfs/device_io.c
+--- ../ntfsprogs-1.13.1/libntfs/device_io.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/device_io.c	2007-01-30 20:47:21.000000000 +0000
+@@ -17,22 +17,32 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #include "config.h"
+ 
+ #ifndef NO_NTFS_DEVICE_DEFAULT_IO_OPS
+ 
+-#ifndef __CYGWIN32__
++#if !defined(__CYGWIN32__) && !defined(__VISOPSYS__)
+ 
+ /* Not on Cygwin; use standard Unix style low level device operations. */
+ #include "unix_io.c"
+ 
++#else /* __CYGWIN32__ || __VISOPSYS__ */
++
++#if defined(__VISOPSYS__)
++
++#include "visopsys_io.c"
++
+ #else /* __CYGWIN32__ */
+ 
+ /* On Cygwin; use Win32 low level device operations. */
+ #include "win32_io.c"
+ 
+-#endif /* __CYGWIN32__ */
++#endif /* __VISOPSYS__ */
++
++#endif /* __CYGWIN32__ || __VISOPSYS__ */
+ 
+ #endif /* NO_NTFS_DEVICE_DEFAULT_IO_OPS */
+diff -urN ../ntfsprogs-1.13.1/libntfs/dir.c ./libntfs/dir.c
+--- ../ntfsprogs-1.13.1/libntfs/dir.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/dir.c	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -486,6 +488,7 @@
+ 	goto eo_put_err_out;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_pathname_to_inode - Find the inode which represents the given pathname
+  * @vol:       An ntfs volume obtained from ntfs_mount
+@@ -2123,3 +2126,4 @@
+ 
+ #endif /* NTFS_RICH */
+ 
++#endif /* __VISOPSYS__ */
+diff -urN ../ntfsprogs-1.13.1/libntfs/index.c ./libntfs/index.c
+--- ../ntfsprogs-1.13.1/libntfs/index.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/index.c	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -104,6 +106,7 @@
+ 	free(ictx);
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_index_ctx_reinit - reinitialize an index context
+  * @ictx:	index context to reinitialize
+@@ -138,6 +141,7 @@
+ 		.name_len = ictx->name_len,
+ 	};
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_index_lookup - find a key in an index and return its index entry
+@@ -465,6 +469,7 @@
+ 	goto err_out;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_index_add_filename - add filename to directory index
+  * @ni:		ntfs inode describing directory to which index add filename
+@@ -979,4 +984,5 @@
+ 	return root;
+ }
+ 
++#endif /* __VISOPSYS__ */
+ 
+diff -urN ../ntfsprogs-1.13.1/libntfs/inode.c ./libntfs/inode.c
+--- ../ntfsprogs-1.13.1/libntfs/inode.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/inode.c	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -94,7 +96,8 @@
+ 		ntfs_log_debug("Eeek. Discarding dirty inode!\n");
+ 	if (NInoAttrList(ni) && ni->attr_list)
+ 		free(ni->attr_list);
+-	free(ni->mrec);
++	if (ni->mrec)
++		free(ni->mrec);
+ 	free(ni);
+ 	return 0;
+ }
+@@ -1149,6 +1152,7 @@
+ 	return ret;
+ }
+ 
++#ifndef __VISOPSYS__
+ #ifdef NTFS_RICH
+ 
+ #include "rich.h"
+@@ -1285,4 +1289,5 @@
+ 
+ 
+ #endif /* NTFS_RICH */
++#endif /* __VISOPSYS__ */
+ 
+diff -urN ../ntfsprogs-1.13.1/libntfs/logfile.c ./libntfs/logfile.c
+--- ../ntfsprogs-1.13.1/libntfs/logfile.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/logfile.c	2007-01-31 01:38:16.000000000 +0000
+@@ -18,6 +18,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -701,13 +703,19 @@
+  * checked by a call to ntfs_check_logfile() and that ntfs_is_logfile_clean()
+  * has been used to ensure that the $LogFile is clean.
+  */
+-int ntfs_empty_logfile(ntfs_attr *na)
++int ntfs_empty_logfile(ntfs_attr *na, progress *prog, int progidx)
+ {
+ 	s64 len, pos, count;
+-	char buf[NTFS_BUF_SIZE];
++	char *buf = NULL;
+ 	int err;
+ 
+ 	ntfs_log_trace("Entering.\n");
++	buf = malloc(NTFS_BUF_SIZE);
++	if (buf == NULL)
++	  {
++	    err = ENOMEM;
++	    goto io_error_exit;
++	  }
+ 	if (NVolLogFileEmpty(na->ni->vol))
+ 		goto done;
+ 
+@@ -723,6 +731,7 @@
+ 	if (!len) {
+ 		ntfs_log_debug("$LogFile has zero length, no disk write "
+ 				"needed.\n");
++		free(buf);
+ 		return 0;
+ 	}
+ 
+@@ -731,7 +740,11 @@
+ 	   array correctly and hence writing below is safe as well. */
+ 	pos = 0;
+ 	while ((count = ntfs_attr_pread(na, pos, NTFS_BUF_SIZE, buf)) > 0)
++	  {
++		if (prog)
++			progress_update(prog, progidx, pos, (len * 3));
+ 		pos += count;
++	  }
+ 
+ 	if (count == -1 || pos != len) {
+ 		err = errno;
+@@ -759,6 +772,9 @@
+ 				err = EIO;
+ 			goto io_error_exit;
+ 		}
++		if (prog)
++			progress_update(prog, progidx, (len + (pos * 2)),
++					(len * 3));
+ 		pos += count;
+ 	}
+ 
+@@ -766,10 +782,12 @@
+ 	NVolSetLogFileEmpty(na->ni->vol);
+ done:
+ 	ntfs_log_trace("Done.\n");
++	free(buf);
+ 	return 0;
+ io_error_exit:
+ 	ntfs_attr_close(na);
+ 	ntfs_inode_close(na->ni);
+ 	errno = err;
++	free(buf);
+ 	return -1;
+ }
+diff -urN ../ntfsprogs-1.13.1/libntfs/logging.c ./libntfs/logging.c
+--- ../ntfsprogs-1.13.1/libntfs/logging.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/logging.c	2007-01-30 20:47:21.000000000 +0000
+@@ -17,6 +17,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -81,13 +83,14 @@
+ 	NTFS_LOG_LEVEL_REASON | NTFS_LOG_LEVEL_PROGRESS,
+ 	NTFS_LOG_FLAG_ONLYNAME,
+ #ifdef DEBUG
+-	ntfs_log_handler_outerr
++	(ntfs_log_handler *) ntfs_log_handler_outerr
+ #else
+-	ntfs_log_handler_null
++	(ntfs_log_handler *) ntfs_log_handler_null
+ #endif
+ };
+ 
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_log_get_levels - Get a list of the current logging levels
+  *
+@@ -180,6 +183,7 @@
+ 	ntfs_log.flags &= (~flags);
+ 	return old;
+ }
++#endif /* __VISOPSYS__ */
+ 
+ 
+ /**
+@@ -193,14 +197,14 @@
+  */
+ static FILE * ntfs_log_get_stream(u32 level)
+ {
+-	FILE *stream;
++	FILE *strm;
+ 
+ 	switch (level) {
+ 		case NTFS_LOG_LEVEL_INFO:
+ 		case NTFS_LOG_LEVEL_QUIET:
+ 		case NTFS_LOG_LEVEL_PROGRESS:
+ 		case NTFS_LOG_LEVEL_VERBOSE:
+-			stream = stdout;
++			strm = stdout;
+ 			break;
+ 
+ 		case NTFS_LOG_LEVEL_DEBUG:
+@@ -210,11 +214,11 @@
+ 		case NTFS_LOG_LEVEL_CRITICAL:
+ 		case NTFS_LOG_LEVEL_PERROR:
+ 		default:
+-			stream = stderr;
++			strm = stderr;
+ 			break;
+ 	}
+ 
+-	return stream;
++	return strm;
+ }
+ 
+ /**
+@@ -285,7 +289,7 @@
+ 			openlog("libntfs", LOG_PID, LOG_USER);
+ #endif
+ 	} else
+-		ntfs_log.handler = ntfs_log_handler_null;
++		ntfs_log.handler = (ntfs_log_handler *) ntfs_log_handler_null;
+ }
+ 
+ /**
+@@ -305,7 +309,7 @@
+  *            0  Message wasn't logged
+  *          num  Number of output characters
+  */
+-int ntfs_log_redirect(const char *function, const char *file,
++int ntfs_log_redirect(const char *function, const char *logfile,
+ 	int line, u32 level, void *data, const char *format, ...)
+ {
+ 	int olderr = errno;
+@@ -317,7 +321,7 @@
+ 
+ 	va_start(args, format);
+ 	errno = olderr;
+-	ret = ntfs_log.handler(function, file, line, level, data, format, args);
++	ret = ntfs_log.handler(function, logfile, line, level, data, format, args);
+ 	va_end(args);
+ 
+ 	errno = olderr;
+@@ -325,6 +329,7 @@
+ }
+ 
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_log_handler_syslog - syslog logging handler
+  * @function:	Function in which the log line occurred
+@@ -400,6 +405,7 @@
+ 	return ret;
+ }
+ #endif
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_log_handler_fprintf - Basic logging handler
+@@ -422,20 +428,20 @@
+  *            0  Message wasn't logged
+  *          num  Number of output characters
+  */
+-int ntfs_log_handler_fprintf(const char *function, const char *file,
++int ntfs_log_handler_fprintf(const char *function, const char *logfile,
+ 	int line, u32 level, void *data, const char *format, va_list args)
+ {
+ 	const int reason_size = 128;
+ 	static char *reason = NULL;
+ 	int ret = 0;
+ 	int olderr = errno;
+-	FILE *stream;
++	FILE *strm;
+ 	const char *col_prefix = NULL;
+ 	const char *col_suffix = NULL;
+ 
+ 	if (!data)		/* Interpret data as a FILE stream. */
+ 		return 0;	/* If it's NULL, we can't do anything. */
+-	stream = (FILE*)data;
++	strm = (FILE*)data;
+ 
+ 	if (level == NTFS_LOG_LEVEL_REASON) {
+ 		if (!reason)
+@@ -480,39 +486,39 @@
+ 	}
+ 
+ 	if (col_prefix)
+-		ret += fprintf(stream, col_prefix);
++		ret += fprintf(strm, col_prefix);
+ 
+ 	if ((ntfs_log.flags & NTFS_LOG_FLAG_ONLYNAME) &&
+-	    (strchr(file, PATH_SEP)))		/* Abbreviate the filename */
+-		file = strrchr(file, PATH_SEP) + 1;
++	    (strchr(logfile, PATH_SEP)))		/* Abbreviate the filename */
++		logfile = strrchr(logfile, PATH_SEP) + 1;
+ 
+ 	if (ntfs_log.flags & NTFS_LOG_FLAG_PREFIX)	/* Prefix the output */
+-		ret += fprintf(stream, "%s", ntfs_log_get_prefix(level));
++		ret += fprintf(strm, "%s", ntfs_log_get_prefix(level));
+ 
+ 	if (ntfs_log.flags & NTFS_LOG_FLAG_FILENAME)	/* Source filename */
+-		ret += fprintf(stream, "%s ", file);
++		ret += fprintf(strm, "%s ", logfile);
+ 
+ 	if (ntfs_log.flags & NTFS_LOG_FLAG_LINE)	/* Source line number */
+-		ret += fprintf(stream, "(%d) ", line);
++		ret += fprintf(strm, "(%d) ", line);
+ 
+ 	if ((ntfs_log.flags & NTFS_LOG_FLAG_FUNCTION) || /* Source function */
+ 	    (level & NTFS_LOG_LEVEL_TRACE))
+-		ret += fprintf(stream, "%s(): ", function);
++		ret += fprintf(strm, "%s(): ", function);
+ 
+-	ret += vfprintf(stream, format, args);
++	ret += vfprintf(strm, format, args);
+ 
+ 	if (level & NTFS_LOG_LEVEL_PERROR) {
+ 		if (reason)
+-			ret += fprintf(stream, " : %s\n", reason);
++			ret += fprintf(strm, " : %s\n", reason);
+ 		else
+-			ret += fprintf(stream, " : %s\n", strerror(olderr));
++			ret += fprintf(strm, " : %s\n", strerror(olderr));
+ 	}
+ 
+ 	if (col_suffix)
+-		ret += fprintf(stream, col_suffix);
++		ret += fprintf(strm, col_suffix);
+ 
+ 
+-	fflush(stream);
++	fflush(strm);
+ 	errno = olderr;
+ 	return ret;
+ }
+@@ -532,13 +538,14 @@
+  *
+  * Returns:  0  Message wasn't logged
+  */
+-int ntfs_log_handler_null(const char *function __attribute__((unused)), const char *file __attribute__((unused)),
++int ntfs_log_handler_null(const char *function __attribute__((unused)), const char *logfile __attribute__((unused)),
+ 	int line __attribute__((unused)), u32 level __attribute__((unused)), void *data __attribute__((unused)),
+ 	const char *format __attribute__((unused)), va_list args __attribute__((unused)))
+ {
+ 	return 0;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_log_handler_stdout - All logs go to stdout
+  * @function:	Function in which the log line occurred
+@@ -568,6 +575,7 @@
+ 
+ 	return ntfs_log_handler_fprintf(function, file, line, level, data, format, args);
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_log_handler_outerr - Logs go to stdout/stderr depending on level
+@@ -591,15 +599,16 @@
+  *            0  Message wasn't logged
+  *          num  Number of output characters
+  */
+-int ntfs_log_handler_outerr(const char *function, const char *file,
++int ntfs_log_handler_outerr(const char *function, const char *logfile,
+ 	int line, u32 level, void *data, const char *format, va_list args)
+ {
+ 	if (!data)
+ 		data = ntfs_log_get_stream(level);
+ 
+-	return ntfs_log_handler_fprintf(function, file, line, level, data, format, args);
++	return ntfs_log_handler_fprintf(function, logfile, line, level, data, format, args);
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_log_handler_stderr - All logs go to stderr
+  * @function:	Function in which the log line occurred
+@@ -668,3 +677,4 @@
+ 	return FALSE;
+ }
+ 
++#endif /* __VISOPSYS__ */
+diff -urN ../ntfsprogs-1.13.1/libntfs/Makefile.visopsys ./libntfs/Makefile.visopsys
+--- ../ntfsprogs-1.13.1/libntfs/Makefile.visopsys	1970-01-01 01:00:00.000000000 +0100
++++ ./libntfs/Makefile.visopsys	2007-01-30 20:47:21.000000000 +0000
+@@ -0,0 +1,86 @@
++## 
++##  Visopsys
++##  Copyright (C) 1998-2011 J. Andrew McLaughlin
++##  
++##  Makefile
++##
++
++ROOT=../../..
++BUILDDIR=${ROOT}/build/system/libraries
++INCDIR=../include/ntfs/
++PROGDIR=../ntfsprogs
++SYSINCDIR=${ROOT}/src/include
++
++include ${ROOT}/Makefile.include
++
++STDDEPS		= ${ROOT}/Makefile.include Makefile.visopsys ${INCDIR}/*.h \
++		${SYSINCDIR}/*.h ${SYSINCDIR}/sys/*.h
++INCLUDE         = -nostdinc -I${INCDIR} -I${SYSINCDIR}
++CFLAGS		= ${OPT} ${ARCH} ${CODEGEN} ${WARN} ${INCLUDE} \
++		-DHAVE_CONFIG_H #-DDEBUG
++LFLAGS		= -nostdlib
++
++NAMES	= attrib \
++	attrlist \
++	bitmap \
++	bootsect \
++	collate \
++	compress \
++	debug \
++	device \
++	device_io \
++	dir \
++	index \
++	inode \
++	lcnalloc \
++	logfile \
++	logging \
++	mft \
++	mst \
++	ntfsresize \
++	runlist \
++	unistr \
++	volume
++
++OBJDIR = obj
++OBJS = $(addprefix ${OBJDIR}/, $(addsuffix .o, ${NAMES}))
++PICOBJDIR = picobj
++PICOBJS = $(addprefix ${PICOBJDIR}/, $(addsuffix .o, ${NAMES}))
++LIBRARY = ${BUILDDIR}/libntfs.a
++SONAME = libntfs.so
++SHAREDLIB = ${BUILDDIR}/${SONAME}
++
++# Targets
++
++all: target-dirs ${LIBRARY} ${SHAREDLIB}
++
++target-dirs:
++	mkdir -p ${OBJDIR} ${PICOBJDIR} ${BUILDDIR}
++
++${LIBRARY}: ${OBJS}
++	${AR} -rs ${LIBRARY} ${OBJS}
++
++${SHAREDLIB}: ${PICOBJS}
++	${CC} -shared -nostdlib -Wl,-soname=${SONAME} ${PICOBJS} -static \
++	-lgcc -o $@
++
++${OBJDIR}/device_io.o: visopsys_io.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/device_io.o: visopsys_io.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
++${OBJDIR}/ntfsresize.o: ${PROGDIR}/ntfsresize.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/ntfsresize.o: ${PROGDIR}/ntfsresize.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
++${OBJDIR}/%.o: %.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -c $< -o $@
++
++${PICOBJDIR}/%.o: %.c ${STDDEPS}
++	${CC} ${CFLAGS} ${LFLAGS} -fpic -c $< -o $@
++
++clean:
++	rm -Rf *~ *.o core ${OBJDIR} ${PICOBJDIR} ${LIBRARY} ${SHAREDLIB}
+diff -urN ../ntfsprogs-1.13.1/libntfs/mft.c ./libntfs/mft.c
+--- ../ntfsprogs-1.13.1/libntfs/mft.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/mft.c	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -189,7 +191,8 @@
+ 			res = errno;
+ 		}
+ 	}
+-	free(bmirr);
++	if (bmirr)
++		free(bmirr);
+ 	if (!res)
+ 		return res;
+ 	errno = res;
+@@ -1556,6 +1559,7 @@
+ }
+ 
+ 
++#ifndef __VISOPSYS__
+ #ifdef NTFS_RICH
+ 
+ #include "bitmap.h"
+@@ -1958,3 +1962,4 @@
+ 	return 0;
+ }
+ 
++#endif /* __VISOPSYS__ */
+diff -urN ../ntfsprogs-1.13.1/libntfs/runlist.c ./libntfs/runlist.c
+--- ../ntfsprogs-1.13.1/libntfs/runlist.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/runlist.c	2007-01-30 20:47:21.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -1721,6 +1723,7 @@
+ /*
+ }
+ */
++#ifndef __VISOPSYS__
+ /**
+  * test_rl_dump_runlist - Runlist test: Display the contents of a runlist
+  * @rl:
+@@ -2121,6 +2124,7 @@
+ 
+ 	return 0;
+ }
++#endif /* __VISOPSYS__ */
+ 
+ #endif
+ 
+diff -urN ../ntfsprogs-1.13.1/libntfs/unistr.c ./libntfs/unistr.c
+--- ../ntfsprogs-1.13.1/libntfs/unistr.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/unistr.c	2007-01-30 20:47:21.000000000 +0000
+@@ -17,6 +17,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -307,6 +309,7 @@
+ 	return dst;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_name_upcase - Map an Unicode name to its uppercase equivalent
+  * @name:
+@@ -345,6 +348,7 @@
+ 	ntfs_name_upcase((ntfschar*)&file_name_attr->file_name,
+ 			file_name_attr->file_name_length, upcase, upcase_len);
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_file_values_compare - Which of two filenames should be listed first
+diff -urN ../ntfsprogs-1.13.1/libntfs/visopsys_io.c ./libntfs/visopsys_io.c
+--- ../ntfsprogs-1.13.1/libntfs/visopsys_io.c	1970-01-01 01:00:00.000000000 +0100
++++ ./libntfs/visopsys_io.c	2007-01-30 20:47:21.000000000 +0000
+@@ -0,0 +1,617 @@
++// 
++//  Visopsys
++//  Copyright (C) 1998-2011 J. Andrew McLaughlin
++//  
++//  This library is free software; you can redistribute it and/or modify it
++//  under the terms of the GNU Lesser General Public License as published by
++//  the Free Software Foundation; either version 2.1 of the License, or (at
++//  your option) any later version.
++//
++//  This library is distributed in the hope that it will be useful, but
++//  WITHOUT ANY WARRANTY; without even the implied warranty of
++//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
++//  General Public License for more details.
++//
++//  You should have received a copy of the GNU Lesser General Public License
++//  along with this library; if not, write to the Free Software Foundation,
++//  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++//
++//  visopsys_io.c
++//
++//  A stdio-like disk I/O implementation for low-level disk access on
++//  Visopsys.  Can access an NTFS volume while it is mounted.  Heavily
++//  modified from win32_io.c in the Linux-NTFS project.
++//
++//  Copyrights in original file:
++//    Copyright (c) 2003-2004 Lode Leroy
++//    Copyright (c) 2003-2005 Anton Altaparmakov
++
++#include <errno.h>
++#include <fcntl.h>
++#include <stdlib.h>
++#include <sys/api.h>
++#include "device.h"
++
++typedef struct {
++  int isDisk;
++  file file;
++  disk disk;
++  s64 partLength;
++  s64 position;    // Logical current position in the file/disk
++
++} visopsys_fd;
++
++#define Vdebug(f, a...) do {                      \
++  ntfs_log_debug("VISOPSYS: %s: ", __FUNCTION__); \
++  ntfs_log_debug(f, ##a);                         \
++} while(0)
++
++static int ntfs_visopsys_errno(unsigned error)
++{
++  // Convert a Visopsys error to a UNIX one
++
++  switch (error) {
++  case ERR_NOSUCHFUNCTION:
++    return EBADRQC;
++  case ERR_NOSUCHENTRY:
++  case ERR_NOSUCHFILE:
++  case ERR_NOSUCHDIR:
++    return ENOENT;
++  case ERR_PERMISSION:
++    return EACCES;
++  case ERR_MEMORY:
++    return ENOMEM;
++  case ERR_NOFREE:
++    return ENOSPC;
++  case ERR_NOMEDIA:
++    return ENODEV;
++  case ERR_NOWRITE:
++    return EROFS;
++  case ERR_BUSY:
++    return EBUSY;
++  case ERR_INVALID:
++  case ERR_NULLPARAMETER:
++    return EINVAL;
++  case ERR_NOSUCHDRIVER:
++  case ERR_NOTIMPLEMENTED:
++    return EOPNOTSUPP;
++  default:
++    // generic message
++    return ERR_ERROR;
++  }
++}
++
++
++static int ntfs_device_visopsys_open(struct ntfs_device *dev, int flags)
++{
++  // Open a device.  dev->d_name must hold the device name, the rest is
++  // ignored.  Supported flags are O_RDONLY, O_WRONLY and O_RDWR.
++  // If the name is not a Visopsys disk name, treat it as a file.
++
++  int status = 0;
++  file f;
++  visopsys_fd *fd = NULL;
++
++  Vdebug("OPEN\n");
++
++  if (NDevOpen(dev))
++    {
++      errno = ntfs_visopsys_errno(ERR_BUSY);
++      return (status = -1);
++    }
++
++  // File name?
++  if (fileFind(dev->d_name, &f) >= 0)
++    {
++      ntfs_log_trace("Can't open regular files\n");
++      errno = ntfs_visopsys_errno(ERR_NOTIMPLEMENTED);
++      return (status = -1);
++    }
++
++  fd = malloc(sizeof(visopsys_fd));
++  if (fd == NULL)
++    {
++      ntfs_log_trace("Memory allocation failure\n");
++      errno = ntfs_visopsys_errno(ERR_MEMORY);
++      return (status = -1);
++    }
++
++  // Disk name.  No UNIX-style opening required.
++
++  // Try to get disk information
++  status = diskGet(dev->d_name, &(fd->disk));
++  if (status < 0)
++    {
++      ntfs_log_trace("Can't get disk information\n");
++      goto error_out;
++    }
++
++  // Make sure it's a logical disk (a partition, that is) rather than a
++  // physical one
++  if ((fd->disk.flags & DISKFLAG_LOGICALPHYSICAL) != DISKFLAG_LOGICAL)
++    {
++      ntfs_log_trace("Can't open physical disks\n");
++      status = ERR_NOTIMPLEMENTED;
++      goto error_out;
++    }
++
++  // Make sure the sector size is set
++  if (fd->disk.sectorSize == 0)
++    {
++      ntfs_log_trace("Disk sector size is NULL\n");
++      status = ERR_BUG;
++      goto error_out;
++    }
++
++  fd->partLength = ((s64) fd->disk.numSectors * (s64) fd->disk.sectorSize);
++
++  dev->d_private = fd;
++  NDevSetOpen(dev);
++  NDevClearDirty(dev);
++
++  // Setup our read-only flag.
++  if ((flags & O_RDWR) != O_RDWR)
++    NDevSetReadOnly(dev);
++
++  return (status = 0);
++
++ error_out:
++  free(fd);
++  errno = ntfs_visopsys_errno(status);
++  return (status = -1);
++}
++
++
++static int ntfs_device_visopsys_close(struct ntfs_device *dev)
++{
++  // Close an open ntfs deivce
++  // dev:	ntfs device obtained via ->open
++  // Return 0 if o.k.
++  //	 -1 if not, and errno set.  Note if error fd->vol_handle is trashed.
++
++  int status = 0;
++  visopsys_fd *fd = NULL;
++
++  Vdebug("CLOSE\n");
++
++  // Check params
++  if (dev == NULL)
++    {
++      ntfs_log_trace("NULL device parameter\n");
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (status = -1);
++    }
++
++  if (!NDevOpen(dev))
++    {
++      ntfs_log_trace("Can't open device\n");
++      errno = ntfs_visopsys_errno(ERR_INVALID);
++      return (status = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  free(fd);
++
++  return (status = 0);
++}
++
++
++static s64 ntfs_device_visopsys_seek(struct ntfs_device *dev, s64 offset,
++				     int whence)
++{
++  // Change current logical file position
++  // dev:	ntfs device obtained via ->open
++  // offset:	required offset from the whence anchor
++  // whence:	whence anchor specifying what @offset is relative to
++  // Return the new position on the volume on success and -1 on error with
++  // errno set to the error code.
++  // whence may be one of the following:
++  //	SEEK_SET - Offset is relative to file start.
++  //	SEEK_CUR - Offset is relative to current position.
++  //	SEEK_END - Offset is relative to end of file.
++
++  s64 abs_ofs = 0;
++  visopsys_fd *fd = NULL;
++
++  //Vdebug("SEEK\n");
++
++  // Check params
++  if (dev == NULL)
++    {
++      ntfs_log_trace("NULL device parameter\n");
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (abs_ofs = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  switch (whence)
++    {
++    case SEEK_SET:
++      abs_ofs = offset;
++      break;
++
++    case SEEK_CUR:
++      abs_ofs = (fd->position + offset);
++      break;
++
++    case SEEK_END:
++      // End of partition != end of disk.
++      if (fd->partLength == -1) {
++	Vdebug("End of partition != end of disk.\n");
++	errno = ntfs_visopsys_errno(ERR_NOTIMPLEMENTED);
++	return (abs_ofs = -1);
++      }
++      abs_ofs = (fd->partLength + offset);
++      break;
++
++    default:
++      ntfs_log_trace("Invalid 'whence' seek argument %d\n", whence);
++      errno = ntfs_visopsys_errno(ERR_INVALID);
++      return (abs_ofs = -1);
++    }
++
++  // abs_ofs should be a multiple of the block size
++  if (abs_ofs % (s64) fd->disk.sectorSize)
++    {
++      ntfs_log_trace("Seek address is not a multiple of sector size\n");
++      errno = ntfs_visopsys_errno(ERR_INVALID);
++      return (abs_ofs = -1);
++    }
++
++  if ((abs_ofs < 0) || (abs_ofs > fd->partLength))
++    {
++      ntfs_log_trace("Seek outside partition (sector %llu)",
++	     (abs_ofs / (s64) fd->disk.sectorSize));
++      if (abs_ofs < 0)
++	ntfs_log_trace("(abs_ofs (%llu) < 0)\n", abs_ofs);
++      else
++	ntfs_log_trace("(abs_ofs (%llu) > fd->partLength (%llu))\n", abs_ofs,
++		       fd->partLength);
++      errno = EINVAL;
++      return (abs_ofs = -1);
++    }
++
++  fd->position = abs_ofs;
++  return (abs_ofs);
++}
++
++
++static s64 ntfs_device_visopsys_read(struct ntfs_device *dev, void *buff,
++				     s64 count)
++{
++  // Read bytes from an ntfs device
++  // dev:	ntfs device obtained via ->open
++  // buff:	pointer to where to put the contents
++  // count:	how many bytes should be read
++  // On success returns the number of bytes actually read (can be < count).
++  // On error returns -1 with errno set.
++
++  int status = 0;
++  visopsys_fd *fd = NULL;
++  s64 startSector = 0;
++  s64 sectorCount = 0;
++  void *saveBuff = NULL;
++  s64 br = 0;
++
++  //Vdebug("READ\n");
++
++  // Check params
++  if ((dev == NULL) || (buff == NULL) || (count <= 0))
++    {
++      ntfs_log_trace("NULL parameter\n");
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (status = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  startSector = (fd->position / (s64) fd->disk.sectorSize);
++  sectorCount = (count / (s64) fd->disk.sectorSize);
++
++  if ((count % (s64) fd->disk.sectorSize) ||
++      (fd->position % (s64) fd->disk.sectorSize))
++    {
++      Vdebug("Doing off-kilter read");
++
++      saveBuff = buff;
++
++      if (count % (s64) fd->disk.sectorSize)
++	sectorCount += 1;
++
++      if (fd->position % (s64) fd->disk.sectorSize)
++	sectorCount += 1;
++
++      buff = malloc(sectorCount * fd->disk.sectorSize);
++      if (buff == NULL)
++	{
++	  ntfs_log_trace("Memory allocation failure\n");
++	  errno = ntfs_visopsys_errno(ERR_MEMORY);
++	  return (status = -1);
++	}
++    }
++
++  // Read sectors
++  status = diskReadSectors(fd->disk.name, (unsigned) startSector,
++			   (unsigned) sectorCount, buff);
++  if (status < 0)
++    {
++      ntfs_log_trace("Error %d doing disk read\n", status);
++      errno = ntfs_visopsys_errno(status);
++      return (status = -1);
++    }
++
++  if (saveBuff)
++    {
++      memcpy(saveBuff, (buff + (fd->position % (s64) fd->disk.sectorSize)),
++	     count);
++      free(buff);
++    }
++
++  br = count;
++  fd->position += count;
++  return (br);
++}
++
++
++static s64 ntfs_device_visopsys_write(struct ntfs_device *dev,
++				      const void *buff, s64 count)
++{
++  // Write bytes to an ntfs device
++  // dev:	ntfs device obtained via ->open
++  // buff:	pointer to the data to write
++  // count:	how many bytes should be written
++  // On success returns the number of bytes actually written.
++  // On error returns -1 with errno set.
++
++  int status = 0;
++  visopsys_fd *fd = NULL;
++  s64 startSector = 0;
++  s64 sectorCount = 0;
++  void *saveBuff = NULL;
++  s64 br = 0;
++
++  //Vdebug("WRITE\n");
++
++  // Check params
++  if ((dev == NULL) || (buff == NULL) || (count <= 0))
++    {
++      ntfs_log_trace("NULL parameter\n");
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (status = -1);
++    }
++
++  if (NDevReadOnly(dev))
++    {
++      ntfs_log_trace("Device is read-only\n");
++      errno = EROFS;
++      return (status = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  startSector = (fd->position / (s64) fd->disk.sectorSize);
++  sectorCount = (count / (s64) fd->disk.sectorSize);
++
++  if ((count % (s64) fd->disk.sectorSize) ||
++      (fd->position % (s64) fd->disk.sectorSize))
++    {
++      Vdebug("Doing off-kilter write");
++
++      saveBuff = (void *) buff;
++
++      if (count % (s64) fd->disk.sectorSize)
++	sectorCount += 1;
++
++      if (fd->position % (s64) fd->disk.sectorSize)
++	sectorCount += 1;
++
++      buff = malloc(sectorCount * fd->disk.sectorSize);
++      if (buff == NULL)
++	{
++	  ntfs_log_trace("Memory allocation failure\n");
++	  errno = ntfs_visopsys_errno(ERR_MEMORY);
++	  return (status = -1);
++	}
++
++      if (fd->position % (s64) fd->disk.sectorSize)
++	{
++	  // The current position is not a multiple of the sector size.
++	  // Read the first sector into the buffer
++	  status = diskReadSectors(fd->disk.name, (unsigned) startSector, 1,
++				   (void *) buff);
++	  if (status < 0)
++	    {
++	      ntfs_log_trace("Error %d doing disk read\n", status);
++	      free((void *) buff);
++	      errno = ntfs_visopsys_errno(status);
++	      return (status = -1);
++	    }
++	}
++
++      if (count % (s64) fd->disk.sectorSize)
++	{
++	  // The count is not a multiple of the sector size.  Read the last
++	  // sector into the buffer
++	  s64 lastSector = (startSector + (sectorCount - 1));
++
++	  status =
++	    diskReadSectors(fd->disk.name, (unsigned) lastSector, 1, (void *)
++			    (buff + ((lastSector - startSector) *
++				     fd->disk.sectorSize)));
++	  if (status < 0)
++	    {
++	      ntfs_log_trace("Error %d doing disk read\n", status);
++	      free((void *) buff);
++	      errno = ntfs_visopsys_errno(status);
++	      return (status = -1);
++	    }
++	}
++
++      // Copy the user-supplied data into the appropriate place in the buffer
++      memcpy((void *) buff,
++	     (saveBuff + (fd->position % (s64) fd->disk.sectorSize)), count);
++    }
++
++  // Read sectors
++  status = diskWriteSectors(fd->disk.name, (unsigned) startSector,
++			    (unsigned) sectorCount, buff);
++
++  if (saveBuff)
++    free((void *) buff);
++
++  if (status < 0)
++    {
++      ntfs_log_trace("Error %d doing disk write\n", status);
++      errno = ntfs_visopsys_errno(status);
++      return (status = -1);
++    }
++  else
++    NDevSetDirty(dev);
++
++  br = count;
++  fd->position += count;
++  return (br);
++}
++
++
++static s64 ntfs_device_visopsys_pread(struct ntfs_device *dev, void *b,
++				      s64 count, s64 offset)
++{
++  //Vdebug("PREAD\n");
++  return (ntfs_pread(dev, offset, count, b));
++}
++
++
++static s64 ntfs_device_visopsys_pwrite(struct ntfs_device *dev, const void *b,
++				       s64 count, s64 offset)
++{
++  //Vdebug("PWRITE\n");
++  return (ntfs_pwrite(dev, offset, count, b));
++}
++
++
++static int ntfs_device_visopsys_sync(struct ntfs_device *dev)
++{
++  // Flush write buffers to disk
++  // dev:	ntfs device obtained via ->open
++  // Return 0 if o.k.
++  //	 -1 if not, and errno set.
++
++  int status = 0;
++  visopsys_fd *fd = NULL;
++
++  Vdebug("SYNC\n");
++
++  // Check params
++  if (dev == NULL)
++    {
++      ntfs_log_trace("NULL device parameter\n");
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (status = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  if (!NDevReadOnly(dev) && NDevDirty(dev))
++    {
++      status = diskSync();
++      if (status < 0)
++	{
++	  ntfs_log_trace("Error syncing disk\n");
++	  errno = ntfs_visopsys_errno(errno);
++	  return (status = -1);
++	}
++
++      NDevClearDirty(dev);
++    }
++
++  return (status = 0);
++}
++
++
++static int ntfs_device_visopsys_stat(struct ntfs_device *dev,
++				     struct stat *buff)
++{
++  // Get a unix-like stat structure for an ntfs device
++  // dev:	ntfs device obtained via ->open
++  // buf:	pointer to the stat structure to fill
++  // Note: Only st_mode, st_size, and st_blocks are filled.
++  // Return 0 if o.k.
++  //	 -1 if not and errno set. in this case handle is trashed.
++
++  int status = 0;
++  visopsys_fd *fd = NULL;
++
++  Vdebug("STAT\n");
++
++  // Check params
++  if ((dev == NULL) || (buff == NULL))
++    {
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (status = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  ntfs_log_trace("stat() operation not implemented\n");
++  errno = ntfs_visopsys_errno(ERR_NOTIMPLEMENTED);
++  return (status = -1);
++}
++
++
++static int ntfs_device_visopsys_ioctl(struct ntfs_device *dev, int request,
++				      void *argp)
++{
++  int status = 0;
++  visopsys_fd *fd = NULL;
++
++  Vdebug("IOCTL %x\n", request);
++
++  // Check params
++  if ((dev == NULL) || (argp == NULL))
++    {
++      ntfs_log_trace("NULL parameter\n");
++      errno = ntfs_visopsys_errno(ERR_NULLPARAMETER);
++      return (status = -1);
++    }
++
++  fd = (visopsys_fd *) dev->d_private;
++
++  switch (request)
++    {
++    case BLKGETSIZE:
++      // Get the size of the device in sectors
++      if (fd->partLength >= 0)
++	{
++	  *((int *) argp) = (fd->disk.numSectors);
++	  return 0;
++	}
++      break;
++
++    case BLKBSZSET:
++      // Set the device sector size.  Not applicable.
++      break;
++
++    default:
++      ntfs_log_trace("IOCTL %x not implemented\n", request);
++      errno = ntfs_visopsys_errno(ERR_NOTIMPLEMENTED);
++      return (status = -1);
++    }
++  return 0;
++}
++
++
++struct ntfs_device_operations ntfs_device_visopsys_io_ops = {
++  .open		= ntfs_device_visopsys_open,
++  .close	= ntfs_device_visopsys_close,
++  .seek		= ntfs_device_visopsys_seek,
++  .read		= ntfs_device_visopsys_read,
++  .write	= ntfs_device_visopsys_write,
++  .pread	= ntfs_device_visopsys_pread,
++  .pwrite	= ntfs_device_visopsys_pwrite,
++  .sync		= ntfs_device_visopsys_sync,
++  .stat		= ntfs_device_visopsys_stat,
++  .ioctl	= ntfs_device_visopsys_ioctl
++};
+diff -urN ../ntfsprogs-1.13.1/libntfs/volume.c ./libntfs/volume.c
+--- ../ntfsprogs-1.13.1/libntfs/volume.c	2007-01-31 01:51:28.000000000 +0000
++++ ./libntfs/volume.c	2007-01-30 22:45:04.000000000 +0000
+@@ -19,6 +19,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation,Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+@@ -118,9 +120,12 @@
+ 		if (dev->d_ops->close(dev))
+ 			ntfs_log_perror("Eeek! Failed to close the device.  Error: ");
+ 	}
+-	free(v->vol_name);
+-	free(v->upcase);
+-	free(v->attrdef);
++	if (v->vol_name)
++		free(v->vol_name);
++	if (v->upcase)
++		free(v->upcase);
++	if (v->attrdef)
++		free(v->attrdef);
+ 	free(v);
+ }
+ 
+@@ -601,7 +606,8 @@
+ 	}
+ 	if (!ntfs_check_logfile(na, &rp) || !ntfs_is_logfile_clean(na, rp))
+ 		err = EOPNOTSUPP;
+-	free(rp);
++	if (rp)
++		free(rp);
+ exit:
+ 	if (na)
+ 		ntfs_attr_close(na);
+@@ -1130,8 +1136,10 @@
+ 	eo = errno;
+ 	if (ctx)
+ 		ntfs_attr_put_search_ctx(ctx);
+-	free(m);
+-	free(m2);
++	if (m)
++		free(m);
++	if (m2)
++		free(m2);
+ 	__ntfs_volume_release(vol);
+ 	errno = eo;
+ 	return NULL;
+@@ -1193,6 +1201,7 @@
+ #endif
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * ntfs_device_umount - close ntfs volume
+  * @vol: address of ntfs_volume structure of volume to close
+@@ -1337,6 +1346,7 @@
+ 	return 0;
+ }
+ #endif /* HAVE_MNTENT_H */
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * ntfs_check_if_mounted - check if an ntfs volume is currently mounted
+@@ -1363,12 +1373,12 @@
+  *
+  * On error return -1 with errno set to the error code.
+  */
+-int ntfs_check_if_mounted(const char *file __attribute__((unused)),
++int ntfs_check_if_mounted(const char *filenm __attribute__((unused)),
+ 		unsigned long *mnt_flags)
+ {
+ 	*mnt_flags = 0;
+ #ifdef HAVE_MNTENT_H
+-	return ntfs_mntent_check(file, mnt_flags);
++	return ntfs_mntent_check(filenm, mnt_flags);
+ #else
+ 	return 0;
+ #endif
+@@ -1430,7 +1440,7 @@
+  *
+  * On error return -1 with errno set to the error code.
+  */
+-int ntfs_logfile_reset(ntfs_volume *vol)
++int ntfs_logfile_reset(ntfs_volume *vol, progress *prog, int progidx)
+ {
+ 	ntfs_inode *ni;
+ 	ntfs_attr *na;
+@@ -1452,7 +1462,7 @@
+ 		goto error_exit;
+ 	}
+ 
+-	if (ntfs_empty_logfile(na)) {
++	if (ntfs_empty_logfile(na, prog, progidx)) {
+ 		eo = errno;
+ 		ntfs_log_perror("Failed to empty $FILE_LogFile/$DATA");
+ 		ntfs_attr_close(na);
+@@ -1535,6 +1545,7 @@
+ }
+ 
+ 
++#ifndef __VISOPSYS__
+ #ifdef NTFS_RICH
+ 
+ #include "tree.h"
+@@ -1898,4 +1909,5 @@
+ 
+ 
+ #endif /* NTFS_RICH */
++#endif /* __VISOPSYS__ */
+ 
+diff -urN ../ntfsprogs-1.13.1/Makefile.visopsys ./Makefile.visopsys
+--- ../ntfsprogs-1.13.1/Makefile.visopsys	1970-01-01 01:00:00.000000000 +0100
++++ ./Makefile.visopsys	2007-01-30 20:47:21.000000000 +0000
+@@ -0,0 +1,18 @@
++## 
++##  Visopsys
++##  Copyright (C) 1998-2011 J. Andrew McLaughlin
++##  
++##  Makefile
++##
++
++BUILDDIR=../../build/system/libraries
++
++all:
++	mkdir -p ${BUILDDIR}
++	make -C libntfs -f Makefile.visopsys
++
++clean:
++	rm -f *~ *.o core
++	make -C include/ntfs -f Makefile.visopsys clean
++	make -C libntfs -f Makefile.visopsys clean
++	make -C ntfsprogs -f Makefile.visopsys clean
+diff -urN ../ntfsprogs-1.13.1/ntfsprogs/Makefile.visopsys ./ntfsprogs/Makefile.visopsys
+--- ../ntfsprogs-1.13.1/ntfsprogs/Makefile.visopsys	1970-01-01 01:00:00.000000000 +0100
++++ ./ntfsprogs/Makefile.visopsys	2007-01-30 20:47:21.000000000 +0000
+@@ -0,0 +1,9 @@
++## 
++##  Visopsys
++##  Copyright (C) 1998-2011 J. Andrew McLaughlin
++##  
++##  Makefile
++##
++
++clean:
++	rm -f *~
+diff -urN ../ntfsprogs-1.13.1/ntfsprogs/ntfsresize.c ./ntfsprogs/ntfsresize.c
+--- ../ntfsprogs-1.13.1/ntfsprogs/ntfsresize.c	2007-01-31 01:51:28.000000000 +0000
++++ ./ntfsprogs/ntfsresize.c	2007-01-31 02:00:00.000000000 +0000
+@@ -25,6 +25,8 @@
+  * along with this program (in the main directory of the Linux-NTFS
+  * distribution in the file COPYING); if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ * Heavily modified 01/2007 by Andy McLaughlin for Visopsys port.
+  */
+ 
+ #include "config.h"
+@@ -51,6 +53,9 @@
+ #include <getopt.h>
+ #endif
+ 
++#include <sys/ntfs.h>
++#include <sys/api.h>
++
+ #include "debug.h"
+ #include "types.h"
+ #include "support.h"
+@@ -63,6 +68,7 @@
+ #include "bitmap.h"
+ #include "inode.h"
+ #include "runlist.h"
++#ifndef __VISOPSYS__
+ #include "utils.h"
+ #include "version.h"
+ 
+@@ -124,14 +130,38 @@
+ "* on the disk surface caused by deterioration, manufacturing faults or    *\n"
+ "* other reason. We suggest to get a replacement disk as soon as possible. *\n"
+ "***************************************************************************\n";
++#endif /* __VISOPSYS__ */
++
++static const char *invalid_ntfs_msg =
++"The device or partition doesn't have a valid NTFS volume.";
++
++static const char *corrupt_volume_msg =
++"This software has detected that your NTFS is corrupted.\n"
++"No modifications were made.";
++
++static const char *hibernated_volume_msg =
++"The NTFS volume is hibernated.  Windows must be resumed and\n"
++"shut down properly so that resizing can be done safely.";
++
++static const char *unclean_journal_msg =
++"The NTFS journal file is unclean.  Please run chkdsk and\n"
++"then boot windows again, and shut down properly.";
++
++static const char *opened_volume_msg =
++"The NTFS volume is already opened by another process.\n"
++"Refusing to continue for the sake of data consistency.";
++
++static const char *bad_sectors_warning_msg =
++"WARNING: The device or partition has bad sectors.";
++
++static const char *many_bad_sectors_msg =
++"WARNING: The device or partition has many bad sectors.\n"
++"This means physical damage on the disk surface caused by\n"
++"defects or deterioration.  Replace as soon as possible.";
+ 
+ struct {
+-	int verbose;
+-	int debug;
+-	int ro_flag;
+ 	int force;
+ 	int info;
+-	int show_progress;
+ 	int badsectors;
+ 	s64 bytes;
+ 	char *volume;
+@@ -143,6 +173,7 @@
+ 	u8 padding[4];		/* Unused: padding to 64 bit. */
+ };
+ 
++#ifndef __VISOPSYS__
+ #define NTFS_PROGBAR		0x0001
+ #define NTFS_PROGBAR_SUPPRESS	0x0002
+ 
+@@ -154,6 +185,7 @@
+ 	float unit;
+ 	u8 padding[4];		/* Unused: padding to 64 bit. */
+ };
++#endif /* __VISOPSYS__ */
+ 
+ struct llcn_t {
+ 	s64 lcn;	/* last used LCN for a "special" file/attr type */
+@@ -188,7 +220,7 @@
+ 	int shrink;		     /* shrink = 1, enlarge = 0 */
+ 	s64 badclusters;	     /* num of physically dead clusters */
+ 	VCN mft_highest_vcn;	     /* used for relocating the $MFT */
+-	struct progress_bar progress;
++	progress *prog;
+ 	struct bitmap lcn_bitmap;
+ 	/* Temporary statistics until all case is supported */
+ 	struct llcn_t last_mft;
+@@ -207,9 +239,7 @@
+ #define NTFS_MBYTE (1000 * 1000)
+ 
+ /* WARNING: don't modify the text, external tools grep for it */
+-#define ERR_PREFIX   "ERROR"
+-#define PERR_PREFIX  ERR_PREFIX "(%d): "
+-#define NERR_PREFIX  ERR_PREFIX ": "
++#define ERR_PREFIX   "ERROR: "
+ 
+ #define DIRTY_NONE		(0)
+ #define DIRTY_INODE		(1)
+@@ -217,11 +247,37 @@
+ 
+ #define NTFS_MAX_CLUSTER_SIZE	(65536)
+ 
++static int progressPercentages[] = {
++  18, // RSZPCNT_CHECK
++  1,  // RSZPCNT_ACCOUNTING
++  17, // RSZPCNT_SETRSZCONST
++  60, // RSZPCNT_VOLFIXUP
++  1,  // RSZPCNT_RELOCATIONS
++  1,  // RSZPCNT_BADCLUST
++  1,  // RSZPCNT_TRUNCBMP
++  1,  // RSZPCNT_UPDBOOTSECT
++};
++
++#define RSZPCNT_CHECK        0
++#define RSZPCNT_ACCOUNTING   1
++#define RSZPCNT_SETRSZCONST  2
++#define RSZPCNT_VOLFIXUP     3
++#define RSZPCNT_RELOCATIONS  4
++#define RSZPCNT_BADCLUST     5
++#define RSZPCNT_TRUNCBMP     6
++#define RSZPCNT_UPDBOOTSECT  7
++
++#define CHECK_CANCEL() do {                   \
++  if (resize->prog && resize->prog->cancel)   \
++    { free(resize); return (ERR_CANCELLED); } \
++} while (0)
++
+ static s64 rounded_up_division(s64 numer, s64 denom)
+ {
+ 	return (numer + (denom - 1)) / denom;
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * perr_printf
+  *
+@@ -591,6 +647,63 @@
+ 	printf("Please make a test run using both the -n and -s options "
+ 	       "before real resizing!\n");
+ }
++#endif /* __VISOPSYS__ */
++
++__attribute__((format(printf, 2, 3)))
++static void progress_message(ntfs_resize_t *resize, const char *fmt, ...)
++{
++	va_list ap;
++	char tmp[PROGRESS_MAX_MESSAGELEN];
++
++	va_start(ap, fmt);
++	vsprintf(tmp, fmt, ap);
++	va_end(ap);
++
++	if (resize->prog && (lockGet(&(resize->prog->lock)) >= 0))
++	  {
++	    strncpy(resize->prog->statusMessage, tmp, PROGRESS_MAX_MESSAGELEN);
++	    lockRelease(&(resize->prog->lock));
++	  }
++
++	ntfs_log_debug("%s\n", tmp);
++}
++
++__attribute__((format(printf, 3, 4)))
++static void _err_printf(ntfs_resize_t *resize, const char *function,
++			const char *fmt, ...)
++{
++	va_list ap;
++	char tmp[PROGRESS_MAX_MESSAGELEN];
++
++	strcpy(tmp, ERR_PREFIX);
++
++	if (function)
++	  sprintf((tmp + strlen(tmp)), "%s: ", function);
++
++	va_start(ap, fmt);
++	vsprintf((tmp + strlen(tmp)), fmt, ap);
++	va_end(ap);
++
++	if (resize->prog && (lockGet(&(resize->prog->lock)) >= 0))
++	  {
++	    strncpy(resize->prog->statusMessage, tmp, PROGRESS_MAX_MESSAGELEN);
++	    resize->prog->confirmError = 0;
++	    resize->prog->error = 1;
++
++	    lockRelease(&(resize->prog->lock));
++
++	    while (!(resize->prog->confirmError))
++	      multitaskerYield();
++	  }
++
++	ntfs_log_trace("%s\n", tmp);
++}
++
++#ifdef DEBUG
++#define err_printf(r, f, a...) _err_printf(r, __FUNCTION__, f, ##a)
++#else
++#define err_printf(r, f, a...) _err_printf(r, NULL, f, ##a)
++#endif
+ 
+ static void rl_set(runlist *rl, VCN vcn, LCN lcn, s64 len)
+ {
+@@ -609,6 +722,7 @@
+ 	return i;
+ }
+ 
++#ifndef __VISOPSYS__
+ static void dump_run(runlist_element *r)
+ {
+ 	ntfs_log_verbose(" %8lld  %8lld (0x%08llx)  %lld\n", (long long)r->vcn,
+@@ -621,6 +735,7 @@
+ 	while (rl->length)
+ 		dump_run(rl++);
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * nr_clusters_to_bitmap_byte_size
+@@ -638,7 +753,7 @@
+ 	return bm_bsize;
+ }
+ 
+-static void collect_resize_constraints(ntfs_resize_t *resize, runlist *rl)
++static int collect_resize_constraints(ntfs_resize_t *resize, runlist *rl)
+ {
+ 	s64 inode, last_lcn;
+ 	ATTR_FLAGS flags;
+@@ -654,14 +769,16 @@
+ 
+ 	if ((ret = ntfs_inode_badclus_bad(inode, resize->ctx->attr)) != 0) {
+ 		if (ret == -1)
+-			perr_exit("Bad sector list check failed");
+-		return;
++			err_printf(resize, "Bad sector list check failed");
++		return (-1);
+ 	}
+ 
+ 	if (inode == FILE_Bitmap) {
+ 		llcn = &resize->last_lcn;
+-		if (atype == AT_DATA && NInoAttrList(resize->ni))
+-		    err_exit("Highly fragmented $Bitmap isn't supported yet.");
++		if (atype == AT_DATA && NInoAttrList(resize->ni)) {
++			err_printf(resize, "Highly fragmented $Bitmap isn't supported yet.");
++			return (-1);
++		}
+ 
+ 		supported = 1;
+ 
+@@ -706,14 +823,15 @@
+ 	}
+ 
+ 	if (supported)
+-		return;
++		return (0);
+ 
+ 	if (resize->last_unsupp < last_lcn)
+ 		resize->last_unsupp = last_lcn;
++	return (0);
+ }
+ 
+ 
+-static void collect_relocation_info(ntfs_resize_t *resize, runlist *rl)
++static int collect_relocation_info(ntfs_resize_t *resize, runlist *rl)
+ {
+ 	s64 lcn, lcn_length, start, len, inode;
+ 	s64 new_vol_size;	/* (last LCN on the volume) + 1 */
+@@ -724,11 +842,11 @@
+ 	new_vol_size = resize->new_volume_size;
+ 
+ 	if (lcn + lcn_length <= new_vol_size)
+-		return;
++		return (0);
+ 
+ 	if (inode == FILE_Bitmap && resize->ctx->attr->type == AT_DATA)
+-		return;
+-
++		return (0);
++	
+ 	start = lcn;
+ 	len = lcn_length;
+ 
+@@ -737,22 +855,19 @@
+ 		len = lcn_length - (new_vol_size - lcn);
+ 
+ 		if (!opt.info && (inode == FILE_MFTMirr)) {
+-			err_printf("$MFTMirr can't be split up yet. Please try "
+-				   "a different size.\n");
+-			print_advise(resize->vol, lcn + lcn_length - 1);
+-			exit(1);
++			err_printf(resize, "$MFTMirr can't be split up yet.  "
++				   "Please try a different size.");
++			return (-1);
+ 		}
+ 	}
+ 
+ 	resize->relocations += len;
+ 
+ 	if (!opt.info || !resize->new_volume_size)
+-		return;
++		return (0);
+ 
+-	printf("Relocation needed for inode %8lld attr 0x%x LCN 0x%08llx "
+-			"length %6lld\n", (long long)inode,
+-			(unsigned int)le32_to_cpu(resize->ctx->attr->type),
+-			(unsigned long long)start, (long long)len);
++	progress_message(resize, "Relocation needed for inode %8lld", (long long)inode);
++	return (0);
+ }
+ 
+ /**
+@@ -764,7 +879,7 @@
+  *
+  * This serves as a rudimentary "chkdsk" operation.
+  */
+-static void build_lcn_usage_bitmap(ntfs_volume *vol, ntfsck_t *fsck)
++static int build_lcn_usage_bitmap(ntfs_resize_t *resize, ntfs_volume *vol, ntfsck_t *fsck)
+ {
+ 	s64 inode;
+ 	ATTR_RECORD *a;
+@@ -776,14 +891,12 @@
+ 	inode = fsck->ni->mft_no;
+ 
+ 	if (!a->non_resident)
+-		return;
++		return (0);
+ 
+ 	if (!(rl = ntfs_mapping_pairs_decompress(vol, a, NULL))) {
+-		int err = errno;
+-		perr_printf("ntfs_decompress_mapping_pairs");
+-		if (err == EIO)
+-			printf("%s", corrupt_volume_msg);
+-		exit(1);
++		if (errno == EIO)
++			err_printf(resize, "ntfs_decompress_mapping_pairs: %s", corrupt_volume_msg);
++		return (-1);
+ 	}
+ 
+ 
+@@ -797,10 +910,13 @@
+ 
+ 		/* FIXME: ntfs_mapping_pairs_decompress should return error */
+ 		if (lcn < 0 || lcn_length <= 0)
+-			err_exit("Corrupt runlist in inode %lld attr %x LCN "
+-				 "%llx length %llx\n", inode,
++		  {
++			err_printf(resize, "Corrupt runlist in inode %lld attr %x LCN "
++				 "%llx length %llx", inode,
+ 				 (unsigned int)le32_to_cpu(a->type), lcn,
+ 				 lcn_length);
++			return (-1);
++		  }
+ 
+ 		for (j = 0; j < lcn_length; j++) {
+ 
+@@ -812,18 +928,18 @@
+ 
+ 				fsck->outsider += outsiders;
+ 
+-				if (++fsck->show_outsider <= 10 || opt.verbose)
+-					printf("Outside of the volume reference"
+-					       " for inode %lld at %lld:%lld\n",
++				if (++fsck->show_outsider <= 10)
++					progress_message(resize, "Outside of the volume reference"
++					       " for inode %lld at %lld:%lld",
+ 					       inode, (long long)k, outsiders);
+ 
+ 				break;
+ 			}
+ 
+ 			if (ntfs_bit_get_and_set(lcn_bitmap->bm, k, 1)) {
+-				if (++fsck->multi_ref <= 10 || opt.verbose)
+-					printf("Cluster %lld is referenced "
+-					       "multiply times!\n",
++				if (++fsck->multi_ref <= 10)
++					progress_message(resize, "Cluster %lld is referenced "
++					       "multiple times!",
+ 					       (long long)k);
+ 				continue;
+ 			}
+@@ -831,15 +947,16 @@
+ 		fsck->inuse += lcn_length;
+ 	}
+ 	free(rl);
++	return (0);
+ }
+ 
+ 
+-static ntfs_attr_search_ctx *attr_get_search_ctx(ntfs_inode *ni, MFT_RECORD *mrec)
++static ntfs_attr_search_ctx *attr_get_search_ctx(ntfs_resize_t *resize, ntfs_inode *ni, MFT_RECORD *mrec)
+ {
+ 	ntfs_attr_search_ctx *ret;
+ 
+ 	if ((ret = ntfs_attr_get_search_ctx(ni, mrec)) == NULL)
+-		perr_printf("ntfs_attr_get_search_ctx");
++		err_printf(resize, "ntfs_attr_get_search_ctx failed");
+ 
+ 	return ret;
+ }
+@@ -850,15 +967,16 @@
+  * For a given MFT Record, iterate through all its attributes.  Any non-resident
+  * data runs will be marked in lcn_bitmap.
+  */
+-static int walk_attributes(ntfs_volume *vol, ntfsck_t *fsck)
++static int walk_attributes(ntfs_resize_t *resize, ntfs_volume *vol, ntfsck_t *fsck)
+ {
+-	if (!(fsck->ctx = attr_get_search_ctx(fsck->ni, NULL)))
++	if (!(fsck->ctx = attr_get_search_ctx(resize, fsck->ni, NULL)))
+ 		return -1;
+ 
+ 	while (!ntfs_attrs_walk(fsck->ctx)) {
+ 		if (fsck->ctx->attr->type == AT_END)
+ 			break;
+-		build_lcn_usage_bitmap(vol, fsck);
++		if (build_lcn_usage_bitmap(resize, vol, fsck) != 0)
++		  return -1;
+ 	}
+ 
+ 	ntfs_attr_put_search_ctx(fsck->ctx);
+@@ -866,36 +984,87 @@
+ }
+ 
+ /**
++ * progress_update
++ *
++ * Update the progress bar and tell the user.
++ */
++void progress_update(progress *prog, int myPercentIndex, u64 current,
++		     u64 total)
++{
++  unsigned finished = 0;
++  int count;
++
++  if (prog && (lockGet(&(prog->lock)) >= 0))
++    {
++      for (count = 0; count < myPercentIndex; count ++)
++	finished += progressPercentages[count];
++
++      finished +=
++	(unsigned) ((current * progressPercentages[myPercentIndex]) / total);
++      if (finished >= 100)
++	finished = 99;
++
++      prog->finished = finished;
++      prog->percentFinished = finished;
++
++      lockRelease(&(prog->lock));
++    }
++}
++
++/**
+  * compare_bitmaps
+  *
+  * Compare two bitmaps.  In this case, $Bitmap as read from the disk and
+  * lcn_bitmap which we built from the MFT Records.
+  */
+-static void compare_bitmaps(ntfs_volume *vol, struct bitmap *a)
++static int compare_bitmaps(ntfs_resize_t *resize, ntfs_volume *vol, struct bitmap *a)
+ {
+ 	s64 i, pos, count;
+ 	int mismatch = 0;
+ 	int backup_boot = 0;
+-	u8 bm[NTFS_BUF_SIZE];
++	u8 *bm = NULL;
+ 
+-	printf("Accounting clusters ...\n");
++	progress_message(resize, "Accounting clusters");
++
++	bm = calloc(NTFS_BUF_SIZE, 1);
++	if (bm == NULL)
++	  {
++	    err_printf(resize, "Not enough memory");
++	    return (-1);
++	  }
+ 
+ 	pos = 0;
+ 	while (1) {
+ 		count = ntfs_attr_pread(vol->lcnbmp_na, pos, NTFS_BUF_SIZE, bm);
+ 		if (count == -1)
+-			perr_exit("Couldn't get $Bitmap $DATA");
++		  {
++			err_printf(resize, "Couldn't get $Bitmap $DATA");
++			free(bm);
++			return (-1);
++		  }
+ 
+ 		if (count == 0) {
+ 			if (a->size > pos)
+-				err_exit("$Bitmap size is smaller than expected"
+-					 " (%lld != %lld)\n", a->size, pos);
++			  {
++				err_printf(resize, "$Bitmap size is smaller than expected"
++					 " (%lld != %lld)", a->size, pos);
++				free(bm);
++				return (-1);
++			  }
+ 			break;
+ 		}
+ 
+ 		for (i = 0; i < count; i++, pos++) {
+ 			s64 cl;  /* current cluster */
+ 
++			progress_update(resize->prog, RSZPCNT_ACCOUNTING,
++					pos, a->size);
++			if (resize->prog && resize->prog->cancel)
++			  {
++			    free(bm);
++			    return (0);
++			  }
++	
+ 			if (a->size <= pos)
+ 				goto done;
+ 
+@@ -913,31 +1082,34 @@
+ 						cl == vol->nr_clusters / 2) {
+ 					/* FIXME: call also boot sector check */
+ 					backup_boot = 1;
+-					printf("Found backup boot sector in "
+-					       "the middle of the volume.\n");
++					progress_message(resize, "Found backup boot sector in "
++					       "the middle of the volume.");
+ 					continue;
+ 				}
+ 
+-				if (++mismatch > 10 && !opt.verbose)
++				if (++mismatch > 10)
+ 					continue;
+ 
+-				printf("Cluster accounting failed at %lld "
++				progress_message(resize, "Cluster accounting failed at %lld "
+ 						"(0x%llx): %s cluster in "
+-						"$Bitmap\n", (long long)cl,
++						"$Bitmap", (long long)cl,
+ 						(unsigned long long)cl,
+ 						bit ? "missing" : "extra");
+ 			}
+ 		}
+ 	}
+ done:
++	free(bm);
+ 	if (mismatch) {
+-		printf("Filesystem check failed! Totally %d cluster "
+-		       "accounting mismatches.\n", mismatch);
+-		err_printf("%s", corrupt_volume_msg);
+-		exit(1);
++		err_printf(resize, "Filesystem check failed!  Total of %d "
++			   "cluster accounting mismatches.", mismatch);
++		err_printf(resize, "%s", corrupt_volume_msg);
++		return (-1);
+ 	}
++	return (0);
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * progress_init
+  *
+@@ -976,11 +1148,12 @@
+ 		printf("100.00 percent completed\n");
+ 	fflush(stdout);
+ }
++#endif /* __VISOPSYS__ */
+ 
+-static int inode_close(ntfs_inode *ni)
++static int inode_close(ntfs_resize_t *resize, ntfs_inode *ni)
+ {
+ 	if (ntfs_inode_close(ni)) {
+-		perr_printf("ntfs_inode_close for inode %llu",
++		err_printf(resize, "ntfs_inode_close for inode %llu failed",
+ 			    (unsigned long long)ni->mft_no);
+ 		return -1;
+ 	}
+@@ -993,33 +1166,29 @@
+  * Read each record in the MFT, skipping the unused ones, and build up a bitmap
+  * from all the non-resident attributes.
+  */
+-static int build_allocation_bitmap(ntfs_volume *vol, ntfsck_t *fsck)
++static int build_allocation_bitmap(ntfs_resize_t *resize, ntfs_volume *vol, ntfsck_t *fsck)
+ {
+ 	s64 nr_mft_records, inode = 0;
+ 	ntfs_inode *ni;
+-	struct progress_bar progress;
+-	int pb_flags = 0;	/* progress bar flags */
+-
+-	/* WARNING: don't modify the text, external tools grep for it */
+-	printf("Checking filesystem consistency ...\n");
+-
+-	if (fsck->flags & NTFSCK_PROGBAR)
+-		pb_flags |= NTFS_PROGBAR;
+ 
+ 	nr_mft_records = vol->mft_na->initialized_size >>
+ 			vol->mft_record_size_bits;
+ 
+-	progress_init(&progress, inode, nr_mft_records - 1, pb_flags);
++	progress_message(resize, "Checking filesystem consistency");
+ 
+ 	for (; inode < nr_mft_records; inode++) {
+-		progress_update(&progress, inode);
++
++		progress_update(resize->prog, RSZPCNT_CHECK, inode,
++				(nr_mft_records - 1));
++		if (resize->prog && resize->prog->cancel)
++			return (0);
+ 
+ 		if ((ni = ntfs_inode_open(vol, (MFT_REF)inode)) == NULL) {
+ 			/* FIXME: continue only if it make sense, e.g.
+ 			   MFT record not in use based on $MFT bitmap */
+ 			if (errno == EIO || errno == ENOENT)
+ 				continue;
+-			perr_printf("Reading inode %lld failed", inode);
++			err_printf(resize, "Reading inode %lld failed", inode);
+ 			return -1;
+ 		}
+ 
+@@ -1027,61 +1196,69 @@
+ 			goto close_inode;
+ 
+ 		fsck->ni = ni;
+-		if (walk_attributes(vol, fsck) != 0) {
+-			inode_close(ni);
++		if (walk_attributes(resize, vol, fsck) != 0) {
++			inode_close(resize, ni);
+ 			return -1;
+ 		}
+ close_inode:
+-		if (inode_close(ni) != 0)
++		if (inode_close(resize, ni) != 0)
+ 			return -1;
+ 	}
+ 	return 0;
+ }
+ 
+-static void build_resize_constraints(ntfs_resize_t *resize)
++static int build_resize_constraints(ntfs_resize_t *resize)
+ {
+ 	s64 i;
+ 	runlist *rl;
+ 
+ 	if (!resize->ctx->attr->non_resident)
+-		return;
++		return (0);
+ 
+ 	if (!(rl = ntfs_mapping_pairs_decompress(resize->vol,
+ 						 resize->ctx->attr, NULL)))
+-		perr_exit("ntfs_decompress_mapping_pairs");
++	  {
++		err_printf(resize, "ntfs_decompress_mapping_pairs failed");
++		return (-1);
++	  }
+ 
+ 	for (i = 0; rl[i].length; i++) {
+ 		/* CHECKME: LCN_RL_NOT_MAPPED check isn't needed */
+ 		if (rl[i].lcn == LCN_HOLE || rl[i].lcn == LCN_RL_NOT_MAPPED)
+ 			continue;
+ 
+-		collect_resize_constraints(resize, rl + i);
++		if (collect_resize_constraints(resize, rl + i) < 0)
++		  return (-1);
+ 		if (resize->shrink)
+-			collect_relocation_info(resize, rl + i);
++			if (collect_relocation_info(resize, rl + i) != 0)
++			  return (-1);
+ 	}
+ 	free(rl);
++	return (0);
+ }
+ 
+-static void resize_constraints_by_attributes(ntfs_resize_t *resize)
++static int resize_constraints_by_attributes(ntfs_resize_t *resize)
+ {
+-	if (!(resize->ctx = attr_get_search_ctx(resize->ni, NULL)))
+-		exit(1);
++	if (!(resize->ctx = attr_get_search_ctx(resize, resize->ni, NULL)))
++	  return (-1);
+ 
+ 	while (!ntfs_attrs_walk(resize->ctx)) {
+ 		if (resize->ctx->attr->type == AT_END)
+ 			break;
+-		build_resize_constraints(resize);
++		if (build_resize_constraints(resize) != 0)
++		  return (-1);
+ 	}
+ 
+ 	ntfs_attr_put_search_ctx(resize->ctx);
++	return (0);
+ }
+ 
+-static void set_resize_constraints(ntfs_resize_t *resize)
++static int set_resize_constraints(ntfs_resize_t *resize)
+ {
+ 	s64 nr_mft_records, inode;
+ 	ntfs_inode *ni;
+ 
+-	printf("Collecting resizing constraints ...\n");
++	progress_message(resize, "Collecting resizing constraints");
+ 
+ 	nr_mft_records = resize->vol->mft_na->initialized_size >>
+ 			resize->vol->mft_record_size_bits;
+@@ -1092,31 +1269,42 @@
+ 		if (ni == NULL) {
+ 			if (errno == EIO || errno == ENOENT)
+ 				continue;
+-			perr_exit("Reading inode %lld failed", inode);
++			err_printf(resize, "Reading inode %lld failed", inode);
++			return (-1);
+ 		}
+ 
+ 		if (ni->mrec->base_mft_record)
+ 			goto close_inode;
+ 
+ 		resize->ni = ni;
+-		resize_constraints_by_attributes(resize);
++		if (resize_constraints_by_attributes(resize) != 0)
++		  return (-1);
+ close_inode:
+-		if (inode_close(ni) != 0)
+-			exit(1);
++		if (inode_close(resize, ni) != 0)
++			return (-1);
++
++		progress_update(resize->prog, RSZPCNT_SETRSZCONST, inode,
++				nr_mft_records);
++		if (resize->prog && resize->prog->cancel)
++		  return (0);
+ 	}
++	return (0);
+ }
+ 
+-static void rl_fixup(runlist **rl)
++static int rl_fixup(ntfs_resize_t *resize, runlist **rl)
+ {
+ 	runlist *tmp = *rl;
+ 
+ 	if (tmp->lcn == LCN_RL_NOT_MAPPED) {
+ 		s64 unmapped_len = tmp->length;
+ 
+-		ntfs_log_verbose("Skip unmapped run at the beginning ...\n");
++		progress_message(resize, "Skip unmapped run at the beginning ...");
+ 
+ 		if (!tmp->length)
+-			err_exit("Empty unmapped runlist! Please report!\n");
++		  {
++			err_printf(resize, "Empty unmapped runlist!  Please report!");
++			return (-1);
++		  }
+ 		(*rl)++;
+ 		for (tmp = *rl; tmp->length; tmp++)
+ 			tmp->vcn -= unmapped_len;
+@@ -1124,18 +1312,22 @@
+ 
+ 	for (tmp = *rl; tmp->length; tmp++) {
+ 		if (tmp->lcn == LCN_RL_NOT_MAPPED) {
+-			ntfs_log_verbose("Skip unmapped run at the end  ...\n");
++			progress_message(resize, "Skip unmapped run at the end  ...");
+ 
+ 			if (tmp[1].length)
+-				err_exit("Unmapped runlist in the middle! "
+-					 "Please report!\n");
++			  {
++				err_printf(resize, "Unmapped runlist in the middle!  "
++					 "Please report!");
++				return (-1);
++			  }
+ 			tmp->lcn = LCN_ENOENT;
+ 			tmp->length = 0;
+ 		}
+ 	}
++	return (0);
+ }
+ 
+-static void replace_attribute_runlist(ntfs_volume *vol,
++static int replace_attribute_runlist(ntfs_resize_t *resize, ntfs_volume *vol,
+ 				      ntfs_attr_search_ctx *ctx,
+ 				      runlist *rl)
+ {
+@@ -1143,18 +1335,25 @@
+ 	void *mp;
+ 	ATTR_RECORD *a = ctx->attr;
+ 
+-	rl_fixup(&rl);
++	if (rl_fixup(resize, &rl) != 0)
++	  return (-1);
+ 
+ 	if ((mp_size = ntfs_get_size_for_mapping_pairs(vol, rl, 0)) == -1)
+-		perr_exit("ntfs_get_size_for_mapping_pairs");
++	  {
++		err_printf(resize, "ntfs_get_size_for_mapping_pairs failed");
++		return (-1);
++	  }
+ 
+ 	if (a->name_length) {
+ 		u16 name_offs = le16_to_cpu(a->name_offset);
+ 		u16 mp_offs = le16_to_cpu(a->mapping_pairs_offset);
+ 
+ 		if (name_offs >= mp_offs)
+-			err_exit("Attribute name is after mapping pairs! "
+-				 "Please report!\n");
++		  {
++			err_printf(resize, "Attribute name is after mapping pairs!  "
++				 "Please report!");
++			return (-1);
++		  }
+ 	}
+ 
+ 	/* CHECKME: don't trust mapping_pairs is always the last item in the
+@@ -1164,7 +1363,7 @@
+ 		s64 remains_size;
+ 		char *next_attr;
+ 
+-		ntfs_log_verbose("Enlarging attribute header ...\n");
++		progress_message(resize, "Enlarging attribute header ...");
+ 
+ 		mp_size = (mp_size + 7) & ~7;
+ 
+@@ -1190,12 +1389,15 @@
+ 
+ 		if (le32_to_cpu(ctx->mrec->bytes_in_use) + l >
+ 				le32_to_cpu(ctx->mrec->bytes_allocated))
+-			err_exit("Extended record needed (%u > %u), not yet "
+-				 "supported!\nPlease try to free less space.\n",
++		  {
++			err_printf(resize, "Extended record needed (%u > %u), not yet "
++				 "supported!  Please try to free less space.",
+ 				 (unsigned int)le32_to_cpu(ctx->mrec->
+ 					bytes_in_use) + l,
+ 				 (unsigned int)le32_to_cpu(ctx->mrec->
+ 					bytes_allocated));
++			return (-1);
++		  }
+ 
+ 		memmove(next_attr + l, next_attr, remains_size);
+ 		ctx->mrec->bytes_in_use = cpu_to_le32(l +
+@@ -1204,14 +1406,21 @@
+ 	}
+ 
+ 	if (!(mp = calloc(1, mp_size)))
+-		perr_exit("Couldn't get memory");
++	  {
++		err_printf(resize, "Couldn't get memory");
++		return (-1);
++	  }
+ 
+ 	if (ntfs_mapping_pairs_build(vol, mp, mp_size, rl, 0, NULL))
+-		perr_exit("ntfs_mapping_pairs_build");
++	  {
++		err_printf(resize, "ntfs_mapping_pairs_build failed");
++		return (-1);
++	  }
+ 
+ 	memmove((u8*)a + le16_to_cpu(a->mapping_pairs_offset), mp, mp_size);
+ 
+ 	free(mp);
++	return (0);
+ }
+ 
+ static void set_bitmap_range(struct bitmap *bm, s64 pos, s64 length, u8 bit)
+@@ -1240,7 +1449,7 @@
+ 	}
+ }
+ 
+-static int find_free_cluster(struct bitmap *bm,
++static int find_free_cluster(ntfs_resize_t *resize, struct bitmap *bm,
+ 			     runlist_element *rle,
+ 			     s64 nr_vol_clusters,
+ 			     int hint)
+@@ -1286,7 +1495,7 @@
+ 	}
+ 	if (rle->length < items && rle->length < max_free_cluster_range) {
+ 		max_free_cluster_range = rle->length;
+-		ntfs_log_verbose("Max free range: %7lld     \n",
++		progress_message(resize, "Max free range: %lld",
+ 				 (long long)max_free_cluster_range);
+ 	}
+ 	pos = rle->lcn + items;
+@@ -1297,7 +1506,7 @@
+ 	return 0;
+ }
+ 
+-static runlist *alloc_cluster(struct bitmap *bm,
++static runlist *alloc_cluster(ntfs_resize_t *resize, struct bitmap *bm,
+ 			      s64 items,
+ 			      s64 nr_vol_clusters,
+ 			      int hint)
+@@ -1317,7 +1526,7 @@
+ 		if (runs)
+ 			hint = 0;
+ 		rle.length = items;
+-		if (find_free_cluster(bm, &rle, nr_vol_clusters, hint) == -1)
++		if (find_free_cluster(resize, bm, &rle, nr_vol_clusters, hint) == -1)
+ 			return NULL;
+ 
+ 		rl_size = (runs + 2) * sizeof(runlist_element);
+@@ -1333,14 +1542,10 @@
+ 
+ 	rl_set(rl + runs, vcn, -1LL, 0LL);
+ 
+-	if (runs > 1) {
+-		ntfs_log_verbose("Multi-run allocation:    \n");
+-		dump_runlist(rl);
+-	}
+ 	return rl;
+ }
+ 
+-static int read_all(struct ntfs_device *dev, void *buf, int count)
++static int read_all(ntfs_resize_t *resize, struct ntfs_device *dev, void *buf, int count)
+ {
+ 	int i;
+ 
+@@ -1356,8 +1561,10 @@
+ 		} else if (i > 0) {
+ 			count -= i;
+ 			buf = i + (char *)buf;
+-		} else
+-			err_exit("Unexpected end of file!\n");
++		} else {
++			err_printf(resize, "Unexpected end of file!");
++			return (-1);
++		}
+ 	}
+ 	return 0;
+ }
+@@ -1389,10 +1596,13 @@
+  * Write an MFT Record back to the disk.  If the read-only command line option
+  * was given, this function will do nothing.
+  */
+-static int write_mft_record(ntfs_volume *v, const MFT_REF mref, MFT_RECORD *buf)
++static int write_mft_record(ntfs_resize_t *resize, ntfs_volume *v, const MFT_REF mref, MFT_RECORD *buf)
+ {
+ 	if (ntfs_mft_record_write(v, mref, buf))
+-		perr_exit("ntfs_mft_record_write");
++	  {
++		err_printf(resize, "ntfs_mft_record_write failed");
++		return (-1);
++	  }
+ 
+ //	if (v->dev->d_ops->sync(v->dev) == -1)
+ //		perr_exit("Failed to sync device");
+@@ -1400,48 +1610,62 @@
+ 	return 0;
+ }
+ 
+-static void lseek_to_cluster(ntfs_volume *vol, s64 lcn)
++static int lseek_to_cluster(ntfs_resize_t *resize, ntfs_volume *vol, s64 lcn)
+ {
+ 	off_t pos;
+ 
+ 	pos = (off_t)(lcn * vol->cluster_size);
+ 
+ 	if (vol->dev->d_ops->seek(vol->dev, pos, SEEK_SET) == (off_t)-1)
+-		perr_exit("seek failed to position %lld", lcn);
++	  {
++		err_printf(resize, "Seek failed to position %lld", lcn);
++		return (-1);
++	  }
++	return (0);
+ }
+ 
+-static void copy_clusters(ntfs_resize_t *resize, s64 dest, s64 src, s64 len)
++static int copy_clusters(ntfs_resize_t *resize, s64 dest, s64 src, s64 len)
+ {
+ 	s64 i;
+-	char buff[NTFS_MAX_CLUSTER_SIZE]; /* overflow checked at mount time */
++	char *buff = NULL; /* overflow checked at mount time */
+ 	ntfs_volume *vol = resize->vol;
+ 
++	if (!(buff = malloc(NTFS_MAX_CLUSTER_SIZE)))
++	  return (-1);
++
+ 	for (i = 0; i < len; i++) {
+ 
+-		lseek_to_cluster(vol, src + i);
++		if (lseek_to_cluster(resize, vol, src + i) < 0)
++		    goto err_out;
+ 
+-		if (read_all(vol->dev, buff, vol->cluster_size) == -1) {
+-			perr_printf("Failed to read from the disk");
++		if (read_all(resize, vol->dev, buff, vol->cluster_size) == -1) {
++			err_printf(resize, "Failed to read from the disk");
+ 			if (errno == EIO)
+-				printf("%s", bad_sectors_warning_msg);
+-			exit(1);
++				err_printf(resize, "%s", bad_sectors_warning_msg);
++			goto err_out;
+ 		}
+ 
+-		lseek_to_cluster(vol, dest + i);
++		if (lseek_to_cluster(resize, vol, dest + i) < 0)
++		  goto err_out;
+ 
+ 		if (write_all(vol->dev, buff, vol->cluster_size) == -1) {
+-			perr_printf("Failed to write to the disk");
++			err_printf(resize, "Failed to write to the disk");
+ 			if (errno == EIO)
+-				printf("%s", bad_sectors_warning_msg);
+-			exit(1);
++				err_printf(resize, "%s", bad_sectors_warning_msg);
++			goto err_out;
+ 		}
+ 
+ 		resize->relocations++;
+-		progress_update(&resize->progress, resize->relocations);
+ 	}
++
++	free(buff);
++	return (0);
++ err_out:
++	free(buff);
++	return (-1);
+ }
+ 
+-static void relocate_clusters(ntfs_resize_t *r, runlist *dest_rl, s64 src_lcn)
++static int relocate_clusters(ntfs_resize_t *r, runlist *dest_rl, s64 src_lcn)
+ {
+ 	/* collect_shrink_constraints() ensured $MFTMir DATA is one run */
+ 	if (r->mref == FILE_MFTMirr && r->ctx->attr->type == AT_DATA) {
+@@ -1449,15 +1673,20 @@
+ 			r->mftmir_rl.lcn = dest_rl->lcn;
+ 			r->mftmir_rl.length = dest_rl->length;
+ 			r->mftmir_old = src_lcn;
+-		} else
+-			err_exit("Multi-run $MFTMirr. Please report!\n");
++		} else {
++			err_printf(r, "Multi-run $MFTMirr.  Please report!");
++			return (-1);
++		}
+ 	}
+ 
+-	for (; dest_rl->length; src_lcn += dest_rl->length, dest_rl++)
+-		copy_clusters(r, dest_rl->lcn, src_lcn, dest_rl->length);
++	for (; dest_rl->length; src_lcn += dest_rl->length, dest_rl++) {
++		if (copy_clusters(r, dest_rl->lcn, src_lcn, dest_rl->length) < 0)
++			return (-1);
++	}
++	return (0);
+ }
+ 
+-static void rl_split_run(runlist **rl, int run, s64 pos)
++static int rl_split_run(ntfs_resize_t *resize, runlist **rl, int run, s64 pos)
+ {
+ 	runlist *rl_new, *rle_new, *rle;
+ 	int items, new_size, size_head, size_tail;
+@@ -1469,7 +1698,10 @@
+ 	size_tail = (items - run - 1) * sizeof(runlist_element);
+ 
+ 	if (!(rl_new = (runlist *)malloc(new_size)))
+-		perr_exit("malloc");
++	  {
++		err_printf(resize, "malloc failed");
++		return (-1);
++	  }
+ 
+ 	rle_new = rl_new + run;
+ 	rle = *rl + run;
+@@ -1483,14 +1715,14 @@
+ 	rl_set(rle_new, rle->vcn, rle->lcn, len_head);
+ 	rl_set(rle_new + 1, rle->vcn + len_head, rle->lcn + len_head, len_tail);
+ 
+-	ntfs_log_verbose("Splitting run at cluster %lld:\n", (long long)pos);
+-	dump_run(rle); dump_run(rle_new); dump_run(rle_new + 1);
++	progress_message(resize, "Splitting run at cluster %lld:", (long long)pos);
+ 
+ 	free(*rl);
+ 	*rl = rl_new;
++	return (0);
+ }
+ 
+-static void rl_insert_at_run(runlist **rl, int run, runlist *ins)
++static int rl_insert_at_run(ntfs_resize_t *resize, runlist **rl, int run, runlist *ins)
+ {
+ 	int items, ins_items;
+ 	int new_size, size_tail;
+@@ -1503,7 +1735,10 @@
+ 	size_tail = (items - run - 1) * sizeof(runlist_element);
+ 
+ 	if (!(*rl = (runlist *)realloc(*rl, new_size)))
+-		perr_exit("realloc");
++	  {
++		err_printf(resize, "realloc failed");
++		return (-1);
++	  }
+ 
+ 	rle = *rl + run;
+ 
+@@ -1514,13 +1749,13 @@
+ //		dump_run(rle);
+ 	}
+ 
+-	return;
++	return (0);
+ 
+ 	/* FIXME: fast path if ins_items = 1 */
+ //	(*rl + run)->lcn = ins->lcn;
+ }
+ 
+-static void relocate_run(ntfs_resize_t *resize, runlist **rl, int run)
++static int relocate_run(ntfs_resize_t *resize, runlist **rl, int run)
+ {
+ 	s64 lcn, lcn_length;
+ 	s64 new_vol_size;	/* (last LCN on the volume) + 1 */
+@@ -1532,39 +1767,47 @@
+ 	new_vol_size = resize->new_volume_size;
+ 
+ 	if (lcn + lcn_length <= new_vol_size)
+-		return;
++		return (0);
+ 
+ 	if (lcn < new_vol_size) {
+-		rl_split_run(rl, run, new_vol_size);
+-		return;
++		if (rl_split_run(resize, rl, run, new_vol_size) < 0)
++			return (-1);
++		return (0);
+ 	}
+ 
+ 	hint = (resize->mref == FILE_MFTMirr) ? 1 : 0;
+-	if (!(relocate_rl = alloc_cluster(&resize->lcn_bitmap, lcn_length,
++	if (!(relocate_rl = alloc_cluster(resize, &resize->lcn_bitmap, lcn_length,
+ 					  new_vol_size, hint)))
+-		perr_exit("Cluster allocation failed for %llu:%lld",
++	  {
++		err_printf(resize, "Cluster allocation failed for %llu:%lld",
+ 			  resize->mref, lcn_length);
++		return (-1);
++	  }
+ 
+ 	/* FIXME: check $MFTMirr DATA isn't multi-run (or support it) */
+-	ntfs_log_verbose("Relocate record %7llu:0x%x:%08lld:0x%08llx:0x%08llx "
+-			 "--> 0x%08llx\n", (unsigned long long)resize->mref,
++	progress_message(resize, "Relocate record %7llu:0x%x:%08lld:0x%08llx:0x%08llx "
++			 "--> 0x%08llx", (unsigned long long)resize->mref,
+ 			 (unsigned int)le32_to_cpu(resize->ctx->attr->type),
+ 			 (long long)lcn_length,
+ 			 (unsigned long long)(*rl + run)->vcn,
+ 			 (unsigned long long)lcn,
+ 			 (unsigned long long)relocate_rl->lcn);
+ 
+-	relocate_clusters(resize, relocate_rl, lcn);
+-	rl_insert_at_run(rl, run, relocate_rl);
++	if (relocate_clusters(resize, relocate_rl, lcn) < 0)
++		return (-1);
++
++	if (rl_insert_at_run(resize, rl, run, relocate_rl) < 0)
++		return (-1);
+ 
+ 	/* We don't release old clusters in the bitmap, that area isn't
+ 	   used by the allocator and will be truncated later on */
+ 	free(relocate_rl);
+ 
+ 	resize->dirty_inode = DIRTY_ATTRIB;
++	return (0);
+ }
+ 
+-static void relocate_attribute(ntfs_resize_t *resize)
++static int relocate_attribute(ntfs_resize_t *resize)
+ {
+ 	ATTR_RECORD *a;
+ 	runlist *rl;
+@@ -1573,10 +1816,12 @@
+ 	a = resize->ctx->attr;
+ 
+ 	if (!a->non_resident)
+-		return;
++		return (0);
+ 
+-	if (!(rl = ntfs_mapping_pairs_decompress(resize->vol, a, NULL)))
+-		perr_exit("ntfs_decompress_mapping_pairs");
++	if (!(rl = ntfs_mapping_pairs_decompress(resize->vol, a, NULL))) {
++		err_printf(resize, "ntfs_decompress_mapping_pairs failed");
++		return (-1);
++	}
+ 
+ 	for (i = 0; rl[i].length; i++) {
+ 		s64 lcn = rl[i].lcn;
+@@ -1587,20 +1832,26 @@
+ 
+ 		/* FIXME: ntfs_mapping_pairs_decompress should return error */
+ 		if (lcn < 0 || lcn_length <= 0)
+-			err_exit("Corrupt runlist in MTF %llu attr %x LCN "
+-				 "%llx length %llx\n", resize->mref,
++		  {
++			err_printf(resize, "Corrupt runlist in MTF %llu attr %x LCN "
++				 "%llx length %llx", resize->mref,
+ 				 (unsigned int)le32_to_cpu(a->type),
+ 				 lcn, lcn_length);
++			return (-1);
++		  }
+ 
+-		relocate_run(resize, &rl, i);
++		if (relocate_run(resize, &rl, i) < 0)
++			return (-1);
+ 	}
+ 
+ 	if (resize->dirty_inode == DIRTY_ATTRIB) {
+-		replace_attribute_runlist(resize->vol, resize->ctx, rl);
++		if (replace_attribute_runlist(resize, resize->vol, resize->ctx, rl) < 0)
++			return (-1);
+ 		resize->dirty_inode = DIRTY_INODE;
+ 	}
+ 
+ 	free(rl);
++	return (0);
+ }
+ 
+ static int is_mftdata(ntfs_resize_t *resize)
+@@ -1652,12 +1903,12 @@
+ 	return 1;
+ }
+ 
+-static void relocate_attributes(ntfs_resize_t *resize, int do_mftdata)
++static int relocate_attributes(ntfs_resize_t *resize, int do_mftdata)
+ {
+ 	int ret;
+ 
+-	if (!(resize->ctx = attr_get_search_ctx(NULL, resize->mrec)))
+-		exit(1);
++	if (!(resize->ctx = attr_get_search_ctx(resize, NULL, resize->mrec)))
++		return (-1);
+ 
+ 	while (!ntfs_attrs_walk(resize->ctx)) {
+ 		if (resize->ctx->attr->type == AT_END)
+@@ -1668,7 +1919,10 @@
+ 
+ 		ret = ntfs_inode_badclus_bad(resize->mref, resize->ctx->attr);
+ 		if (ret == -1)
+-			perr_exit("Bad sector list check failed");
++		  {
++			err_printf(resize, "Bad sector list check failed");
++			return (-1);
++		  }
+ 		else if (ret == 1)
+ 			continue;
+ 
+@@ -1676,76 +1930,94 @@
+ 		    resize->ctx->attr->type == AT_DATA)
+ 			continue;
+ 
+-		relocate_attribute(resize);
++		if (relocate_attribute(resize) < 0)
++			return (-1);
+ 	}
+ 
+ 	ntfs_attr_put_search_ctx(resize->ctx);
++	return (0);
+ }
+ 
+-static void relocate_inode(ntfs_resize_t *resize, MFT_REF mref, int do_mftdata)
++static int relocate_inode(ntfs_resize_t *resize, MFT_REF mref, int do_mftdata)
+ {
+ 	if (ntfs_file_record_read(resize->vol, mref, &resize->mrec, NULL)) {
+ 		/* FIXME: continue only if it make sense, e.g.
+ 		   MFT record not in use based on $MFT bitmap */
+ 		if (errno == EIO || errno == ENOENT)
+-			return;
+-		perr_exit("ntfs_file_record_record");
++			return (0);
++		err_printf(resize, "ntfs_file_record_read failed");
++		return (-1);
+ 	}
+ 
+ 	if (!(resize->mrec->flags & MFT_RECORD_IN_USE))
+-		return;
++		return (0);
+ 
+ 	resize->mref = mref;
+ 	resize->dirty_inode = DIRTY_NONE;
+ 
+-	relocate_attributes(resize, do_mftdata);
++	if (relocate_attributes(resize, do_mftdata) != 0)
++		return (-1);
+ 
+ 	if (resize->dirty_inode == DIRTY_INODE) {
+ //		if (vol->dev->d_ops->sync(vol->dev) == -1)
+ //			perr_exit("Failed to sync device");
+-		if (write_mft_record(resize->vol, mref, resize->mrec))
+-			perr_exit("Couldn't update record %llu", mref);
++		if (write_mft_record(resize, resize->vol, mref, resize->mrec))
++		  {
++			err_printf(resize, "Couldn't update record %llu", mref);
++			return (-1);
++		  }
+ 	}
++	return (0);
+ }
+ 
+-static void relocate_inodes(ntfs_resize_t *resize)
++static int relocate_inodes(ntfs_resize_t *resize)
+ {
+ 	s64 nr_mft_records;
+ 	MFT_REF mref;
+ 	VCN highest_vcn;
+ 
+-	printf("Relocating needed data ...\n");
++	progress_message(resize, "Relocating needed data");
+ 
+-	progress_init(&resize->progress, 0, resize->relocations, resize->progress.flags);
+ 	resize->relocations = 0;
+ 
+ 	resize->mrec = (MFT_RECORD *)malloc(resize->vol->mft_record_size);
+ 	if (!resize->mrec)
+-		perr_exit("malloc failed");
++	  {
++		err_printf(resize, "malloc failed");
++		return (-1);
++	  }
+ 
+ 	nr_mft_records = resize->vol->mft_na->initialized_size >>
+ 			resize->vol->mft_record_size_bits;
+ 
+-	for (mref = 0; mref < (MFT_REF)nr_mft_records; mref++)
+-		relocate_inode(resize, mref, 0);
++	for (mref = 0; mref < (MFT_REF)nr_mft_records; mref++) {
++		if (relocate_inode(resize, mref, 0) != 0)
++			return (-1);
++	}
+ 
+ 	while (1) {
+ 		highest_vcn = resize->mft_highest_vcn;
+ 		mref = nr_mft_records;
+ 		do {
+-			relocate_inode(resize, --mref, 1);
++			if (relocate_inode(resize, --mref, 1) != 0)
++				return (-1);
+ 			if (resize->mft_highest_vcn == 0)
+ 				goto done;
+ 		} while (mref);
+ 
+-		if (highest_vcn == resize->mft_highest_vcn)
+-			err_exit("Sanity check failed! Highest_vcn = %lld. "
+-				 "Please report!\n", highest_vcn);
++		if (highest_vcn == resize->mft_highest_vcn) {
++			err_printf(resize, "Sanity check failed!  Highest_vcn = %lld.  "
++				   "Please report!", highest_vcn);
++			return (-1);
++		  }
+ 	}
+ done:
+-	free(resize->mrec);
++	if (resize->mrec)
++		free(resize->mrec);
++	return (0);
+ }
+ 
++#ifndef __VISOPSYS__
+ static void print_hint(ntfs_volume *vol, const char *s, struct llcn_t llcn)
+ {
+ 	s64 runs_b, runs_mb;
+@@ -1783,20 +2055,27 @@
+ 
+ 	print_advise(vol, resize->last_unsupp);
+ }
++#endif /* __VISOPSYS__ */
+ 
+ 
+-static void rl_expand(runlist **rl, const VCN last_vcn)
++static int rl_expand(ntfs_resize_t *resize, runlist **rl, const VCN last_vcn)
+ {
+ 	int len;
+ 	runlist *p = *rl;
+ 
+ 	len = rl_items(p) - 1;
+ 	if (len <= 0)
+-		err_exit("rl_expand: bad runlist length: %d\n", len);
++	  {
++		err_printf(resize, "rl_expand: bad runlist length: %d", len);
++		return (-1);
++	  }
+ 
+ 	if (p[len].vcn > last_vcn)
+-		err_exit("rl_expand: length is already more than requested "
+-			 "(%lld > %lld)\n", p[len].vcn, last_vcn);
++	  {
++		err_printf(resize, "rl_expand: length is already more than requested "
++			 "(%lld > %lld)", p[len].vcn, last_vcn);
++		return (-1);
++	  }
+ 
+ 	if (p[len - 1].lcn == LCN_HOLE) {
+ 
+@@ -1807,34 +2086,49 @@
+ 
+ 		p = realloc(*rl, (++len + 1) * sizeof(runlist_element));
+ 		if (!p)
+-			perr_exit("rl_expand: realloc");
++		  {
++			err_printf(resize, "rl_expand: realloc failed");
++			return (-1);
++		  }
+ 
+ 		p[len - 1].lcn = LCN_HOLE;
+ 		p[len - 1].length = last_vcn - p[len - 1].vcn;
+ 		rl_set(p + len, last_vcn, LCN_ENOENT, 0LL);
+ 		*rl = p;
+ 
+-	} else
+-		err_exit("rl_expand: bad LCN: %lld\n", p[len - 1].lcn);
++	} else {
++		err_printf(resize, "rl_expand: bad LCN: %lld", p[len - 1].lcn);
++		return (-1);
++	}
++	return (0);
+ }
+ 
+-static void rl_truncate(runlist **rl, const VCN last_vcn)
++static int rl_truncate(ntfs_resize_t *resize, runlist **rl, const VCN last_vcn)
+ {
+ 	int len;
+ 	VCN vcn;
+ 
+ 	len = rl_items(*rl) - 1;
+ 	if (len <= 0)
+-		err_exit("rl_truncate: bad runlist length: %d\n", len);
++	  {
++		err_printf(resize, "rl_truncate: bad runlist length: %d", len);
++		return (-1);
++	  }
+ 
+ 	vcn = (*rl)[len].vcn;
+ 
+ 	if (vcn < last_vcn)
+-		rl_expand(rl, last_vcn);
+-
++	  {
++		if (rl_expand(resize, rl, last_vcn) < 0)
++		return (-1);
++	  }
+ 	else if (vcn > last_vcn)
+ 		if (ntfs_rl_truncate(rl, last_vcn) == -1)
+-			perr_exit("ntfs_rl_truncate");
++		  {
++			err_printf(resize, "ntfs_rl_truncate failed");
++			return (-1);
++		  }
++	return (0);
+ }
+ 
+ /**
+@@ -1857,7 +2151,7 @@
+  * FIXME: this function should go away and instead using a generalized
+  * "truncate_bitmap_data_attr()"
+  */
+-static void truncate_badclust_bad_attr(ntfs_resize_t *resize)
++static int truncate_badclust_bad_attr(ntfs_resize_t *resize)
+ {
+ 	ATTR_RECORD *a;
+ 	runlist *rl_bad;
+@@ -1866,21 +2160,30 @@
+ 
+ 	a = resize->ctx->attr;
+ 	if (!a->non_resident)
++	  {
+ 		/* FIXME: handle resident attribute value */
+-		err_exit("Resident attribute in $BadClust isn't supported!\n");
++		err_printf(resize, "Resident attribute in $BadClust isn't supported!");
++		return (-1);
++	  }
+ 
+ 	if (!(rl_bad = ntfs_mapping_pairs_decompress(vol, a, NULL)))
+-		perr_exit("ntfs_mapping_pairs_decompress");
++	  {
++		err_printf(resize, "ntfs_mapping_pairs_decompress failed");
++		return (-1);
++	  }
+ 
+-	rl_truncate(&rl_bad, nr_clusters);
++	if (rl_truncate(resize, &rl_bad, nr_clusters) < 0)
++		return (-1);
+ 
+ 	a->highest_vcn = cpu_to_le64(nr_clusters - 1LL);
+ 	a->allocated_size = cpu_to_le64(nr_clusters * vol->cluster_size);
+ 	a->data_size = cpu_to_le64(nr_clusters * vol->cluster_size);
+ 
+-	replace_attribute_runlist(vol, resize->ctx, rl_bad);
++	if (replace_attribute_runlist(resize, vol, resize->ctx, rl_bad) < 0)
++		return (-1);
+ 
+ 	free(rl_bad);
++	return (0);
+ }
+ 
+ /**
+@@ -1889,7 +2192,7 @@
+  * Reallocate the metadata file $Bitmap.  It must be large enough for one bit
+  * per cluster of the shrunken volume.  Also it must be a of 8 bytes in size.
+  */
+-static void realloc_bitmap_data_attr(ntfs_resize_t *resize,
++static int realloc_bitmap_data_attr(ntfs_resize_t *resize,
+ 				     runlist **rl,
+ 				     s64 nr_bm_clusters)
+ {
+@@ -1900,7 +2203,10 @@
+ 	struct bitmap *bm = &resize->lcn_bitmap;
+ 
+ 	if (!(*rl = ntfs_mapping_pairs_decompress(vol, a, NULL)))
+-		perr_exit("ntfs_mapping_pairs_decompress");
++	  {
++		err_printf(resize, "ntfs_mapping_pairs_decompress failed");
++		return (-1);
++	  }
+ 
+ 	release_bitmap_clusters(bm, *rl);
+ 	free(*rl);
+@@ -1908,26 +2214,34 @@
+ 	for (i = vol->nr_clusters; i < new_size; i++)
+ 		ntfs_bit_set(bm->bm, i, 0);
+ 
+-	if (!(*rl = alloc_cluster(bm, nr_bm_clusters, new_size, 0)))
+-		perr_exit("Couldn't allocate $Bitmap clusters");
++	if (!(*rl = alloc_cluster(resize, bm, nr_bm_clusters, new_size, 0)))
++	  {
++		err_printf(resize, "Couldn't allocate $Bitmap clusters");
++		return (-1);
++	  }
++	return (0);
+ }
+ 
+-static void realloc_lcn_bitmap(ntfs_resize_t *resize, s64 bm_bsize)
++static int realloc_lcn_bitmap(ntfs_resize_t *resize, s64 bm_bsize)
+ {
+ 	u8 *tmp;
+ 
+ 	if (!(tmp = realloc(resize->lcn_bitmap.bm, bm_bsize)))
+-		perr_exit("realloc");
++	  {
++		err_printf(resize, "realloc failed");
++		return (-1);
++	  }
+ 
+ 	resize->lcn_bitmap.bm = tmp;
+ 	resize->lcn_bitmap.size = bm_bsize;
+ 	bitmap_file_data_fixup(resize->new_volume_size, &resize->lcn_bitmap);
++	return (0);
+ }
+ 
+ /**
+  * truncate_bitmap_data_attr
+  */
+-static void truncate_bitmap_data_attr(ntfs_resize_t *resize)
++static int truncate_bitmap_data_attr(ntfs_resize_t *resize)
+ {
+ 	ATTR_RECORD *a;
+ 	runlist *rl;
+@@ -1937,18 +2251,25 @@
+ 
+ 	a = resize->ctx->attr;
+ 	if (!a->non_resident)
++	  {
+ 		/* FIXME: handle resident attribute value */
+-		err_exit("Resident attribute in $Bitmap isn't supported!\n");
++		err_printf(resize, "Resident attribute in $Bitmap isn't supported!");
++		return (-1);
++	  }
+ 
+ 	bm_bsize = nr_clusters_to_bitmap_byte_size(resize->new_volume_size);
+ 	nr_bm_clusters = rounded_up_division(bm_bsize, vol->cluster_size);
+ 
+ 	if (resize->shrink) {
+-		realloc_bitmap_data_attr(resize, &rl, nr_bm_clusters);
+-		realloc_lcn_bitmap(resize, bm_bsize);
++		if (realloc_bitmap_data_attr(resize, &rl, nr_bm_clusters) < 0)
++			return (-1);
++		if (realloc_lcn_bitmap(resize, bm_bsize) < 0)
++			return (-1);
+ 	} else {
+-		realloc_lcn_bitmap(resize, bm_bsize);
+-		realloc_bitmap_data_attr(resize, &rl, nr_bm_clusters);
++		if (realloc_lcn_bitmap(resize, bm_bsize) < 0)
++			return (-1);
++		if (realloc_bitmap_data_attr(resize, &rl, nr_bm_clusters) < 0)
++			return (-1);
+ 	}
+ 
+ 	a->highest_vcn = cpu_to_le64(nr_bm_clusters - 1LL);
+@@ -1956,7 +2277,8 @@
+ 	a->data_size = cpu_to_le64(bm_bsize);
+ 	a->initialized_size = cpu_to_le64(bm_bsize);
+ 
+-	replace_attribute_runlist(vol, resize->ctx, rl);
++	if (replace_attribute_runlist(resize, vol, resize->ctx, rl) < 0)
++		return (-1);
+ 
+ 	/*
+ 	 * FIXME: update allocated/data sizes and timestamps in $FILE_NAME
+@@ -1966,12 +2288,15 @@
+ 	size = ntfs_rl_pwrite(vol, rl, 0, bm_bsize, resize->lcn_bitmap.bm);
+ 	if (bm_bsize != size) {
+ 		if (size == -1)
+-			perr_exit("Couldn't write $Bitmap");
+-		err_exit("Couldn't write full $Bitmap file (%lld from %lld)\n",
++			err_printf(resize, "Couldn't write $Bitmap");
++		else
++			err_printf(resize, "Couldn't write full $Bitmap file (%lld from %lld)",
+ 				(long long)size, (long long)bm_bsize);
++		return (-1);
+ 	}
+ 
+ 	free(rl);
++	return (0);
+ }
+ 
+ /**
+@@ -1980,63 +2305,79 @@
+  * Find the $DATA attribute (with or without a name) for the given MFT reference
+  * (inode number).
+  */
+-static void lookup_data_attr(ntfs_volume *vol,
++static int lookup_data_attr(ntfs_resize_t *resize, ntfs_volume *vol,
+ 			     MFT_REF mref,
+ 			     const char *aname,
+ 			     ntfs_attr_search_ctx **ctx)
+ {
+ 	ntfs_inode *ni;
+-	ntfschar *ustr;
++	ntfschar *ustr = NULL;
+ 	int len = 0;
+ 
+ 	if (!(ni = ntfs_inode_open(vol, mref)))
+-		perr_exit("ntfs_open_inode");
+-
+-	if (!(*ctx = attr_get_search_ctx(ni, NULL)))
+-		exit(1);
++	  {
++		err_printf(resize, "ntfs_open_inode failed");
++		return (-1);
++	  }
++
++	if (!(*ctx = attr_get_search_ctx(resize, ni, NULL)))
++	  {
++		return (-1);
++	  }
+ 
+ 	if ((ustr = ntfs_str2ucs(aname, &len)) == NULL) {
+-		perr_printf("Couldn't convert '%s' to Unicode", aname);
+-		exit(1);
++		err_printf(resize, "Couldn't convert '%s' to Unicode", aname);
++		return (-1);
+ 	}
+ 
+ 	if (ntfs_attr_lookup(AT_DATA, ustr, len, 0, 0, NULL, 0, *ctx))
+-		perr_exit("ntfs_lookup_attr");
++	  {
++		err_printf(resize, "ntfs_lookup_attr failed");
++		return (-1);
++	  }
+ 
+ 	ntfs_ucsfree(ustr);
++	return (0);
+ }
+ 
+-static int check_bad_sectors(ntfs_volume *vol)
++static int check_bad_sectors(ntfs_resize_t *resize, ntfs_volume *vol)
+ {
+ 	ntfs_attr_search_ctx *ctx;
+ 	ntfs_inode *base_ni;
+ 	runlist *rl;
+ 	s64 i, badclusters = 0;
+ 
+-	ntfs_log_verbose("Checking for bad sectors ...\n");
++	progress_message(resize, "Checking for bad sectors");
+ 
+-	lookup_data_attr(vol, FILE_BadClus, "$Bad", &ctx);
++	if (lookup_data_attr(resize, vol, FILE_BadClus, "$Bad", &ctx) != 0)
++		return (-1);
+ 
+ 	base_ni = ctx->base_ntfs_ino;
+ 	if (!base_ni)
+ 		base_ni = ctx->ntfs_ino;
+ 
+ 	if (NInoAttrList(base_ni)) {
+-		err_printf("Hopelessly many bad sectors has been detected!\n");
+-		printf("%s", many_bad_sectors_msg);
+-		exit(1);
++		err_printf(resize, "Hopelessly many bad sectors has been detected!");
++		err_printf(resize, "%s", many_bad_sectors_msg);
++		return (-1);
+ 	}
+ 
+ 	if (!ctx->attr->non_resident)
+-		err_exit("Resident attribute in $BadClust! Please report to "
+-			 "%s\n", NTFS_DEV_LIST);
++	  {
++		err_printf(resize, "Resident attribute in $BadClust! Please report to "
++			 "%s", NTFS_DEV_LIST);
++		return (-1);
++	  }
+ 	/* 
+ 	 * FIXME: The below would be partial for non-base records in the
+ 	 * not yet supported multi-record case. Alternatively use audited
+ 	 * ntfs_attr_truncate after an umount & mount.
+ 	 */
+ 	if (!(rl = ntfs_mapping_pairs_decompress(vol, ctx->attr, NULL)))
+-		perr_exit("Decompressing $BadClust:$Bad mapping pairs failed");
++	  {
++		err_printf(resize, "Decompressing $BadClust:$Bad mapping pairs failed");
++		return (-1);
++	  }
+ 
+ 	for (i = 0; rl[i].length; i++) {
+ 		/* CHECKME: LCN_RL_NOT_MAPPED check isn't needed */
+@@ -2044,22 +2385,21 @@
+ 			continue;
+ 
+ 		badclusters += rl[i].length;
+-		ntfs_log_verbose("Bad cluster: %#8llx - %#llx    (%lld)\n",
++		err_printf(resize, "Bad cluster: %#8llx - %#llx    (%lld)\n",
+ 				 rl[i].lcn, rl[i].lcn + rl[i].length - 1,
+ 				 rl[i].length);
+ 	}
+ 
+ 	if (badclusters) {
+-		printf("%sThis software has detected that the disk has at least"
+-		       " %lld bad sector%s.\n",
+-		       !opt.badsectors ? NERR_PREFIX : "WARNING: ",
++		err_printf(resize, "WARNING: This software has detected that the\n"
++			   "disk has at least %lld bad sector%s.",
+ 		       badclusters, badclusters - 1 ? "s" : "");
+ 		if (!opt.badsectors) {
+-			printf("%s", bad_sectors_warning_msg);
+-			exit(1);
++			err_printf(resize, "%s", bad_sectors_warning_msg);
++			return (-1);
+ 		} else
+-			printf("WARNING: Bad sectors can cause reliability "
+-			       "problems and massive data loss!!!\n");
++			err_printf(resize, "WARNING: Bad sectors can cause reliability\n"
++			       "problems and massive data loss!!!");
+ 	}
+ 
+ 	free(rl);
+@@ -2073,19 +2413,25 @@
+  *
+  * Shrink the $BadClus file to match the new volume size.
+  */
+-static void truncate_badclust_file(ntfs_resize_t *resize)
++static int truncate_badclust_file(ntfs_resize_t *resize)
+ {
+-	printf("Updating $BadClust file ...\n");
++	progress_message(resize, "Updating $BadClust file");
+ 
+-	lookup_data_attr(resize->vol, FILE_BadClus, "$Bad", &resize->ctx);
++	if (lookup_data_attr(resize, resize->vol, FILE_BadClus, "$Bad", &resize->ctx) != 0)
++		return (-1);
+ 	/* FIXME: sanity_check_attr(ctx->attr); */
+-	truncate_badclust_bad_attr(resize);
++	if (truncate_badclust_bad_attr(resize) < 0)
++		return (-1);
+ 
+-	if (write_mft_record(resize->vol, resize->ctx->ntfs_ino->mft_no,
++	if (write_mft_record(resize, resize->vol, resize->ctx->ntfs_ino->mft_no,
+ 			     resize->ctx->mrec))
+-		perr_exit("Couldn't update $BadClust");
++	  {
++		err_printf(resize, "Couldn't update $BadClust");
++		return (-1);
++	  }
+ 
+ 	ntfs_attr_put_search_ctx(resize->ctx);
++	return (0);
+ }
+ 
+ /**
+@@ -2093,18 +2439,25 @@
+  *
+  * Shrink the $Bitmap file to match the new volume size.
+  */
+-static void truncate_bitmap_file(ntfs_resize_t *resize)
++static int truncate_bitmap_file(ntfs_resize_t *resize)
+ {
+-	printf("Updating $Bitmap file ...\n");
++	progress_message(resize, "Updating $Bitmap file");
++
++	if (lookup_data_attr(resize, resize->vol, FILE_Bitmap, NULL, &resize->ctx) != 0)
++		return (-1);
+ 
+-	lookup_data_attr(resize->vol, FILE_Bitmap, NULL, &resize->ctx);
+-	truncate_bitmap_data_attr(resize);
++	if (truncate_bitmap_data_attr(resize) < 0)
++		return (-1);
+ 
+-	if (write_mft_record(resize->vol, resize->ctx->ntfs_ino->mft_no,
++	if (write_mft_record(resize, resize->vol, resize->ctx->ntfs_ino->mft_no,
+ 			     resize->ctx->mrec))
+-		perr_exit("Couldn't update $Bitmap");
++	  {
++		err_printf(resize, "Couldn't update $Bitmap");
++		return (-1);
++	  }
+ 
+ 	ntfs_attr_put_search_ctx(resize->ctx);
++	return (0);
+ }
+ 
+ /**
+@@ -2114,8 +2467,10 @@
+  * All the bits are set to 0, except those representing the region beyond the
+  * end of the disk.
+  */
+-static int setup_lcn_bitmap(struct bitmap *bm, s64 nr_clusters)
++static int setup_lcn_bitmap(ntfs_resize_t *resize, struct bitmap *bm, s64 nr_clusters)
+ {
++	progress_message(resize, "Set up LCN bitmap");
++
+ 	/* Determine lcn bitmap byte size and allocate it. */
+ 	bm->size = rounded_up_division(nr_clusters, 8);
+ 
+@@ -2131,39 +2486,52 @@
+  *
+  * FIXME: should be done using ntfs_* functions
+  */
+-static void update_bootsector(ntfs_resize_t *r)
++static int update_bootsector(ntfs_resize_t *r)
+ {
+ 	NTFS_BOOT_SECTOR bs;
+ 	s64  bs_size = sizeof(NTFS_BOOT_SECTOR);
+ 	ntfs_volume *vol = r->vol;
+ 
+-	printf("Updating Boot record ...\n");
++	progress_message(r, "Updating Boot record");
+ 
+ 	if (vol->dev->d_ops->seek(vol->dev, 0, SEEK_SET) == (off_t)-1)
+-		perr_exit("lseek");
++	  {
++		err_printf(r, "lseek failed");
++		return (-1);
++	  }
+ 
+ 	if (vol->dev->d_ops->read(vol->dev, &bs, bs_size) == -1)
+-		perr_exit("read() error");
++	  {
++		err_printf(r, "read() error");
++		return (-1);
++	  }
+ 
+ 	bs.number_of_sectors = cpu_to_sle64(r->new_volume_size *
+ 			bs.bpb.sectors_per_cluster);
+ 
+ 	if (r->mftmir_old) {
+-		r->progress.flags |= NTFS_PROGBAR_SUPPRESS;
+-		copy_clusters(r, r->mftmir_rl.lcn, r->mftmir_old,
+-			      r->mftmir_rl.length);
++		if (copy_clusters(r, r->mftmir_rl.lcn, r->mftmir_old,
++			      r->mftmir_rl.length) < 0)
++			return (-1);
+ 		bs.mftmirr_lcn = cpu_to_le64(r->mftmir_rl.lcn);
+-		r->progress.flags &= ~NTFS_PROGBAR_SUPPRESS;
+ 	}
+ 
+ 	if (vol->dev->d_ops->seek(vol->dev, 0, SEEK_SET) == (off_t)-1)
+-		perr_exit("lseek");
++	  {
++		err_printf(r, "lseek failed");
++		return (-1);
++	  }
+ 
+-	if (!opt.ro_flag)
++//	if (!opt.ro_flag)
+ 		if (vol->dev->d_ops->write(vol->dev, &bs, bs_size) == -1)
+-			perr_exit("write() error");
++		  {
++			err_printf(r, "write() error");
++			return (-1);
++		  }
++	return (0);
+ }
+ 
++#ifndef __VISOPSYS__
+ /**
+  * vol_size
+  */
+@@ -2210,6 +2578,7 @@
+ 			(long long)resize->relocations, (long long)
+ 			rounded_up_division(relocations, NTFS_MBYTE));
+ }
++#endif /* __VISOPSYS__ */
+ 
+ /**
+  * mount_volume
+@@ -2218,61 +2587,77 @@
+  * is dirty (Windows wasn't shutdown properly).  If everything is OK, then mount
+  * the volume (load the metadata into memory).
+  */
+-static ntfs_volume *mount_volume(void)
++static ntfs_volume *mount_volume(ntfs_resize_t *resize)
+ {
+ 	unsigned long mntflag;
+ 	ntfs_volume *vol = NULL;
+ 
++	progress_message(resize, "Mounting volume");
++
+ 	if (ntfs_check_if_mounted(opt.volume, &mntflag)) {
+-		perr_printf("Failed to check '%s' mount state", opt.volume);
+-		printf("Probably /etc/mtab is missing. It's too risky to "
+-		       "continue. You might try\nan another Linux distro.\n");
+-		exit(1);
++		err_printf(resize, "Failed to check '%s' mount state", opt.volume);
++		return (NULL);
+ 	}
+ 	if (mntflag & NTFS_MF_MOUNTED) {
+ 		if (!(mntflag & NTFS_MF_READONLY))
+-			err_exit("Device '%s' is mounted read-write. "
+-				 "You must 'umount' it first.\n", opt.volume);
+-		if (!opt.ro_flag)
+-			err_exit("Device '%s' is mounted. "
+-				 "You must 'umount' it first.\n", opt.volume);
++			err_printf(resize, "Device '%s' is mounted read-write.  "
++				   "You must unmount it first.", opt.volume);
++		else
++			err_printf(resize, "Device '%s' is mounted.  "
++				   "You must unmount it first.", opt.volume);
++		return (NULL);
+ 	}
+ 
+-	if (!(vol = ntfs_mount(opt.volume, opt.ro_flag | MS_NOATIME))) {
++	if (!(vol = ntfs_mount(opt.volume, MS_NOATIME))) {
+ 
+ 		int err = errno;
+ 
+-		perr_printf("Opening '%s' as NTFS failed", opt.volume);
++		static char *ERRMESS = "Opening '%s' as NTFS failed.  %s";
+ 		if (err == EINVAL)
+-			printf(invalid_ntfs_msg, opt.volume);
++			err_printf(resize, ERRMESS, opt.volume,
++				   invalid_ntfs_msg);
+ 		else if (err == EIO)
+-			printf("%s", corrupt_volume_msg);
++			err_printf(resize, ERRMESS, opt.volume,
++				   corrupt_volume_msg);
+ 		else if (err == EPERM)
+-			printf("%s", hibernated_volume_msg);
++			err_printf(resize, ERRMESS, opt.volume,
++				   hibernated_volume_msg);
+ 		else if (err == EOPNOTSUPP)
+-			printf("%s", unclean_journal_msg);
++			err_printf(resize, ERRMESS, opt.volume,
++				   unclean_journal_msg);
+ 		else if (err == EBUSY)
+-			printf("%s", opened_volume_msg);
+-		exit(1);
++			err_printf(resize, ERRMESS, opt.volume,
++				   opened_volume_msg);
++		else
++			err_printf(resize, ERRMESS, opt.volume, "Unknown error.");
++		return (NULL);
+ 	}
+ 
+ 	if (vol->flags & VOLUME_IS_DIRTY)
+ 		if (opt.force-- <= 0)
+-			err_exit("Volume is scheduled for check.\nRun chkdsk /f"
+-				 " and please try again, or see option -f.\n");
++		  {
++			err_printf(resize, "Volume is scheduled for check.  Run chkdsk /f"
++				 " and please try again, or see option -f.");
++			return (NULL);
++		  }
+ 
+ 	if (NTFS_MAX_CLUSTER_SIZE < vol->cluster_size)
+-		err_exit("Cluster size %u is too large!\n",
++	  {
++		err_printf(resize, "Cluster size %u is too large!",
+ 			(unsigned int)vol->cluster_size);
++		return (NULL);
++	  }
+ 
+-	printf("Device name        : %s\n", opt.volume);
+-	printf("NTFS volume version: %d.%d\n", vol->major_ver, vol->minor_ver);
++	progress_message(resize, "Device name: %s", opt.volume);
++	progress_message(resize, "NTFS volume version: %d.%d", vol->major_ver, vol->minor_ver);
+ 	if (ntfs_version_is_supported(vol))
+-		perr_exit("Unknown NTFS version");
++	  {
++		err_printf(resize, "Unknown NTFS version");
++		return (NULL);
++	  }
+ 
+-	printf("Cluster size       : %u bytes\n",
++	progress_message(resize, "Cluster size: %u bytes",
+ 			(unsigned int)vol->cluster_size);
+-	print_vol_size("Current volume size", vol_size(vol, vol->nr_clusters));
+ 
+ 	return vol;
+ }
+@@ -2284,30 +2669,41 @@
+  * boots it will automatically run chkdsk to check for any problems.  If the
+  * read-only command line option was given, this function will do nothing.
+  */
+-static void prepare_volume_fixup(ntfs_volume *vol)
++static int prepare_volume_fixup(ntfs_resize_t *resize, ntfs_volume *vol)
+ {
+ 	u16 flags;
+ 
+ 	flags = vol->flags | VOLUME_IS_DIRTY;
+-	if (vol->major_ver >= 2)
+-		flags |= VOLUME_MOUNTED_ON_NT4;
+ 
+-	printf("Schedule chkdsk for NTFS consistency check at Windows "
+-		"boot time ...\n");
++	progress_message(resize, "Schedule chkdsk for NTFS consistency check "
++			 "at Windows boot time");
+ 
+ 	if (ntfs_volume_write_flags(vol, flags))
+-		perr_exit("Failed to set $Volume dirty");
++	  {
++		err_printf(resize, "Failed to set $Volume dirty");
++		return (-1);
++	  }
+ 
+ 	if (vol->dev->d_ops->sync(vol->dev) == -1)
+-		perr_exit("Failed to sync device");
+-
+-	printf("Resetting $LogFile ... (this might take a while)\n");
+-
+-	if (ntfs_logfile_reset(vol))
+-		perr_exit("Failed to reset $LogFile");
++	  {
++		err_printf(resize, "Failed to sync device");
++		return (-1);
++	  }
++
++	progress_message(resize, "Resetting $LogFile (this might take a while)");
++
++	if (ntfs_logfile_reset(vol, resize->prog, RSZPCNT_VOLFIXUP))
++	  {
++		err_printf(resize, "Failed to reset $LogFile");
++		return (-1);
++	  }
+ 
+ 	if (vol->dev->d_ops->sync(vol->dev) == -1)
+-		perr_exit("Failed to sync device");
++	  {
++		err_printf(resize, "Failed to sync device");
++		return (-1);
++	  }
++	return (0);
+ }
+ 
+ 
+@@ -2320,94 +2716,177 @@
+ 		resize->last_unsupp = last;
+ }
+ 
+-static void check_resize_constraints(ntfs_resize_t *resize)
++static int check_resize_constraints(ntfs_resize_t *resize)
+ {
+ 	s64 new_size = resize->new_volume_size;
+ 
++	progress_message(resize, "Checking resize constraints");
++
+ 	/* FIXME: resize.shrink true also if only -i is used */
+ 	if (!resize->shrink)
+-		return;
++		return (0);
+ 
+ 	if (resize->inuse == resize->vol->nr_clusters)
+-		err_exit("Volume is full. To shrink it, "
+-			 "delete unused files.\n");
++	  {
++		err_printf(resize, "Volume is full.  To shrink it, "
++			 "delete unused files.");
++		return (-1);
++	  }
+ 
+ 	if (opt.info)
+-		return;
++		return (0);
+ 
+ 	/* FIXME: reserve some extra space so Windows can boot ... */
+ 	if (new_size < resize->inuse)
+-		err_exit("New size can't be less than the space already"
+-			 " occupied by data.\nYou either need to delete unused"
+-			 " files or see the -i option.\n");
++	  {
++		err_printf(resize, "New size can't be less than the space "
++			   "already occupied by data.  You need to delete "
++			   "unused files.");
++		return (-1);
++	  }
+ 
+ 	if (new_size <= resize->last_unsupp)
+-		err_exit("The fragmentation type, you have, isn't "
+-			 "supported yet. Rerun ntfsresize\nwith "
+-			 "the -i option to estimate the smallest "
+-			 "shrunken volume size supported.\n");
+-
+-	print_num_of_relocations(resize);
++	  {
++		err_printf(resize, "The fragmentation type you have isn't "
++			   "supported yet.  The requested size is less than "
++			   "the smallest shrunken volume size supported.");
++		return (-1);
++	  }
++	return (0);
+ }
+ 
+-static void check_cluster_allocation(ntfs_volume *vol, ntfsck_t *fsck)
++static int check_cluster_allocation(ntfs_resize_t *resize, ntfs_volume *vol, ntfsck_t *fsck)
+ {
+ 	memset(fsck, 0, sizeof(ntfsck_t));
+ 
+-	if (opt.show_progress)
+-		fsck->flags |= NTFSCK_PROGBAR;
+-
+-	if (setup_lcn_bitmap(&fsck->lcn_bitmap, vol->nr_clusters) != 0)
+-		perr_exit("Failed to setup allocation bitmap");
+-	if (build_allocation_bitmap(vol, fsck) != 0)
+-		exit(1);
++	if (setup_lcn_bitmap(resize, &fsck->lcn_bitmap, vol->nr_clusters) != 0)
++	  {
++		err_printf(resize, "Failed to setup allocation bitmap");
++		return (-1);
++	  }
++	if (build_allocation_bitmap(resize, vol, fsck) != 0)
++		return (-1);
++	progress_update(resize->prog, RSZPCNT_CHECK, 1, 1);
+ 	if (fsck->outsider || fsck->multi_ref) {
+-		err_printf("Filesystem check failed!\n");
++		err_printf(resize, "Filesystem check failed!");
+ 		if (fsck->outsider)
+-			err_printf("%d clusters are referenced outside "
+-				   "of the volume.\n", fsck->outsider);
++			err_printf(resize, "%d clusters are referenced outside "
++				   "of the volume.", fsck->outsider);
+ 		if (fsck->multi_ref)
+-			err_printf("%d clusters are referenced multiply"
+-				   " times.\n", fsck->multi_ref);
+-		printf("%s", corrupt_volume_msg);
+-		exit(1);
++			err_printf(resize, "%d clusters are referenced multiple"
++				   " times.", fsck->multi_ref);
++		err_printf(resize, "%s", corrupt_volume_msg);
++		return (-1);
+ 	}
+ 
+-	compare_bitmaps(vol, &fsck->lcn_bitmap);
++	if (compare_bitmaps(resize, vol, &fsck->lcn_bitmap) < 0)
++		return (-1);
++
++	return (0);
+ }
+ 
+-int main(int argc, char **argv)
++static int get_minblocks(ntfs_resize_t *resize, disk *theDisk,
++			 unsigned *minBlocks)
+ {
++	s64 new_b;
++  
++	/* Take the next supported cluster (free or relocatable)
++	   plus reserve a cluster for the backup boot sector */
++	resize->last_unsupp += 2;
++
++	if (resize->last_unsupp > resize->vol->nr_clusters) {
++		err_printf(resize, "Very rare, unsupported fragmentation type "
++			   "detected.  Try to defragment your NTFS and retry "
++			   "the operation");
++		return (-1);
++	}
++
++	new_b = (resize->last_unsupp * resize->vol->cluster_size);
++	*minBlocks = (unsigned) (new_b / theDisk->sectorSize);
++	if (new_b % theDisk->sectorSize)
++		*minBlocks += 1;
++	return (0);
++}
++
++
++static int _resize(const char *diskName, unsigned blocks, progress *prog,
++		   int info, unsigned *minBlocks, unsigned *maxBlocks)
++{
++	int status = 0;
++	disk theDisk;
+ 	ntfsck_t fsck;
+-	ntfs_resize_t resize;
++	ntfs_resize_t *resize = NULL;
+ 	s64 new_size = 0;	/* in clusters; 0 = --info w/o --size */
+ 	s64 device_size;        /* in bytes */
+-	ntfs_volume *vol;
++	ntfs_volume *vol = NULL;
+ 
+-	ntfs_log_set_handler(ntfs_log_handler_outerr);
++	ntfs_log_set_handler((ntfs_log_handler *) ntfs_log_handler_outerr);
+ 
+-	printf("%s v%s (libntfs %s)\n", EXEC_NAME, VERSION,
+-			ntfs_libntfs_version());
++	// Check params
++	if (diskName == NULL)
++	  return (status = errno = ERR_NULLPARAMETER);
++
++	resize = malloc(sizeof(ntfs_resize_t));
++	if (resize == NULL)
++	  return (status = errno);
++
++	// Try to get the disk structure.
++	status = diskGet(diskName, &theDisk);
++	if (status < 0)
++	  {
++	    errno = status;
++	    goto err_out;
++	  }
+ 
+-	if (!parse_options(argc, argv))
+-		return 1;
++	/*
++	  int force;         // Force to progress
++	  int info;          // Info only, no resize
++	  int badsectors;    // Support disks having bad sectors
++	  s64 bytes;         // Number of bytes to resize to
++	  char *volume;      // Disk name
++	*/
++	
++	bzero(&opt, sizeof(opt));
+ 
+-	utils_set_locale();
++	opt.force++;
++	opt.info = info;
++	resize->prog = prog;
++	opt.badsectors++;
++	opt.bytes = ((s64) blocks * (s64) theDisk.sectorSize);
++	opt.volume = theDisk.name;
++
++	if (resize->prog && (lockGet(&(resize->prog->lock)) >= 0))
++	  {
++	    bzero((void *) resize->prog, sizeof(progress));
++	    resize->prog->total = 100;
++	    resize->prog->canCancel = 1;
++	    lockRelease(&(resize->prog->lock));
++	  }
++
++	if ((vol = mount_volume(resize)) == NULL)
++	  {
++		err_printf(resize, "Couldn't open volume '%s'!", opt.volume);
++		goto err_out;
++	  }
+ 
+-	if ((vol = mount_volume()) == NULL)
+-		err_exit("Couldn't open volume '%s'!\n", opt.volume);
++	CHECK_CANCEL();
+ 
+ 	device_size = ntfs_device_size_get(vol->dev, vol->sector_size);
+ 	device_size *= vol->sector_size;
+ 	if (device_size <= 0)
+-		err_exit("Couldn't get device size (%lld)!\n", device_size);
+-
+-	print_vol_size("Current device size", device_size);
++	  {
++		err_printf(resize, "Couldn't get device size (%lld)!",
++			   device_size);
++		goto err_out;
++	  }
+ 
+ 	if (device_size < vol->nr_clusters * vol->cluster_size)
+-		err_exit("Current NTFS volume size is bigger than the device "
+-			 "size!\nCorrupt partition table or incorrect device "
+-			 "partitioning?\n");
++	  {
++	    err_printf(resize, "Current NTFS volume size is bigger than the "
++		       "device size!  Corrupt partition table or incorrect "
++		       "device partitioning?");
++		goto err_out;
++	  }
+ 
+ 	if (!opt.bytes && !opt.info)
+ 		opt.bytes = device_size;
+@@ -2421,82 +2900,137 @@
+ 		--new_size;
+ 
+ 	if (!opt.info) {
+-		print_vol_size("New volume size    ", vol_size(vol, new_size));
+ 		if (device_size < opt.bytes)
+-			err_exit("New size can't be bigger than the device size"
+-				 ".\nIf you want to enlarge NTFS then first "
+-				 "enlarge the device size by e.g. fdisk.\n");
++		  {
++			err_printf(resize, "New size can't be bigger than the device "
++				   "size.  If you want to enlarge NTFS then first "
++				   "enlarge the device size by e.g. fdisk.");
++			goto err_out;
++		  }
+ 	}
+ 
+ 	if (!opt.info && (new_size == vol->nr_clusters ||
+ 			  (opt.bytes == device_size &&
+ 			   new_size == vol->nr_clusters - 1))) {
+-		printf("Nothing to do: NTFS volume size is already OK.\n");
+-		exit(0);
++		progress_message(resize, "Nothing to do: NTFS volume size is already OK.");
++		goto out;
+ 	}
+ 
+-	memset(&resize, 0, sizeof(resize));
+-	resize.vol = vol;
+-	resize.new_volume_size = new_size;
++	memset(resize, 0, sizeof(ntfs_resize_t));
++	resize->vol = vol;
++	resize->prog = prog;
++	resize->new_volume_size = new_size;
+ 	/* This is also true if --info was used w/o --size (new_size = 0) */
+ 	if (new_size < vol->nr_clusters)
+-		resize.shrink = 1;
+-	if (opt.show_progress)
+-		resize.progress.flags |= NTFS_PROGBAR;
++		resize->shrink = 1;
+ 	/*
+ 	 * Checking and __reporting__ of bad sectors must be done before cluster
+ 	 * allocation check because chkdsk doesn't fix $Bitmap's w/ bad sectors
+ 	 * thus users would (were) quite confused why chkdsk doesn't work.
+ 	 */
+-	resize.badclusters = check_bad_sectors(vol);
++	resize->badclusters = check_bad_sectors(resize, vol);
++	if (resize->badclusters < 0)
++		goto err_out;
++
++	CHECK_CANCEL();
++
++	if (check_cluster_allocation(resize, vol, &fsck) != 0)
++		goto err_out;
++	progress_update(resize->prog, RSZPCNT_ACCOUNTING, 1, 1);
+ 
+-	check_cluster_allocation(vol, &fsck);
++	CHECK_CANCEL();
+ 
+-	print_disk_usage(vol, fsck.inuse);
++	resize->inuse = fsck.inuse;
++	resize->lcn_bitmap = fsck.lcn_bitmap;
+ 
+-	resize.inuse = fsck.inuse;
+-	resize.lcn_bitmap = fsck.lcn_bitmap;
++	if (set_resize_constraints(resize) != 0)
++		goto err_out;
++	progress_update(resize->prog, RSZPCNT_SETRSZCONST, 1, 1);
+ 
+-	set_resize_constraints(&resize);
+-	set_disk_usage_constraint(&resize);
+-	check_resize_constraints(&resize);
++	CHECK_CANCEL();
++
++	set_disk_usage_constraint(resize);
++
++	CHECK_CANCEL();
++
++	if (check_resize_constraints(resize) != 0)
++		goto err_out;
+ 
+ 	if (opt.info) {
+-		advise_on_resize(&resize);
+-		exit(0);
++		if (get_minblocks(resize, &theDisk, minBlocks) < 0)
++			goto err_out;
++		*maxBlocks = theDisk.numSectors;
++		goto out;
+ 	}
+ 
+-	if (opt.force-- <= 0 && !opt.ro_flag) {
+-		printf("%s", resize_warning_msg);
+-		proceed_question();
+-	}
++	CHECK_CANCEL();
++
++	if (resize->prog && (lockGet(&(resize->prog->lock)) >= 0))
++	  {
++	    resize->prog->canCancel = 0;
++	    lockRelease(&(resize->prog->lock));
++	  }
+ 
+ 	/* FIXME: performance - relocate logfile here if it's needed */
+-	prepare_volume_fixup(vol);
+-
+-	if (resize.relocations)
+-		relocate_inodes(&resize);
+-
+-	truncate_badclust_file(&resize);
+-	truncate_bitmap_file(&resize);
+-	update_bootsector(&resize);
++	if (prepare_volume_fixup(resize, vol) < 0)
++		goto err_out;
++	progress_update(resize->prog, RSZPCNT_VOLFIXUP, 1, 1);
++
++	if (resize->relocations)
++		if (relocate_inodes(resize) != 0)
++			goto err_out;
++	progress_update(resize->prog, RSZPCNT_RELOCATIONS, 1, 1);
++
++	if (truncate_badclust_file(resize) != 0)
++	  goto err_out;
++	progress_update(resize->prog, RSZPCNT_BADCLUST, 1, 1);
++
++	if (truncate_bitmap_file(resize) != 0)
++	  goto err_out;
++	progress_update(resize->prog, RSZPCNT_TRUNCBMP, 1, 1);
++
++	if (update_bootsector(resize) < 0)
++	  goto err_out;
++	progress_update(resize->prog, RSZPCNT_UPDBOOTSECT, 1, 1);
+ 
+ 	/* We don't create backup boot sector because we don't know where the
+ 	   partition will be split. The scheduled chkdsk will fix it */
+ 
+-	if (opt.ro_flag) {
+-		printf("The read-only test run ended successfully.\n");
+-		exit(0);
+-	}
+-
+ 	/* WARNING: don't modify the texts, external tools grep for them */
+-	printf("Syncing device ...\n");
++	progress_message(resize, "Syncing device");
+ 	if (vol->dev->d_ops->sync(vol->dev) == -1)
+-		perr_exit("fsync");
++	  {
++		err_printf(resize, "fsync failed");
++		goto err_out;
++	  }
+ 
+-	printf("Successfully resized NTFS on device '%s'.\n", vol->dev->d_name);
+-	if (resize.shrink)
+-		printf("%s", resize_important_msg);
++	progress_message(resize, "Successfully resized NTFS on device '%s'.",
++			 vol->dev->d_name);
+ 
+-	return 0;
++	if (resize->prog && (lockGet(&(resize->prog->lock)) >= 0))
++	  {
++	    resize->prog->finished = resize->prog->total;
++	    resize->prog->percentFinished = 100;
++	    lockRelease(&(resize->prog->lock));
++	  }
++
++ out:
++	free(resize);
++	return (0);
++ err_out:
++	free(resize);
++	return (-1);
++}
++
++
++int ntfsGetResizeConstraints(const char *diskName, unsigned *minBlocks,
++			     unsigned *maxBlocks)
++{
++  return (_resize(diskName, 0, NULL, 1, minBlocks, maxBlocks));
++}
++
++
++int ntfsResize(const char *diskName, unsigned blocks, progress *prog)
++{
++  return (_resize(diskName, blocks, prog, 0, NULL, NULL));
+ }

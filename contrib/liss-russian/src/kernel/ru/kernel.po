@@ -1,0 +1,136 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: kernel.po\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-07 23:55+0100\n"
+"PO-Revision-Date: 2014-07-25 16:43+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: kernelInitialize.c:301
+msgid ""
+"\n"
+" *** Your boot disk appears to be running in unsupported native-SATA mode.\n"
+" *** You may be able to temporarily enable ATA or 'legacy' IDE mode in\n"
+" *** your BIOS setup.\n"
+msgstr ""
+"\n"
+" *** Ваш диск работает в неподдерживаемом режиме native-SATA.\n"
+" *** Вы можете времмено включить режим ATA или 'legacy' IDE в\n"
+" *** настройках BIOS.\n"
+
+#: kernelFilesystemFat.c:3949
+#, c-format
+msgid "%llu files need defragmentation"
+msgstr "Фрагментировано %llu файлов"
+
+#: kernelFilesystemFat.c:3935
+#, c-format
+msgid "Analyzing"
+msgstr "Анализ"
+
+#: kernelFilesystemFatPlus.c:281
+msgid "Checking constraints"
+msgstr "Проверка ограничений"
+
+#: kernelFilesystemFatPlus.c:410
+msgid "Clearing new FAT sectors"
+msgstr "Очистка новых секторов FAT"
+
+#: kernelFilesystemFatPlus.c:353
+#, c-format
+msgid "Data exists outside the new size (%u >= %llu)"
+msgstr "За пределами нового размера остаются данные (%u >= %llu)"
+
+#: kernelFilesystemFat.c:3782
+#, c-format
+msgid "Defragmenting %llu/%llu: %s"
+msgstr "Дефрагментация %llu/%llu: %s"
+
+#: kernelFilesystemFatPlus.c:437
+msgid "Error clearing new FAT sectors"
+msgstr "Ошибка при очистке новых секторов FAT"
+
+#: kernelFilesystemFatPlus.c:334
+msgid "Error defragmenting filesystem"
+msgstr "Ошибка при дефрагментации файловой системы"
+
+#: kernelFilesystemFatPlus.c:417
+msgid "Error getting memory"
+msgstr "Ошибка при получении памяти"
+
+#: kernelFilesystemFatPlus.c:291
+msgid "Error getting resizing constraints"
+msgstr "Ошибка при определении ограничений размера файловой системы"
+
+#: kernelFilesystemFatPlus.c:399
+msgid "Error moving data"
+msgstr "Ошибка при перемещении данных"
+
+#: kernelFilesystemFatPlus.c:318 kernelFilesystemFatPlus.c:342
+msgid "Error reading filesystem info"
+msgstr "Ошибка при чтении информации о файловой системе"
+
+#: kernelFilesystemFatPlus.c:451
+msgid "Error synching FAT copies"
+msgstr "Ошибка при синхронизации копий FAT"
+
+#: kernelFilesystemFatPlus.c:476 kernelFilesystemFatPlus.c:485
+msgid "Error updating filesystem info"
+msgstr "Ошибка при обновлении информации о файловой системе"
+
+#: kernelFilesystemFatPlus.c:301
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (maximum is %llu)"
+msgstr ""
+"Размер файловой системы не может быть изменен до %llu блоков (максимум - "
+"%llu)"
+
+#: kernelFilesystemFatPlus.c:298
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (minimum is %llu)"
+msgstr ""
+"Размер файловой системы не может быть изменен до %llu блоков (минимум - %llu)"
+
+# Verbatim phrase issued 95 windows at shutdown :)
+#: kernelShutdown.c:45
+msgid "OK to power off now."
+msgstr "Теперь питание компьютера можно отключить"
+
+#: kernelFilesystemFat.c:3910 kernelFilesystemFatPlus.c:310
+msgid "Reading filesystem info"
+msgstr "Чтение информации о файловой системе"
+
+#: kernelShutdown.c:44
+msgid "Rebooting."
+msgstr "Перезагрузка."
+
+#: kernelShutdown.c:315
+#, c-format
+msgid "SYSTEM HALTED: Panic at %s:%s(%d)"
+msgstr "СИСТЕМА ОСТАНОВЛЕНА: Паника в %s:%s(%d)"
+
+#: kernelShutdown.c:153
+msgid "Shutting down"
+msgstr "Выключение"
+
+#: kernelShutdown.c:42
+msgid "Shutting down Visopsys, please wait..."
+msgstr "Завершение Visopsys, подождите..."
+
+#: kernelFilesystemFatPlus.c:461
+msgid "Updating filesystem info"
+msgstr "Обновление информации о файловой системе"
+
+#: kernelShutdown.c:43
+msgid "[ Wait for \"OK to power off\" message ]"
+msgstr "[ Ожидаем разрешения на выключение ]"

@@ -1,0 +1,15 @@
+
+ -- mkdir --
+
+Create one or more new directories.
+
+Usage:
+  mkdir [-p] <directory1> [directory2] [...]
+
+This command can be used to create one or more new directories.  The first
+parameter is the name of a new directory to create.  Any number of other
+(optional) directories to create can be specified at the same time.
+
+Options:
+-p              : Create parent directories, if necessary.
+

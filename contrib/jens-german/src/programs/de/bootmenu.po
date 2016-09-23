@@ -1,0 +1,209 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-24 03:25+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bootmenu.c:793
+#, c-format
+msgid ""
+"\n"
+"  [Cursor up/down to select, 'e' edit, '*' default\n"
+"   'd' delete, Enter to accept, 'Q' to quit]"
+msgstr ""
+"\n"
+"  [Bewegen Sie den Cursor nach oben/unten für die Auswahl,\n"
+"   \"e\" zum bearbeiten, \"*\" für den Standard\n"
+"   \"d\" zum löschen, \"Enter\" zum annehmen, \"q\" zum abbrechen]"
+
+#: bootmenu.c:749
+msgid ""
+"\n"
+"There are no chain-loadable operating systems on this disk.\n"
+"\n"
+msgstr ""
+"\n"
+"Auf der Disk existieren keine nacheinander ladefähigen Betriebssysteme.\n"
+"\n"
+
+#: bootmenu.c:734
+#, c-format
+msgid "\"%s\" [Filesystem: %s]"
+msgstr "\"%s\" [Dateisystem: %s]"
+
+#: bootmenu.c:559
+msgid "Automatically boot default selection after (seconds)"
+msgstr "Die Standardauswahl automatisch starten nach (Sekunden)"
+
+#: bootmenu.c:498
+msgid "Boot Menu Installer"
+msgstr "Installationsprogramm im Boot-Menü"
+
+#: bootmenu.c:67
+msgid "Boot menu written."
+msgstr "Boot-Menü wurde geschrieben."
+
+#: bootmenu.c:392
+msgid "Can't get buffer memory\n"
+msgstr "Speicherpuffer konnte nicht bezogen werden\n"
+
+#: bootmenu.c:691
+#, c-format
+msgid "Can't get disk %s\n"
+msgstr "Disk %s wurde nicht gefunden\n"
+
+#: bootmenu.c:349
+msgid "Can't get memory for the logical disk list"
+msgstr "Es konnte kein Speicher für die Liste gewiesen werden"
+
+#: bootmenu.c:708
+msgid "Can't get the list of logical disks"
+msgstr "Es konnte keine Liste von Disks gefunden werden"
+
+#: bootmenu.c:356
+msgid "Can't get the logical disk list\n"
+msgstr "Es konnte keine Liste von Disks gefunden werden\n"
+
+#: bootmenu.c:385
+#, c-format
+msgid "Can't open %s file\n"
+msgstr "Datei %s konnte nicht geöffnet werden\n"
+
+#: bootmenu.c:399
+#, c-format
+msgid "Can't read %s file\n"
+msgstr "Datei %s konnte nicht gelesen werden\n"
+
+#: bootmenu.c:638
+#, c-format
+msgid "Can't write MBR %s to %s\n"
+msgstr "MBR %s konnte nicht auf %s geschrieben werden\n"
+
+#: bootmenu.c:626
+msgid "Can't write boot menu\n"
+msgstr "Boot-Menü konnte nicht geschrieben werden\n"
+
+#: bootmenu.c:861
+msgid "Can't write boot menu or MBR\n"
+msgstr "Boot-Menü oder MBR konnte nicht geschrieben werden\n"
+
+#: bootmenu.c:230 bootmenu.c:587
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: bootmenu.c:66
+msgid "Chain-loadable entries for the boot menu:"
+msgstr "Nacheinander ladefähige Einträge für das Boot-Menü:"
+
+#: bootmenu.c:542
+msgid "Default"
+msgstr "Standard"
+
+#: bootmenu.c:546
+msgid "Delete"
+msgstr "Löschen"
+
+#: bootmenu.c:434
+#, c-format
+msgid ""
+"Disk %s\n"
+"  Label: %s\n"
+"  Filesystem: %s\n"
+"  Chain-loadable: %s\n"
+"\n"
+msgstr ""
+"Disk %s\n"
+"  Name: %s\n"
+"  Dateisystem: %s\n"
+"  Nacheinander ladefähig: %s\n"
+"\n"
+
+#: bootmenu.c:700
+#, c-format
+msgid "Disk %s is not a physical hard disk device\n"
+msgstr "Disk %s ist keine physikalisch vorhandene Festplatte\n"
+
+#: bootmenu.c:869
+msgid "Done"
+msgstr "Fertig"
+
+#: bootmenu.c:538
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: bootmenu.c:198
+msgid "Edit entry label"
+msgstr "Name bearbeiten"
+
+#: bootmenu.c:266
+#, c-format
+msgid ""
+"Enter new label (%d characters max.):\n"
+" [%s]\n"
+" ["
+msgstr ""
+"Neuen Namen vergeben (%d Zeichen max.):\n"
+" [%s]\n"
+" ["
+
+#: bootmenu.c:121
+msgid "Error"
+msgstr "Fehler"
+
+#: bootmenu.c:224 bootmenu.c:582
+msgid "OK"
+msgstr "OK"
+
+#: bootmenu.c:65
+msgid "Partitions on the disk:"
+msgstr "Partitionen auf der Disk:"
+
+#: bootmenu.c:680
+msgid "Permission Denied"
+msgstr "Zugriff verweigert"
+
+#: bootmenu.c:61
+msgid ""
+"Visopsys Boot Menu Installer\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+msgstr ""
+"Visopsys Installationsprogramm für das Boot-Menü\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin"
+
+#: bootmenu.c:63
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Um diesen Befehl auszuführen müssen Sie spezielle Rechte besitzen.\n"
+"(Versuchen Sie sich als \"admin\" anzumelden)"
+
+#: bootmenu.c:437
+msgid "no"
+msgstr "nein"
+
+#: bootmenu.c:103
+#, c-format
+msgid ""
+"usage:\n"
+"%s <disk name>\n"
+msgstr ""
+"Benutzung:\n"
+"%s <Name der Disk>\n"
+
+#: bootmenu.c:437
+msgid "yes"
+msgstr "ja"

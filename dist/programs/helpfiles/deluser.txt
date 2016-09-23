@@ -1,0 +1,10 @@
+
+ -- deluser --
+
+Delete a user account from the system
+
+Usage:
+  deluser <user_name>
+
+The deluser program is a very simple method of deleting a user account.
+

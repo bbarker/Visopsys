@@ -1,0 +1,130 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:12-0300\n"
+"PO-Revision-Date: 2013-11-09 23:51-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: users.c:557
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Das Kommando \"%s\" funktioniert nur im Grafikmodus\n"
+
+#: users.c:435 users.c:511
+msgid "Add User"
+msgstr "Neuer Benutzer"
+
+#: users.c:460
+msgid "Can't delete the last user"
+msgstr "Der letzte Benutzer kann nicht gelöscht werden"
+
+#: users.c:240
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: users.c:212
+msgid "Confirm password:"
+msgstr "Passwortbestätigung:"
+
+#: users.c:518
+msgid "Delete User"
+msgstr "Benutzer löschen"
+
+#: users.c:454
+#, c-format
+msgid "Delete user %s?"
+msgstr "Benutzer %s löschen?"
+
+#: users.c:456
+msgid "Delete?"
+msgstr "Löschen?"
+
+#: users.c:602
+msgid "Done"
+msgstr "Fertig"
+
+#: users.c:435
+msgid "Enter the user name:"
+msgstr "Gebe den Benutzernamen ein:"
+
+#: users.c:78
+msgid "Error"
+msgstr "Fehler"
+
+#: users.c:375
+msgid "Error adding user"
+msgstr "Fehler beim Hinzufügen des Benutzers"
+
+#: users.c:406
+msgid "Error deleting user"
+msgstr "Fehler beim Löschen des Benutzers"
+
+#: users.c:96
+msgid "Error getting user names"
+msgstr "Fehler beim Lesen der Benutzernamen"
+
+#: users.c:345
+msgid "Error setting password"
+msgstr "Fehler beim konfigurieren des Passwortes"
+
+#: users.c:196
+msgid "New password:"
+msgstr "Neues Passwort:"
+
+#: users.c:599
+#, c-format
+msgid "No such user \"%s\""
+msgstr "Kein Benutzer Namens \"%s\""
+
+#: users.c:235
+msgid "OK"
+msgstr "OK"
+
+#: users.c:183
+msgid "Old password:"
+msgstr "Altes Passwort:"
+
+#: users.c:602
+msgid "Password set"
+msgstr "Passwort konfiguriert"
+
+#: users.c:223 users.c:349
+msgid "Passwords do not match"
+msgstr "Passwörter unterschiedlich"
+
+#: users.c:343 users.c:404
+msgid "Permission denied"
+msgstr "Keine Erlaubnis"
+
+#: users.c:155 users.c:157 users.c:526
+msgid "Set Password"
+msgstr "Konfiguriere Passwort"
+
+#: users.c:367
+#, c-format
+msgid "User \"%s\" already exists."
+msgstr "Der Benutzer \"%s\" existiert bereits."
+
+#: users.c:483
+msgid "User Manager"
+msgstr "User Manager"
+
+#: users.c:170
+#, c-format
+msgid "User name: %s"
+msgstr "Benutzername: %s"

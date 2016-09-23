@@ -1,0 +1,1444 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-12-09 02:07+0000\n"
+"PO-Revision-Date: 2009-06-13 00:20+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: fdisk.c:5697
+#, c-format
+msgid ""
+"\n"
+"\n"
+"No disk selected.  Quitting.\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Kein Datenträger gewählt.  Abbruch.\n"
+"\n"
+
+#: fdisk.c:404
+#, c-format
+msgid ""
+"\n"
+"\n"
+"WARNING: %s\n"
+msgstr ""
+"\n"
+"\n"
+"WARNUNG: %s\n"
+
+#: fdisk.c:2284
+#, c-format
+msgid ""
+"\n"
+"%s (I)gnore/(U)nmount/(C)ancel?: "
+msgstr ""
+"\n"
+"%s (I) Ignorieren/(U) Trennen/(C) Abbrechen?: "
+
+#: fdisk.c:3687
+#, c-format
+msgid ""
+"\n"
+"%s (press 'Q' to cancel)\n"
+msgstr ""
+"\n"
+"%s (wählen Sie 'Q' um abzubrechen)\n"
+
+#: fdisk.c:205
+#, c-format
+msgid ""
+"\n"
+"%s (y/n): "
+msgstr ""
+"\n"
+"%s (y/n): "
+
+#: fdisk.c:2917
+#, c-format
+msgid ""
+"\n"
+"%s or 'Q' to quit\n"
+"-> "
+msgstr ""
+"\n"
+"%s oder 'Q' um abzubrechen\n"
+"-> "
+
+#: fdisk.c:4377
+#, c-format
+msgid ""
+"\n"
+"Change Partition Order\n"
+"\n"
+" %s\n"
+msgstr ""
+"\n"
+"Ändere Partitionsordnung\n"
+"\n"
+" %s\n"
+
+#: fdisk.c:2186
+#, c-format
+msgid ""
+"\n"
+"Creating %s partition\n"
+msgstr ""
+"\n"
+"Erstelle %s Partition\n"
+
+#: fdisk.c:3432
+#, c-format
+msgid ""
+"\n"
+"Current ending cylinder: %u\n"
+msgstr ""
+"\n"
+"Aktueller Endzylinder: %u\n"
+
+#: fdisk.c:1738
+#, c-format
+msgid ""
+"\n"
+"Enter the hexadecimal code to set as the type ('L' to list, 'Q' to quit):\n"
+"-> "
+msgstr ""
+"\n"
+"Geben Sie einen hexadezimalen Code als Bezeichnung ein  ('L' für Liste, 'Q' "
+"für Abbruch):\n"
+"-> "
+
+#: fdisk.c:4684
+#, c-format
+msgid ""
+"\n"
+"Erasing data... (press 'Q' to cancel)\n"
+msgstr ""
+"\n"
+"Entfernt Daten... (wählen Sie 'Q' um abzubrechen)\n"
+
+#: fdisk.c:878
+#, c-format
+msgid ""
+"\n"
+"Fix these errors?"
+msgstr ""
+"\n"
+"Diese Fehler beheben?"
+
+#: fdisk.c:876
+#, c-format
+msgid ""
+"\n"
+"Fix this error?"
+msgstr ""
+"\n"
+"Fehler beheben?"
+
+#: fdisk.c:352
+#, c-format
+msgid ""
+"\n"
+"Press any key to continue. "
+msgstr ""
+"\n"
+"Weiter mit beliebiger Taste. "
+
+#: fdisk.c:5405
+#, c-format
+msgid "  -== %d changes pending ==-\n"
+msgstr "  -== %d Änderungen nicht gespeichert ==-\n"
+
+#: fdisk.c:4398
+#, c-format
+msgid ""
+" %s\n"
+"\n"
+"  [Cursor up/down to select, '-' move up, '+' move down,\n"
+"   Enter to accept, 'Q' to quit]"
+msgstr ""
+" %s\n"
+"\n"
+"  [Cursor hoch/runter um '-' nach oben, '+' unten zu verschieben,\n"
+"   Eingabe als Bestätigung, 'Q' um abzubrechen]"
+
+#: fdisk.c:2629
+#, c-format
+msgid "%d hours "
+msgstr "%d Stunden "
+
+#: fdisk.c:2634
+#, c-format
+msgid "%d minutes"
+msgstr "%d Minuten"
+
+#: fdisk.c:1363
+#, c-format
+msgid ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+msgstr ""
+"%s\n"
+"Copyright (C) 1998-2013 J. Andrew McLaughlin\n"
+
+#: fdisk.c:2195 fdisk.c:2209 fdisk.c:3437
+#, c-format
+msgid ""
+", or 'Q' to quit:\n"
+"-> "
+msgstr ""
+", oder 'Q' um abzubrechen:\n"
+"-> "
+
+#: fdisk.c:707
+msgid "/active"
+msgstr "/aktiv"
+
+#: fdisk.c:2631
+#, c-format
+msgid "1 hour "
+msgstr "1 Stunde "
+
+#: fdisk.c:4790
+msgid ""
+"?\n"
+"(This change cannot be undone)"
+msgstr ""
+"?\n"
+"(Diese Änderung kann nicht rückgängig gemacht werden)"
+
+#: fdisk.c:3158
+msgid ""
+"A filesystem resize cannot be undone, and must be committed\n"
+"to disk immediately.  You need to write your other changes\n"
+"to disk before continuing."
+msgstr ""
+"Skalierung des Dateisystems kann nicht rückgängig gemacht werden und muss "
+"sofort\n"
+"auf den Datenträger übertragen werden.  Alle Änderungen sollten gespeichert "
+"werden\n"
+"bevor Sie fortfahren."
+
+#: fdisk.c:2459
+msgid ""
+"A partition defragmentation cannot be undone, and it is required\n"
+"that you write your other changes to disk before continuing."
+msgstr ""
+"Eine Partitions Defragmentierung kann nicht rückgängig gemacht werden.\n"
+"Sie sollten alle Änderungen speichern bevor Sie fortfahren."
+
+#: fdisk.c:4760
+msgid ""
+"A partition erase cannot be undone, and it is required that you\n"
+"write your other changes to disk before continuing."
+msgstr ""
+"Gelöschte Partitionen können nicht wiederhergestellt werden und Sie müssen\n"
+"alle anderen Änderungen speichern bevor Sie fortfahren."
+
+#: fdisk.c:2358
+msgid ""
+"A partition format cannot be undone, and it is required that\n"
+"you write your other changes to disk before continuing."
+msgstr ""
+"Formatierung kann nicht rückgängig gemacht werden.\n"
+"Speichern Sie alle Änderungen, bevor Sie fortfahren."
+
+#: fdisk.c:2861
+msgid ""
+"A partition move cannot be undone, and must be committed\n"
+"to disk immediately.  You need to write your other changes\n"
+"to disk before continuing."
+msgstr ""
+"Verschieben der Partition kann nicht rückgängig gemacht werden und muss "
+"sofort\n"
+"auf den Datenträger übertragen werden.  Sie müssen alle anderen Änderungen\n"
+"abspeichern, bevor Sie fortfahren."
+
+#: fdisk.c:4496
+msgid ""
+"After you write changes, the \"active\" partition will\n"
+"always boot automatically.  Proceed?"
+msgstr ""
+"Nachdem die Änderungen übernommen wurden, wird aktive Partition\n"
+"immer automatisch gestartet.  Fortfahren?"
+
+#: fdisk.c:4863
+msgid "Attributes"
+msgstr "Eigenschaften"
+
+#: fdisk.c:3198 fdisk.c:3226
+msgid "Can't Resize Filesystem"
+msgstr "Dateisystem kann nicht skaliert werden"
+
+#: fdisk.c:980
+msgid "Can't create backup file"
+msgstr "Es kann keine Backupdatei erstellt werden"
+
+#: fdisk.c:1566
+msgid "Can't create dialog window"
+msgstr "Kann kein Dialogfenster erstellen"
+
+#: fdisk.c:523
+msgid "Can't determine whether slice is used"
+msgstr "Nicht erkennbar ob Zeitscheibenverfahren angewendet wird."
+
+#: gpt.c:178
+msgid "Can't get memory for a GPT entry array"
+msgstr "Kein Speicher für GPT Datenfeld"
+
+#: gpt.c:71
+msgid "Can't get memory for a GPT header"
+msgstr "Kein Speicher für GPT Header"
+
+#: gpt.c:115
+msgid "Can't get memory for a GPT header copy"
+msgstr "Kein Speicher für Kopie von GPT Header"
+
+#: fdisk.c:4505
+#, c-format
+msgid "Can't locate simple MBR file %s"
+msgstr "Kann keine einfache MBR Datei ermitteln %s"
+
+#: fdisk.c:998
+#, c-format
+msgid "Can't open backup file %s"
+msgstr "Kann Backupdatei %s nicht öffnen"
+
+#: gpt.c:187
+msgid "Can't read GPT entries"
+msgstr "Kann GPT Einträge nicht lesen"
+
+#: gpt.c:79
+msgid "Can't read GPT header"
+msgstr "Kann GPT Header nicht lesen"
+
+#: fdisk.c:4529
+#, c-format
+msgid "Can't read simple MBR file %s"
+msgstr "Konnte einfache MBR Datei %s nicht lesen"
+
+#: gpt.c:230
+msgid "Can't write GPT backup entries"
+msgstr "Kann keine GPT Backup Einträge schreiben"
+
+#: gpt.c:221
+msgid "Can't write GPT entries"
+msgstr "Kann keine GPT Einträge schreiben"
+
+#: gpt.c:127
+msgid "Can't write GPT header"
+msgstr "Kann GPT Header nicht lesen"
+
+#: gpt.c:144
+msgid "Can't write backup GPT header"
+msgstr "Kann Backup GPT Header nicht lesen"
+
+#: fdisk.c:1597 fdisk.c:2122 fdisk.c:2281 fdisk.c:3324 fdisk.c:3755
+#: fdisk.c:3898 fdisk.c:4299
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: fdisk.c:2305
+#, c-format
+msgid "Cancel\n"
+msgstr "Abbrechen\n"
+
+#: fdisk.c:3873
+msgid "Choose Disk"
+msgstr "Datenträger wählen"
+
+#: fdisk.c:2351
+msgid "Choose the FAT type:"
+msgstr "Wählen Sie Art der FAT:"
+
+#: fdisk.c:2350
+msgid "Choose the filesystem type:"
+msgstr "Wählen Sie das Dateisystem:"
+
+#: fdisk.c:1840
+msgid "Choose the partition type:"
+msgstr "Wählen Sie eine Partitionsart:"
+
+#: fdisk.c:5678
+#, c-format
+msgid "Clear the partition table of disk %s?"
+msgstr "Partitions-Tabelle von Datenträger %s löschen?"
+
+#: fdisk.c:3167
+msgid "Collecting filesystem resizing constraints..."
+msgstr "Sammle Beschränkungen der Skalierung des Dateisystems..."
+
+#: fdisk.c:2607
+msgid "Committing changes to disk.  Are you SURE?"
+msgstr "Änderungen übernehmen.  Sind Sie SICHER?"
+
+#: fdisk.c:201
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+#: fdisk.c:177
+msgid "Copy"
+msgstr "Kopieren"
+
+#: fdisk.c:151
+msgid "Copy disk"
+msgstr "Datenträger kopieren"
+
+#: fdisk.c:3998
+#, c-format
+msgid ""
+"Copy disk %s to disk %s.\n"
+"WARNING: THIS WILL DESTROY ALL DATA ON DISK %s.\n"
+"ARE YOU SURE YOU WANT TO DO THIS?"
+msgstr ""
+"Kopiere Datenträger %s auf Datenträger %s.\n"
+"WARNUNG: SIE ZERSTÖREN ALLE DATEN AUF DEM DATENTRÄGER %s.\n"
+"WOLLEN SIE WIRKLICH FORTFAHREN?"
+
+#: fdisk.c:3674
+#, c-format
+msgid "Copying %u MB..."
+msgstr "Kopiert %u MB..."
+
+#: fdisk.c:4521
+msgid "Couldn't read MBR sector"
+msgstr "Konnte MBR Abschnitt nicht lesen"
+
+#: msdos.c:70 msdos.c:278
+#, c-format
+msgid "Couldn't read partition table sector %u"
+msgstr "Konnte Partitions-Tabellen Abschnitt %u nicht lesen"
+
+#: fdisk.c:4537
+msgid "Couldn't write MBR sector"
+msgstr "Konnte MBR Abschnitt nicht lesen"
+
+#: msdos.c:394
+#, c-format
+msgid "Couldn't write partition table sector %u"
+msgstr "Konnte keinen Partitions-Tabellen Abschnitt schreiben %u"
+
+#: fdisk.c:188 fdisk.c:5249
+msgid "Create"
+msgstr "Erstellen"
+
+#: fdisk.c:2058
+msgid "Create Partition"
+msgstr "Partition erstellen"
+
+#: fdisk.c:3282
+#, c-format
+msgid "Current ending cylinder: %u\n"
+msgstr "Aktueller Endzylinder: %u\n"
+
+#: fdisk.c:4857
+msgid "Cylinders"
+msgstr "Zylinder"
+
+#: fdisk.c:2349
+msgid "Default"
+msgstr "Standard"
+
+#: fdisk.c:182 fdisk.c:5263
+msgid "Defragment"
+msgstr "Defragmentieren"
+
+#: fdisk.c:2465
+#, c-format
+msgid ""
+"Defragment partition %s?\n"
+"(This change cannot be undone)"
+msgstr ""
+"Partition defragmentieren %s?\n"
+"Änderung kann nicht rückgängig gemacht werden"
+
+#: fdisk.c:2509
+#, c-format
+msgid "Defragmentation complete"
+msgstr "Defragmentierung abgeschlossen"
+
+#: fdisk.c:2493
+msgid "Defragmenting..."
+msgstr "Defragmentierung..."
+
+#: fdisk.c:180 fdisk.c:5278
+msgid "Delete"
+msgstr "Entfernen"
+
+#: fdisk.c:189 fdisk.c:5272
+msgid "Delete all"
+msgstr "Alle entfernen"
+
+#: fdisk.c:1816
+msgid "Deleting active partition.  You should set another partition active."
+msgstr "Löscht aktive Partition.  Sie sollten eine andere Partition anwenden."
+
+#: fdisk.c:1149
+#, c-format
+msgid "Discard changes to disk %s?"
+msgstr "Änderungen an %s verwerfen?"
+
+#: fdisk.c:4848 fdisk.c:5152
+msgid "Disk"
+msgstr "Datenträger"
+
+#: fdisk.c:1166
+#, c-format
+msgid "Disk \"%s\" is missing geometry information."
+msgstr "Datenträger \"%s\" enthält keine Geometrie-Informationen."
+
+#: fdisk.c:477
+#, c-format
+msgid "Disk %d: [%s] %llu MB, %u cyls, %u heads, %u secs/cyl, %u bytes/sec"
+msgstr ""
+"Datenträger %d: [%s] %llu MB, %u Zyl, %u Köpfe, %u Sekt/Zyl, %u Byte/Sek"
+
+#: fdisk.c:4029
+#, c-format
+msgid ""
+"Disk %s is smaller than the amount of data on disk %s.\n"
+"If you wish, you can continue and copy the data that will\n"
+"fit.  Don't do this unless you're sure you know what you're\n"
+"doing.  CONTINUE?"
+msgstr ""
+"Datenträger %s ist kleiner als gesamte Datenmenge auf Datenträger %s.\n"
+"Wenn Sie wollen, können Sie so viele Daten wie möglich übertragen.\n"
+"Beginnen Sie den Prozess nicht, wenn Sie nicht wissen was passieren könnte.\n"
+"FORTFAHREN?"
+
+#: fdisk.c:5597
+msgid "Disk Manager"
+msgstr "Disk Manager"
+
+#: fdisk.c:4287
+msgid "Down"
+msgstr "Nach unten"
+
+#: fdisk.c:2565
+#, c-format
+msgid ""
+"EMPTY SPACE INFO:\n"
+"\n"
+msgstr ""
+"LEERRAUM INFO:\n"
+"\n"
+
+#: fdisk.c:681
+msgid "Empty space"
+msgstr "Leer"
+
+#: fdisk.c:78
+#, c-format
+msgid ""
+"Enter ending cylinder (%u-%u)\n"
+"or size in megabytes with 'm' (1m-%um),\n"
+"or size in cylinders with 'c' (1c-%uc)"
+msgstr ""
+"Geben Sie den Endzylinder von %u bis %u an\n"
+"oder geben Sie die Größe in Megabytes an mit 'm' (1m-%um),\n"
+"oder geben Sie die Größe der Zylinder an mit 'c' (1c-%uc)"
+
+#: fdisk.c:77
+#, c-format
+msgid "Enter starting cylinder (%u-%u)"
+msgstr "Geben Sie Start- und End-Zylinder (%u-%u)"
+
+#: fdisk.c:2902
+#, c-format
+msgid ""
+"Enter starting cylinder:\n"
+"(%u-%u)"
+msgstr ""
+"Startzylinder eingeben:\n"
+"(%u-%u)"
+
+#: fdisk.c:191
+msgid "Erase"
+msgstr "Löschen"
+
+#: fdisk.c:4822
+msgid "Erase complete"
+msgstr "Löschvorgang abgeschlossen"
+
+#: fdisk.c:4825
+#, c-format
+msgid "Erase complete\n"
+msgstr "Löschvorgang abgeschlossen\n"
+
+#: fdisk.c:155
+msgid "Erase disk"
+msgstr "Datenträger löschen"
+
+#: fdisk.c:4786
+#, c-format
+msgid "Erase partition %s"
+msgstr "Partition löschen %s"
+
+#: fdisk.c:4747
+msgid "Erase partition or disk?"
+msgstr "Partition oder Datenträger löschen?"
+
+#: fdisk.c:4648
+msgid "Erase security level"
+msgstr "Sicherheits-Level"
+
+#: fdisk.c:4738
+msgid "Erase the partition or the whole disk?:"
+msgstr "Partition oder gesamten Inhalt des Datenträgers entfernen?:"
+
+#: fdisk.c:4788
+msgid "Erase this empty space"
+msgstr "Diesen Leerraum entfernen"
+
+#: fdisk.c:4782
+#, c-format
+msgid "Erase whole disk %s"
+msgstr "Gesamten Datenträger löschen %s"
+
+#: fdisk.c:4641
+msgid ""
+"Erasing clears the data securely by overwriting successive\n"
+"passes of random data.  More passes is more secure but\n"
+"takes longer.  Choose the security level:"
+msgstr ""
+"Löschvorgang entfernt die Daten sicher, indem Daten mehrmals mit\n"
+"zufälligen Daten überschrieben werden.  Mehrere Überschreibungen sind "
+"sicherer\n"
+"nehmen aber auch mehr Zeit in Anspruch.  Wählen Sie das Sicherheits-Level:"
+
+#: fdisk.c:4681
+msgid "Erasing data..."
+msgstr "Entfernt Daten..."
+
+#: fdisk.c:374
+msgid "Error"
+msgstr "Fehler"
+
+#: fdisk.c:4816
+#, c-format
+msgid "Error %d erasing %s"
+msgstr "Fehler %d beim Löschen von %s"
+
+#: fdisk.c:3569
+#, c-format
+msgid "Error %d reading %u sectors at %u from disk %s"
+msgstr "Fehler %d beim Lesen %u der Sektoren %u auf Datenträger %s"
+
+#: fdisk.c:947
+#, c-format
+msgid ""
+"Error %d reading partition table, data may be incorrect.\n"
+"Proceed with caution."
+msgstr ""
+"Fehler %d beim Lesen der Partitions-Tabelle, Daten können fehlerhaft sein.\n"
+"Fahren Sie mit Bedacht fort."
+
+#: fdisk.c:4563
+#, c-format
+msgid "Error %d running bootmenu command"
+msgstr "Fehler %d beim Ausführen des Bootmenü-Befehls"
+
+#: fdisk.c:3572
+#, c-format
+msgid "Error %d writing %u sectors at %u to disk %s"
+msgstr "Fehler %d beim Schreiben %u der Sektoren %u auf Datenträger %s"
+
+#: fdisk.c:2505
+msgid "Error during defragmentation"
+msgstr "Fehler bei der Defragmentierung"
+
+#: fdisk.c:3075
+msgid "Error during filesystem resize"
+msgstr "Fehler bei Skalierung des Dateisystems"
+
+#: fdisk.c:2426
+msgid "Error during format"
+msgstr "Fehler bei der Formatierung"
+
+#: fdisk.c:4513
+msgid "Error getting memory"
+msgstr "Kann keinen Speicherplatz ermitteln"
+
+#: fdisk.c:4597
+msgid "Error opening backup partition table file"
+msgstr "Fehler beim Öffnen der Backupdatei für die Partitions-Tabelle"
+
+#: fdisk.c:4610 fdisk.c:4623
+msgid "Error reading backup partition table file"
+msgstr "Fehler beim Lesen der Backupdatei für die Partitions-Tabelle"
+
+#: fdisk.c:3191
+#, c-format
+msgid ""
+"Error reading filesystem information.  However, it is\n"
+"possible to resize the partition anyway and discard all\n"
+"of the data it contains.  Continue?"
+msgstr ""
+"Fehler beim Lesen der Dateisystem-Informationen.  Sie können die Partition\n"
+"trotzdem skalieren und alle enthaltenen Daten\n"
+"verwerfen.  Fortfahren?"
+
+#: fdisk.c:1005 fdisk.c:1010
+msgid "Error writing backup partition table file"
+msgstr "Fehler beim Schreiben einer Backupdatei für die Partitions-Tabelle"
+
+#: fdisk.c:2386
+msgid "FAT Type"
+msgstr "FAT-Art"
+
+#: fdisk.c:5147
+msgid "File"
+msgstr "Datei"
+
+#: fdisk.c:3170 fdisk.c:4854
+msgid "Filesystem"
+msgstr "Dateisystem"
+
+#: fdisk.c:3129
+msgid "Filesystem and partition (recommended)"
+msgstr "Dateisystem und Partition (empfohlen)"
+
+#: fdisk.c:3073
+msgid "Filesystem resize cancelled"
+msgstr "Skalierung des Dateisystems abgebrochen"
+
+#: fdisk.c:3484
+#, c-format
+msgid "Filesystem resize complete"
+msgstr "Skalierung des Dateisystems abgeschlossen"
+
+#: fdisk.c:181 fdisk.c:5267
+msgid "Format"
+msgstr "Formatierung"
+
+#: fdisk.c:2369
+#, c-format
+msgid "Format Partition %s"
+msgstr "Dateisystem %s"
+
+#: fdisk.c:2430
+#, c-format
+msgid "Format complete"
+msgstr "Formatierung abgeschlossen"
+
+#: fdisk.c:2412
+#, c-format
+msgid ""
+"Format partition %s as %s?\n"
+"(This change cannot be undone)"
+msgstr ""
+"Partition %s als %s formatieren?\n"
+"Änderung kann nicht rückgängig gemacht werden"
+
+#: gpt.c:195
+#, c-format
+msgid "GPT entries checksum mismatch (%x != %x)"
+msgstr "GPT Eintrags Prüfsumme unstimmig (%x != %x)"
+
+#: gpt.c:95
+#, c-format
+msgid "GPT header checksum mismatch (%x != %x)"
+msgstr "GPT Header Prüfsumme unstimmig (%x != %x)"
+
+#: fdisk.c:184
+msgid "Hide/Unhide"
+msgstr "Verstecken/Wiederherstellen"
+
+#: fdisk.c:5282
+msgid "Hide/unhide"
+msgstr "Verstecken/Wiederherstellen"
+
+#: fdisk.c:2280
+msgid "Ignore"
+msgstr "Ignorieren"
+
+#: fdisk.c:2293
+#, c-format
+msgid "Ignore\n"
+msgstr "Ignorieren\n"
+
+#: fdisk.c:185 fdisk.c:2576 fdisk.c:5286
+msgid "Info"
+msgstr "Information"
+
+#: fdisk.c:2233 fdisk.c:3452
+msgid "Invalid ending cylinder number"
+msgstr "Ungültiger Endzylinder"
+
+#: fdisk.c:2226
+msgid "Invalid starting cylinder number"
+msgstr "Ungültiger Startzylinder"
+
+#: fdisk.c:186
+msgid "List types"
+msgstr "Unterstützte Systeme"
+
+#: fdisk.c:2076
+msgid "Logical"
+msgstr "Logisch"
+
+#: msdos.c:331
+msgid "Logical partition cannot start on a cylinder boundary"
+msgstr "Logische Partition kann nicht auf Zylindergrenze beginnen"
+
+#: fdisk.c:154
+msgid "MBR boot menu"
+msgstr "MBR Bootmenü"
+
+#: fdisk.c:187 fdisk.c:5258
+msgid "Move"
+msgstr "Verschieben"
+
+#: fdisk.c:2949
+msgid "Moving"
+msgstr "Verschieben"
+
+#: fdisk.c:2735
+#, c-format
+msgid "Moving %llu MB"
+msgstr "Verschiebe %llu MB"
+
+#: fdisk.c:2944
+#, c-format
+msgid ""
+"Moving partition from cylinder %u to cylinder %u.\n"
+"Continue?"
+msgstr ""
+"Verschiebe Partition von Zylinder %u zu Zylinder %u.\n"
+"Fortfahren?"
+
+#: fdisk.c:4255
+msgid "Must be more than one primary partition to reorder!"
+msgstr "Für die Umordnung muss mehr als eine primäre Partition vorhanden sein!"
+
+#: fdisk.c:2479
+msgid "New Feature"
+msgstr "Neue Funktionen"
+
+#: fdisk.c:220
+#, c-format
+msgid "No\n"
+msgstr "Nein\n"
+
+#: fdisk.c:5526
+msgid "No disk selected.  Quitting."
+msgstr "Kein Datenträger ausgewählt.  Abbrechen."
+
+#: fdisk.c:2872
+msgid "No empty space on either side!"
+msgstr "Leerraum an den Seiten unzulässig!"
+
+#: fdisk.c:5654
+msgid "No fixed disks to manage.  Quitting."
+msgstr "Keine Festplatten können verwaltet werden.  Abbruch."
+
+#: fdisk.c:5645
+msgid "No hard disks registered"
+msgstr "Keine Festplatten registriert"
+
+#: fdisk.c:3945
+msgid "No other disks to copy to"
+msgstr "Keine anderen Datenträger verfügbar"
+
+#: fdisk.c:4119
+msgid "No partition copied to the clipboard"
+msgstr "Es befinden sich keine Partitionen auf dem Datenträger"
+
+#: fdisk.c:4019
+msgid ""
+"No partitions on the disk.  Do you want to copy the whole\n"
+"disk anyway?"
+msgstr ""
+"Keine Partitionen auf dem Datenträger.  Wollen Sie dennoch den gesamten\n"
+"Datenträger übertragen?"
+
+#: fdisk.c:2345 fdisk.c:2347
+msgid "None"
+msgstr "Keine"
+
+#: fdisk.c:3989
+msgid "Not much point in copying a disk to itself!"
+msgstr ""
+"Es macht keinen Sinn den Inhalt des Datenträgers auf sich selbst zu kopieren!"
+
+#: fdisk.c:2117 fdisk.c:3319 fdisk.c:3894 fdisk.c:4295
+msgid "OK"
+msgstr "OK"
+
+#: fdisk.c:2548
+#, c-format
+msgid ""
+"PARTITION %s INFO:\n"
+"\n"
+"Active : %s\n"
+msgstr ""
+"PARTITION %s INFO:\n"
+"\n"
+"Aktiv : %s\n"
+
+#: fdisk.c:4851 fdisk.c:5158
+msgid "Partition"
+msgstr "Partition"
+
+#: fdisk.c:2069
+msgid ""
+"Partition\n"
+"type:"
+msgstr ""
+"Partition\n"
+"type:"
+
+#: fdisk.c:860
+#, c-format
+msgid "Partition %s ending CHS sector is %u, should be %u\n"
+msgstr ""
+"Partition %s mit CHS Sektor %u am Ende, sollte angegeben werden als %u\n"
+
+#: fdisk.c:792
+#, c-format
+msgid "Partition %s ending cylinder is %u, should be %u\n"
+msgstr "Partition %s mit End-Zylinder %u, sollte angegeben werden als %u\n"
+
+#: fdisk.c:826
+#, c-format
+msgid "Partition %s ending head is %u, should be %u\n"
+msgstr "Partition %s mit Header %u am Ende, sollte angegeben werden als %u\n"
+
+#: fdisk.c:4138
+#, c-format
+msgid ""
+"Partition %s is too big (%llu sectors) to fit in the\n"
+"selected empty space (%llu sectors)"
+msgstr ""
+"Partition %s ist zu groß (%llu Sektoren) um in den gewählten\n"
+"Leerraum übertragen zu werden (%llu Sektoren)"
+
+#: fdisk.c:843
+#, c-format
+msgid "Partition %s starting CHS sector is %u, should be %u\n"
+msgstr ""
+"Partition %s mit CHS Sektor %u am Anfang, sollte angegeben werden als %u\n"
+
+#: fdisk.c:776
+#, c-format
+msgid "Partition %s starting cylinder is %u, should be %u\n"
+msgstr "Partition %s mit Start-Zylinder %u, sollte angegeben werden als %u\n"
+
+#: fdisk.c:809
+#, c-format
+msgid "Partition %s starting head is %u, should be %u\n"
+msgstr "Partition %s mit Header %u am Anfang, sollte angegeben werden als %u\n"
+
+#: fdisk.c:2279
+msgid "Partition Is Mounted"
+msgstr "Partition ist verbunden"
+
+#: fdisk.c:4261
+msgid "Partition Order"
+msgstr "Partitionsordnung"
+
+#: fdisk.c:3130
+msgid "Partition only"
+msgstr "Nur Partition"
+
+#: fdisk.c:152
+msgid "Partition order"
+msgstr "Partitionsordnung"
+
+#: fdisk.c:1182
+msgid ""
+"Partition table consistency check failed.\n"
+"Continue anyway?"
+msgstr ""
+"Überprüfung der Widerspruchsfreiheit der Partitions-Tabelle fehlgeschlagen.\n"
+"Trotzdem fortfahren?"
+
+#: fdisk.c:1044
+msgid ""
+"Partition table consistency check failed.\n"
+"Write anyway?"
+msgstr ""
+"Überprüfung der Widerspruchsfreiheit der Partitions-Tabelle fehlgeschlagen.\n"
+"Trotzdem schreiben?"
+
+#: fdisk.c:178
+msgid "Paste"
+msgstr "Einfügen"
+
+#: fdisk.c:4145
+#, c-format
+msgid "Paste partition %s to selected empty space on disk %s?"
+msgstr "Partition %s auf gewählten Leerraum auf Datenträger %s übertragen?"
+
+#: fdisk.c:1201
+msgid "Please choose the disk on which to operate:"
+msgstr ""
+"Bitte wählen Sie den Datenträger auf dem die Anwendung ausgeführt werden "
+"soll:"
+
+#: fdisk.c:3979
+msgid "Please choose the disk to copy to:"
+msgstr "Wählen Sie den Datenträger für den Kopiervorgang:"
+
+#: fdisk.c:3135
+msgid "Please select the type of resize operation:"
+msgstr "Bitte wählen Sie die Art der Skalierung:"
+
+#: fdisk.c:2475
+#, c-format
+msgid ""
+"Please use this feature with caution; it is not\n"
+"well tested.  Continue?"
+msgstr ""
+"Benutzen Sie diese Funktion mit großer Vorsicht; sie ist nicht\n"
+"genügend erprobt.  Fortfahren?"
+
+#: fdisk.c:2076
+msgid "Primary"
+msgstr "Primär"
+
+#: fdisk.c:5647
+msgid "Problem getting hard disk info"
+msgstr "Kann keine Festplatteninformationen abfragen"
+
+#: fdisk.c:139
+msgid "Quit"
+msgstr "Abbrechen"
+
+#: fdisk.c:234
+msgid "Quit without writing changes?"
+msgstr "Abbrechen ohne Änderungen zu übernehmen?"
+
+#: fdisk.c:2759
+#, c-format
+msgid "Read error %d reading sectors %u-%u from disk %s"
+msgstr "Lesefehler %d in den Abschnitten %u-%u des Datenträgers %s"
+
+#: fdisk.c:183 fdisk.c:5290
+msgid "Resize"
+msgstr "Skalieren"
+
+#: fdisk.c:3263
+msgid "Resize Partition"
+msgstr "Partition skalieren"
+
+#: fdisk.c:3137
+msgid "Resize Type"
+msgstr "Skalierungsart"
+
+#: fdisk.c:3469
+msgid "Resizing"
+msgstr "Skalierung"
+
+#: fdisk.c:3038
+msgid "Resizing Filesystem..."
+msgstr "Dateisystem wird skaliert..."
+
+#: fdisk.c:3463
+#, c-format
+msgid ""
+"Resizing partition from %llu to %u sectors.\n"
+"Please use this feature with caution, and only after\n"
+"making a backup of all important data.  Continue?"
+msgstr ""
+"Skaliere Partition von %llu zu %u Sektoren.\n"
+"Verwenden Sie diese Option mit Vorsicht und nur nachdem\n"
+"Sie ein Backup der wichtigsten Daten erstellt haben.  Fortfahren?"
+
+#: fdisk.c:3220
+#, c-format
+msgid ""
+"Resizing the filesystem on this partition is not supported.\n"
+"However, it is possible to resize the partition anyway and\n"
+"discard all of the data it contains.  Continue?"
+msgstr ""
+"Sie können das Dateisystem auf dieser Partition nicht skalieren.\n"
+"Sie können das Dateisystem dennoch skalieren und alle enthaltenen\n"
+"Daten verwerfen.  Fortfahren?"
+
+#: fdisk.c:138
+msgid "Restore backup"
+msgstr "Backup wiederherstellen"
+
+#: fdisk.c:4578
+msgid "Restore old partition table from backup?"
+msgstr "Alte Partitions-Tabelle aus Backup wiederherstellen?"
+
+#: fdisk.c:1593
+msgid "Select"
+msgstr "Wählen"
+
+#: fdisk.c:179 fdisk.c:5254
+msgid "Set active"
+msgstr "Aktivieren"
+
+#: fdisk.c:190
+msgid "Set type"
+msgstr "Art wählen"
+
+#: fdisk.c:4860
+msgid "Size(MB)"
+msgstr "Größe(MB)"
+
+#: fdisk.c:2568
+#, c-format
+msgid ""
+"Starting Cyl/Hd/Sect: %u/%u/%u\n"
+"Ending Cyl/Hd/Sect  : %u/%u/%u\n"
+"Logical start sector: %llu\n"
+"Logical size: %llu"
+msgstr ""
+"Startzyl/Hd/Sekt: %u/%u/%u\n"
+"Endzyl/Hd/Sekt  : %u/%u/%u\n"
+"Logischer Startsektor: %llu\n"
+"Logische Größe: %llu"
+
+#: fdisk.c:2908
+msgid "Starting Cylinder"
+msgstr "Startzylinder"
+
+#: fdisk.c:2933
+msgid "Starting cylinder is not valid"
+msgstr "Startzylinder ist ungültig"
+
+#: fdisk.c:2432 fdisk.c:2511 fdisk.c:3486 fdisk.c:4822
+msgid "Success"
+msgstr "Erfolgreich"
+
+#: fdisk.c:76
+msgid "Supported Partition Types"
+msgstr "Unterstützte Systeme"
+
+#: msdos.c:77
+#, c-format
+msgid "Table at %u has no signature"
+msgstr "Tabelle auf %u hat keine Signatur"
+
+#: fdisk.c:3752
+#, c-format
+msgid "Terminating processes..."
+msgstr "Prozesse beenden..."
+
+#: fdisk.c:2273
+#, c-format
+msgid ""
+"The partition is mounted as %s.  It is STRONGLY recommended\n"
+"that you unmount before continuing"
+msgstr ""
+"Partition ist mit %s verbunden.  Es wird DRINGEND empfohlen\n"
+"dass Sie alles trennen bevor Sie fortfahren"
+
+#: msdos.c:550
+msgid ""
+"The partition table is full of primary partitions.  Use more\n"
+"logical partitions in order to create more."
+msgstr ""
+"Die Partitions-Tabelle ist gefüllt mit primären Partitionen.  Verwenden Sie\n"
+"mehr logische Partitionen, um mehr von ihnen zu erstellen."
+
+#: fdisk.c:4491 fdisk.c:4554
+msgid ""
+"This operation cannot be undone, and it is required that\n"
+"you write your other changes to disk before continuing."
+msgstr ""
+"Dieser Vorgang kann nicht rückgängig gemacht werden und Sie müssen\n"
+"alle Änderungen auf einem Datenträger speichern bevor Sie fortfahren."
+
+#: fdisk.c:2626
+msgid "Time remaining: "
+msgstr "Restdauer: "
+
+#: fdisk.c:2730 fdisk.c:3680 fdisk.c:4676
+msgid "Time remaining: ?? hours ?? minutes"
+msgstr "Restdauer: ?? Stunden ?? Minuten"
+
+#: fdisk.c:2558
+#, c-format
+msgid "Type GUID : "
+msgstr "Art GUID : "
+
+#: fdisk.c:2553
+#, c-format
+msgid "Type ID : %02x\n"
+msgstr "Art ID : %02x\n"
+
+#: fdisk.c:2723
+msgid "Unable to allocate memory"
+msgstr "Kann Speicher nicht zuordnen"
+
+#: fdisk.c:3668
+msgid "Unable to allocate memory buffer!"
+msgstr "Kann Zwischenspeicher nicht zuordnen!"
+
+#: fdisk.c:2327
+#, c-format
+msgid "Unable to unmount %s"
+msgstr "Kann nicht getrennt werden %s"
+
+#: fdisk.c:2613
+#, c-format
+msgid "Unable to write the partition table of %s."
+msgstr "Kann Partitions-Tabelle von %s nicht schreiben."
+
+#: fdisk.c:137 fdisk.c:5294
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: fdisk.c:2402
+#, c-format
+msgid "Unformat partition %s?  (This change cannot be undone)"
+msgstr ""
+"Format von Partition löschen %s?  (Änderung kann nicht rückgängig gemacht "
+"werden)"
+
+#: fdisk.c:952
+msgid "Unknown disk label.  Writing changes will create an MS-DOS label."
+msgstr ""
+"Unbekannte Datenträger-Bezeichnung.  Bearbeitung erstellt eine MS-DOS "
+"Bezeichnung."
+
+#: fdisk.c:2280
+msgid "Unmount"
+msgstr "Trennen"
+
+#: fdisk.c:2299
+#, c-format
+msgid "Unmount\n"
+msgstr "Trennen\n"
+
+#: fdisk.c:1768
+#, c-format
+msgid "Unsupported partition type %x"
+msgstr "Partitionsart wird nicht unterstützt %x"
+
+#: fdisk.c:4283
+msgid "Up"
+msgstr "Nach oben"
+
+#: fdisk.c:401
+msgid "Warning"
+msgstr "Warnung"
+
+#: fdisk.c:136
+msgid "Write"
+msgstr "Übernehmen"
+
+#: fdisk.c:153
+msgid "Write basic MBR"
+msgstr "In MBR schreiben"
+
+#: fdisk.c:5299
+msgid "Write changes"
+msgstr "Änderungen übernehmen"
+
+#: fdisk.c:2773
+#, c-format
+msgid "Write error %d writing sectors %u-%u to disk %s"
+msgstr "Schreibfehler %d in den Abschnitten %u-%u auf Datenträger %s"
+
+#: fdisk.c:214
+#, c-format
+msgid "Yes\n"
+msgstr "Ja\n"
+
+#: fdisk.c:491
+msgid ""
+"You have at least one disk running in unsupported native-SATA mode.\n"
+"You may be able to temporarily enable ATA or 'legacy' IDE mode in your\n"
+"BIOS setup."
+msgstr ""
+"Mindestens eine Disk läuft im nativen SATA-Modus, der nicht unterstützt\n"
+"wird.  Sie sollten vielleicht zeitweise den ATA- oder IDE-Modus\n"
+"(Legacy-Modus) in Ihren BIOS-Einstellungen aktivieren."
+
+#: fdisk.c:74
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"Um diesen Befehl auszuführen müssen Sie spezielle Rechte besitzen.\n"
+"(Versuchen Sie die Anmeldung als \"admin\")"
+
+#: fdisk.c:5359
+msgid "[A] Set active\n"
+msgstr "[A] Aktivieren\n"
+
+#: fdisk.c:5360
+msgid "[B] Partition order\n"
+msgstr "[B] Partitionsordnung\n"
+
+#: fdisk.c:5361
+msgid "[C] Copy disk\n"
+msgstr "[C] Datenträger kopieren\n"
+
+#: fdisk.c:5362
+msgid "[D] Delete\n"
+msgstr "[D] Entfernen\n"
+
+#: fdisk.c:5363
+msgid "[E] Copy partition\n"
+msgstr "[E] Partition kopieren\n"
+
+#: fdisk.c:5364
+msgid "[F] Format\n"
+msgstr "[F] Format\n"
+
+#: fdisk.c:5365
+msgid "[G] Defragment\n"
+msgstr "[G] Defragmentieren\n"
+
+#: fdisk.c:5366
+msgid "[H] Hide/Unhide\n"
+msgstr "[H] Verstecken/Wiederherstellen\n"
+
+#: fdisk.c:5367
+msgid "[I] Info\n"
+msgstr "[I] Info\n"
+
+#: fdisk.c:5368
+msgid "[L] List types\n"
+msgstr "[L] Unterstützte Systeme\n"
+
+#: fdisk.c:5369
+msgid "[M] Move\n"
+msgstr "[M] Verschieben\n"
+
+#: fdisk.c:5370
+msgid "[N] Create new\n"
+msgstr "[N] Neu\n"
+
+#: fdisk.c:5371
+msgid "[O] Delete all\n"
+msgstr "[O] Alle entfernen\n"
+
+#: fdisk.c:5379
+#, c-format
+msgid "[P] Paste partition\n"
+msgstr "[P] Partition einfügen\n"
+
+#: fdisk.c:5381
+#, c-format
+msgid "[Q] Quit\n"
+msgstr "[Q] Abbrechen\n"
+
+#: fdisk.c:5383
+#, c-format
+msgid "[R] Restore backup\n"
+msgstr "[R] Backup wiederherstellen\n"
+
+#: fdisk.c:5385
+#, c-format
+msgid "[S] Select disk\n"
+msgstr "[S] Datenträger auswählen\n"
+
+#: fdisk.c:5387
+#, c-format
+msgid "[T] Set type\n"
+msgstr "[T] Dateisystem wählen\n"
+
+#: fdisk.c:5389
+#, c-format
+msgid "[U] Undo\n"
+msgstr "[U] Rückgängig\n"
+
+#: fdisk.c:5391
+#, c-format
+msgid "[V] Erase\n"
+msgstr "[V] Löschen\n"
+
+#: fdisk.c:5393
+#, c-format
+msgid "[W] Write changes\n"
+msgstr "[W] Änderungen übernehmen\n"
+
+#: fdisk.c:5395
+#, c-format
+msgid "[X] Write basic MBR\n"
+msgstr "[X] In MBR schreiben\n"
+
+#: fdisk.c:5397
+#, c-format
+msgid "[Y] MBR boot menu\n"
+msgstr "[Y] MBR Bootmenü\n"
+
+#: fdisk.c:5399
+#, c-format
+msgid "[Z] Resize\n"
+msgstr "[Z] Skalieren\n"
+
+#: fdisk.c:4644
+msgid "basic (clear only)"
+msgstr "einfach (nur entfernen)"
+
+#: fdisk.c:2396
+msgid "default"
+msgstr "standard"
+
+#: fdisk.c:4817
+msgid "disk"
+msgstr "Datenträger"
+
+#: fdisk.c:2637
+#, c-format
+msgid "less than 1 minute"
+msgstr "weniger als 1 Minute"
+
+#: fdisk.c:704 fdisk.c:1841 fdisk.c:2187
+#, c-format
+msgid "logical"
+msgstr "logisch"
+
+#: fdisk.c:4645
+msgid "more secure"
+msgstr "sicherer"
+
+#: fdisk.c:4645
+msgid "most secure"
+msgstr "am sichersten"
+
+#: fdisk.c:2550
+msgid "no"
+msgstr "nein"
+
+#: fdisk.c:2400
+msgid "none"
+msgstr "keine"
+
+#: fdisk.c:4739 fdisk.c:4817
+msgid "partition"
+msgstr "Partition"
+
+#: fdisk.c:702 fdisk.c:1841 fdisk.c:2187
+#, c-format
+msgid "primary"
+msgstr "primär"
+
+#: fdisk.c:4644
+msgid "secure"
+msgstr "sicher"
+
+#: fdisk.c:636 fdisk.c:646 fdisk.c:671
+msgid "unknown"
+msgstr "unbekannt"
+
+#: fdisk.c:4739
+msgid "whole disk"
+msgstr "gesamten Datenträger"
+
+#: fdisk.c:2550
+msgid "yes"
+msgstr "Ja"

@@ -1,0 +1,21 @@
+
+ -- calc --
+
+A calculator program.
+
+The button labelled "dec" changes the current numeric base, if you press it
+once, the current numeric base will be hexadecimal and the button will now be
+labelled "hex".  If you press it twice the base will be octal and the button
+labelled "oct".  Pressing it three times restarts the cycle with "dec" and so
+on.
+
+Floating point behavior might look a bit strange to people not accustomed to
+binary floating point operation: in fact, after typing some floating number,
+you might see it gets turned into another number. This happens due to the
+structure of binary floating pointer numbers.
+
+Usage:
+  calc
+
+(Only available in graphics mode)
+

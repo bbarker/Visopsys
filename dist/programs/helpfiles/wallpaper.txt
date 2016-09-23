@@ -1,0 +1,16 @@
+
+ -- wallpaper --
+
+Set the background wallpaper image.
+
+Usage:
+  wallpaper [image_file]
+
+(Only available in graphics mode)
+
+This command will set the background wallpaper image from the (optional)
+image file name parameter or, if no image file name is supplied, the program
+will prompt the user.
+
+Currently, bitmap (.bmp) and JPEG (.jpg) image formats are supported.
+

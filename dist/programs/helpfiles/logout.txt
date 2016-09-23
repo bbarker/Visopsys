@@ -1,0 +1,11 @@
+
+ -- logout --
+
+End the current login session.
+
+Synonym:
+  exit
+
+Usage:
+  logout
+

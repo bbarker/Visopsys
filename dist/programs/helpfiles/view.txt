@@ -1,0 +1,20 @@
+
+ -- view --
+
+View a file.
+
+Usage:
+  view [file]
+
+(Only available in graphics mode)
+
+This command will launch a window in which the requested file is displayed.
+If no file name is supplied on the command line (or for example if the
+program is launched by clicking on its icon), the user will be prompted for
+the file to display.
+
+The currently-supported file formats are:
+
+- Images (currently only uncompressed, 8-bit and 24-bit bitmap images)
+- Text files
+

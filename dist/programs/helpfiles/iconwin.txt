@@ -1,0 +1,14 @@
+
+ -- iconwin --
+
+A program for displaying custom icon windows.
+
+Usage:
+  iconwin <config_file>
+
+The iconwin program is interactive, and may only be used in graphics mode.
+It creates a window with icons, as specified in the named configuration file.
+The 'Administration' icon, for example, on the default Visopsys desktop
+uses the iconwin program to display the relevant administration tasks with
+custom icons for each.
+

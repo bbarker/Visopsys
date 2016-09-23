@@ -1,0 +1,78 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:05-0300\n"
+"PO-Revision-Date: 2013-11-09 23:04-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: login.c:463
+#, c-format
+msgid ""
+"\n"
+"Welcome %s\n"
+"%s"
+msgstr ""
+"\n"
+"Wilkommen %s\n"
+"%s"
+
+#: login.c:456
+#, c-format
+msgid "Couldn't load login shell %s!"
+msgstr "Loginshell %s kann nicht geladen werden!"
+
+#: login.c:123 login.c:408
+msgid "Error"
+msgstr "Fehler"
+
+#: login.c:432
+msgid "Login Failed"
+msgstr "Login fehl geschlagen"
+
+#: login.c:210
+msgid "Login Window"
+msgstr "Login Fenster"
+
+#: login.c:441
+msgid "Read Only"
+msgstr "Nur Lesen"
+
+#: login.c:254
+msgid "Reboot"
+msgstr "Neu starten"
+
+#: login.c:260
+msgid "Shut down"
+msgstr "Ausschalten"
+
+#: login.c:106
+msgid "That login name is too long."
+msgstr "Loginname zu lang."
+
+#: login.c:107
+msgid "That password is too long."
+msgstr "Passwort zu lang."
+
+#: login.c:432
+msgid "Unable to log in to the Window Manager!"
+msgstr "Kann nicht in den Window Manager eingeloggt werden!"
+
+#: login.c:97
+msgid "login: "
+msgstr "Login:"
+
+#: login.c:322
+#, c-format
+msgid "password: "
+msgstr "Passwort:"

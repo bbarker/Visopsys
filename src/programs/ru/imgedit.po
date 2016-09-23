@@ -1,0 +1,111 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: imgedit.c:98
+msgid "Error"
+msgstr ""
+
+#: imgedit.c:106
+msgid "Discard changes?"
+msgstr ""
+
+#: imgedit.c:107
+msgid "File has been modified.  Discard changes?"
+msgstr ""
+
+#: imgedit.c:108
+msgid "Discard"
+msgstr ""
+
+#: imgedit.c:108
+msgid "Cancel"
+msgstr ""
+
+#: imgedit.c:140 imgedit.c:805
+msgid "Enter filename"
+msgstr ""
+
+#: imgedit.c:141
+msgid "Please enter the name of the file for saving:"
+msgstr ""
+
+#: imgedit.c:155
+#, c-format
+msgid "Error %d saving file"
+msgstr ""
+
+#: imgedit.c:440 imgedit.c:731
+msgid "Thickness"
+msgstr ""
+
+#: imgedit.c:441
+msgid "Enter line thickess"
+msgstr ""
+
+#: imgedit.c:515
+msgid "Image Editor"
+msgstr ""
+
+#: imgedit.c:594
+msgid "Save"
+msgstr ""
+
+#: imgedit.c:641
+msgid "Color"
+msgstr ""
+
+#: imgedit.c:656
+msgid "Pick"
+msgstr ""
+
+#: imgedit.c:673
+msgid "Draw"
+msgstr ""
+
+#: imgedit.c:686
+msgid "Line"
+msgstr ""
+
+#: imgedit.c:699
+msgid "Rect"
+msgstr ""
+
+#: imgedit.c:712
+msgid "Oval"
+msgstr ""
+
+#: imgedit.c:745
+msgid "Fill"
+msgstr ""
+
+#: imgedit.c:779
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+
+#: imgedit.c:797
+#, c-format
+msgid "Unknown option '%c'"
+msgstr ""
+
+#: imgedit.c:806
+msgid "Please enter an image file to edit:"
+msgstr ""

@@ -1,0 +1,189 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 10:57-0300\n"
+"PO-Revision-Date: 2013-11-08 20:54-0400\n"
+"Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-Bookmarks: 5,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: copy-boot.c:244
+#, c-format
+msgid "%s is not a valid boot sector\n"
+msgstr "%s ist kein gültiger Bootsektor\n"
+
+#: copy-boot.c:431 copy-boot.c:466
+#, c-format
+msgid "%u FATs of %u\n"
+msgstr "%u FATs von %u\n"
+
+#: copy-boot.c:430 copy-boot.c:464
+#, c-format
+msgid "%u reserved\n"
+msgstr "%u reserviert\n"
+
+#: copy-boot.c:433
+#, c-format
+msgid "%u root dir sectors\n"
+msgstr "%u Rootverzeichnis-Sektoren\n"
+
+#: copy-boot.c:512
+msgid "Add boot sector signature\n"
+msgstr "Bootsektor-Signatur hinzufügen\n"
+
+#: copy-boot.c:326
+#, c-format
+msgid "Can't alloc %u bytes to find an unused cluster\n"
+msgstr "Kann nicht %u bytes zum Finden eines unbenutzten Clusters zuteilen\n"
+
+#: copy-boot.c:151 copy-boot.c:202
+#, c-format
+msgid "Can't open device %s\n"
+msgstr "Das Gerät %s kann nicht geöffnet werden\n"
+
+#: copy-boot.c:335
+msgid "Can't read FAT sector\n"
+msgstr "FAT-sektor kann nicht gelesen werden\n"
+
+#: copy-boot.c:169
+#, c-format
+msgid "Can't read sector\n"
+msgstr "Sektor kann nicht gelesen werden\n"
+
+#: copy-boot.c:158 copy-boot.c:209
+#, c-format
+msgid "Can't seek device to sector %u\n"
+msgstr ""
+
+#: copy-boot.c:220
+#, c-format
+msgid "Can't write sector\n"
+msgstr "Sektor kann nicht geschrieben werden\n"
+
+#: copy-boot.c:238
+#, c-format
+msgid "Couldn't read boot sector from %s\n"
+msgstr "Der Bootsektor von %s konnte nicht gelesen werden\n"
+
+#: copy-boot.c:275
+#, c-format
+msgid "Couldn't write backup boot sector to %s\n"
+msgstr "Der Backup-Bootsektor konnte nicht in %s geschrieben werden\n"
+
+#: copy-boot.c:263
+#, c-format
+msgid "Couldn't write boot sector to %s\n"
+msgstr "Der Bootsektor konnte nicht in %s geschrieben werden\n"
+
+#: copy-boot.c:141
+#, c-format
+msgid "Error reading disk %s\n"
+msgstr "Lesefehler in Disk %s\n"
+
+#: copy-boot.c:192
+#, c-format
+msgid "Error writing disk %s\n"
+msgstr "Schreibfehler in Disk %s\n"
+
+#: copy-boot.c:299
+#, c-format
+msgid "File system type is not supported\n"
+msgstr "Dateisystem-type nicht unterstützt\n"
+
+#: copy-boot.c:321
+msgid "Find first unused cluster\n"
+msgstr "Suche den ersten unbenutzten Cluster\n"
+
+#: copy-boot.c:394
+#, c-format
+msgid "First unused cluster %u\n"
+msgstr "Erster unbenutzter Cluster %u\n"
+
+#: copy-boot.c:486
+#, c-format
+msgid "First user sector for OS loader is %u\n"
+msgstr "Erster Benutzersektor für OS Loader ist %u\n"
+
+#: copy-boot.c:290
+msgid "Merge boot sectors\n"
+msgstr "Boot sektoren vereinen\n"
+
+#: copy-boot.c:498
+#, c-format
+msgid "OS loader sectors are %u\n"
+msgstr "OS Ladesektoren sind %u\n"
+
+#: copy-boot.c:233
+#, c-format
+msgid "Read boot sector from %s\n"
+msgstr "Lese Bootsektor von %s\n"
+
+#: copy-boot.c:468
+#, c-format
+msgid "Root dir cluster %u\n"
+msgstr "Root Verzeichniscluster %u\n"
+
+#: copy-boot.c:436 copy-boot.c:470
+#, c-format
+msgid "Sectors per cluster %u\n"
+msgstr "Sektoren pro Cluster %u\n"
+
+#: copy-boot.c:421
+msgid "Set OS loader parameters\n"
+msgstr "OS Ladeparameter einstellen\n"
+
+#: copy-boot.c:427
+msgid "Target filesystem is FAT12\n"
+msgstr "Zieldateisystem ist FAT12\n"
+
+#: copy-boot.c:429
+msgid "Target filesystem is FAT16\n"
+msgstr "Zieldateisystem ist FAT16\n"
+
+#: copy-boot.c:463
+msgid "Target filesystem is FAT32\n"
+msgstr "Zieldateisystem ist FAT32\n"
+
+#: copy-boot.c:389
+#, c-format
+msgid "Unknown FAT type %s\n"
+msgstr "Unbekannter FAT Typ %s\n"
+
+#: copy-boot.c:258
+#, c-format
+msgid "Write boot sector to %s\n"
+msgstr "Schreibe Bootsektor nach %s\n"
+
+#: copy-boot.c:542
+#, c-format
+msgid "fat32BSHeader size is 0x%02x instead of 0x5A\n"
+msgstr "fat32BSHeader Grösse ist 0x%02x statt 0x5A\n"
+
+#: copy-boot.c:549
+#, c-format
+msgid "fat32FsInfo size is %d instead of 512\n"
+msgstr "fat32FsInfo Grösse ist %d statt of 512\n"
+
+#: copy-boot.c:535
+#, c-format
+msgid "fatBSHeader size is 0x%02x instead of 0x3E\n"
+msgstr "fatBSHeader Grösse ist 0x%02x statt 0x3E\n"
+
+#: copy-boot.c:123
+#, c-format
+msgid ""
+"usage:\n"
+"%s <boot image> <output file|device>\n"
+msgstr ""
+"Benutzung:\n"
+"%s <boot-image> <outputdatei|gerät>\n"

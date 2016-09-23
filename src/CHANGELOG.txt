@@ -1,0 +1,3194 @@
+-------------
+ Version 0.8   16/09/2016
+-------------
+
+  Overview: This major release offers an updated look, touch support, new
+  programs and GUI features, better widescreen viewing, and improved
+  performance.  It includes new icons, a basic compression library, FAT
+  filesystem resizing, improved internationalization including Russian and
+  Turkish translations, and an OHCI (USB 1) driver - reaching the milestone of
+  supporting all existing USB controller types.
+
+- All of the icons have been replaced with ones from (or adapted from) the
+Oxygen icon set.
+- All of the desktop background (wallpaper) images are new.
+- There are new default colours, making for a slightly darker theme.
+- The login and first boot screens have had a facelift; they're now full-
+screen windows with a new splash image.
+- Window title bars are thicker, and checkboxes and radio buttons have been
+enlarged.
+- Added a Virtual Keyboard ('keyboard') program for touchscreen input, which
+can also be clicked with the mouse.  It is located in the Programs area, and
+is started automatically in an iconified mode when touchscreen hardware has
+been detected.  The icon shows in the right corner of the top taskbar menu,
+and can be tapped/clicked to show or hide the virtual keyboard.
+- Added a new, basic Image Editor ('imgedit') program, which features zoomable
+viewing, color picking, freehand drawing, lines, rectangles, and squares
+(filled or outline).
+- Added a new, graphical Font Editor program - to replace the old command-line
+'fontutil' program - that enables the viewing and editing of Visopsys'
+proprietary bitmapped font format (.vbf).  By default, it presents a list of
+fonts installed in the /system/fonts directory.  Otherwise, clicking on any
+font file in the File Browser will load it using the Font Editor.  Extra
+command-line-only functionality for creating, importing, and converting .vbf
+files is still supported.
+- Added a simple Archive Manager ('archman') program, which can open and
+display compressed archives supported by the compression library.  This
+initial version is limited to extracting files.
+- Added a System Diagnostics ('sysdiag') program for testing memory and disks.
+- Added 'libmono' monospace fonts, replacing the 'xterm' font in most
+instances.  Adapted from Liberation Mono.
+- Improved support for Windows ICO icon format images, including XOR mapping
+(alpha channel translucency) for 32-bit images, and AND-masking for
+transparency.
+- The mouse pointer, button images, and icons are now drawn using alpha
+channel blending.
+- The window library's file list widget now attempts to use the icon itself,
+when choosing an icon for an icon file.  Supported image types now appear as
+small thumbnails in their icons.
+- The 'clock' program has been updated so that it shows as a label in the
+top taskbar menu, rather than a small window at the bottom of the screen.
+- The operating system loader now attempts to select a video mode that matches
+the hardware's native/best aspect ratio, for wide-screen displays.  The user
+can override this in the Display Settings window, or at boot time by pressing
+'Esc' during kernel loading, and selecting a mode from a menu.
+- The Keyboard Mapping ('keymap') program has been updated to use the
+graphical keyboard from the window library.  Editing maps now selects the
+appropriate character set for the keyboard language.
+- The Devices ('lsdev') program has been updated to use the new window tree
+component, rather than just displaying a flat listing of devices.
+- Added per-user window system configuration (colors, sizes, fonts, etc).
+- Added per-user desktop configuration (wallpaper, taskbar, icons, etc).
+- Added a graphical keyboard widget to the window library, with dynamic size
+and the ability to change keymaps.  Used by the 'keymap' and 'keyboard'
+programs.
+- Added a pixel editor widget to the window library, allowing images to be
+viewed and/or edited at a fine level of detail.
+- Added a window 'tree' component for displaying expandable/collapsable
+hierarchies of items, such as files and directories.  Used by the 'lsdev'
+program.
+- Added an 'archive list' widget to the window library.  It is analogous to
+the file list used by the file selection dialog and the file browser, but
+operates on the contents of archives as implemented by the compression
+library.
+- Programs can now add icon and label components to the top taskbar menu.
+Used by the 'clock' and 'keyboard' programs.  Programs can now iconify so that
+they are minimized, and don't appear in the normal Window menu, but show an
+icon in the taskbar menu (similar to the Windows 'tray').
+- The mouse pointer can now be hidden (for touch operation).
+- Pressing the keyboard 'menu' key will raise any applicable context menu
+for the focused component.
+- For best performance, the kernel no longer loads a splash image during
+initialization.
+- Container components can now contain an 'active' sub-component; like a focus
+component, it should receive things like keyboard events, even if it doesn't
+actually have the focus ('sub-focus' or focus-within-a-focus).  The
+designation of the active component is implementation-specific, depending on
+the type of container.
+- The window library's file selection dialog now allows for selecting
+directories, and requires the type (file or directory) to be specified at
+creation time.
+- The window shell now uses the kernel's linked lists to manage its
+collections of menu items and menu bar components.
+- Removed the kernelFontGetDefault() function (fontGetDefault() in user space)
+and replaced it with kernelFontGetSystem() (not exported to user space) to
+return the kernel's built-in basic font.  Added a default small fixed-width
+font variable to the window system, which defaults to xterm-normal-10.
+- A number of icon files have been renamed to remove the word 'icon'.
+- The Disk Manager now has the option to write a new, empty partition table,
+of any supported type (currently DOS/MBR and GPT).
+- The Disk Manager can now copy disks and partitions even when there are read
+or write errors; this way it can be used to recover data from a failing disk.
+If a large read or write operation fails, after prompting the user about
+whether to continue, it will restart from the failure point and attempt each
+sector of the failed operation individually.
+- The Disk Manager now has a checkbox in graphics mode, to show or hide
+removable disks.  It is un-checked by default.
+- The Disk Manager now offers a way to view 'raw' partition table data via the
+new 'Disk info' item in the Disk menu.
+- The Disk Manager now shows slices for reserved areas, instead of showing all
+un-partitioned space as empty.
+- Added FAT filesystem resizing capability, available in the Disk Manager.
+- Added a kernelFileGetTempName() function (fileGetTempName() in user space)
+for generating names for temporary files and directories.
+- The kernel's file handling code now uses the CPU timestamp for recording
+the last access to a file or directory, instead of the system timer.
+- Added USB touchscreen support and a touchscreen abstraction layer, akin to
+but distinct from the generic mouse functionality.
+- Added an OHCI (USB 1) host controller driver.  All 4 USB controller types
+are now supported.
+- The kernel's Linear Framebuffer graphics driver can now do 15/16 bits-per-
+pixel alpha channel blending.
+- The XHCI (USB 3) driver is now aware of extra 'scratchpad buffer' bits
+introduced in the 1.1 specification.
+- The entire operating system is generally more internationalized, and aware
+of appropriate character sets (a.k.a code pages) and fonts to use for keyboard
+mappings and translation strings.
+- Added per-user keymap and character set settings, using the environment
+variables ENV_KEYMAP and ENV_CHARSET.
+- Added a new Russian translation, and fonts and character set data for
+iso-8859-5 (Russian).
+- Added a new Turkish translation, and fonts and character set data for
+iso-8859-9 (Turkish).
+- Added Russian and Turkish keyboard mappings.
+- Added language-specific kernel.conf files for Russian and Turkish.
+- Automatic keymap selection mapped to language codes in
+/system/config/keymap.conf.
+- The kernel's keyboard code will now use the character set appropriate to the
+language specified in the keymap data.
+- New kernel functions kernelCharsetToUnicode() and kernelCharsetFromUnicode()
+(charsetToUnicode and charsetFromUnicode in user space), and a configuration
+file /system/config/charset.conf to map language codes to character sets.
+- The new keymap file format version 2 adds a version number, and the mapped
+values are now stored as unicode.  Keymap files now include shift-altgr maps.
+- New character set handling - <sys/charset.h>.
+- Added per-window and per-component character set selection, and new kernel
+functions kernelWindowSetCharSet() and kernelWindowComponentSetCharSet()
+(windowSetCharSet and windowComponentSetCharSet in user space) for setting
+them.
+- Implemented a compression/decompression library, libcompress, with initial
+support for the DEFLATE algorithm and Gzip and Tar file formats.
+Functionality is defined in <sys/compress.h>, <sys/deflate.h>, <sys/gzip.h>,
+and <sys/tar.h>.
+- The kernel loader can now recognize/classify TAR archive files.
+- Overhauled the fonts system.  Version 2 of VBF font file headers have been
+modified to contain standardized information about the font family, style,
+points, charset, dimensions, etc.  Kernel fonts are now dynamic and Unicode-
+based, and contain information about what character sets are supported by the
+in-memory instance.
+- There is a new kernelFontGet() function replacing kernelFontLoadSystem(),
+where the caller specifies the font family, style, size, and perhaps desired
+character set (otherwise that can be determined from the environment) and
+receives a kernel pointer/object key.  kernelFontGet() scans the in-memory
+structures for the desired qualities, character set, etc., and dynamically
+loads more from individual font files as necessary to supplement the in-memory
+version.  That way, VBF fonts can contain smaller character sets (ASCII 0-127,
+ISO-8859-X 128-255, etc.).
+- Added a performance timer library (libtimer) that can be used to measure
+time spent in individual functions.  See <sys/timer.h>.
+- Integrated PPM image support courtesy of Giuseppe Gatta (nextvolume on the
+Visopsys forum).  The kernel loader can now recognize/classify PPM images.
+- Added scrolling to the text-mode vshCursorMenu so that we can use it to do
+things like partition type selection for MS-DOS labels in the Disk Manager (has
+way too many choices for the current vshCursorMenu).
+- The 'mkdir' command now accepts a -p option to create parent directories
+recursively.
+- Added a -h (halt) command line option to the 'shutdown' program,which
+behaves like the -r (reboot) option and shuts down and/or powers off the
+system without prompting the user in graphics mode.
+- The 32-bit build will now compile on a 64-bit OS.
+- Added <sys/bmp.h>, <sys/ico.h>, and <sys/jpg.h> header files, which replace
+a lot of what was previously found in the corresponding kernel headers.
+- Moved a number of additional definitions for both kernel and user space into
+system header files.  These include values and strings for colors
+<sys/color.h>, mouse input <sys/mouse.h>, user logins <sys/user.h>,
+and the GUI <sys/desktop.h> and <sys/window.h>.
+- Added <sys/lang.h> with a number of 2-letter language codes.
+- Added the system header file <sys/png.h>.
+- Tidied up the kernelProcessorX86.h macros and moved them to
+<sys/processor.h> for use by user space and library code (such as memcpy(),
+memset(), crt0.c, and the timer library).  Each X86 instruction used is a
+macro.  To the extent possible, more complex operations are composed
+exclusively of other macros.  Also added a macro for copying data backwards
+(direction flag set) and processor macros are now used in the libc memmove()
+function.
+- Changed the name of the 'Lance' ethernet driver (kernelLanceDriver) to
+kernelNetworkPcNetDriver.
+- Implemented the strtol(), strtoll(), strtoul(), and strtoull() C library
+functions.
+- The C library's stat() function now sets the st_mode field using the standard
+S_IF* flags, and the macros for interpreting them such as S_ISREG() have been
+added to <sys/stat.h>.
+- The kernelGraphicDrawText() function now has an (optional) character set
+parameter.
+- Added a kernelPageMapped() function, for drivers such as the APIC driver, to
+determine whether a physical address has already been mapped to virtual
+memory.
+- kernelWindowShellRefresh() now returns void.
+- Fixed: The Disk Manager now checks for mounted partitions before doing
+'delete all'.
+- Fixed: Destroying a component from a still-live window could cause crashes
+as soon as the user moved the mouse.
+- Fixed: The Calculator program was not correctly performing square root and
+factorial operations.
+- Fixed: The 'clock' program was was showing the weekday (+1) and day of the
+month (-1) incorrectly since 0.77.
+- Fixed: Error messages from the 'iconwin' program attempting to load non-
+existent language-specific versions of config files.
+- Fixed: The EXT filesystem driver's interpretation of the inode 'blocks'
+field was incorrect.
+- Fixed: EHCI handling of full-speed USB 2.0 hubs was incorrect due to an
+error in the specification.
+- Fixed: The USB keyboard driver no longer assumes any particular buffer
+ordering of keystroke data.
+- Fixed: A small issue in the setting of endpoint contexts while configuring
+XHCI device slots.
+- Fixed: A bug in the XHCI driver in which certain class-specific device
+requests could be confused with standard USB requests.  In particular, setting
+keyboard lights would cause keyboard devices to be erroneously re-configured.
+- Fixed: Booting from a debug build ISO image could fail.  Removed the
+processorRepInPortXX() and processorRepOutPortXX() macros from
+<sys/processor.h>.  They were only being used by the IDE driver, and seemed to
+be causing corruption in debug mode.
+- Fixed: A bug in the kernelWindowFocus() function wherein the focusWindow
+variable would remain set to the previous value if the new window can't focus.
+- Fixed: The kernelWindowSetSize() function wasn't working correctly unless
+window layout had already been done, and kernelWindowSetVisible() was called
+afterward.
+- Fixed: The kernelStackTrace() function has been corrected for live-tracing
+the current process.
+- Fixed: The C library function 'dirname' was always returning '.' if any '/'
+appeared in the path, and crashing if only a trailing '/' was present.
+- Fixed: Several subtle off-by-one errors in kernelPage.c that could prevent
+userspace applications from accessing the uppermost pages in their address
+space (the last page table).
+
+--------------
+ Version 0.77   16/06/2015
+--------------
+
+  Overview: This maintenance release provides performance and quality
+  improvements, rather than new features.  Improved boot time and
+  reliability, GUI performance, support for composite USB devices, fixes
+  to several hardware drivers, and additions to the C library.
+
+- Added proper support for composite USB devices, treating each interface as
+a separate device at the kernel level.
+- The CPU driver no longer determines the CPU frequency using the RTC, but
+rather using the system timer and a short countdown.  This shortens the boot
+time by 1-2 seconds.
+- It is now possible to drag scrollbars and sliders without keeping the mouse
+pointer strictly within the component or window.
+- Added language-specific kernel.conf files for Spanish and German
+- Improved the window system graphics performance.  Added a 'redraw' parameter
+to the 'set data' function for window components, and added a 'buffer' flag to
+the window drawing parameters, for components that draw into a private
+graphics buffer.  These allow for a sequence of drawing and updating
+operations to happen without the visible screen data needing to be updated
+every time.
+- Improved the performance of the PS2 mouse driver.  It was very laggy on
+some systems.
+- Improved the performance of the kernel's file stream code, when reading or
+writing larger amounts of data (multiple file blocks).
+- Added kernel functionality for virtual keyboards.  A virtual keyboard device
+is now created by default, and key strokes can be sent to it via the new
+function kernelKeyboardVirtualInput() (keyboardVirtualInput() in user space).
+- In the Display Settings program, the desktop wallpaper sample is now scaled
+to the screen aspect ratio, and if no wallpaper is chosen, the sample is
+filled with the desktop color.
+- The command shell no longer requires typing a space character before or
+after special symbols, such as an ampersand.
+- The Display Settings program was reading the colors from the kernel
+configuration, but calling kernelWindowSetColor() would save them in the
+window configuration.  kernelWindowSetColor() no longer saves the values -
+only sets them for the current session.  The Display Settings program now
+loads from, and saves to, the window configuration.
+- Fixed and standardized command-line option processing for most of the
+included programs.
+- Converted all usages of bzero() to memset().  bzero() just calls memset()
+to do the work anyway.
+- Removed the outdated 'loadfont' program and kernelFontSetDefault() function,
+as loadfont was the only user of that.
+- Re-engineered the GUI 'canvas' component for better drawing performance.
+- The window system's icon code that formats labels has been re-written, and
+will now split the text label with newlines.
+- The window 'canvas' component will now auto-fill with a custom background
+color, if one is specified.
+- Added a new kernel function kernelWindowSetFocusable() (windowSetFocusable()
+in user space) for indicating that a window should never take the focus away
+from other windows.  It can still receive GUI events, but doesn't receive key
+strokes or similar things by default.
+- Made the thickness of slider bars and scroll bars configurable in the
+window.conf file.
+- Window events now contain the keyboard scan code for a keyboard event, in
+addition to the ASCII code.
+- Exported the kernel's graphics drawing functions to user space.
+- Added a kernel kernelGraphicCopyBuffer() function, for copying graphics
+buffers, or portions thereof.
+- Added kernelImageFill() (imageFill() in userspace) and kernelImagePaste()
+(imagePaste() in userspace) functions for filling an image with a color, or
+pasting one image into another, respectively.
+- The window shell's functions for setting the desktop background image were
+saving the setting in the desktop configuration file.  They no longer do this,
+and the 'wallpaper' program now updates the file.  Also reworked configuration
+file reading in the main window system code and the window shell, and reading
+and writing in the Display Settings program.
+- The USB subsystem now adds kernelDevice entries for USB devices that aren't
+supported (aren't claimed by device drivers) so that the device listing is
+more complete.
+- USB work: updated the hub definitions to make USB version compatibility
+more obvious, and moved them from the hub driver's header to the system USB
+header.  Split the keyboard and mouse drivers into separate files, and removed
+the combined HID one.  Improved the collection of interface and endpoint data,
+by adding new data structures for them and grouping endpoints with their
+interfaces. Improved support for composite (multi-interface) devices by giving
+each interface its own bus target number, and requiring drivers to 'claim'
+individual interfaces, instead of the whole device.  Reduced the overhead of
+setting EHCI static endpoint characteristics+capabilities, and fixed the
+setting of USB 2.0 hub address and port for low- and full-speed devices.
+- Changed the USB drivers so that a physical device will only have its
+configuration set once, in the case where drivers are claiming and using
+multiple interfaces.
+- Added a longer ready timeout to the USB disk driver.
+- The XHCI (USB3) driver no longer disables I/O and memory decoding in PCI
+when detecting controllers.
+- The kernel loader's gzip file classification no longer requires the file to
+qualify as binary; it's possible to have uncompressed text blocks/members
+inside the archive, which can cause the gzip file to be considered text by the
+loader.
+- Reduced reliance on the system timer, particularly in the disk drivers, in
+favour of the kernelCpu functions that measure time in milliseconds.  The
+multitasker uses it less, and the kernelMultitaskerWait() function now takes
+milliseconds instead of 'ticks' as its argument.
+- The IDE disk driver's 'identify device' code now uses the data structure
+used by the AHCI SATA driver (in kernelAtaDriver.h).
+- Added an RTC function kernelRtcDateTime2Tm() for converting the kernel's
+arbitrary RTC 'packed date' and 'packed time' formats to 'struct tm'.
+- kernelMemCopy(), kernelMemClear(), kernelMemSet(), and kernelMemCmp() have
+been removed; we now use the C library versions instead.
+- When locating the boot device, the kernel no longer relies on the OS loader
+to pass the LBA of boot sector.  Identification is now based strictly on the
+boot sector signature.
+- The floppy disk driver has been updated so that it won't attempt to support
+'type 16' (removable ATAPI/USB) drives.
+- Kernel function index numbers (in <sys/api.h>) are now expressed in
+hexadecimal, to speed up indexing by avoiding expensive division operations
+in kernelApi.c, in favour of shifts and masks.  Also, font, image, and
+variable list functions have been given their own categories (instead of
+being 'misc').
+- Updated the kernel's font subsystem and API to allow userspace manipulation
+of font data.
+- The window library's functions for making thumbnail images have been updated
+to allow images to be stretched to the maximum size, and to fill any unfilled
+area with a background color.
+- Added a <sys/env.h> include file for centralizing the names of standard
+environment variables.
+- Implemented the C library ctime() and gmtime() functions, and fixed up the
+behaviour of other time functions so that everything is consistent with the
+libary specs.
+- Implemented the C library mktime() function.  The code for converting
+'struct tm' to time_t has been taken from the time() and kernelUnixTime()
+functions, and those functions now use mktime().
+- The 'file' structure in <sys/file.h> now expresses file creation, accessed,
+and modification times as 'struct tm'.  The fileEntry2File() function in
+kernelFile.c was modified to use the kernelRtcDateTime2Tm() function.  The
+VSH library functions vshPrintDate() and vshPrintTime() functions have been
+modified to cope with the change.
+- The kernelProcessorX86.h file of assembly language macros has been cleaned
+up and simplified, and moved to <sys/processor.h> so that it can be used by
+userspace and library code, such as memcpy(), memset(), crt0.c.  Added a macro
+for copying data backwards (direction flag set) and used it in the C library
+memmove() function.
+- Updated the metadata in the Arial and Viner font files.
+- Fixed: The kernel's fileStream code was not correctly handling streams
+opened in 'append' (write-only) mode.
+- Fixed: The kernel's file stream code was not keeping track of/setting
+the file size correctly.
+- Fixed: The EXT filesystem driver had a bug in its readFile() functionality.
+When the inode uses block lists, and the starting block number is greater
+than the number of 'direct' blocks, the driver was simply reading the first
+sequence of indirect blocks, without regard to the starting block number.
+- Fixed: The AHCI SATA driver could fail to detect disk(s) with the error
+message "AHCI port %d BSY or DRQ set - skipping device detection".
+- Fixed: Incorrect status and error register writing functions in the USB1
+UHCI driver.
+- Fixed: The IDE driver wasn't dealing well with individual controllers and
+channels operating in 'compatibilily' mode (alongside others that may be
+native).  Now, we examine each controller and channel, whether it has PCI
+I/O ports and interrupts, and whether it should continue to stay in
+compatibility mode or be switched to native.
+- Fixed: Added PCI definition for class:subclass FF:00 to suppress spurious
+warnings about unknown subclasses.
+- Fixed: A minor memory leak in the kernel's main font loading function.
+Only occurred when the file to load wasn't a recognized font file.
+- Fixed: Some of the kernel's graphics drawing functions, so that the oval-
+drawing functionality works as documented (same as drawing inside a bounding
+rectangle), and tuned the behavior with various parameters (dimensions,
+thickness, fill).
+- Fixed: Upon initial window creation, the window's graphics buffer was being
+created with minimum size and width, preventing larger, image-based
+components (such as a canvas) from being drawn upon before the first window
+layout had been completed.
+- Fixed: Removed the automatic USB Mass Storage reset during device
+enumeration of USB disks.  Some devices, on some controllers, stop responding,
+and it seems unnecessary.
+- Fixed: The EHCI (USB2) unregisterInterrupt() function was incorrectly
+unlinking interrupt queue heads.
+- Fixed: The middle and right mouse buttons were swapped for all USB boot-
+protocol mice.
+- Fixed: XHCI (USB3) interrupt handling to allow concurrent interrupt and
+non-interrupt communication between multiple endpoints.
+- Fixed: In the window library's file browser widget, some of the default
+icon names were wrong, not up to date.
+- Fixed: The stat() C library function has been updated to set the file times
+correctly, to proper unix time.
+- Fixed: The window library's windowCenterDialog() function, so that it won't
+place a window at negative coordinates (off the top or left edges of the
+visible screen).
+- Fixed: In the Disk Manager, when resizing a partition in graphics mode
+(and other sliders generally) merely mousing over the slider could cause
+the text field to be changed.
+- Fixed: When setting the video resolution in the Display Settings program,
+the video mode file was not having its size set correctly, and an error
+message "File has not been opened for writing" would appear on the command
+line.
+
+--------------
+ Version 0.76   27/12/2014
+--------------
+
+  Overview: This maintenance release is focused on improved quality, rather
+  than new features.  The EXT (Linux) filesystem driver has been re-
+  engineered, the Disk Manager program has been fixed in numerous ways, and
+  hardware drivers and subsystems such as USB, APIC, and RTC have been tuned.
+
+- Did a fairly major overhaul of the EXT filesystem driver, adding more
+adaptive feature support, plus support for EXT4 flexible block groups and
+basic support for EXT4 extent-based files.  Also fixed a little bug in the
+formatting functionality (setting the EXT_INCOMPAT_FILETYPE flag in the
+superblock).
+- Improved the new APIC driver so that it considers the correct priority order
+when returning the number of the active interrupt.  This fixes failures when
+using the VirtualPC emulator, and some failures seen with the Qemu emulator.
+- The Disk Manager program is slowly transitioning away from the notion of
+'cylinders', and towards showing the user units of sectors, megabytes, etc.
+- Added the kernel function kernelCpuGetMs() for millisecond-accurate time
+readings based on the CPU's timestamp counter (better than using the system
+timer, in most cases).
+- Some modern systems don't allow manual control the A20 address line, but
+work anyway.  The OS loader will still print an error message, but it will no
+longer terminate booting with a fatal error in such cases.
+- Added a extra support for multi-interface (composite) USB devices.
+- Improved the EHCI (USB 2.0) driver and the way it manages queue heads and
+the periodic schedule.  Interrupt queue heads for devices are no longer placed
+directly into the periodic schedule; instead linked, interval-specific queue
+heads are used.  Linked lists of queue head items are now chained correctly.
+- All USB device drivers now check to make sure a device hasn't already been
+'claimed' by another driver.
+- All USB transaction creators now specify timeout values as appropriate, and
+all of the USB host controller drivers now pay attention to those.
+- Added kernel locking to the XHCI (USB 3.0) driver.
+- Added a short delay to the XHCI (USB 3.0) controller driver, after setting
+the port reset bit, before reading it back to check for the 'clear'.  In some
+cases it can read clear straight away, but the reset hasn't completed yet,
+resulting in device detection failures.
+- Fine-tuned the PS2 mouse and keyboard timeouts, and the USB keyboard
+typematic repeat timing.
+- Exported kernelFilesystemScan() for use in user space.  This function asks
+the kernel to re-scan a logical disk to determine its filesystem type.  Useful
+for programs that do disk formatting.
+- Upgraded the model used by the 'progress' structure and threads, so that the
+threads won't terminate prematurely -- until they're explicitly told the
+operation is completed, rather than when the progress reaches 100%.
+- Added a mallocCheck() function to the dynamic memory allocation code, in
+order to perform integrity checking on demand.  Useful for debugging memory
+corruption problems.  Also added a kernelMallocCheck() interface for use in
+the kernel.
+- The USB controller drivers and the Lance ethernet driver now make use of the
+bus device 'claiming' feature.
+- The kernelInterruptHook() function now works with both interrupt handler
+functions, and tasks (like the multitasker scheduler).
+- Improved the layout code of the window library dialog boxes.
+- Got rid of the Disk Manager checks/warnings about disk geometry errors when
+performing a partition table check.  We want to reduce reliance on legacy disk
+geometry, and frequent mismatches meant a lot of scary-looking warnings that
+probably didn't amount to anything anyway.
+- In the Disk Manager, the code for specific disk label types (MS-DOS, GPT)
+now specifies the first and last available sectors for data, and the starting
+and ending values for new/moved/resized partitions are adjusted to accommodate
+these.
+- In the Disk Manager, pasting a partition now requires committing changes,
+as with format operations, erases, filesystem resizes, etc.
+- When disks or partitions are erased in the Disk Manager, it now checks for
+mounted filesystems, and the kernel is now told to re-scan the filesystem
+types, the same as after a format operation.
+- The Disk Manager now checks for a mounted filesystem before deleting a
+partition.
+- The Disk Manager no longer enables the 'set active' button/menu item when
+working with a GPT partition table.  The option is meaningless for this disk
+label type.
+- Reduced the memory usage of the command-line 'find' program; it was
+allocating too much during a deep-path directory recursion.
+- Removed unused kernel function kernelDeviceTreeGetCount().
+- Removed some old functionality for building a 'Plus' version with extra
+features.
+- Fixed: The VirtualBox emulator was not cooperating with the RTC driver, and
+the boot would fail/crash.
+- Fixed: A double-fault would occur if an exception was triggered before
+multitasking was enabled.
+- Fixed: ALT-TAB only worked for activating the top menu bar if at least one
+window existed (i.e. something in the 'Windows' menu).  It now tries to
+activate the first menubar menu that has some menu items in it.
+- Fixed: Automounting filesystems (from mount.conf) failed if no mount point
+was set.  The filesystems program doesn't force the user to specify one.  The
+kernel now attempts to use a default (/<diskname>).
+- Fixed: The Disk Manager's data moving threads could calculate incorrect
+sector numbers when copying/moving data from the start of the disk, toward the
+end of the disk.
+- Fixed: In the Disk Manager, copying and pasting partitions between MS-DOS
+disks and GPT disks wasn't working.
+- Fixed: The Disk Manager could show an incorrect diagram with certain MS-DOS
+logical partitions.  Empty spaces were being calculated using cylinder values,
+which aren't necessarily set for logical partitions, by other software.
+- Fixed: In the Disk Manager, pasting a partition into an empty disk, would
+clobber the first track, disk label, etc. of the empty disk.
+- Fixed: In the Disk Manager, MS-DOS extended partitions were not having
+their logical sizes calculated correctly (Parted would complain about
+'overlapping partitions').
+- Fixed: Corrected the numbers shown when the Disk Manager queries the user
+for partition size, when creating or resizing.
+- Fixed: In the Disk Manager, the horizontal sliders used for moving,
+resizing, and creating partitions didn't update their associated text fields
+when moved with keyboard presses.
+- Fixed: The VSH cursor menu was corrupting memory by attempting to set the
+text cursor row to a negative number, when there were too many items to fit in
+the text area/screen.  Also added better parameter checking to the
+kernelText.c code.
+- Fixed: a divide-by-zero error in the window library's windowNumberDialog
+code, that would cause it to crash when the minimum and maximum values were
+the same.
+- Fixed: 2 bugs related to GUID generation; The structure was not being
+defined as 'packed', and separately, the kernelGuidGenerate() function was
+over-writing the end of the structure by 2 bytes when writing the node ID.
+- Fixed: The file browser program would crash when passed a relative directory
+name on the command line.
+
+--------------
+ Version 0.75   27/10/2014
+--------------
+
+  Overview: This harware-focused maintenance release adds USB 3.0 support,
+  improved USB 2.0 and USB hub support, an APIC interrupt controller driver,
+  plus several bug fixes and general quality improvements.
+
+- Added USB3 (XHCI) support.
+- Greatly improved USB2 (EHCI) and hub support.
+- Added APIC interrupt controller support.
+- Added support for detecting and parsing the Intel multiprocessor table.
+- The USB layer code no longer sets device configurations by default.
+  It is now left up to the individual device drivers, when they determine
+  that a given device is supported.  Configuring some unknown, built-in,
+  proprietary devices can cause other devices to stop responding.
+- USB hub removal now triggers a recursive device removal for all
+  downstream things connected via the hub.
+- If a mounted removable disk (such as a USB stick) is removed from the
+  system, a call to kernelFilesystemRemoved() will now act like a forced
+  umount - unbuffering files and removing the filesystem - without
+  attempting further accesses to the physical disk.
+- Added new functionality to count interrupt hooks, and updated some
+  definitions and things in the PCI driver.
+- Physical memory addresses are now treated as unsigned integer values
+  instead of void pointers.
+- Added kernelMemoryGetIo() and kernelMemoryReleaseIo() functions for
+  automating the process of allocating/releasing aligned physical memory,
+  mapping it, and marking it un-cacheable.
+- Added a kernelDebugStop() function to output a message and halt
+  execution when errors are encountered in debug mode.
+- Added a kernelDebugRemoveFile() function as a companion to
+  kernelDebugAddFile()
+- Fixed: In the computer browser, when clicking to mount a CD-ROM for
+  the first time, from a cold boot, the file browser that was launched
+  sometimes wouldn't start in the CD-ROM's mount directory.
+- Fixed: In the file browser and the file dialog, the current directory
+  field started off disabled (greyed-out), but changing the directory
+  caused it to be redrawn as enabled (not greyed out).  Components weren't
+  being re-rendered when their setData() functions were called.
+- Fixed: A bug in the USB driver subsystem, in which a device
+  disconnection could cause the USB thread to go into an infinite loop.
+- Fixed: Increased timeout values for SCSI 'start unit' commands, to
+  support various USB-attached disks (hard disks and CD/DVD drives that
+  need time to spin up).
+- Fixed: An IDE disk controller driver bug where an unhandled interrupt
+  could result from selecting a nonexistent slave drive on certain
+  controllers.  Also eliminated some redundant status polling.
+- Fixed: Timing issues in the AHCI SATA driver related to CD/DVD drives.
+- Fixed: Removed kernelMalloc() usage in kernelDebug.c which could cause
+  debugging output not to be displayed in an interrupt context.
+
+--------------
+ Version 0.74   30/06/2014
+--------------
+
+  Overview: This maintenance release features enhanced internationalization
+  support with Spanish and German translations, per-user settings, and
+  extensive stability and performance improvements, most notably to the
+  kernel memory, user input, disk I/O, and GUI subsystems.
+
+- Added per-user home directories, under /users, which are now the default
+  'current directory' when the user logs in.
+- Created a new configuration file for environment variables that are set at
+  login time, and per-user override ones in home directories.
+- Language setting is now a system-wide and per-user environment variable,
+  that can be chosen at first boot, and in the user management tools.
+- Added Spanish and German translations for many of the user programs and
+  GUI features.
+- Added a 'language chooser' dialog window to the window library.
+- Part of the GUI system has been re-written, including changing the 'menu'
+  implementation from a window component into a child window.
+- GUI menus have been changed so that when the topmost menu item is selected,
+  pressing cursor-up removes the selection.
+- The file dialog window now shows the current path the way the file browser
+  program does.
+- Implemented mouse and keyboard threads to process input outside of the
+  interrupt context, for improved stability.
+- The keyboard system has been redesigned, including the use of hardware-
+  neutral (based on UEFI) scan codes and modifier flags.
+- Added typematic key repeats for USB keyboards.
+- Fortified the kernel's user management code and closed some security
+  loopholes.
+- Added a 'deluser' command line command, as a companion to 'adduser'.
+- Modified the 'passwd' program, so that no user name argument means to
+  assume the current user.
+- Password length checking has been added to the User Manager program.
+- The disk caching code now does more combining of cache entries for improved
+  performance, reducing the number of disk writes.
+- Some of the kernel's memory management code has been reworked.
+- All hardware drivers that use mapped physical memory now set the memory
+  page attributes to disable caching.
+- The installers and install file format (e.g. dist/system/install-files.*)
+  now have a way to specify different source and destination filenames.
+- Interrupt handlers are now disallowed from allocating or freeing memory,
+  or changing the page tables/directories.
+- Made the kernelImageLoad() "requested width" and "requested height"
+  parameters work generically, for image types whose drivers don't support it.
+- Added 'set data' functionality to a number of the GUI components, required
+  for support of on-the-fly language switching
+- Separated the kernel's window shell thread from the main GUI system, as a
+  precursor to making it a userspace executable, and to facilitate per-user
+  settings and runtime language switching.
+- Re-implemented the kernel's 'variable list' functionality, so that it uses
+  data offsets instead of pointers to locate variables and values.  This
+  makes them easier to copy.
+- When a child process inherits an input stream, the old text attributes are
+  now remembered, and restored when the process terminates.
+- The build system now uses a command line 'make debug' to create a debug
+  build, which doesn't strip libraries or executables.
+- Fixed up the ctype.h functions (isalpha(), tolower(), etc) so that they
+  use the ISO-8859-15 code page we're using everywhere else, instead of just
+  basic ASCII.
+- Added a setenv() function to the C library.
+- Added a kernelUserExists() function (userExists() in user space).
+- Added a new include file, <sys/paths.h>, that centralizes the definition
+  of some of the basic file structure.
+- Created header files <sys/gpt.h> and <sys/usb.h> and moved the relevent
+  definitions from the Disk Manager and the kernel to those.
+- Added a utils/trim-whitespace script for stripping trailing whitespace
+  from source files and whatnot.
+- Removed the big header file of PCI vendor and device codes that we were
+  using in debug mode.  Too much of a pain to edit/maintain.
+- Fixed: Moving the PS/2 mouse around during hardware initialization of its
+  driver could cause a cascading boot failure.
+- Fixed: When there were windows on the screen, pressing ALT-TAB 2-3 times
+  could cause a major GUI crash.
+- Fixed: When resizing images in the 'view' program, the window title bar
+  didn't update (with the correct zoom percentage) until the window focus
+  changed.
+- Fixed: In graphics mode, the File Browser only noticed directory changes
+  when a file is added or removed, but not sub-directories.
+- Fixed: The interpretation of the Linux swap fileystem header.
+- Fixed: Support for using images inside of GUI buttons
+- Fixed: The internationalization library 'libintl' to allow multiple
+  switches of the language messages at runtime.
+- Fixed: The implementation of the C library getenv() function, so that
+  repeated calls don't leak memory.
+- Fixed: A program with no input stream could crash if it called the kernel's
+  text input functions.  Added checking in the input functions.
+- Fixed: Improved the stability of the Screenshot program.
+- Fixed: When logged in to the GUI as an unprivileged user, there were a lot
+  of error messages stating: Cannot release system memory block from
+  unprivileged user process.
+- Fixed: Pressing backspace at position (0,0) would cause the Edit program
+  to crash.
+- Fixed: Clicking on the kernel binary in the file browser program would
+  cause a crash in the kernel's runtime loader.
+
+--------------
+ Version 0.73   27/01/2014
+--------------
+
+  Overview: This is a hardware support update and bugfix release, adding
+  native SATA and USB CD/DVD support and a Calculator program, as well as
+  numerous usability and reliability fixes.
+
+- Implemented a full SATA (AHCI) driver.
+- Implemented an ATAPI-over-USB driver for USB CD/DVD drives.
+- Added the 'calc' calculator program written by Giuseppe Gatta
+  <tails92@gmail.com>
+- The code that detects GPT partition tables (both in the kernel
+  and in the Disk Manager) now checks whether the MS-DOS "guard table" is
+  really a guard table, for more reliable GPT detection.
+- Improved SCSI disk initialization and fixed USB mass storage error
+  detection.
+- Improved timing precision for IDE port polling timeouts and channel
+  resets.
+- Improved the kernel's pseudo-random number generation.
+- The USB 2 (EHCI) driver now handles controller-level error interrupts
+  (host system errors).
+- Improved formatting of the CPU model string for display output in the
+  'lsdev' (Devices) program.
+- Added a PCI subclass for SCSI-attached storage.
+- Changed the 'bootmenu', 'copy-mbr', and 'fdisk' (Disk Manager) programs
+  to preserve the 'disk signature' field when installing a new MBR secor.
+  This solves the problem of Windows requiring a 'repair' after installing
+  the basic MBR or MBR boot menu.  Also removed a warning/confirmation
+  message about the repair thing from the 'bootmenu' program.
+- In the computer browser, inapplicable context menu items are now greyed
+  out, such as 'mount' when a disk is already mounted.
+- Window menu items are now set to the same width as their parent
+  menu, so that they're all the same length when highlighted/selected.
+- Ensured that all GUI widgets call kernelWindowComponentDestroy() if
+  they encounter an error after using kernelWindowComponentNew(), and the
+  destroy() function, and any allocated memory being attached to pointers in
+  the component structure, are ordered such that things can be deallocated
+  correctly.
+- Added driverMediaPresent() functions to the disk drivers, to
+  more elegantly determine whether removable disks have media present (we
+  still fall back to attempting a read if the function is not implemented
+  by the driver).  Renamed the kernelDiskGetMediaState() function to
+  kernelDiskMediaPresent() and also renamed the kernelDiskChanged() function
+  to kernelDiskMediaChanged().  Also removed filesystem driver getFreeBytes()
+  functions that always return 0.
+- Added "interrupt number out of range" debug error messages to the
+  kernel's interrupt code.
+- Removed the unused 'driverReset()' function from the list of disk
+  driver operations.
+- Removed the unused and obsolete 'recalibrate' function from the
+  disk driver architecture.
+- Fixed: espectalll123 gave us a corrected Spanish keyboard map.
+- Fixed: Modified the USB 2.0 (EHCI) and SATA (AHCI) drivers so that they
+  don't fail if PCI bus mastering can't be enabled.
+- Fixed: SCSI protocol command sizes and status packet handling for USB
+  mass storage devices.
+- Fixed: On some systems, the NTFS code was not detecting the filesystem due
+  to a debug-mode stack corruption issue.
+- Fixed: When clicking on the CD-ROM icon in the Computer Browser, there
+  was an error message "Can't mount disk on" (even though the CD could be
+  mounted from the command line).
+- Fixed: USB 2.0 (EHCI) hot-plugging of USB mass-storage devices would tend
+  to fail.  The devices were being detected, but were generating
+  communication errors.
+- Fixed: Eliminated a kernel API error message coming from the ifconfig
+  'Network Devices' program.
+- Fixed: When scrolling up and down - for example in the default startup
+  console - text was sometimes being drawn outside the text area boundaries.
+- Fixed: Dismissing a dialog box could cause the mouse pointer to disappear,
+  when the mouse was somewhere within the parent window.
+- Fixed: Newer GNU linkers create executables with non-page-aligned data
+  segments.  These were not being loaded correctly by the runtime linker.
+- Fixed: Window resizing was very difficult and the correct mouse position
+  to do so didn't really correspond with the point where the mouse cursor
+  would change to a resize cursor.
+- Fixed: Right-clicking in a menu would cause the menu item to show
+  selected.  Right-clicks aren't currently relevant for menu items, so now
+  we just ignore them.
+- Fixed: If a CD-ROM is mounted, the computer browser would access it
+  continually.  Made this better, but getting the disk properties causes the
+  kernel to check the removable media status, so it's not entirely avoidable.
+- Fixed: Right-clicking anywhere in the computer browser would bring up
+  the context menu for the selected disk.  That should only happen when
+  right-clicking on an actual item.  Added a getData() and eventComp()
+  functions to the windowList component, to return the objectKeys of all
+  the windowListItems, and to let windowListItems receive right-click
+  context menu events, respectively.
+
+--------------
+ Version 0.72   22/08/2013
+--------------
+
+  Overview: This release consists of hardware support updates and bug fixes,
+  with particular focus on USB. Support for USB 2 controllers and devices has
+  been added.
+
+- Added initial USB2 (EHCI) support.
+- Added a stub USB3 (XHCI) driver.
+- Implemented interrupt sharing and chaining, so that USB controllers (for
+  example) can share interrupts with one other, as well as other devices such
+  as disk controllers.
+- Improved the output of the Devices program so that it's a little bit more
+  readable.
+- Improved the collection and recording of the CPU vendor string.
+- Did a bit more development of the simple ACPI driver.
+- Added a kernelPause() function, that will wait for the specified number of
+  seconds, or a keypress.
+- Added additional error checking and debugging to the 'bus' subsystem and the
+  kernel linked list functions.
+- Added some extra PCI structure definitions, needed mostly if we ever get
+  around to doing PCI interrupt routing.
+- Made some small improvements to PCI - comments, detection, debugging,
+  iterating and debugging the capabilities list, etc.
+- Added functions for interrupt handlers to get and set the current interrupt
+  number (the previous implementation failed when the interrupt number is 0).
+- Ensured that all ISRs disable interrupts whilst inside their handlers, and
+  save/restore the flags register too (changing the kernelProcessorIsrEnter
+  and kernelProcessorIsrExit macros).
+- Added "interrupt number out of range" debug error messages to the
+  kernelInterrupt code.
+- Made build configuration changes for development on newer systems (like
+  Ubuntu 11) and newer GNU tools (like GCC 4.6), and tweaked some ELF loading
+  code in the OS loader. Additional ELF loading changes may need to be make
+  in the kernel.
+- Fixed: USB hub detection could happen twice - once during the controller's
+  initial device connection detection, and again when device driver detection
+  happened for hubs.
+- Fixed: The first (number 1) USB port didn't work on many systems.
+- Fixed: Certain USB hard disks not working, and/or causing boot failure.
+- Fixed: The AHCI driver no longer fails to initialize if PCI bus mastering
+  can't be enabled.
+- Fixed: ACPI (soft) power off could cause some systems not to boot the
+  operating system on the next attempt.
+- Fixed: Removed possible infinite loop condition in the 'real time clock'
+  driver.
+- Fixed: When the OS was installed somewhere via the native installer (for
+  example on a USB stick) with a FAT32 filesystem type, the volume label was
+  not being set properly.
+- Fixed: The graphical native installer would often skip the password setting
+  box (flashing up and then disappearing).
+- Fixed: The TAB key was not working when using a USB keyboard.
+- Fixed: GCC compile errors under Ubuntu 11.10
+
+--------------
+ Version 0.71   28/10/2011
+--------------
+
+  Overview: The bulk of this release consists of general bug fixes, and
+  improvements to hardware detection and device drivers, with particular
+  focus on USB.  New features include the ability to boot from a USB device
+  (a new USB image is available for download) and the ability to power down
+  the system.
+
+- Implemented USB booting.
+- Added a USB blank-image file and a script for installing into it.
+- Improved detection of USB devices by always separating hotplug behaviour
+from coldplug detection at boot time.
+- USB 2.0 (EHCI) controllers are detected and disabled (reset) so that
+they don't interfere with access to the legacy USB 1.1 UHCI ports.
+- Search all 255 possible PCI buses, not just the first 10.  It's slower
+to search them all, but some devices have been seen to reside on e.g. the
+17th bus.
+- Improved recognition of PCI device classes and subclasses.
+- Added support for multiple buses of any type (such as PCI and USB)
+- Implemented a partial ACPI power management driver, so that the shutdown
+command can power off the system.
+- Added a kernelCpu module to contain the old driver detection code and
+some new functions for using the CPU timestamp counter.
+- CPU timestamp frequency is now measured from within the real time clock
+initialization.
+- The malloc() memory management code has been changed to a best-fit
+allocation strategy, in order to reduce memory fragmentation and improve
+heap memory usage.  In addition, the memory block list has been separated
+into 'used' and 'free' lists for faster searches.
+- Updated GPT GUIDs for partition types, and moved the definitions and
+descriptions into the header file src/include/sys/guid.h
+- The boot menu installer now shows a warning that Windows 7 (and maybe
+Vista) will require the installation CD, in order to 'repair' its boot
+configuration.
+- The OS loader now passes a boot sector 'signature' found on the boot
+device (such as in the MBR) to the kernel in order to help the kernel
+figure out for itself which device it should mount as the root filesystem.
+- We now mark the logical disks of non-partitioned physical disks as being
+'primary' partitions.
+- Implemented an advisory bus target 'claiming' system, so that multiple
+drivers won't attempt to control a device (such as the IDE driver trying
+to operate a supported SATA controller in legacy mode).
+- The kernel's symbols are now read from the ELF file itself, and not from
+the kernelSymbols.txt file, which has been obsoleted.
+- Moved general ATA definitions (i.e. those common to PATA, SATA, etc)
+into a new kernelAtaDriver.h file.
+- Moved the UHCI getEndpointDesc() function into the general USB driver as
+kernelUsbGetEndpointDesc(), and fixed the UHCI global reset timing so that
+it's closer to being exactly 100ms.
+- Added a PCI subclass for SD controllers
+- The kernel's linked list iteration has been changed so that it allows
+simultaneous read-only iteration through the list (not thread-safe per se,
+but multithread-able).
+- Added DEBUG flags to the src/programs Makefiles
+- Improved the OS loader, so that it searches for the code and data
+segments in the kernel's ELF executable, rather than assuming that they're
+the first and second segments, respectively.  Kernels built under Ubuntu,
+for example, have additional segments.
+- The kernel's disk management code now recycles disk numbers, so that for
+example, inserting a USB stick which gets named sd0, then removing it and
+reinserting, doesn't result in the disk being named sd1
+- Modified the install script to use the install files in the build area,
+and ignore comment lines that start with '#'
+- Reformatted the output of the disks command.
+- The kernel's kernelPageMap(), kernelPageMapToFree(), and
+kernelPageUnmap() functions will now accept non-page-aligned physical and
+virtual addresses, and adjust requests accordingly for use by the internal
+map() and unmap() functions.
+- The kernel's memory allocation code now makes proper use of the BIOS
+memory map passed in by the OS loader
+- The EXT 2/3 driver can now mount filesystems with variable-sized inode
+structures.
+- The mouse abstraction layer now has a default, simple pointer built in,
+that it can draw manually into an image, in the case where the mouse
+pointer image files are missing.
+- The filesystem 'resize constraints' call (such as to the kernel or NTFS)
+now passes a 'progress' parameter just like a real resize, so that error
+messages, etc., can be presented to the user.
+- Implemented libdl.so functionality, providing functions such as dlfcn.h,
+dlopen(), dlerror(), dlsym(), and dlclose().
+- Fixed: USB endpoint enumeration no longer discards the 0x80 bit of the
+endpoint address, since some devices require it in order for the endpoint
+address to be unique.
+- Fixed: A number of USB sticks would fail to enumerate, because port
+reset timings/logic were not technically correct.
+- Fixed: Pulling a USB stick that hadn't been successfully configured by
+the SCSI USB code would cause the USB thread to page fault in
+kernelDeviceHotplug().
+- Fixed: An EXT 2/3 symbolic link was showing up as an empty icon in the
+file browser.
+- Fixed: FAT volume label entries stored in the root directory were not
+being re-created when the directories were written.
+- Fixed: The kernel's GPT partition table code was not correctly reading
+partition table entries; it was failing to correctly calculate the buffer
+size and number of sectors of the entries.
+- Fixed: The Disk Manager program was incorrectly calculating the ending
+sector of entries in GPT partition tables.
+- Fixes and improvements to the kernel's file stream functions, and to the
+C library fflush(), fread(), fwrite(), and fseek() functions.
+- Fixed: Incorrect kernel API parameter definitions for the kernelCrc32()
+(userspace crc32()) function to allow a NULL 3rd parameter.
+- Fixed: The kernel's CRC-32 code was not correctly calculating checksums
+when an initial/carried-over CRC checksum was supplied.
+- Fixed: All of the kernel loader's file detection/classification routines
+now check for adequate file data length before examining various offsets in
+the data.
+- Fixed: The Bresenham line drawing algorithm in the kernel's framebuffer
+graphic drover was incorrect/incomplete for diagonal lines going from
+upper-left to lower-right.
+- Fixed: The kernel's random number generator was outputting many more
+even numbers than odd numbers.  Out of 1 million calls, the ratios of
+even:odd were more than 4:1.
+- Fixed: When using the built-in system font, the code that wraps the icon
+text could discard a letter.
+- Fixed: Printing TAB characters with '\t' in printf() was not working.
+- Fixed: When doing a screenshot, the "saving..." dialog could appear in
+the screenshot.  The dialog was being created before capturing the screen
+data.
+- Fixed: ISOs compiled/created under Ubuntu 10.10 did not start
+successfully; the system crashed during kernel initialization.
+- Fixed: Some small compilation errors and an install.sh script bug when
+building under Ubuntu 10.4
+
+--------------
+ Version 0.7    16/02/2011
+--------------
+
+  Overview: This new release offers an updated look and a number of new
+  features, including JPEG image support, image resizing, 64-bit disk
+  support, UDF (DVD) filesystem support, and GPT partition table support,
+  as well as lots of new icons, wallpaper images, and file browsing
+  functionality.  New administrative applications and functionality have
+  been added, and the ATA/IDE driver has been enhanced, including the
+  ability to better support backwards-compatible SATA controllers.  FPU
+  context saving has been improved, and a number of tweaks and bug fixes
+  are also included.
+
+- Updated the appearance of windows and several types of widgets.
+- Added JPEG image format support.
+- Added image resizing code.
+- Added 64-bit disk support.
+- Added UDF (DVD-ROM) filesystem support.
+- Added GPT disk label support to the kernel and to the Disk Manager
+program.
+- Included a quantity of new icons based on contributions provided by
+Leency <leency@mail.ru>, including the folder icon, and all of the
+file browser icons for different file types.
+- Implemented keyboard navigation of the GUI menus using 'Alt' to activate
+them, and the cursor and 'Enter' keys to navigate and select.
+- Alt-Tab now raises the root window's 'window' menu for keyboard
+navigation between open windows, in a way somewhat analogous to the way
+Windows and other GUIs do it.
+- Created new icons for the 'cal' (Calendar), 'mines', and 'snake' programs,
+as well as for the 'lsdev' (Devices), 'install', and 'users' (User Manager)
+administration programs.
+- Added loader file class support for the ability to recognise GIF and PNG
+images, Zip, Gzip, and Ar archives, and PDF and HTML documents.  Also added
+file browser icons for PDF, HTML and archive files.
+- Designed and implemented a new proprietary font file format that enables
+sparsely-mapped, bitmapped fonts.  Added a 'fontutil' utility program for
+editing and managing the new format.
+- New splash image for the 0.7x series.
+- New default background pattern wallpaper image, and three additional,
+full-sized ones.
+- Redesigned the 'bangicon', 'infoicon', and 'questicon' images.
+- Changed the visual effect which clicking on, or dragging icons.  Instead
+of reverse-video (xor), the icons now tint yellow.  Additionally, when
+dragging icons, the icon image now appears instead of a box outline.
+- Changed the way icon text is drawn, so that it no longer has a solid box
+behind it, but instead has a little drop shadow.
+- Icon components are now optionally focus-able, enabling keyboard
+navigation of (for example) the desktop icons, or the icons in the shutdown
+program
+- Implemented image alpha channels and blending, with support for resizing.
+- Added support for reading monochrome windows bitmap (.bmp) images.
+- Added support for some new (non-4:3 aspect) graphics modes.
+- Implemented horizontal window scroll bars.
+- Added a 'divider' window component, for placing simple little lines in
+a window.  Useful for separating sections of components.
+- Window components can now be created with a flag to suppress the use of
+scroll bars.
+- Improved the IDE driver so that it can detect and operate multiple
+controllers, correctly use PCI I/O port remappings, and PCI interrupts,
+as well as adding improved support for things like backwards-compatible
+SATA disks/controllers.
+- Added initial, very basic detection of AHCI SATA controllers (operating
+in native AHCI mode) and their disks.
+- Reimplemented the kernel API interface.  It now supports variable-sized
+arguments and return values, and does checking on argument types and values
+(for example user vs. kernel pointers, NULL values, etc).
+- Reimplemented the kernel's file stream subsystem for character-based file
+I/O as a simple buffered mechanism with a file pointer, instead of using
+the kernel's streams.
+- Added an 'I/O ready' state to the multitasker, so that processes waiting
+for (for example) disk I/O can go into a 'waiting' state and be awoken as
+soon as possible when the I/O arrives, rather than polling for interrupts
+as they had been doing previously.  The 'idle thread' now loops through the
+process list, looking for any I/O-ready processes and yields its timeslice
+when it finds one.  The scheduler gives such processes high priority.
+- Added more efficient power management, idling the processor during spare
+cycles.
+- Moved common keyboard functionality out of the drivers and into the
+abstraction layer, with an interface for handling of specific keyboard
+'special' events such as PrtScn or Ctrl-Alt-Del.
+- Added basic internationalization library support (libintl), modeled on
+the GNU gettext system.
+- Added 32-bit CRC calculation to the kernel.
+- Added RAM disk support, courtesy of contributions from Davide Airaghi
+<davide.airaghi@gmail.com>.
+- Implemented 'lazy'  FPU context saving; the context is only saved or
+restored if a different process tries to use it.
+- Added new keyboard mappings: French, Belgian, and Spanish.
+- Keyboard mappings are now stored in files, rather than hardcoded in the
+kernel.  The 'keymap' (Keyboard Mapping) program has been enhanced to
+facilitate the editing and saving of new keymaps.  In addition, the file
+browser will now use it to open keymap files when they're clicked.
+- Added a new configuration file /system/config/mount.conf containing
+variables for specifying mount points of filesystems (like Unix fstab) and
+whether or not to auto-mount them.  The 'mount' and 'computer' programs use
+the file (as well as the kernel's automounting), and there is also a new
+'filesys' program in the Administration window for editing it.
+- Added some extra error checking in the filesystem detection code.
+- The FAT boot sector now copies the partition table entry pointed to by
+the SI register, so that it is in a known/safe location for passing off
+in turn to the OS loader.
+- Added right-click context menus to the disk icons in the computer browser.
+The menu currently contains 'Browse', 'Mount as...', 'Unmount', and
+'Properties' choices.
+- The computer browser now shows the filesystem label, if applicable, in
+its icon text.
+- When a wallpaper image is chosen, it is now automatically resized to fit
+the the client area of the window.
+- When displaying an image, the 'view' program now scales large images down
+by default so that they use no more than 2/3 of the screen.
+- The 'view' program now has a right-click context menu to zoom in and out
+on images, or show them actual size.
+- The 'disprops' (Display Settings) program has been reorganized, and now
+shows a thumbnail preview of the selected background wallpaper image.
+- Added an option to the windowFileDialog to show image file thumbnail
+previews.
+- The 'imgboot' program now has 'run' as the default selection, instead of
+'install'
+- Added locking to the kernel's stream functions.
+- Added kernel logging of the OS loader's hardware info structure.
+- Added a 'model' string field to the kernel and user disk structures.
+- Window components now receive mouse enter/exit events.
+- Window components can now have custom mouse pointers, as windows do.
+- Added mouse pointers that indicate window resizing, and they are now
+switched to automatically when passing over window borders.
+- New default desktop color that goes better with the splash image
+- The window shell now uses the foreground color for the root window menu,
+instead of the desktop color (this way there's a contrast).
+- The foreground, background, and desktop colors are no longer specified
+exclusively in the kernel's configuration file.  They are still there as
+default values for boot time, but additional color settings are specified
+in the window configuration file, and those override the kernel ones when
+they're available.
+- Added windowNewThumbImage() and windowThumbImageUpdate() functions to
+the window library.  These can be used to create a thumbnail-sized window
+image object from an image file name.
+- Added a kernelFileGetFullPath() function (userspace fileGetFullPath) that
+will return the full path+name of a file referenced by a file structure.
+- The kernelFontLoad() (userspace fontLoad) function will now search the
+system's font directory (/system/fonts) for a font file, so it's not
+necessary to pass a complete pathname.
+- Removed /system/mount directory, as it wasn't being used.
+- The kernelFileFind() (userspace fileFind) function now acccepts a NULL
+file structure pointer, for instances in which the caller is really only
+interested in whether the file exists.
+- The windowFileDialog window library code now interprets a non-empty
+fileName argument as a value to show by default in the file name field.
+Additionally, the file name field no longer shows the fully-qualified
+names of files, just the short names.
+- Added a windowNumberDialog to the userspace window library, for
+requesting the user to enter a number value, and providing a graphical
+slider widged for setting the value with the mouse.
+- The boot menu installer program 'bootmenu' now checks for previous
+installations and remembers the old entries.
+- The 'imgboot' program now checks for the presense of the 'install'
+program before querying about whether to install.
+- The 'iconwin' program now skips any entry whose icon is missing.
+- Reduced the padding values of the text area in the 'lsdev' (Devices)
+program.  Also fixed it so that it doesn't scroll down and then back up
+again while it's visible.
+- The kernel configuration reader/writer functions have been augmented
+with get/set/unset convenience functions for quickly getting or changing
+individual configuration values from files.
+- Removed the title bar from the 'clock' program.
+- The 'window' (Command Window) program has been renamed 'cmdwin'.
+- Changed the runtime program name of the 'fdisk' program from "Visopsys
+Disk Manager" to just "Disk Manager".
+- Implemented proper stack backtraces for help with debugging.  Walks the
+stack frame, uses the process symbol table, etc.  Used by the exception
+handler and by calling kernelStackTrace().
+- Added a kernelDebugHexDwords() function for doing simple hex dumps of
+dword-oriented memory such as stacks.
+- Added a stack debugging output function kernelDebugStack().
+- Added a 'hexdump' command for examining the contents of binary files.
+- Added a 'Details' button to the kernel error dialog window, which brings
+up a dialog showing process debugging info and a stack trace.
+- Added a kernelRealloc() function like the C library realloc().
+- Added a generic kernelImageCopy() function which is exported to userspace
+as imageCopy().
+- The window canvas component now resizes itself properly, using the image
+resizing function.
+- Added a kernelDebugBinary() function for doing simple binary dumps.
+- Added the -fno-stack-protector argument to Makefile.include so we can
+link using gcc 4.1.3 (Ubuntu 7.10, etc).
+- Added tests for since and cosine calculation to the 'test' program, and
+made both do 'double' calculations, and some random ones also.
+- Added an fabsf() function to the C library.
+- Added a getenv() function to the C library.
+- Added _dbl2str() and _flt2str() C library functions for converting
+doubles and floats to strings, respectively, and added %f format specifier
+support to the _xpndfmt() function (used by the printf family of
+functions).
+- Added an fls() C library function and fixed up ffs().
+- Added a kernel API function kernelFileSetSize(), a driverSetBlocks()
+filesystem driver function for the back end, and ftruncate() and truncate()
+C library functions for the front end.
+- Added a sleep() C library function.
+- Added a strtok() C library function.
+- Added and exported a kernel API function randomBytes() for filling a
+buffer with random data.
+- Exported the kernelWindowComponentUnfocus() function via the kernel API.
+- Added a kernelDebugError() macro that reports errors only when debugging
+is turned on on.  Replaces several locally-defined debugError() macros in
+drivers, etc.
+- Added a new 'label' field to the kernel's generic logical disk filesystem
+structure.  The filesystem drivers fill it in, where applicable.
+- Added mouse support for scroll wheels.
+- Window event streams are now just plan kernel streams with wrapper
+functions that read or write only complete events -- the way they were
+originally intended to be.
+- The 'mines' game map now stays on the screen after the game, so you can
+have a look at it.
+- Fixed the cos(), cosf(), sin(), and sinf() functions so that they work
+periodically (i.e. for larger radians values that are greater than
+(PI * 2).
+- Exported the kernelPageGetPhysical() function to userspace programs as
+pageGetPhysical()
+- The multitasker now uses system timer mode 3
+- Added a sys/ascii.h include file to include definitions of commonly-used
+character codes.
+- Fixed: The OS loader could hang during disk detection (divide by zero
+error) if the BIOS 'get drive parameters' function returned success despite
+there being no such drive.
+- Fixed: The PS/2 mouse driver has been reworked to deal properly with
+mouse interrupts from various types of mouse hardware.
+- Fixed: Clicking outside of a context menu could fail to erase the menu
+if there were no other focusable components.
+- Fixed: After a window relayout, the mouse pointer was not being properly
+redrawn.
+- Fixed: Resizing any window to a larger size in a vertical direction
+caused the window thread to generate a divide-by-zero exception
+- Fixed: The C library's dirname() function didn't work correctly for
+items in the root directory.
+- Fixed: The C library's fread() and fwrite() functions were returning
+negative error codes as return values.  They now return a size_t of the
+number of items read/written, and any error is in errno.
+- Fixed: The C library's strcmp() and strncmp() functions were not dealing
+gracefully with NULL pointers, and the strncmp() function was returning
+nonstandard result codes.
+- Fixed: The kernel's kernelFileStreamRead function was overwriting
+properly-sized buffers by 1 byte, causing buffer overflows.
+- Fixed: Opening an existing file stream in read/write mode (using fopen()
+or kernelFileStreamOpen()) would cause the kernel to seek to the end of
+the file for writing, but begin reading at the beginning of the last file
+block.  Now all opens begin at offset 0 unless they're write-only.
+- Fixed: The FAT filesystem driver no longer sets the size of the file to
+a multiple of the block (cluster) size on every write.  Only if the number
+of blocks changed.
+- Fixed: The access mode flags in unistd.h were not bitwise-exclusive.
+- Fixed: open.c did not handle access mode flags correctly and was
+returning errno rather than -1 on error.
+- Fixed: Before multitasking was enabled, printing debug messages could
+crash because it printed the current process name without checking to see
+whether there *is* a current process.
+- Fixed: When a windowTextArea was being detroyed, it was not resetting
+the text input and output streams of the process in the multitasker.
+- Fixed: Intensive floating point operations (for example when displaying
+JPEGs or resizing images) could cause a system crash.  The exception entry
+end exit macros were incorrect.
+- Fixed: The _xpndfmt() code used for printf-style format strings was
+initializing a 'double' type unnecessarily, causing any attempt to print
+things inside the FPU exception handler to blow up.
+- Fixed: The sliders of the color choosers (e.g. in the display settings
+program) were 'backwards' in the sense that they should decrease to the
+left and increase to the right, intuitively.
+- Fixed: Clicking on a filename with embedded spaces failed to open the
+file in the file browser, because it wasn't quoting the name.
+- Fixed: The kernelWindowLayout() function now properly lays out and
+resizes the window, particularly if it's already been laid out previously.
+- Fixed: A bug with mixing types in the sinf() and cosf() functions could
+cause floating point operations to get into an endless loop of "device not
+available" exceptions.
+- Fixed: Booting was failing on Virtual PC.  VPC does not properly support
+the IA-32 architecture's "nested task" concept.  The multitasker no longer
+uses interrupt returns and nested tasks -- all task switches are done with
+far calls.  Mouse and keyboard still don't work properly in VPC.
+- Fixed: Text console error messages about not being able to find mouse
+pointer images.
+- Fixed: The 'cdrom' program was crashing with a page fault during device
+scanning.
+- Fixed: A kernel error message was showing in the console log when there
+was no boot splash image (a la Partition Logic) and the initialization
+code was trying to free the unallocated memory.
+- Fixed: The parititon diagram in the Disk Manager was showing extra
+border lines when clicked, that didn't appear until moused over and
+made stranger-looking by the phantom redrawing of invisible menu items at
+the same theoretical coordinates that caused them to be discontiguous.
+The superclass image component was unhelpfully drawing its border when
+focused.
+- Fixed: Detecting USB mice and keyboards at boot time could fail and
+prevent other devices such as PS/2 mice and keyboards from working
+properly.
+- Fixed: When using the 'disprops' program to enable the clock on the
+desktop, clicking OK after checking the box caused a page fault.
+- Fixed: When closing the console window opened from the command line,
+the following error message appeared:
+"Error:console:kernelWindowContainer.c:remove(401): No such component in
+container"
+- Fixed: The setData() function of the kernelWindowTextArea component was
+inserting a NULL 1 byte past the end of the supplied data buffer
+- Fixed: Opening the edit program when running from a read-only filesystem
+produced the following error in the window:
+"Error:edit:kernelFile.c:kernelFileGetTemp(3304) Filesystem is read-only"
+- Fixed: When running the edit program from a read-only filesystem,
+specifying a non-existent file would close the program without any message.
+- Fixed: The windowTextField widget now scrolls properly horizontally.
+- Fixed: Recursive copying of a directory into another directory using the
+'cp -R' command did not create the destination top-level directory, but
+instead merely copied the contents of the source directory.
+- Fixed: Added a NULL-parameter check to the strlen() C library function.
+- Fixed: the multitasker's createNewProcess() no longer crashes when the
+caller passes a NULL parameter in the argv[] array.
+- Fixed: The native installer program created an unbootable installation
+when using a FAT32 filesystem type.
+- Fixed: A disk caching bug wherein the cachePrune() function could be called
+in the middle of a mult-part cache read or write operation.
+- Fixed: A NULL-parameter kernel API call in the 'cal' Calendar program.
+- Fixed: A page fault exception that could occur when starting the
+'filebrowse' File Browser program.
+- Fixed: A bug in the C library 'memmove' function could cause a page fault
+when called to move 0 bytes.
+- Fixed: In the generic C library malloc() code, there was a bug that was
+causing partially-allocated blocks to not be split correctly.  Also added a
+consistency-checking function.
+- Fixed: The 'edit' program was creating temporary files that weren't being
+deleted on exit.
+- Fixed: A number of components were creating error messages and/or crashing
+when certain files (such as mouse pointer images and icons) aren't present.
+- Fixed: When using a FAT12 filesystem, writing any FAT sector after the
+first one was causing 2 sectors to be written - resulting in a write of the
+last FAT sector overwriting the first root directory sector.
+- Fixed: The kernelConfigRead() function could overrun its line buffer if
+the line was longer then 255 bytes.
+- Fixed: The FAT filesystem driver was under-calculating the correct size
+for the free-cluster bitmap in the case where the data clusters were not a
+multiple of 8.
+- Fixed: Assorted compiler and script errors when working with the source on
+an Ubuntu 10.10 system.
+- Fixed: Passing an empty string to the kernelFilesystemMount() command was
+resulting in the new filesystem being mounted over top of the current
+directory.
+- Fixed: The windowIcon initializer now error checks for NULL image data.
+
+--------------
+ Version 0.69   24/09/2007
+--------------
+
+  Overview: Four months in the making, this is a maintenance release
+  comprising the final round of tweaks and bug fixes to the 0.6x series of
+  Visopsys, featuring lots of work on the USB subsystem including support
+  for USB mice/keyboards and hubs, tuning of the FAT filesystem driver,
+  usability fixes for various user programs, and loads of OS kernel and C
+  library improvements and bug fixes.
+
+- Lots of improvements to the USB subsystem, the UHCI controller driver,
+and the USB SCSI disk driver.
+- Added support for USB mice and keyboards
+- Implemented a driver for USB hubs.
+- Extensive tuning of the FAT filesystem driver, and the scanning of
+the FAT at mount time is much faster.  Also fixed a small fragmentation
+bug, and turned a bunch of extraneous error messages into debug messages.
+- The FAT filesystem driver no longer stores the entire FAT in memory.
+- Added basic hardware detection for OpenHCI (OHCI) USB controllers so that
+they're at least indicated correctly at boot time.
+- Improved checks for removable (CD, floppy, flash, etc.) media changes,
+invalidating the disk cache when the media changes.
+- The 'filebrowse' program now shows the name of the current directory,
+and remembers any selection from the parent directory so that it's still
+selected if the user goes back up.
+- Re-wrote much of the PS/2 mouse driver, primarily to deal with out-of-
+sync situations that could cause the mouse pointer to jump around.
+- Re-added the 'logout' program to the basic installation -- without it
+there's no 'logout' option in the shutdown menu.
+- Added a "linked list" implementation to the kernel for generic management
+of lists of pointers.
+- Replaced bzero() calls in the kernel with kernelMemClear() calls.
+- Updated the kernel's exception handler so that it will print exception
+address/symbol information even if multitasking isn't yet enabled.
+- Added a '-n' option to the 'format' program, for specifying the volume
+name (label).
+- Added a kernelDebugHex() function for doing simple hex dumps.
+- Renamed the kernelKeyBoardDriver to the kernelPs2KeyboardDriver and the
+kernelPS2MouseDriver to the kernelPs2MouseDriver
+- Got rid of the kernelMemoryReleaseSystem() function -- the regular
+kernelMemoryRelease() function can now handle releasing system memory
+blocks.
+- The printf() and family %x format specifiers now print only unsigned
+values.
+- Fixed: The Disk Manager showed partitions with the starting and ending
+cylinders determined from information in the partition table.  This could
+be inconsistent (particularly in the case where geometries are guessed)
+with the geometry of the disk as seen by the kernel.
+- Fixed: Using the Disk Manager with a hotplugged USB disk caused a
+divide-by-zero exception because the geometry values were zeros.  The
+kernel SCSI disk driver now determines/guesses a geometry, and the Disk
+Manager now ensures that the values are non-zero.
+- Fixed: Using the Configuration Editor to open a config file with no
+predefined variables resulted in a window with no 'list' component.
+- Fixed: The text editor couldn't create a new file.
+- Fixed: The 'filebrowse' program could crash when you using the 'del' key
+to delete files.
+- Fixed: An occasional problem with ejecting ATAPI (CD-ROM, etc) devices in
+the kernelIdeDriver code.
+- Fixed: Spurious interrupts could cause the kernelPicGetActive() function
+call to hang in the driver.
+- Fixed: Command line option processing for the 'format' and 'rm' commands.
+- Fixed: Calling the component 'set visible' function didn't work for
+containers.
+- Fixed: USB "can't enable port" messages.
+- Fixed: Error messages were being double-printed on the screen when
+console logging was in effect.
+- Fixed: The USB UHCI driver was not returning the number of bytes
+transferred for transactions with a data phase.
+- Fixed: Some window ops were generating error messages because they were
+trying to malloc() 0 bytes when the root window contained no components.
+- Fixed: The _xpndfmt() function was causing an exception when printing
+pointers in hex using the %p format specifier.
+- Fixed: The _xpndfmt() function was causing a divide-by-zero fault when
+printing GUIDs in the Disk Manager.
+- Fixed: The kernelDiskGetMediaState() function wasn't locking the disk
+before accessing the disk structure.
+
+--------------
+ Version 0.68   10/05/2007
+--------------
+
+  Overview: This is a maintenance release, with a focus on disk I/O
+  performance (fixed the kernel's disk cache, and added IDE lookahead and
+  write caching), secure deletion (shredding) of files/partitions/disks,
+  and bug fixes, including important changes to the OS loader resulting
+  in more reliable booting on more systems.
+
+- Re-implemented the kernel's disk caching.  Previously, performance was
+generally bad but could be horrendous under heavy I/O, as well as evidence
+that it was buggy and could occasionally cause data corruption.
+- Added read caching (lookahead) and write caching ability to the IDE disk
+driver.  Write caching necessitated a flush() disk driver function to be
+called from the higher-level sync() function.
+- In the Disk Manager, turned off software disk caching when doing a disk
+copy operation; vastly improves I/O throughput for faster copies.
+- Implemented new A20 address line code in the 'vloader' OS loader, for
+successful booting on more systems.  New A20 enabling methods include a
+BIOS call and a write to port 92h.
+- Implemented secure deletion of disk data with a kernelDiskEraseSectors()
+function that does passes of overwriting the raw disk sectors.  Added an
+'erase' operation to the Disk Manager to enable this for partitions and
+whole disks.
+- Implemented secure deletion for files, which does passes of overwriting
+the file data.  Added a command line option to the 'rm' command to invoke
+it.
+- Reorganized some of the malloc() code and added debugging output.
+- Added logic to the malloc() code (used both the kernel and user programs)
+for deallocating heap memory when it is no longer being used, rather than
+keeping it all indefinitely.  Each block now keeps a record of its
+allocation, and when the whole allocation is unused it is freed.
+- Updated some partition tag descriptions in the kernel disk code (will
+show up primarily in the Disk Manager).
+- Added a '-R' option to the 'cp' program for recursive directory copying.
+- Added regular write-protect checking to the floppy driver, so that by
+the time a filesystem is mounted we should already know if we can't write
+to it.
+- The kernelDevice for system memory now contains an attribute with the
+memory size.  Viewable from the 'lsdev' (Devices) program.
+- Removed the kernelDiskSyncDisk() function, made kernelDiskSync() a call
+for specific disks, and added a kernelDiskSyncAll() function for syncing
+all the disks.
+- Add a kernelDiskGetStats() function for getting disk performance data,
+and add that info to the Program Manager's display.
+- Added a set of software flags to the 'disk' and 'kernelDisk' structures
+to indicate changeable things like media state, door state, read-only,
+'sync' flag, etc.  The previous 'flags' fields was really an indication of
+the hardware type, so was changed to a 'type' field.
+- Added a kernelDiskSetFlags() function to allow changing user-settable
+values in the new flags field, and added a DISKFLAG_NOCACHE flag to disable
+the software cache for the disk.
+- Added the optional-argument-option support to the getopt() C library
+function.
+- Added a "file ops" test to the test program.
+- Added a basic "disk I/O" test to the test program.
+- Removed the redundant vshCopyFile() function from the vsh library.
+- Fixed: The floppy disk version was too full, crashed during boot when it
+subsequently couldn't write log files, etc., and otherwise spewed too many
+error messages.
+- Fixed: When an IDE disk had a small multi-sector value like 16, reading
+large files could fail with an error message about  too many PRD entries.
+- Fixed: In the Disk Manager, when NTFS resizing failed (for example with
+the unclean journal message) control didn't return - it just hung.
+- Fixed: With large IDE disks, on some systems, the kernel seemed to be
+getting 28-bit-limited geometry and size values from the BIOS.  The IDE
+driver replaces BIOS values with ones from the device/controller wherever
+the BIOS values make more sense.
+- Fixed: Doing a 'full' Visopsys install on a ~80mb partition, after
+choosing to format as FAT16, could totally crash/hang the system.
+- Fixed: The mouse was leaving tracers at the rightmost and bottommost
+edges of the screen (1 pixel width).
+- Fixed: The kernelFileCopy() function now allocates memory for its copy
+buffer using kernelMemoryGet() rather then kernelMalloc().
+- Fixed: Most of the file system data allocated in the FAT filesystem
+driver was not deallocated, simply discarded.
+- Fixed: The kernelFileCopyRecursive() function caused a page fault when
+it encountered an empty directory.
+- Fixed: Though the Disk Manager's 'move partition' and 'copy disk/
+partiton' progress indicators would show the correct time, but the
+percentage could overflow. going back to a smaller number and then
+climbing again.
+
+--------------
+ Version 0.67   03/04/2007
+--------------
+
+  Overview: This is a maintenance release, including a number of bug fixes
+  and the addition of new capabilities to the IDE disk driver including
+  PCI, DMA, and 48-bit addressing support; a significant re-engineering of
+  the Disk Manager program to modularise it for new disk label types, plus
+  support for moving logical partitions and creating 'preceding' logical
+  partitions.
+
+- Added PCI, DMA, and 48-bit addressing support to the IDE disk driver.
+- Did some touchups and corrections to the Visopsys IO code in the libntfs
+library.
+- Implemented the ability to move logical partitions in the Disk Manager.
+- Implemented the ability to create 'preceding' logical partitions in the
+Disk Manager.
+- Modularised the Disk Manager so that it will be better suited for working
+with different types of disk labels.
+- Added a debug_io category to the kernelDebug.c functions.
+- Added itoux() and lltoux() pseudo- C library functions for printing
+unsigned hexadecimal strings.
+- Commands specified for menu items in the desktop configuration file are
+now checked to make sure they exist.
+- Corrected the '%p' specifier printf() and family format strings, so that
+it is printed as an unsigned value.
+- Cleaned up new compilation warnings generated by GCC 4.1.1.
+- Fixed: Lines of only whitespace in configuration files used by the
+kernel configuration reader/writer functions halted processing.
+- Fixed: Launching a new window failed to reset the global "focused
+component" until the mouse was moved.
+- Fixed: When a process was killed, the text input stream's 'echo'
+attribute was not being reset.
+- Fixed: The FAT filesystem driver's "get unused clusters" function was not
+properly returning an error if no free clusters were found.
+- Fixed: In the Disk Manager, using the cursor keys in the disk list or
+partition list did not change the selection.
+- Fixed: The kernel's GUID generation routine could hang because it was
+using an uninitialized lock structure.
+- Fixed: When creating a new logical partition in between two others, the
+Disk Manager didn't set the disk order correctly.
+- Fixed: IDE disk driver now properly checks for sector number overflow.
+Previously it could fail to detect attempts at >28-bit addressing, causing
+overflow at the ~130GB mark.
+- Fixed: A bug in the 'lsdev' program printing devices when the number of
+attributes was less than 2.
+- Fixed: The progress dialog didn't layout properly when resized, and also
+fixed the layout of a few dialogs and windows vis. resizing.
+- The Disk Manager's progress dialogs that show time remaining no longer
+zero-pad the values, and specify the time in "X hours X minutes" format.
+
+--------------
+ Version 0.66   01/02/2007
+--------------
+
+  Overview: This is a maintenance release, featuring the ability to resize
+  Windows Vista partitions, more reliable loading on various systems,
+  better exception handling, color text in graphics mode, improvements to
+  the C library, and a number of bug fixes.
+
+- Ported ntfsprogs 1.13.1 (including ntfsresize 1.13.1.1) so that the Disk
+Manager can successfully resize Windows Vista NTFS partitions.
+- Modified the vloader OS loader so that it only uses int 15 to move data
+into high memory.  Improves reliability of loading on more systems.
+- The exception handler is now a separate task, for proper debugging and
+better reliability (in case of stack corruption, etc)
+- Implemented proper color text output in both text and graphics modes.
+- The boot sector code was further groomed and streamlined, though the
+work highlighted a bug in the GRUB bootloader that will always prevent
+chain-loading Visopsys from the second hard disk.
+- The MBR bootmenu code no longer has the number of sectors to load
+hardcoded into it.  It now reads a tracks' worth.  Also changed some of
+the memory locations used, since there might have been conflicts there.
+- Improved the Disk Manager's confirmation/warning message before resizing
+a partition.
+- When the progress dialog's 'Cancel' button is disabled, the mouse
+cursor shows 'busy'.
+- In the Disk Manager, progress indicator more accurately represents
+the actual times of the different stages of an NTFS resize.
+- In the Disk Manager, the "Resetting $Logfile" portion of an NTFS resize
+shows progress indication.
+- The kernel now accepts relative pathnames to file-related API functions.
+ Removed all the absolute path hand-waving from programs, libs, etc.
+- Implemented the family of scanf() C library functioms, including fscanf(),
+sscanf(), vfscanf(), vscanf(), and vsscanf().
+- Added the C library functions_num2str(), _numdgts(), and _str2num().
+Removed the custom atoi(), itoa(), itob(), itox(), lltoa(), lltob(), lltox(),
+ulltoa(), utoa(), and xtoi() functions and made them all macros in <stdlib.h>
+using the 3 new functions, above.
+- Added realpath() and strnlen() C library functions.
+- Added the C library functions basename() and dirname(), and removed
+the kernel API function fileSeparateLast().
+- Removed the custom C library functions _div64(), _divdi3(),_moddi3(),
+_udivdi3(), and_umoddi3().  We now use the libgcc versions.
+- Made the 'progress' data structure 64-bit, and changed the text-mode
+version to show initial (0%) values and messages (as opposed to only when
+the first change occurs).
+- The GUI "menu bar" component is no longer a container.  It now *has* a
+container, so that it can also have state information about which menu is
+visible.  Previously, raising a right-click menu in the Disk Manager could
+cause the corresponding menu bar title to draw itself raised when it
+shouldn't.
+- It is now possible to 'focus' the root window (without it going over top
+of the other windows, obviously).
+- Fixed: FAT32 bug in which the vloader OS loader was looking for the wrong
+terminating cluster number.
+- Fixed: When a window was bigger than the screen dimensions, moving the
+left side of it off the screen, then moving the mouse around the right side
+of the window caused mouse tracers (and perhaps a GUI crash).
+- Fixed: Dragging the 'imgboot' window off the left side of the screen
+caused a system crash.
+- Fixed: When a list component is disabled, the list items no longer appear
+greyed-out.
+- Fixed: If the 'iconwin' program can't find the icon, it will try to
+use the standard 'executable' one instead of the generic visopsys one.
+- Fixed: The 'iconwin' program could still show an icon for a program that
+wasn't available.  Also changed the config file format so that a list of
+icon names is not required to be specified before the individual specs
+- Fixed: In text mode, the 'more' command could leave its reverse characters
+on the last line if you're scrolling with any other key than [space].
+- Fixed: Printing a legitimately-escaped format sequence such as %%d in
+user space using printf() and friends didn't work, as the kernel's print
+routines would try to format their input again.
+- Fixed: The C library memcmp function was comparing one too many bytes.
+- Fixed: When the text was a different color (such as an error) and the
+screen scrolled, the cursor could remain the color of the previous line.
+- Fixed: When booting from a CD there was an error message:
+Error:kernel process:kernelFile.c:fileCreate(614):
+Filesystem is read-only.
+- Fixed: Broken CD-ROM emulation was not recognized on some systems.
+
+--------------
+ Version 0.65   18/12/2006
+--------------
+
+  Overview: This is a maintenance release, with particular focus on the
+Disk Manager program, the USB subsystem, and the GUI.  The Disk Manager
+can now copy and paste partitions, cancel partition move operations,
+format user-specified FAT subtypes, and has more user-friendly partition
+type selection.
+
+- Re-engineered the kernel's USB subsystem and UHCI host controller
+driver and re-enabled basic USB support by default.
+- Implemented per-window mouse pointers, so that applications can set
+them appropriately according to whatever they're doing without affecting
+anything else.
+- The Disk Manager can now copy and paste partitions, on the same disk
+or disk-to-disk.
+- The Disk Manager's "move partition" operation now allows the user to
+press the 'Cancel' button as long as no data from the original partition
+location has (yet) been overwritten.
+- Formatting FAT filesystems using the Install or Disk Manager programs
+now allows the user to specify a FAT filesystem subtype (default, fat12,
+fat16, fat32).
+- The Disk Manager's "list types" and "set type" dialogs now display the
+partition types in a clickable list box selection; The user no longer
+has to type a hex code to set the type.
+- Added the ability to do FPU state saves and restores (with help from
+Davide Airaghi <davide.airaghi@gmail.com> and Greg <reqst@o2.pl>).
+- Added a global window manager variable list.
+- Added "mouse enter" and "mouse exit" events for windows.
+- Added fopen(), fclose(), and strcasestr() C library functions.
+- Created a proper test suite harness program.  Initial tests implemented
+are for text output, port I/O protection, floating-point, and some GUI
+operations.
+- Code improvements to the implementation of window component levels.
+- The generic window component now has some container functions built in,
+such as layout(), numComps(), flatten(), and setBuffer(), so that all
+'composite' components that contain others can have their sub-components
+participate in various actions.
+- The processing of window events no longer tries to determine the
+precise component the event happened to -- instead events are now
+cascaded down through any/all applicable containers, components,
+subcomponents, etc.  Added an eventComp() function to window components so
+that they can specify whether they want some sub-component to receive a
+particular event, otherwise it goes to the component itself by default.
+- Added a little removeFromContainer() inline function for removing
+components from their parent container.
+- The floppy disk driver now does better memory management of its list of
+disks, devices, driver data, etc.
+- Fixed: Divide-by-zero fault in the kernel's random number code, caused
+by any call to the rand() C library function.
+- Fixed: The 'cat' and 'more' commands were crashy.
+- Fixed: Closing the Command Window program could occasionally cause
+system crashes.
+- Fixed: Booting could fail (system crash) when the (FAT) root filesystem
+was nearly full.
+- Fixed: A bug in the Disk Manager's format() function was preventing it
+from offering the choice 'none' (clobber).
+- Fixed: Creating logical partitions in the Disk Manager could cause page
+fault exceptions when writing the changes.
+- Fixed: Formatting a too-large disk as FAT12 caused a divide-by-zero
+fault.
+- Fixed: Clicking on a context menu item that didn't fall within the
+bounds of its parent window had no effect.
+- Fixed: When resizing the Disk Manager window, the partition diagram
+didn't completely redraw its entire width.
+- Fixed: When the Display Settings program was used to set the global
+colors, there were some window components whose colors were changing
+incorrectly including icons, lists, and menu items/list items.
+- Fixed: When changing a variable in the Configuration Editor, clicking
+OK caused remnants of the selected item to be erroneously drawn at the
+top of the window.
+
+--------------
+ Version 0.64   25/10/2006
+--------------
+
+  Overview: This is a maintenance release, with extensive code grooming
+and bug fixes.  There has been a particular focus on the GUI code, kernel
+debugging, the kernel API, gcc 4.x warnings, and compiler optimization
+problems.  New user-visible features include the addition of right-click
+context menus and support for 32-bit bitmaps and icons.
+
+- Booting now works under the Bochs 2.3 emulator (failed in graphics mode
+under earlier versions)
+- Implemented right-click context menus.
+- Added support for 32-bit .bmp bitmap images and .ico icons
+- The Disk Manager's canvas now responds to keyboard cursor inputs.
+- Did general, large-scale GUI re-engineering.
+- Fixed compilation errors under gcc 4.x
+- Added some API debugging
+- Moved the sysCall() inline function into a _syscall.c file to avoid
+problems with gcc (optimization) function inlining.
+- Dialog windows no longer appear in the window shell's window list.
+- Multitasking/sheduling changes: Separated out the scheduler's code for
+choosing the next program to run (into a subroutine), corrected the big
+comment that describes the scheduling algorithm, fixed a bug that might
+have resulted in a NULL pointer dereference, made it so the exception
+handler is never interrupted by another process, and added a
+kernelProcessingException variable that exports the exception number being
+processed.
+- Implemented a generic kernel debugging functionality that can be compiled
+in conditionally, and that can filter messages by categories (for example,
+there is a category for GUI debugging and a category for USB debugging), as
+well as filtering by source file.
+- Disabled USB support for now, since it's broken and can cause some boots
+to hang
+- The window border component only ever drew when it was called to draw
+the top border, since it could only draw the entire border.  Now the 'draw
+gradient border' function can draw individual lines of a border and the
+border component draws the parts individually.
+- Did some cleanup of the vloader OS loader code
+- Added a function to redraw all the windows, and another one that resets
+all of the (non-custom) colors of all the windows' components.  Setting the
+colors in the 'Display Settings' program uses this to change all of the
+window colors immediately.
+- Added more debugging info to errors in the malloc() code.
+- Added a userspace flag for components that aren't focusable by default.
+Subsequently, 'canvas' components are no longer focusable by default.
+- Creating window menus is now done more simply by passing a structure with
+the list of menu items, then calling the getSelected() function to find out
+which one was clicked.  Also implemented the more-useful getData() function,
+which returns the objectKey of the selected item.
+- Implemented a window 'slider' component to wrap the scroll bar component,
+so that it can be focusable and accept keyboard input. (And adapted the
+window library color chooser dialog to use it).
+- Window canvas components now show a visual change when they are focused.
+- GUI menu components now have their own graphic buffers, so that regardless
+of what window they come from they can stay on top, extend outside the
+window, etc.
+- The install.sh script now copies any /bootinfo or /grphmode files into
+the CD-ROM boot floppy images.
+- The install/imaging scripts no longer redirect useful error output to
+/dev/null -- they now redirect to temporary log files, check exit codes,
+and direct the user to the log files if applicable.
+- The window manager code now has more efficient memory management, so
+that it isn't allocating memory for the entire array of possible window
+structures at initialization time.
+- Created a top-level Makefile.include file for all the code Makefiles,
+added some more warning flags to it, and fixed the resulting warnings.
+- Made gcc optimization args (-00, -02, etc) a global Makefile variable
+- The objectKey type is now a 'volatile void *'
+- Made data structures throughout properly self-referential (instead of
+using void * pointers) and removed all of the unnecessary casting, for
+(hopefully) fewer coding errors.
+- Fixed: The vloader OS loader was being written to the *second* free
+cluster by the Fedora VFAT driver when not using FAT32.  Made a hack to
+adjust it when installing from Fedora, and generally streamlined the
+copy-boot program.
+- Fixed: A slight bug in the FAT code in that it relied too strictly on the
+Microsoft definition of FAT-type detection.  Now it takes into account a
+couple of extra hints.
+- Fixed: The 'view' program wasn't showing tab characters properly in text
+files.
+- Fixed: The 'vsh' shell would crash if the user entered a line containing
+only whitespace.
+- Fixed: A bug in the copyArea() function of the framebuffer graphic driver
+in that it wasn't checking to see whether the areas were outside the buffer.
+
+--------------
+ Version 0.63   15/08/2006
+--------------
+
+  Overview: This is a maintenance and bugfix release, with numerous small
+  tweaks throughout the entire system.  New features include the ability
+  to format and resize Linux swap partitions, more reliable OS loading,
+  more detailed CPU detection, and a simple text editor.
+
+- Added formatting and resizing support for Linux swap partitions.
+- Added a basic, simple text editor (currently only works in graphics mode).
+- The OS loader now does improved memory moves to high memory for better
+reliability on more systems.
+- Added improved CPU detection to the kernel 'system' driver.
+- Added the beginnings of a 32-bit BIOS driver.
+- The file list widget and the file dialog have been reworked so that
+they don't use a separate GUI thread, since that was unreliable and crashy.
+- GUI applications can now enable click-driven cursor movements in text
+areas.
+- Removed the hard limit on the maximum number of window components.
+- The kernel now records and uses a network domain name, both via DHCP and
+via the kernel's config file.
+- There are now kernel functions to get and set the host and domain names,
+as well as UNIX-style command line functions.
+- Added a kernelSystemInfo() function, similar to the UNIX 'uname' syscall.
+- Added a variable list of text-string attributes to all hardware device
+structures.
+- The window 'component parameters' structure now has a 'flags' field to be
+used for all boolean values.
+- Added getWidth() and getHeight() functions for fonts.
+- Text screen saving and restoring now uses caller-supplied pointers instead
+of storing a single instance in kernel memory.
+- Added a text API function to enable or disable screen scrolling.
+- Window resize events now go into the window's event stream so that
+applications can catch them.
+- The scrollbar slider now has a minimum size, so that it's clickable even
+when there's lots of data to scroll through.
+- The makefile variables for $CC, etc., are now settable from the top-level
+makefile.
+- The 'ldd' program was really more like an 'nm' program, so it was renamed.
+- Fixed: PS/2 mouse driver synchronization problems on some systems.
+- Fixed: The Disk Manager's 'set type' menu item was failing to bring up
+the dialog.
+- Fixed: After resizing a filesystem, the Disk Manager no longer shows the
+warning "Can't write partition table backup in read-only mode" (if booted
+from a CD, for example).  This just scared people.
+- Fixed: When entering the filesystem resizing value in the Disk Manager's
+text mode, it didn't allow you to append 'c' or 'm' for size in cylinders
+or megabytes.
+- Fixed: The Disk Manager no longer continually pesters users about
+incorrect CHS values in partition entries; one 'no' answer now turns it
+off.
+- Fixed: The FAT filesystem driver now ensures that items it's processing
+(when it's constructing short filenames, or writing directories) belong to
+its own filesystem (as opposed to mount points for other filesystems, for
+example).
+- Fixed: If the 'imgboot' program's config files contained commands with
+arguments, the icons weren't shown because the program didn't separate off
+the arguments and therefore couldn't locate the commands.
+- Fixed: Using the 'view' program to view a really small or really large
+image caused GUI crashiness.
+
+--------------
+ Version 0.62   25/04/2006
+--------------
+
+  Overview: This is a maintenance release.  Some new features include basic
+  USB controller support, a USB mass-storage driver, device hotplugging,
+  Qemu support, loading of RLE encoded bitmaps, a 'programs' icon, and
+  'minesweeper' and 'snake' games.
+
+- Implemented basic USB support for UHCI controllers.
+- Implemented a SCSI driver that can support USB mass storage devices.
+- Added basic hot-plugging support for devices.
+- Added support in the image functions for loading RLE encoded bitmaps.
+- Added a 'programs' icon.
+- Added 'minesweeper' and 'snake' games.
+- Added an icon for Bauer Vladislav's calendar program.
+- Implemented a proper kernelBus top-level infrastructure for use by
+the PCI driver, USB driver, etc.
+- The display devices and text console drivers are now initialized separately
+and before other hardware, so that hardware detection messages can be shown
+while detection is going on.
+- The 'computer' program now continuously scans for new disks.
+- The 'shutdown' command now has a command-line flag for rebooting, and the
+'shutdown' and 'reboot' commands now have command-line flags for ejecting
+the boot media, if applicable.
+- The 'iconwin' and 'filebrowse' programs now change the mouse pointer when
+they're busy loading up a file or program.
+- The 'iconwin' program now continues silently when programs or icons
+specified in the config file are missing.
+- The boot menu now has a default selection and timeout period (settable by
+the 'bootmenu' program).
+- There is now an 'active menu' global window system variable so that the
+focussed menu can always be on top, and always go away then it loses focus.
+- Fixed: Booting failed on Qemu due to a PS/2 mouse driver hang.
+- Fixed: The 'bootmenu' program failed to run from a read-only media.
+- Fixed: The boot menu timer was counting down too quickly.
+- Fixed: The 'install' program failed if a directory it wanted to create
+already existed.
+- Fixed: The 'defrag' program was giving "can't defrag filesystem type
+'unknown'" messages for things like floppies that hadn't been mounted.
+- Fixed: The kernelDiskGetMediaState() function was returning 0 for flash
+disks
+
+--------------
+ Version 0.61   27/01/2006
+--------------
+
+  Overview: This is a maintenance release.  Some new features include Disk
+  Manager support for resizing NTFS filesystems and arbitrary partitions,
+  purely unprivileged user-space processes, I/O port permissions and
+  protection, IDE block mode I/O, Linux swap detection and clobber,
+  improved atomic kernel locks, many C library additions, and a calendar
+  program, in addition to assorted bug fixes.
+
+- The Disk Manager can now resize Windows XP (NTFS) partitions, as a result
+of porting Linux ntfsprogs NTFS resizing code.
+- The Disk Manager will now allow partition-only resizing regardless of
+the filesystem type (with appropriate warnings).
+- All userspace programs now run in unprivileged CPU mode, regardless of
+actual privilege level, and I/O privilege maps have been implemented by
+Davide Airaghi.
+- Improved IDE/ATA hard disk driver performance by implementing block-mode
+I/O.
+- Added basic 'stub' NTFS filesystem support (detection and clobber).
+- Added basic 'stub' Linux swap filesystem support (detection and clobber).
+- The kernel's locking code now implements real atomic locking.
+- Added Bauer Vladislav's calendar program.
+- All threads now use the same page directory control data as their process
+parents for better synchronisation.
+- Process stacks now have guard pages at the top which are privileged, so
+that user process stack overflows cause protection faults.
+- The C library now has a proper suite of malloc() functionality -- taken
+from the kernel's implementation -- which is now used by the kernel instead
+so it can be used for user space without code duplication.
+- Added a kernelMemoryBlockInfo() function to return information about an
+allocated memory block.  Useful for the realloc() libc function.
+- Added a kernel disk function for rescanning the partitions of a single
+disk.
+- Added a lock to the 'progress' data structure.
+- Implemented 'confirmation' capability in the progress structure and the
+libvsh and libwindow progress bar/dialog functions.
+- Add a kernel filesystem function for getting statistics about a filesystem
+(whether it's mounted or not, or indeed, properly supported or not).
+- Added a kernel filesystem function for getting resizing constraints.
+- Added a kernel filestystem function for requesting specific detection
+of filesystem type (useful for removable media and such).
+- The text-mode installer now offers to let you partition first.
+- The text mode Disk Manager now show the operations/commands in two
+columns.
+- Added a window library 'radio dialog' for presenting choices in a radio
+button format.
+- The Disk Manager's 'move partition' and 'copy disk' functions now uses
+standard progress dialogs and show time estimates.
+- The kernel logging thread now has a lock on the log, so that the log
+doesn't get garbled by different processes logging at the same time.
+- The OS loader's screen output is now saved in a file (/system/vloader.log)
+so that it can be examined afterwards.
+- Removed the source code from the ISO distribution.
+- Printf()-style C library functions now support left-justification ('-')
+format specifiers.
+- Added C library functions lltoa(), lltob(), lltox(), and ulltoa() to
+support 'long' format specifiers and arguments.
+- Added C library functions mbstowcs(), mbtowc(), and wctomb() for wide-
+character support.
+- Added C library functions fflush(), ffs(), fgets(), realloc(), strdup(),
+strerror(), vfprintf(), vprintf(), vsnprintf(), and vsprintf().
+- Added C library functions for 64-bit divisions such as __div64(),
+__divdi3(), __moddi3(), etc.
+- Enabled the C library functions such as fgetpos(), fread(), fsetpos(),
+fflush(), fgets(), ftell(), fprintf(), fseek() and fwrite() (as applicable)
+to behave correctly when the FILE* stream is 'stdin', 'stdout', or 'stderr'.
+- Added C library header files endian.h, stdint.h, and <sys/cdefs.h>.
+- Fixed: After formatting FAT32, Linux and older Windows installers would
+show the filesystem as 100% full.
+- Fixed: Errors with IDE/ATA hard disks as secondary masters.
+- Fixed: Unformatting (clobbering) a partition in the disk manager didn't
+seem to convince the kernel to un-detect the previous filesystem until
+reboot.
+- Fixed: The graphical 'ifconfig' program wasn't updating the device text
+after starting/stopping networking.
+- Fixed: The wallpaper program was not properly shutting down its window
+thread.
+- Fixed: The imgboot program failed to exit after calling the login
+program.
+- Fixed: There was a (harmless) error message when running the 'ldd' program
+against an executable program because it always tried to load the file as a
+library.
+
+-------------
+ Version 0.6   30/11/2006
+-------------
+
+  Overview: This release introduces a host of new functionality, including
+  a cleaned up desktop with icons for browsing the computer, file systems,
+  and administrative tasks, FAT defragmenting, ELF dynamic linking, a
+  built in chain-boot loader and simple MBR formatting, file browsing
+  widgets and dialogs, Windows .ico icon file support, a generic file
+  viewing program, Italian keyboard support, new icons and a new splash
+  screen.
+
+- Added a 'Computer' icon, equivalent to the one in Linux or 'My Computer'
+in Windows.  It shows the different disks, auto-mounts them (if applicable)
+when clicked, and launches a file browser.
+- Added a 'File Browser' icon.
+- Added an 'Administration' icon which brings up a window for various
+other programs that were previously on the default desktop.
+- The 'view' program is now a more generic program for default viewing of
+various sorts of files.
+- Added defragmenting capability to the FAT filesystem driver.
+- Implemented shared libraries and dynamically linked executables.  All
+included libraries and programs are now dynamic.
+- Implemented a simple, chain-loading MBR boot menu for loading from
+different partitions and operating systems.  The 'bootmenu' program lets
+the user edit the menu strings and set parameters.  Also accessible from
+the Disk Manager.  ** Note that this will NOT load any Linux installation
+that uses an initrd.
+- Implemented simple MBR code, so that for example the Disk Manager can
+be used to rescue a system from a deleted or corrupt GRUB installation.
+- Added Windows .ico icon file format support and converted many existing
+icons to that format.
+- Created file browsing widgets/dialogs.
+- There is a new splash screen image and a number of new icons.
+- Text areas now use white background and blue text as the default colours.
+- Added Davide Airaghi's Italian keyboard mapping.
+- Some preliminary networking support has been added, but for the moment it
+is disabled by default.  The only network device driver provided is for
+the "Lance" (AMD PC-NET) card, which can be simulated under VMWare.  In
+the 'Administration' window, there is now a 'Network' icon that proves
+access to a simple 'Network Devices' program which, for now, just shows
+devices, status, settings, dynamic (via DHCP) IP address, etc.  There is
+also a 'ping' command.
+- The new exception handler prints out more diagnostic information (exception
+type, and more)
+- There is now a vsh library function for a text mode progress bar.
+- The format program now shows a progress bar in text mode.
+- The Disk Manager will refuse outright, or warn/confirm before moving,
+formatting, or deleting mounted partitions.
+- The 'disks' command now shows mount points.
+- Created an 'iconwin' program that uses config files to create custom
+windows with icons, and user-specified actions associated with them.
+- Added a /CREDITS.txt file for listing others' contributions.
+- There is now a /system/mouse/ directory for mouse pointer images, a
+/system/config/ directory for .conf files of all programs and the kernel,
+a /system/mount directory for automatic mounting, and a /system/wallpaper
+directory for background images.
+- Created a 'progress dialog' window library feature that utilizes
+the 'progress' structure and shows a progress bar and status messages.
+- The exception handler is no longer a standalone task, in order to do FPU
+state saves/restores without setting the CR0[TS] bit.
+- Handles exceptions generated when a process attempts to do floating point
+operations after a task switch.
+- The filesystem structure is now contained within the logical disk
+structure.
+- The user-space 'disk' object now indicates whether a partition is mounted,
+and if so, the mount point.
+- Exported a portion of the kernelDevice structure as a new 'device'
+structure, and created API functions to export the hardware device tree.
+- 'Atomized' some of the ASM macros in kernelProcessorX86.h so that they can
+be reused in other more complex macros
+- Added floorf(), sin(), cos(), and tan() functions to the C lib.
+- Added support for %b format specifiers in the _xpndfmt.c functions
+by adding another bogus C library routine (itob).
+- File changes: Changed 'kernelMiscFunctions.*' to 'kernelMisc.*', and the
+kernelPageManager and kernelMemoryManager have had the 'Manager' bit taken
+out of their file/function names.
+- Added window library functions to clear an event handler and to get the
+window thread PID
+- Implemented a 'progress' data structure that can be passed to (for
+example) long filesystem operations such as format, check, resize.
+- The 'map to free' functionality of the paging code no longer, by default,
+allocates the first page in the address space.  This makes it easier to
+detect/guide against NULL pointer dereferences.
+- Got rid of the 'diskType' and 'mediaType' enums from the various
+disk structures, and instead use a set of logical flags to describe disks.
+- Removed the deprecated windowPack() and windowSetPacked() API functions.
+- Fixed: In the Disk Manager, cancelling a new partition creation at the
+label type stage caused 2 changes to show as pending.
+- Fixed: The Disk Manager's partition reordering menu didn't display
+changes properly in text mode.  It worked but the changes weren't reflected
+in the menu.
+- Fixed: The lost+found directory created by the EXT2 formatting code was
+not readable when we mounted the filesystem.  Also, the permissions are now
+set to the same values as Linux mke2fs.
+- Fixed: Using the 'gcc version 3.4.2' and 'ld version 2.15.92.0.2' combo
+(Fedora Core 3), generated programs had a new, unexpected number (3) of
+ELF program header entries.
+- Fixed: Selecting partition/list types in the Disk Manager could crash
+the program.
+- Fixed: The Program Manager was associating some child threads with the
+wrong parents in the process list.
+
+---------------
+Version 0.58
+---------------
+
+  Overview: This is a maintenance and bugfix release.  Some new features
+  include support for EXT2 filesystem formatting, German keyboard layouts,
+  GUID (Globally-Unique Identifier) generation, and filesystem clobber.
+  Also includes a number of important bugfixes to the Disk Manager program.
+
+- Implemented EXT2 formatting.
+- Added Jonas Zaddach's German keyboard layout
+- Added GUID-generating capability to the kernel.
+- Filesystem drivers that support 'format' functionality now also support
+'clobber' functions, so that for example when a format is done, the
+filesystem doesn't still get detected as the previous type.
+- The filesystems code now has a proper array of all the different
+filesystem drivers, that can be iterated through (for example, when doing
+filesystem detection).
+- Implemented a "multi choice dialog" that shows buttons with user-
+specified text strings and returns the index of the specified choice.
+- Fixed: In the Disk Manager, when creating partitions, it wasn't possible
+to create logical partitions.  When choosing primary, no primary/logical
+attribute was shown.
+- Fixed: The EXT filesystem code would fail to mount small filesystems with
+only a single block group, where the number of blocks was less than the
+maximum blocks per group.
+- Fixed: In the graphics mode Disk Manager, after specifying start and end
+values for a new partition, pressing 'Cancel' in the tag type dialog didn't
+stop the partition from being created.
+- Fixed: The Disk Manager's 'move' function check for empty space on either
+side of a partition could produce a false error
+- Fixed: The Disk Manager was telling the kernel to reread the partitions
+too frivolously (especially in between writing the main and extended
+partition tables).
+- Fixed: The vsh shell's code for marshalling quoted arguments was broken
+(e.g. 'touch "foo bar"' created 2 files, foo and bar)
+- Fixed: The libc time() function is producing dates off (slow) by 1 year.
+
+---------------
+Version 0.57
+---------------
+
+  Overview: This is a maintenance and bugfix release.  There are various
+  GUI touch-ups, the Disk Manager now updates disk geometry information in
+  FAT partitions after disk copy operations, the GUI 'list' component has
+  been reimplemented, and a number of kernel improvents have been back-ported
+  from the 0.6 development branch.
+
+- When the disk manager does disk-to-disk copies, it now ensures that the
+disk geometries stored in any FAT partitions are correct.
+- Window lists components now have multi-column mode implemented, are now
+capable of showing various combinations of icons, text, or both, and they are
+now able to resize successfully, so that more rows can become visible and
+multi-column lists get extra columns.
+- Added a window 'selection event' that widgets (such as the window list)
+can differentiate between a pointless click or scrollbar event and a real
+user selection.
+- Moved command line parsing code into the kernel's loader so that it will
+parse a raw command line.
+- The window text area component now has an 'update' function that is called
+by the text area subcomponent to let it know when it has updated (so the
+window component can update the scroll bar, for example)
+- Added API functions to export the hardware device tree.
+- Exported a portition of the kernelDevice structure as a new 'device'
+structure.
+- A bunch of the buttons from various windows have had their 'fixed width'
+parameters set.
+- Added a 'delete recursive' convenience file function.
+- There is now a loaderClassifyFile version that just temporarily reads in
+the first few sectors of a file in order to classify it.
+- Added a loader file classes function for generic text and binary files,
+and boot sectors.
+- Added an snprintf C library function.
+- The vshFileList (the 'ls' command) function now prints more efficiently.
+Previously made millions of print calls.
+- Added a kernelFileCount function to the file functions, so that it's easy
+to preallocate memory for file entries, etc.
+- The windowGuiThread library function now returns the PID of the GUi
+thread process so that calling programs can monitor its survival.
+- Updated the help file documentation for the program files.
+- Fixed: If the user doesn't have administrator privileges, the 'disprops'
+program now greys out the list of screen resolutions because the kernel
+won't allow it to be changed.  Also, the API functions to get/set the
+window manager colours have been made into user-privilege functions.
+- Fixed: After "user authentication failed", the login program stopped
+responding.
+- Fixed: The icon layout in the kernel window shell was allowing the text
+of the bottom-most icon to wrap off the screen.
+- Fixed: The console text area's scroll bar was not being added to windows
+when the rest of the text area was added; thus the scroll bar did not
+appear.
+- Fixed: The 'wallpaper' program failed to set the wallpaper if the file
+name supplied in the file dialog was an absolute path.
+- Fixed: The window list item code had an error in which it undercalculated
+the length of the text string.
+
+---------------
+Version 0.56
+---------------
+
+  Overview: This is a maintenance and bugfix release.  Important bugfixes
+  include the elimination of boot hangs due to faulty mouse initialization
+  and full kernel variable lists, a fix to the detection of secondary
+  hard disks, and a fix to faulty mounting of EXT2/3 filesystems.  In
+  addition, important multitasker improvements related to process
+  initialization have been back-ported from the 0.6 development branch.
+
+- Fixed: The system could fail to boot in graphics mode due to faulty mouse
+initialization
+- Fixed: The kernel's symbol variable list was becoming full and causing
+various boot initializations to fail.  The kernel's variableList code has
+been changed so that it automatically manages list memory.
+- Fixed: "ID or target sector not found" messages during boot when a second
+(slave, for example) hard disk was present.
+- Fixed: EXT2 mounting had become generally broken
+- Back-ported the 0.6 branch multitasker changes (to do with processImage
+structures and argument passing).
+- The exception handler process now displays a dialog box when a program
+crashes, so that they don't simply disappear (requiring the user to look at
+the console output for the reason)
+- Added a system to generate the programs' help file text from comments
+within the source code, so that it's easier to keep up to date.
+- Fixed: When a mount attempt failed, it was possible to end up with a rogue
+'/' entry added to the root directory, which could render the whole
+directory tree useless until reboot.
+- "Genericized" the image loading functions so that they first identify
+the format, then call the appropriate routines to interpret it.
+- Fixed: When calling kernelWindowDestroy() with a window that had user
+containers, there were a number of "Container data is NULL" error messages.
+- The kernelError code no longer prints the current process name if
+the error occurs inside an interrupt handler; it prints the interrupt
+handler number instead.
+- Any window components that contain other components now remove them from
+the parent container, if applicable. (windowTextArea and windowTitleBar,
+for example).
+- Fixed: After choosing the destination disk in the install program, there
+was an error message from kernelMemoryManager.c:838:The memory pointer is
+not mapped.
+- The ELF loader code now marks executable code pages as read-only, ELF
+headers are now processed more correctly (side effect: eliminating various
+messages about unexpected number of ELF headers)
+- Changed the FAT, EXT, and ISO filesystem drivers to take more advantage of
+packed structures for better efficiency.
+- Fixed: The 'format' program was inadvertently ignoring the '-t' filesystem
+type option.
+- Fixed: If the default background colour was not used, the text area
+widget's scroll bar would use that background color rather than the normal
+grey.
+- Un-exported the filesystem functions in the FAT, ISO, and EXT drivers.
+- The 'imgboot' program now shows the OS version in the title.
+
+---------------
+Version 0.55
+---------------
+
+  Overview: This is a maintenance and bugfix release, with some additional
+  capabilities including installation support for all FAT filesystems,
+  primitive PCI driver support, and a better organised device driver
+  infrastructure.  In addition, GUI window layout and resizing has been
+  reimplemented and generally fixed.
+
+- The system can now install to and boot from any kind of FAT filesystem
+(FAT12, FAT16, and FAT32/VFAT).
+- Fixed window relayout when windows are sized.
+- Implemented a better-organised hardware device "tree" and a new, more
+generic device driver interface.
+- Added a basic PCI bus driver, the initial implementation of which was
+provided by Jonas Zaddach.  Only logs a bus device scan, for the moment.
+- Implemented a basic a signalling infrastructure, which initially fixes
+the problem of CTRL-C crashing the system in text mode.
+- Back-ported a number of changes and improvements from the 0.6 branch to
+the kernel's disk layer.
+- Added a 'debug window layout' function that displays the layout grid
+alongside the components; makes it much easier to do program window design
+and to debug the kernel's layout code.
+- The window manager's event handler thread now dynamically allocates the
+memory it uses for storing event hooks.
+- Implemented the 'swab' libc function.  Useful for networking.
+- The page manager's 'get physical address' function has been modified so
+that it works with addresses that aren't page-aligned.
+- The interrupt controller functions now have a function that returns the
+active interrupt number, and synchronized the kernel's hardware interrupt
+number codes with the 'normal' PC interrupt numbers (e.g. 0-F).
+- Fixed: Interrupts are now disabled during the pause before reboot, so
+that for example the kernel is not still processing I/O interrupts and such.
+- Fixed: A number of small issues with the kernelWindowStream code.
+- Fixed: In the install program, installing on a freshly-inserted floppy.
+could produce the error message "can't install a boot sector for filesystem
+type 'unknown'".
+- Fixed: When installing from a 'basic' install, there was a spurious error
+message resulting from attempting to look for the 'full' install file.
+
+---------------
+Version 0.54
+---------------
+
+  Overview: This is a maintenance release, with numerous small improvements
+  and bugfixes including some general back-porting from the 0.6 development
+  branch.  In addition, IDE disk-to-disk operations have been improved so
+  that they can happen in parallel, the kernel hardware drivers' interrupt
+  handing has been given a new interface, and there is some improved
+  efficiency in a performance-critical section of the multitasker.
+
+- Updated the IDE disk controller locking, so that each now have their own
+locks; thus I/O can be done in parallel between disks on different
+controllers.
+- Back-ported large numbers small changes and improvements from the 0.6
+development branch.
+- Cleaned up the kernelInterrupt code, got rid of all the 'default'
+handlers, added an interface for getting/hooking the vectors, and changed
+all the built-in drivers to use the interface.  All interrupts are now
+initially masked off, and the hardware driver code for each kind of device
+has to turn them on after hooking the handler.
+- The bootable floppy image for the ISO distribution now contains only the
+OS loader and the kernel, because only these are used.  This shrinks the
+(zipped) ISO image size.
+- The calculation of CPU percentage in the multitasker's scheduler is now
+done more efficiently, inside the loop that evaluates the process queue.
+- Added text 'save screen' and 'restore screen' functions for use by
+programs such as 'fdisk' and 'install' which clear the screen.
+- Added convenience functions to the kernelUser code for working with
+arbitrary password files, so that for example the installer can set up the
+destination password file without doing it all manually.
+- Added kernelDiskGet() (single logical or physical), kernelDiskGetAll(),
+and kernelDiskGetAllPhysical() functions.
+- The kernel's page manager now includes a method for setting flags on
+pages (such as writable, present, cache disable, etc), and a function that
+allows memory to be mapped at a particular address.
+- Created a user-space 'process image' structure that can describe details
+such as memory page mapping, virtual addresses, entry points, arguments,
+and so on.
+- kernelError.h now contains the include for <sys/errors.h>
+- Fixed: Copying a big file such as an .iso image could fail because the
+copy code tried to allocate enough memory for the whole file.  Now it
+allocates as much as possible and does multiple reads/writes
+- Fixed: Typing and using the mouse at the same time was causing funny
+things to go on.  The interrupt handlers for the two devices needed to be
+better synchronized.
+- Fixed: When dragging an icon, one pixel-width of the icon title wasn't
+being erased properly.
+- Fixed: The FAT12 boot sector source code shipped with version 0.53 didn't
+work for floppy disks
+- Fixed: In the libc's _xpndfmt.c function (used by printf, sprintf, etc),
+the numDigits() function was returning the wrong value for large signed
+numbers, resulting in double-width numbers for format strings such as %08x.
+- Fixed: The graphics mode text driver was not recognizing 'longest lines'
+if the cursor had been moved around using the textSetRow function.
+- Fixed: Doing a second kernel make without changing anything resulted in
+an empty kernelSymbols.txt file, since the previous make stripped the
+kernel.
+
+---------------
+Version 0.53
+---------------
+
+  Overview: This is a maintenance release, with numerous small improvements
+  and bugfixes.  A number of unnecessary files and programs have been
+  removed.
+
+- Re-engineered the kernel's file handling code so that it uses less stack
+memory, has less code redundancy, and exports different functions to the
+rest of the kernel than it does to user space.
+- The format operation causes the kernel to re-scan the partitions, so that
+the new filesystem type is recorded in the disk structure
+- The Program Manager now shows overall memory usage totals.
+- The 'mem' command now prints totals in kilobytes, and uses a structure
+from the kernel (a new API function) describing the memory blocks, rather
+than the kernel printing out the information directly.  Subsequently,
+deprecated the kernelMemoryPrintUsage() function.
+- The shutdown program now attempts to eject the CD-ROM a second time if
+required, since it seems that some drives will fail on the first attempt
+but succeed on the second.
+- The FAT boot sectors no longer rely on the disk geometry they get from
+the DOS BPB block.  They get it from the BIOS instead.
+- Removed the 'move' command (there's already a 'mv' command)
+- Removed a large number of unimplemented libc function files.
+- Moved the libc global data into crt0.c
+- The boot sectors/OS loader that capture key presses ("press any key...")
+now use the BIOS' int 16h function instead of trapping the hardware interrupt.
+- Deprecated the kernelDisk{Read|Write}Absolute functions.  Instead,
+the normal kernelDisk{Read|Write} functions are now able to figure out
+whether the supplied disk name is physical or logical.
+- The libvsh functions no longer call perror().  They still set errno, and
+then leave perror() up to the caller.
+- Added the -W and -Wshadow options to Makefiles.
+- Added -ffreestanding to Makefiles, to ensure that the compiler isn't
+including built-in functions we're not expecting.
+- Got rid of the "unsigned int" terminology everywhere and replaced it with
+simple "unsigned"
+- Fixed: The Disk Manager was showing 1MB total size for all disks
+- Fixed: In the Disk Manager's 'create partition' function, if you supplied
+bad start/end values, the logical/primary choice would be disabled when the
+dialog box came back.
+- Fixed: When copying a file, if the destination was a directory (rather than
+a fully-specified file name), there was a kernelFileDelete error message
+- Fixed: when the vshCursorMenu scrolled the screen, it looked funny.
+- Fixed: 'ls' an unknown file, hang!
+
+---------------
+Version 0.52
+---------------
+
+  Overview: This is a maintenance and bugfix release, with some additional
+  features, such as improved disk-to-disk copies and partition table
+  reordering in the Disk Manager, and additional C library functions.
+
+- Implemented threaded, double-buffered disk IO for the 'copy disk'
+functionality of the disk manager.
+- The disk manager's slice list now indicates the disk name and file system
+type (if available), and it is now possible to change the partition table
+ordering - i.e., changing drive names/letters.
+- The vsh history is bigger, and there is now a 'history' command.
+- Added open(), lseek(), read(), write(), close(), fprintf, fread(),
+fwrite(), and stat() C library functions.
+- The kernelError messages now indicate the name of the process that caused
+the error.
+- The 'disks' command now reports the filesystem type, if known, and not
+just the partition label.
+- Exported the kernelMultitaskerProcessIsAlive() function.
+- The 'vsh' and 'ls' commands have been updated to improve their stack/data
+memory usages.
+- The kernelConfigurationWriter has been reworked so that if the file
+already exists, it writes the new one to a temp location first, then moves
+the new one over top.
+- Fixed up the Makefiles a bit and we now make sure that we're building
+with the correct CPU specified.
+- Fixed up 'errno' implementation in the C library.
+- Fixed: The disk manager 'copy disk' failure was leaving the dialog box
+on the screen.
+- Fixed: The format command could hang when doing a large FAT32 filesystem.
+- Fixed: The 'rmdir' functionality was broken, because the '.' and '..'
+entries were not being removed correctly.
+- Fixed: In the disk manager's 'create partition' function, specifying a
+megabyte size value overflowed at 4096m.
+- Fixed: The windowList component has been changed to stop implementing its
+own idea of 'container', and use the standard container component.
+- Fixed: Deleting the old menu list items in kernelWindowShellUpdateList()
+was causing crashes; it was disabled in the 0.5 release, and it was a pretty
+serious memory leak.
+- Fixed: The 'umount' command failed when a following / was after the mount
+point name.
+
+---------------
+Version 0.51
+---------------
+
+  Overview: This is a maintenance and bugfix release, with some additional
+  features, such as the Disk Manager's ability to fix small partition table
+  consistency errors.
+
+- Enhanced the bootstrap code so that it is possible to boot on some
+trickier hardware platforms, such as Toshiba laptops.
+- The disk manager now offers to fix errors turned up by the partition
+table check.
+- The disk thread now respawns when it is killed [ thanks Thomas Kreitner ].
+- The 'install' program now show a progress meter in text mode while
+copying files.
+- When the shutdown program is attempting to eject the disk, it now shows
+a banner dialog since sometimes it takes a couple of seconds.
+- In the text area code, when the screen is cleared, the existing screen
+contents are no longer rolled back into the buffer -- they are discarded.
+- Deprecated the windowPack() and windowSetPacked() API functions.
+- While attempting builds with gcc version 3.4.2, fixed a number of bugs
+and details that the newer compiler found.
+- Fixed: The program manager wasn't really putting threads under their
+correct process parents; it merely put them in order as received from the
+kernel.
+- Fixed: The getopt() library function was being used incorrectly by a
+number of the user applications.
+- Fixed: It was possible to kill the exception handler thread, which caused
+an immediate triple fault [ thanks Thomas Kreitner ].
+- Fixed: Broken CD-ROM floppy disk emulations no longer trick the loader
+into detecting nonexistent floppies.
+- Fixed: On some hardware, the kernel's hardware detection could be tricked
+into detecting nonexistent fixed disks with NULL geometry.
+- Fixed: The 'megabytes' value being printed for hard disks by the loader
+was severely wrong.
+
+---------------
+Version 0.5
+---------------
+
+  Overview: This release adds logical partition capabilities to both the
+  kernel and the Disk Manager (which has been substantially rewritten),
+  window minimizing, a GUI taskbar for managing windows, new icons and
+  cleaner desktop layout, a 'Program Manager' application, and a temporary
+  file interface -- as well as lots of bug fixes and smaller tweaks.
+
+- Added support for hard disk logical partitions
+- Added a 'taskbar' menu to the top of the root window.
+- Added 'minimize' functionality to windows.
+- Made a 'program manager' program that allows a user to manage running
+processes, etc.
+- Enlarged the disk manager window and its canvas, and added a more action
+buttons.
+- Added a 'show info' action to the disk manager.
+- Implemented the ability to 'hide' partitions in the disk manager
+- The disk manager now includes an option for writing a fresh partition
+table to a disk.
+- The disk manager now allows the disk to be specified as a command line
+argument.
+- The disk manager now has a better GUI interface for creating a new
+partition.
+- Implemented a temporary file interface
+- The install program now shows which install disk is selected when in
+graphics mode.
+- Made a new 'shell' icon for the command window, added icons for the program
+manager and configuration editor, and removed the 'logout' and 'shutdown'
+icons from the desktop.
+- Programs that can run in both graphics and text modes (such as the disk
+manager and the installer) now have a standard -T argument that causes them
+to run in text mode.
+- Added a libvsh 'cursor menu'.  Converted imgboot, fdisk, etc. to use it.
+- Added the ability to have comment lines in the install files
+- Created a libvsh function for parsing a command line into command and args,
+suitable for passing to the loaderLoadAndExec function.
+- Added a user-space 'process' struct, and converted the 'ps' command to
+use it.
+- The date/time printing library functions have been cleaned up and fixed
+so that they don't print superfluous spaces
+- Restored the 'ownership' attributes of input streams, and restored the
+CTRL-C functionality.
+- Moved the 'dist' directory out of the 'utils' area and into the top
+level directory
+- Added strchr and strrchr C library functions
+- Added a kernelStreamDestroy() function to complement kernelStreamNew()
+- Attempting to mount a CD will now close the tray before the attempt, if
+it's open.
+- Removed the icons= line from windowmanager.conf.  The window shell will
+now figure out the list of icons dynamically based on which ones are
+actually specified in the file
+- The 'format' now has 2 additional modes: a graphical mode, and a non-
+interactive 'silent' mode.
+- (Re)-implemented the ability to get a screen shot from a key press.
+The 'instant screenshot' is triggered by [PRINT SCRN] key, and multiple
+shots can be taken this way without overwriting one another.
+- The vsh prompt is no longer the whole directory path; just the current
+directory name.
+- The window checkbox widget now ignores the user-specified foreground
+color for the 'x', since we always use white for the background behind it,
+and if the foreground was white, no 'x' would be visible.
+- The graphical shutdown program now offers an 'eject CD-ROM' checkbox
+when booted from CD-ROM, since otherwise the door stays locked and getting
+the CD out during the BIOS POST can be tricky.
+- CTRL-ALT-DEL now does a proper shutdown, so that the disks are synced
+before rebooting.
+- Removed the exception handler's 'core dump' code, since it wasn't all
+that useful without tracing/debugging facilities.
+- Clicking outside of all of a window's components now removes the focus
+from any focussed component.
+- Fixed: The 'cdrom' program's help page claimed that it will attempt to
+guess the name of the device is not specified, but that hadn't been
+implemented.  It always picked the first cdrom.
+- Fixed: The ATAPI driver was not reliably ejecting CD-ROMs.
+- Fixed: The window manager screenshot code was crashy
+- Fixed: The 'display settings' program's 'show clock on the desktop'
+thing was very crashy.
+- Fixed: The kernelFileStreamClose() function now destroys the stream.
+Previously it didn't do so and was a memory leak.
+- Fixed: The installation program now calculates the required space more
+accurately, and verifies adequate disk space *before* starting the
+installation.
+- Fixed: Extra (second) floppy disks were showing up where they didn't exist
+- Fixed: The disk manager's formatting functionality was crashy
+- Fixed: In graphics mode, the disk manager's action buttons were not being
+laid out properly.
+- Fixed: In graphics mode, the disk name argument of the disk manager didn't
+properly select the disk in the disk list.
+- Fixed: The kernel logger was inserting random characters into the log at
+512-byte boundaries.
+- Fixed: The return value of the library memcmp function.  If comparison
+failed on the first byte, it was returning success (0).
+- Fixed: Partition Magic was complaining about the disk manager's CHS values
+being incorrect.  In particular it wasn't liking our 'maxed out' head and
+sector values when a partition started or ended at a cylinder > 1024.
+- Fixed: When creating new partitions in the disk manager, Partition Magic
+was showing multiple ones as active.
+- Fixed: Dragging an icon was executing the program, as if the icon were
+simply clicked
+- Fixed: Seeking/writing to the end of a file stream was broken.
+- Fixed: Typing during a graphics mode screen scroll left stray cursors on
+the screen and could cause crashes
+- Fixed: When snapping the icons in the root window, the window layout was
+being redone too many times (once for *every* icon that moved).
+- Fixed: The menu bar component was ignoring any user-specified font.
+- Fixed: Window title bar menus are no longer drawn if there are no items
+in them.
+- Fixed: The window canvas component was generating a kernelMemoryRelease
+message about a pointer not being mapped.
+- Fixed: Causing the console text area to scroll while it wasn't visible
+caused a triple-fault.
+- Fixed: The status messages in the graphical install program were wrapping
+off the window.
+- Fixed: If a CD-ROM was a master with a slave, that CD-ROM was not detected.
+If the slave was also a CD-ROM, neither was detected.
+- Fixed: The system was unable to boot from the second CD-ROM device.
+- Fixed: Running the 'install' program with a disk name argument was not
+working
+
+---------------
+Version 0.42
+---------------
+
+  Overview: This is primarily a bugfix release, with some added features
+  including the ability to format partitions from the Disk Manager, plus
+  vertical scroll bars on text areas and visual reimplementation of
+  "greyed out" window components.
+
+- Enabled filesystem formatting functionality in the disk manager.
+- Implemented vertical scroll bars and extended buffers on window text
+area components
+- Improved the 'greying out' functionality in the window manager; it
+didn't look great with the default colors and looked positively silly with
+some other color schemes.
+- Reimplemented the 'hidden' functionality of window text areas so that
+the buffer contains the real content, and the visible area contains the
+asterisks.  The 'get data' function returns the data from the buffer.
+- The window manager now makes more use of the busy mouse pointer
+- Restored window list locking, now that interrupt handlers don't need
+access.
+- Created a new logo for the splash image
+- In the disk manager, there is now a confirmation dialog before moving
+partitions
+- Added a 'get disk by file' function.
+- The 'disk' structures now contain a set of flags to indicate which
+filesystem functions are available from the appropriate driver, if
+applicable.
+- Moved the window event processing out of the execution path of interrupt
+handlers and into the window manager thread
+- Added 'new' and 'destroy' functions for kernelTextAreas
+- Moved icons and fonts into subdirectories under /system
+- Added a way to specify whether a loadable font should be fixed-width
+- Removed instances of 'bzero' calls in the kernel.  We have a much better
+kernelMemClear() function.
+- Added a 'strncasecmp' C library function
+- Simplified the management of 'kernelFilesystem' structures in the
+filesystem code.
+- The graphics code (main, framebuffer driver, and window manager and
+friends) now uses ints instead of unsigneds for widths and heights
+- Moved the font argument from some window components into the
+componentParameters structure
+- Fixed: Setting the widest item in a GUI menu to not enabled caused a bit
+of the menu border to get greyed out as well.
+- Fixed: State changes in the disk manager's disk and partition lists caused
+by key events were not being handled properly.
+- Fixed: In the User Manager, when adding a new user, if the user already
+existed the program would still prompt for a password.
+- Fixed: In 16-bit video mode, window titles were not displaying proper
+transparency
+- Fixed: The size/drawing of the items in list components was slightly off.
+- Fixed: If fonts or icons are missing, there's a panic
+- Fixed: The text mode console driver was not scrolling properly when
+printing long lines.  The next line would overwrite the wrapped part of the
+previous one.
+
+---------------
+Version 0.41
+---------------
+
+  Overview: This is primarily a bugfix release, with some added features
+  including the ability to move partitions, a configuration editor, and a
+  keymap editor.  There are also a number of small tweaks to graphical
+  components and GUI user settings.
+
+- The disk manager can now move partitions in contiguous space (i.e. it can
+'slide' them from side to side)
+- Created a 'configuration editor' for editing configuration files
+- Created a 'keymap editor' for choosing keyboard layout.
+- In the Disk Manager, clicking on a colored slice in the canvas area now
+selects the partition
+- Added a 'color chooser' window library dialog box
+- The window shell thread now loads programs automatically based on things
+specified in the window manager config file.
+- Added a pretty xterm font (modified from the xterm program under Linux).
+- Made it possible to set the default foreground, background, and desktop
+colors for all graphics operations in the kernel.conf file.
+- Added a 'show clock on desktop' checkbox to the display properties app with
+an accompanying clock app.
+- Implemented right and middle mouse click events.
+- The radio button GUI widget will now accept focus and allow keyboard
+control
+- In the Disk Manager, when a new partition is created, it is now selected
+afterward.
+- When copying disks in the disk manager, added a better prompt dialog
+to ask which disk to copy to, with a clickable list instead of a typing
+prompt, and it doesn't prompt about which disk to copy to if there's only
+one other choice
+- Made the 'scroll bar' GUI widget available from user space
+- Calling 'set selected' with GUI list widgets now scrolls the list if
+necessary so that the selected one is visible.
+- The window manager no longer re-saves its config file at shutdown
+- Added a 'cancel' button to the 'copy disk' dialog of the disk manager
+- Mouse dragging events now filter down to the user space via the event stream.
+- Added a 'kill by name' function to the multitasker.
+- Added a 'focus' routine to the menu widget, so that when the menu will
+disappear itself if it loses the focus
+- Made a more friendly error message for the help command when there is not
+a help file for the topic.
+- Fixed: In 15-bit graphics modes, the colors were all wrong.
+- Fixed: The window list component was not responding very accurately to
+movements of the vertical slider, the slider was picking up both up-and-down
+mouse clicks, and dragging wasn't all that perfect either.
+- Fixed: It was possible to resize a window down to nothing (or less than
+nothing!!).
+- Fixed: The mouse pointer was leaving tracers when dragging or resizing
+windows, or dragging icons
+- Fixed: Compilation failed on SuSE 9, with gcc 3.3.3 and (more importantly)
+whatever GNU ld comes with it.
+- Fixed: It wasn't possible to hide a GUI component if they had the focus.
+- Fixed: The format command stopped accepting a lone disk name argument
+- Fixed: The framebuffer graphic driver was not drawing any part of outlined
+rectangles if part of the rectangle was off the screen.
+- Fixed: Resizing list components was not resizing the subcomponent list
+items
+- Fixed: Multiple buttons inside a container component were not picking up
+window events.
+- Fixed: The arial bold 10 font's equals ('=') sign was a plus ('+')
+- Fixed: Pressing CTRL-ALT-DELETE in graphics mode produced a panic with
+'can't yield() in interrupt handler'
+
+---------------
+Version 0.4
+---------------
+
+  Overview: This release features a number of graphical interface
+  improvements, including several new GUI widgets and "newbie" usability
+  tweaks.  The 'install' and 'disk manager' programs have been properly
+  GUI-enabled, and this release also adds user authentication with MD5
+  password encryption.
+
+- Implemented the following GUI widgets:
+checkbox, radio button, menu bar (plus menu, and menu item), progress bar,
+canvas, scroll bar, list (plus list item), and password field
+- Implemented 'container' components which can be nested arbitrarily,
+and have their layout done individually.  Added a top level 'container'
+component to the window structure and removed the simple list of components.
+- When running from a CD-ROM or other read-only filesystem, there is now
+an general warning that the user can't modify settings or change anything
+generally.
+- The OS loader now gives the kernel a list of supported graphics
+resolutions/depths that are supported, and there is user preference for
+choosing the mode, which the OS loader now reads from a file.
+- Improved the hardware structure in the OS loader so that it makes use of
+NASM's STRUCT directive
+- Added text-mode password prompting code to the vsh library
+- Exported locking and variable list functionality to user space.
+- The 'configuration reader/writer' code is more sophisticated, so that it
+preserves comment lines (if replacing an existing config file)
+- Updated the install image generation scripts, and fixed the naming of the
+generated images
+- Created a new background image that isn't so 'busy'.  Removed the old ones.
+- The 'start program' loaded by the kernel is now specified dynamically in
+a file, and added an 'image boot' program to be loaded first when booting
+from an ISO or floppy  image distribution that will prompt the user whether
+they want to install, or simply run from that image.
+- In the vsh, you no longer need to put a space between the last command
+argument and any ampersand
+- Implemented Bresenham's lines and circles algorithms in the framebuffer
+graphic driver.
+- Both the native installer and the UNIX installation scripts now use
+file lists and include options to do a 'basic' versus 'full' install.
+- The FAT filesystem driver no longer calculates the filesystem free space
+asynchronously.  Previously, this meant that an application could not know
+how long to wait before it could begin writing to a freshly-mounted
+filesystem.
+- Graphicized both the 'install' and 'disk manager' programs
+- After copying a larger disk to a smaller one in the disk manager, we now
+go through the entries in the partition table and adjust them so that none
+have illegal values.  That means, for example, deleting or truncating
+partitions that don't fit on the smaller disk.
+- Added a 'cursoring' effect to the text mode disk manager, since it
+makes the flow better (not required to type partition numbers, etc.), and
+which means that a partition or empty space is always selected, which fits
+better with the graphics mode use model.
+- The disk manager program now saves disk-specific backup MBRs in the
+/system/boot directory
+- The window manager thread now checks that windows' processes are still
+alive, so that it doesn't require a mouse click to dispose of the window.
+Also, if the window manager thread dies it is now restarted
+- 'Visopsys blue' is now the default foreground color for most GUI
+components (rather than black).
+- Removed the start window and replaced it with a simple splash image
+- Changed remaining 'csh' scripts to 'sh' and removed the unused stuff
+from the /utils/src-mgmt directory
+- Rearranges the source code directory structure and build system a little
+bit, so that there is a top-level 'build' directory which contains all the
+installable stuff in the correct places.  This allowed the installer to be
+a lot simpler and facilitated the implementation of installation file lists.
+- Implemented a 'getopt' library function and converted the contents of
+the 'programs' directory to use it.
+- Added a 'window shell' thread which is the new user login process
+in graphics mode, and which handles events on components in the root window.
+- Added 'delete user' functionality to both the kernelUser code and the
+'user manager' program.
+- Added a 'passwd' command that shows as a 'user manager' in the GUI, that
+can be used to change passwords and create/delete accounts.
+- Separated the source files for the different libraries into
+subdirectories, and broke out the libvsh and libwindow code into separate
+source files to reduce executable sizes.
+- Added a 'file selection' dialog box into the window lib.
+- Font printing by default draws the background color under the character.
+Transparent images are still an option.
+- Added a 'flags' field to the kernelWindow structure, since there were a
+few booleans and it's a waste of space to make them all ints.
+- Vsh file completion now works like bash when there's only one
+'real' item in a directory -- complete it with just a [tab]
+- Made it possible to click between multiple text areas in window
+- Added user authentication to the login program
+- Improved handling of width specifiers for 'printf' number parameters.
+- Added an MD5 encryption implementation
+- A commands is no longer added to the vsh history if it's the same as the
+previous one
+- The keyboard code now reads the lights status at startup so that it
+doesn't reset them improperly.  Also, numlock works.
+- Implemented enable/disable functionality for GUI components.
+- Implemented a 'set visible' function for components
+- Implemented 'set disabled' functionality for window menu items
+- Added 'resizable X' and 'resizable Y' fields in the component parameter
+structure, and only resize components appropriately
+- Simplified the process of adding components to windows, so that you only
+have to call the 'new' function, with the component parameters, and it will
+be added to the window automatically.
+- Removed the 'size' parameters from the 'button' component constructor
+- Implemented the 'get data' and 'set data' methods of text label
+components, so that the label contents can be dynamic.
+- Added a window component flag that will prevent a [tab] from unfocusing
+certain components.
+- Removed the coordinate and size parameters from the "new window"
+function of the window manager.  The window size is determined automatically
+unless the "set size" function is called.
+- Window layout happens automatically.  The programmer no longer has to do
+this explicitly.
+- Added resizing capability to the windows in the window manager.
+- Window buttons are now focusable and can handle various keyboard events
+- Implemented proper 'focussing' of window components
+- Added a function for getting the contents of a text field or text area
+component in the window manager
+- The window close button no longer uses the little 'X' image file,
+but rather draws its own 'X' using the new bresenham line drawing abilities.
+- Changed the 'shutdown' program so that in graphics mode it prompts for
+a reboot or shutdown
+- Added a better 'install' icon.
+- Added a GPL banner to the image boot program
+- Disabled the left-right cursor keys in the vsh, as they tend to make
+people think they can do line editing (which they can't, yet).
+- Fixed: If the screen dimensions are too small to accommodate a window, it
+doesn't appear at all.
+- Fixed: Pressing CTRL-ALT-DELETE in graphics mode produces a panic with
+'can't yield() in interrupt handler'
+- Fixed: The 'screenshot' program was crashing when attempting to write to
+read-only filesystems.
+- Fixed: If the floppy was removed while the boot loader was loading the
+kernel, it was going into long retry loops
+- Fixed: File input streams were horribly broken in the ISO9660 filesystem
+driver.  Before the fix they would only read the first sector.
+- Fixed: argv[0] was not being set by the loader code.  It was only being
+set explicitly by the vsh when programs are executed, which it shouldn't do
+at all.
+- Fixed: The arrangement of icons in the root window so that they wrap
+into the next column when they hit the bottom of the screen
+- Fixed: There was trouble (triple-fault) drawing outline (non-filled)
+rectangles in the framebuffer graphic driver, if they were partially off
+the edges of the screen
+- Fixed: The ELF loader was not allocting enough memory for the uninitialized
+data that executables might require.
+- Fixed: The free spaces calculation in the disk manager was incorrect,
+particularly when there was only one partition that didn't start at zero
+- Fixed: "component cannot focus" error messages when clicking on icon
+components
+- Fixed: When booting from the hard disk , the opening of the kernel log
+file often failed with a "not enough space" message.
+- Fixed: In text mode, the login process was not properly setting supervisor
+privilege for the 'admin' user
+- Fixed: When windows were dragged, the focus was lost from the focused
+component.
+- Fixed: Text fields were coming up with their cursors on by default.
+- Fixed: The kernel.log file was not being updated/written correctly.
+- Fixed: The fileWrite routine was not behaving as expected when writing a
+single-block file.  The file size was zero, even though the file was written
+and closed properly
+- Fixed: When writing a file using the file stream functions, there was
+a newline inserted at the beginning of a file.
+
+---------------
+Version 0.33
+---------------
+
+  Overview: This is primarily a bugfix release, with bootable CD-ROM support
+added as a new feature.
+
+- Added bootable ISO9660 (el-torito) CD-ROM support.
+- The 'no boot' boot sector code no longer reboots the system, but instead
+properly calls the next boot option
+- Fixed: Spurious error messages when booting from a read-only file system.
+- Fixed the kernel heap allocation code, which was losing and corrupting
+blocks of memory, and leaving small, odd-sized gaps of unused memory.
+- Polished up the scripts for creating floppy & CD-ROM images
+- Fixed: No longer attempt to recalibrate ATAPI disks.
+- If a CD-ROM read fails because there is no disk, the driver no longer
+leaves the number of sectors at zero, since that will stop all subsequent
+read attempts
+- The CD-ROM driver code can determine more elegantly whether there is a data
+CD in the drive and if not, print a friendly error message.
+
+---------------
+Version 0.32
+---------------
+
+  Overview: This is primarily a bugfix release, with CD-ROM and ISO9660
+  filesystem support added as new (alpha) features.
+
+- Added (multi-session capable) CD-ROM driver code
+- Fixed: The 'date' command day of the week was wrong.
+- Created a set of help text files for all of the commands, in a
+  /programs/helpfiles subdirectory.  The 'help' command is now an executable
+  which can provide command-specific help.
+- The 'vsh' shell now has a '-c' option so that it can be used to execute
+  commands, non-interactively.
+- Added a 'system' Visopsys C library function
+- Added a 'driver data' field in the physical disk object, so that the
+  different drivers can store device-specific data there.  Implemented the
+  floppy driver's 'detect' and 'register device' routines to remove some of
+  the floppy-specific stuff from the hardware detection code.
+- The 'mount' and 'umount' commands will now accept relative pathnames
+- Added an ISO9660 filesystem driver
+- Eliminated spurious floppy timeout error messages when booting from hard
+  disks.
+- Fixed: Unknown floppy drive types were causing hardware detection (and
+  therefore the whole startup) to fail.
+
+---------------
+Version 0.31
+---------------
+
+  Overview: This is primarily a bugfix release, with EXT2 filesystem support
+  added as a new (alpha) feature.
+
+- Implemented a preliminary, alpha, read-only EXT2 filesystem driver
+- The libraries and (non-kernel) include files have been relicensed under
+  the GNU LGPL to permit use by proprietary programs
+- The IDE/ATA/ATAPI driver was not responding to disks on the secondary
+  controller.
+- Fixed: The 'cat' program wasn't printing tabs properly the way the 'more'
+  program does.
+- Fixed: kernelMalloc allocations were not necessarily being done on any
+  boundaries.  It is now done on sizeof(unsigned) (dword) boundaries.
+- Added a *very* basic 'find' program which only traverses whole directory
+  trees.  Initially to aid in development of new filesystems
+
+---------------
+Version 0.3
+---------------
+
+  Overview: This release is very much an "under the hood" release.  The
+  user interaction is similar to that of 0.2, but a great deal of work
+  has gone into improving the structure, performance, and stability of the
+  underlying code -- particularly the disk subsystem.  However, some eye
+  candy has been added, and the GUI is more functional and consistent.
+
+- A thread of a process can now kill the parent process.
+- Created a multitasker 'detach' function for daemons or other programs
+  to use to detach themselves from any programs that might be blocking on
+  them.
+- Fixed: Windows wasn't entirely happy with our FAT short filename aliases.
+  Complained about the format of the short name of
+  "/system/boot/bootsect.fatnoboot"
+- Changed the naming of the kernel window components (removed the'component'
+  bit from the names)
+- Fixed: File completions were completing things they shouldn't; i.e. when
+  you "cd system; ls b[tab]" it completed "background" but there's a "boot"
+  directory as well.
+- The window manager thread is now the login process for a user when in
+  graphics mode, rather than a text shell running in a console window.
+- Reduced the stack sizes of processes.  They shouldn't need nearly as much
+  (260K) as they were being given.
+- Removed all the 'binary distribution' stuff (the Java installer,
+  shell scripts, readmes, etc).  We will only do binary distributions as
+  floppy or ISO images from now on.
+- The console window is no longer shown by default.  Added a program and
+  icon ('console') to display it and handle the window events, etc.  Added
+  external API functions to put a console widget into a user program.
+- Changed the error reporting interface for the disk drivers.  Removed
+  the 'last error message' and 'last error code' functions -- these were
+  leftovers from the days of ASM drivers that couldn't use the normal error
+  reporting mechanisms.
+- Fixed: The mouse was not being redrawn when windows close themselves.
+- Implemented 'levels' for GUI components within a window, in the same
+  manner as windows have levels.  This way if components overlap, we can
+  only send windowEvents to the uppermost one.
+- Sped up the scrolling of graphics text areas.  Now only scroll as much of
+  the width of the area as the longest line of contents.
+- Fixed up the framebuffer graphic driver a little bit more so that it draws
+  most efficiently for the bit depth it's using.
+- Implemented kernel versions of malloc() and free() so that we're not always
+  wasting whole pages of memory for small things.
+- Added shutdown and reboot buttons to the login screen in graphics mode.
+- Implemented text labels on kernelWindowButton components, with selectable
+  font.
+- Fixed: Window layout problems.  Attempting to add reboot and shutdown
+  buttons to the login screen, I discovered that setting the components
+  gridWidth parameters to 2 causes a crash.  In addition, when I incorrectly
+  left the gridWidth at 1 and attempted to add the 2 buttons below (using 2
+  grid places) they were erroneously placed on the line above, and the
+  other widgets got squashed together.
+- Added an event notification callback mechanism for user programs that
+  use the GUI.  When a user performs a GUI action, such as clicking a
+  button, the user application can now read that event from the component.
+- As a supplement to this, implmented user-mode library code for monitoring
+  window component event queues.  It includes a "GUI run" function that
+  signals the application is ready to begin monitoring its widgets for
+  events, after all its setup is done.  The rest of the flow can be driven
+  by callbacks from events.  All of the included programs have been converted
+  to use these features.
+- Added a logout procedure for the window manager (rather than having to
+  log out by hand from the console window)
+- Implemented a better "kernel panic" routine that displays something
+  useful in either text or graphics mode and shuts things down quickly.
+- Interrupt handlers and their actions are no longer allowed to yield(),
+  wait(), block(), etc.
+- Fixed: Moving the mouse in text mode is disrupting keyboard input
+- The fdisk program will save a backup copy of the MBR before writing changes,
+  and provides an option to restore it.
+- The graphic/text console drivers, as well as the FAT filesystem driver,
+  have abstracted driver registration procedures like the hardware drivers do.
+- The API calls in kernelApi.c are now 'hashed' according to their function
+  number, for faster API throughput.
+- Added a routine to the generic disk code for reading the disks'
+  partition tables (instead of in the hardware enumeration code).  It is
+  be re-callable anytime so that programs like fdisk can create/delete
+  partitions and have the change be reflected immediately in the list of
+  logical disks.
+- Cleaned up the management of the kernel's built-in drivers.  The drivers
+  now have an 'init' that registers the driver structure with the kernel, so
+  that the kernelDriverManagement code doesn't have to have all the functions
+  hard-coded in there.
+- Disk caches are invalidated when removable media is unmounted.
+- The boot sector and the OS loader can now boot from a cylinder > 1024.
+- Large disk geometries are now correctly evaluated by the hardware detection
+  code and by the fdisk program.
+- Created a 'non-bootable' FAT boot sector, that the formatting code uses
+  to make non-system FAT volumes
+- When files are copied, the sizes are now being set correctly.
+- The new floppy driver C code no longer freezes up the computer if you remove
+  the media unexpectedly.
+- Hardware enumeration and fdisk no longer fail when there is no partition
+  table on the hard disk
+- FAT filesystem root directories now have '.' entries (and '..' entries
+  when they're not '/')
+- Removing the last file in a directory (for example, in the root of a
+  filesystem) no longer produces an error message.
+- Fixed up the filesystem driver stuff, so that there is only one instance
+  of each driver of each known type
+- In the FAT filesystem driver, file names that start with '.' were listed,
+  but could not be created or accessed.  This is fixed.
+- Implmented FAT filesystem driver formatting functionality
+- Improved the fdisk program so that it can do most common operations
+- When there are no files in a directory, 'ls' no longer prints an error
+  message.
+- When doing disk reads, we now do read-ahead caching
+- The kernel is now able to handle operation from a read-only or write-
+  protected media without spewing errors and getting panicky.
+- kernelLocks are now exclusive even to the same process.  i.e. If a
+  process owns a lock, calling kernelLockGet() a second time fails.
+- Added a UK English keyboard mapping
+- The disk code should launches a new 'synchronizer' thread if the existing
+  one dies.
+- The exception handler tries to do a stack dump when an exception occurs.
+- The filesystem code is now correctly updating FAT short filename aliases
+  when files are moved.
+- Updated the loader code that searches for a valid video mode.  It now
+  searches for *any* LFB video mode first, and reports an error to that effect
+  if it finds none.  That is a different scenario than not finding a 'desired'
+  video mode.
+- Added LFB graphic driver support for bit depths of 32, 16, and 15 BPP.
+- Remove the FAT sector caching from the FAT filesystem driver.
+- Changed the filesystem synchronizer so that it is now a *disk* daemon
+  that simply turns removable drives' motors off.
+- Implemented proper asynchronous disk caching.
+- Kernel symbols to aid debugging, in the /system/kernelSymbols.txt file,
+  which is read at startup and used for stack traces and whatnot.
+- Converted all built-in drivers from ASM to C, with inline ASM in a
+  processor-specific header file.  This makes it easier for them to use the C
+  data structures, etc., for better integration with the rest of the kernel.
+  THERE IS NO LONGER ANY NASM ASSEMBLY CODE IN THE KERNEL.  Woo!
+- Changed 'root' user to 'admin' user -- something less geeky/UNIXy.
+- The kernelDisk structure is broken up into physical objects and logical
+  disks (volumes, i.e. hard disk partitions, but every physical disk has at
+  least one logical disk).  The disk cache, 'idle since' value, physical
+  characteristics, etc., are in the physical disk.  Things like starting
+  sector, number of sectors, etc., are in the logical disk structure.  The
+  physical disk structure contains the logical ones.
+- Added some memory manager macros so that each memory block request
+  doesn't require an alignment specification (only where desired)
+- Fixed: rm system/windowmanager.conf ; sync   ...Errors in the filesystem.
+- The window icon code is better able to deal with long icon names.
+  Previously it printed the whole name on one long line.
+- When a user logs out of the window manager, all windows belonging to
+  that user are destroyed
+- Fixed: Mouse driver initialization was sometimes causing the boot sequence
+  to 'hang' a little bit -- wiggling the mouse or pressing keys was required
+  to continue
+- The kernel log utility was losing some log messages that come early in the
+  boot process, before the root filesystem is mounted.
+- Change start.o (.c) to crt0.o for more UNIX C compatibility.
+- Fixed: When running a command window, all the shell processes suddenly
+  start hogging CPU.  Was a case of 2 'ready' processes constantly yield()ing
+  to one another.  Changed the scheduler so that a process will get a low
+  weight if it has yielded that timeslice before (a little different from the
+  previous algorithm)
+
+---------------
+Version 0.2
+---------------
+
+  Overview: This release was a huge leap ahead from version 0.1 (and
+  it took a long time, too).  This release added a basic GUI, whereas
+  version 0.1 was text-mode only.  Really, the list of changes below is
+  very incomplete -- Especially in listing new features.
+
+- Fixed: When rebooting from other operating systems such as Windows or
+  Linux, Visopsys would triple-fault.  Clearing the page cache seems to do
+  the trick.  Also changed the way page caching is done.  Turned off write-
+  through which improved the performance of the graphics as well.
+- Updated the shell 'help' text.
+- Fixed: Can't move/copy a file over top of another by the same name in a
+  different location unless you specify the destination filename explicitly
+  (i.e. if you just specify the directory, it fails)
+- When using the 'more' program, pressing [enter] to list a new line no
+  longer leaves the "--More--(xx%)--" message on the screen
+- When a process has finished but is waiting for its child threads to
+  terminate (i.e. mount), any process that is blocking on that process
+  now stops waiting.
+- Fixed: Crashes when running the 'install' program, and other types of long
+  disk writes.  When this happened under the old exception handler, the
+  handler used to go into an endless loop complaining about an exception in
+  the idle process.  This was the fault of the 'timed event scheduler'.
+  Got rid of that.
+- Fixed: The floppy motor was staying on all the time on many machines
+- Fixed: The FAT filesystem code was not properly filling all long filenames.
+  They were cut off after some number of characters.
+- Fixed: When in the multitasker the killing of a process is delayed because
+  of child threads, the process never seems to be killed when the children
+  have all terminated.  For example, when you mount a large FAT filesystem
+  (C:), the thread that reads the FAT keeps the "mount" process alive,
+  waiting, forever.
+- Fixed: When pushing some of the "non-printable" keys such as 'num lock'
+  and then doing command history, the shell was backing up by one character
+  before completing the filename.
+- Added support for non-fixed-width fonts in the kernelFont functions.
+- Added support for loading fonts.  The system font looks lame on titles
+  and whatnot, particularly on the login screen.
+- The login is now a little more meaningful in graphics mode.  Previously,
+  a console window would open with a login: prompt, but the user could
+  happily start opening other command windows and such, and ignore the login
+  (unless they wanted root permissions).
+- Added loading support for 24-bit bitmaps.  We already saved in that format.
+- Fixed: Umounting a filesystem was not properly dereferencing either the
+  filesystem or the disk.  Couldn't mount->unmount->mount the same disk.
+- Changed the shell to do filename completions on the same line as the
+  current line, rather than starting on the next line.
+- Implemented multiple text output streams, with the text input stream
+  changing to the active window, so that we can have multiple text windows
+  open at the same time
+- Implmented the FAT filesystem driver checking functionality [It's very
+  primitive, but it does detect and fix some errors]
+- Moved the exception handler code into the multitasker.  It really needs to
+  interact with the multitasker quite a bit.
+- The new exception handler thread was hanging the terminal (breakable with
+  CTRL-C) when the exception message happened at the bottom of the text area
+  and caused the screen to scroll
+- The kernel's exception handler is now a spawned thread with its own stack,
+  etc., so that it doesn't run as part of whatever process caused the
+  exception in the first place.  This helps to prevent the exception handler
+  itself from crashing if things have gone seriously wrong with a process.
+- Adding permission checking to the kernel functions that are be exported to
+  the rest of the world.
+- Fixed: The boot progress indicator was progressing beyond the end of the
+  indicator
+- The 'getchar' routine now does the work of polling/yielding, rather than
+  the programs that call it.
+- Added a basic 'fdisk' program that can do things like swap the active
+  partition on hard disks
+- Fixed: The hard disk enumeration routine was crashing when there was more
+  than one physical disk
+- Added the ability to copy directory trees in the filesystem functions, one
+  level up from the filesystem driver.  Could be a library routine instead
+  someday.
+- Fixed: The 'cp' command was crashing when copying files involving the hard
+  disk
+- Implmented the 'write' function in the IDE disk driver.  Previously it was
+  left out since the filesystem driver is still imperfect.
+- Fixed: Mounting hard disk partitions on my 30GB hard disk was not working.
+  LBA versus CHS issue
+- Fixed: The mouse driver initialization sometimes hung, waiting for a
+  response from the mouse to a command
+- Added ELF executable capability and moved the programs to ELF format
+- Fixed: Incomplete filenames were still having an / appended to them by
+  the shell.
+- The PS2 mouse driver and the keyboard driver now share a lock on the
+  device, since they both deal with the same registers, etc.
+- Fixed: Sometimes an error in another program could cause a fault in the
+  idle process (?!?), then the exception handler routines would get into an
+  endless loop
+- Fixed: When a process created a new process, the unmapping of the new
+  process' memory from the parent process space would sometimes cause a page
+  fault.
+- Fixed: The 'log file updater' thread was been crashing frequently, most
+  often when another process crashed
+- The scheduler no longer spawns a new idle thread while the multitasker is
+  in the process of shutting down.
+- Fixed: The 'date' command was producing wrong results.  The year, dotm,
+  hour, minute, etc., were correct, but the month and dotw were wrong.
+- Fixed: When shortening a filename, one extra character from the old
+  filename got left on the end of the new name.  This was because of strncpy
+  changes.
+- Fixed: There was a little sequencing error in the kernelMemoryManager's
+  share memory routine -- it was deallocating the memory from the sharer
+  process before allocating it to the sharee.
+- Simplified the default driver management.  It was ridiculously
+  overcomplicated.
+- Fixed: The FAT code that lowercases short filenames wasn't lowercasing the
+  file extensions
+- Fixed: Most of the device driver initialization routines were being called
+  twice; once in kernelDriverManagement.c and once in the abstraction layer
+  initialization
+
+---------------
+Version 0.1
+---------------
+
+- Initial public release.

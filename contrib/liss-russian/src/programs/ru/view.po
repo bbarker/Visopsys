@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: view.po\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:13-0300\n"
+"PO-Revision-Date: 2014-07-25 18:13+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: view.c:364
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"Команда \"%s\" работает только в графическом режиме\n"
+
+#: view.c:72
+msgid "Actual size"
+msgstr "Фактический размер"
+
+#: view.c:415
+#, c-format
+msgid "Can't display the file type of \"%s\" (%s)"
+msgstr "Не могу отобразить тип файла \"%s\" (%s)"
+
+#: view.c:103
+#, c-format
+msgid "ERROR: %s\n"
+msgstr "ОШИБКА: %s\n"
+
+#: view.c:382
+msgid "Enter filename"
+msgstr "Введите имя файла"
+
+#: view.c:101
+msgid "Error"
+msgstr "Ошибка"
+
+#: view.c:250
+#, c-format
+msgid "Error loading the image \"%s\"\n"
+msgstr "Ошика при загрузке изображения  \"%s\"\n"
+
+#: view.c:273
+msgid "Image"
+msgstr "Изображение"
+
+#: view.c:243
+msgid "Loading"
+msgstr "Загрузка"
+
+#: view.c:243
+msgid "Loading image..."
+msgstr "Загрузка изображения..."
+
+#: view.c:382
+msgid "Please choose the file to view:"
+msgstr "Выберите файл для просмотра:"
+
+#: view.c:399
+#, c-format
+msgid "The file \"%s\" was not found"
+msgstr "Файл  \"%s\" не найден"
+
+#: view.c:408
+#, c-format
+msgid "Unable to classify the file \"%s\""
+msgstr "Невозможно классифицировать файл \"%s\""
+
+#: view.c:307
+#, c-format
+msgid "Unable to load the file \"%s\"\n"
+msgstr "Невозможно загрузить файл \"%s\"\n"
+
+#: view.c:253
+#, c-format
+msgid "Unable to load the image \"%s\"\n"
+msgstr "Невозможно загрузить изображение \"%s\"\n"
+
+#: view.c:70
+msgid "Zoom in"
+msgstr "Увеличение"
+
+#: view.c:71
+msgid "Zoom out"
+msgstr "Уменьшение"

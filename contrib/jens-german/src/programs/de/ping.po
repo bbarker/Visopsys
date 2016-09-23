@@ -1,0 +1,95 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 01:37+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ping.c:402
+#, c-format
+msgid ""
+"\n"
+"--- %d.%d.%d.%d ping statistics ---\n"
+msgstr ""
+"\n"
+"--- %d.%d.%d.%d Ping-Statistiken ---\n"
+
+#: ping.c:160
+#, c-format
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
+msgstr "%d Byte von %d.%d.%d.%d: icmp_seq=%d ttl=%d Zeit=X ms\n"
+
+#: ping.c:404
+#, c-format
+msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
+msgstr "%d Pakete übertragen, %d empfangen, %d%% verloren, Zeit Xms\n"
+
+#: ping.c:288
+msgid "Enter Address"
+msgstr "Addresse angeben"
+
+#: ping.c:289
+msgid "Enter the network address to ping:"
+msgstr "Geben Sie die Netzwerkadresse ein an die ein Ping geschickt werden soll:"
+
+#: ping.c:84
+msgid "Error"
+msgstr "Fehler"
+
+#: ping.c:344
+msgid "Error opening network connection"
+msgstr "Fehler beim öffnen der Netzwerkverbindung"
+
+#: ping.c:384
+msgid "Error pinging host"
+msgstr "Fehler beim anpingen des Hosts"
+
+#: ping.c:362
+msgid "Error setting signal handler"
+msgstr "Fehler beim setzen des Signal-Handlers"
+
+#: ping.c:375
+msgid "Error starting response thread"
+msgstr "Fehler beim starten des Antwort-Eintrages"
+
+#: ping.c:325
+msgid "Memory allocation error"
+msgstr "Fehler bei der Speicherverteilung"
+
+#: ping.c:272
+msgid "Networking is not currently enabled"
+msgstr "Das Arbeiten im Netzwerk ist derzeit nicht aktiviert"
+
+#: ping.c:193
+msgid "Ping"
+msgstr "Ping"
+
+#: ping.c:348
+#, c-format
+msgid "Ping %d.%d.%d.%d %d bytes of data\n"
+msgstr "Ping %d.%d.%d.%d %d Byte an Daten\n"
+
+#: ping.c:226
+msgid "Stop"
+msgstr "Stopp"
+
+#: ping.c:92
+#, c-format
+msgid ""
+"usage:\n"
+"%s [-T] <address | hostname>\n"
+msgstr ""
+"Benutzung:\n"
+"%s [-T] <address | hostname>\n"

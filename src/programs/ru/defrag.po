@@ -1,0 +1,165 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: defrag\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: 2015-05-08 01:45+0700\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: defrag.c:75
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: defrag.c:104
+msgid ""
+"\n"
+"Press any key to continue. "
+msgstr ""
+"\n"
+"Нажмите любую клавишу. "
+
+#: defrag.c:127
+msgid "Error"
+msgstr "Ошибка"
+
+#: defrag.c:153
+msgid "Please choose the disk to defragment:"
+msgstr ""
+
+#: defrag.c:173
+msgid "Choose Disk"
+msgstr "Выберите диск"
+
+#: defrag.c:188
+msgid "OK"
+msgstr "ОК"
+
+#: defrag.c:192 defrag.c:260
+msgid "Cancel"
+msgstr "Отмена"
+
+#: defrag.c:254
+#, c-format
+msgid ""
+"The disk is mounted as %s.  It is STRONGLY recommended\n"
+"that you unmount before continuing"
+msgstr ""
+"Диск подключен как %s.  НАСТОЯТЕЛЬНО рекомендуем\n"
+"отключить его перед тем как продолжить"
+
+#: defrag.c:259
+msgid "Disk is mounted"
+msgstr "Диск подключен"
+
+#: defrag.c:260
+msgid "Ignore"
+msgstr "Игнорировать"
+
+#: defrag.c:260
+msgid "Unmount"
+msgstr "Отключить"
+
+#: defrag.c:263
+#, c-format
+msgid ""
+"\n"
+"%s (I)gnore/(U)nmount/(C)ancel?: "
+msgstr ""
+"\n"
+"%s (I)игнорировать/(U)отключить/(C)отмена?: "
+
+#: defrag.c:272
+msgid "Ignore\n"
+msgstr "Игнорировать\n"
+
+#: defrag.c:278
+msgid "Unmount\n"
+msgstr "Отключить\n"
+
+#: defrag.c:284
+msgid "Cancel\n"
+msgstr "Отмена\n"
+
+#: defrag.c:303
+#, c-format
+msgid "Unable to unmount %s"
+msgstr "Невозможно отключить %s"
+
+#: defrag.c:344
+#, c-format
+msgid "Unknown option '%c'"
+msgstr ""
+
+#: defrag.c:356
+msgid "Error getting disks info"
+msgstr "Ошибка получения информации о диске"
+
+#: defrag.c:362
+msgid ""
+"\n"
+"Visopsys DEFRAG Utility\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+msgstr ""
+"\n"
+"Visopsys DEFRAG Utility\n"
+"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+
+#: defrag.c:384
+msgid ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+msgstr ""
+"You must be a privileged user to use this command.\n"
+"(Try logging in as user \"admin\")"
+
+#: defrag.c:411
+#, c-format
+msgid "Unknown filesystem type on disk \"%s\""
+msgstr "Неизвестная ФС на диске \"%s\""
+
+#: defrag.c:421
+#, c-format
+msgid "Error getting info for disk \"%s\""
+msgstr "Ошибка получения информации для диска  \"%s\" "
+
+#: defrag.c:430
+#, c-format
+msgid "Defragmenting the filesystem type \"%s\" is not supported"
+msgstr "Дефрагментируемая ФС  \"%s\" не поддерживается"
+
+#: defrag.c:437
+#, c-format
+msgid "Defragmenting disk %s.  Are you sure?"
+msgstr "Дефрагментируем диск %s. Уверены?"
+
+#: defrag.c:441
+msgid ""
+"\n"
+"Quitting.\n"
+msgstr ""
+"\n"
+"Выходим.\n"
+
+#: defrag.c:453
+msgid "Defragmenting..."
+msgstr "Дефрагментируем..."
+
+#: defrag.c:465
+msgid "Defragmentation complete"
+msgstr "Дефрагментация выполнена"
+
+#: defrag.c:467
+msgid "Success"
+msgstr "Успех"

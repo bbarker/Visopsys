@@ -1,0 +1,47 @@
+
+ -- format --
+
+This command will create a new, empty filesystem.
+
+Usage:
+  format [-l] [-n name] [-s] [-t type] [-T] [disk_name]
+
+The 'format' program is interactive, and operates in both text and graphics
+mode.  The -l option forces a 'long' format (if supported), which clears the
+entire data area of the filesystem.  The -n option sets the volume name
+(label).  The -s option forces 'silent' mode (i.e. no unnecessary output
+or status messages are printed/displayed).  The -T option forces format to
+operate in text-only mode.
+
+The -t option is the desired filesystem type.  Currently the default type,
+if none is specified, is FAT.  The names of supported filesystem types are
+dependent upon the names allowed by particular filesystem drivers.  For
+example, the FAT filesystem driver will accept the generic type name 'fat',
+in which case it will then choose the most appropriate FAT subtype for the
+size of the disk.  Otherwise it will accept the explicit subtypes 'fat12',
+'fat16' or 'fat32'.  Other filesystem types can be expected to exhibit the
+same sorts of behaviour as they are developed.
+
+Some currently-supported arguments to the -t option are:
+
+  none        : Erases all known filesystem types
+  fat         : DOS/Windows FAT
+    fat12     : 12-bit FAT
+    fat16     : 16-bit FAT
+    fat32     : 32-bit FAT, or VFAT
+  ext         : Linux EXT
+    ext2      : Linux EXT2 (EXT3 not yet supported)
+  linux-swap  : Linux swap
+  ntfs        : Windows NTFS
+
+The third (optional) parameter is the name of a (logical) disk to format
+(use the 'disks' command to list the disks).  A format can only proceed if
+the driver for the requested filesystem type supports this functionality.
+
+Options:
+-l         : Long format
+-n <name>  : Set the volume name (label)
+-s         : Silent mode
+-t <type>  : Format as this filesystem type.
+-T         : Force text mode operation
+

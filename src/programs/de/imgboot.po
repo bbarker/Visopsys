@@ -1,0 +1,174 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: 2014-01-22 17:25-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: imgboot.c:60
+#, c-format
+msgid "Welcome to %s"
+msgstr "Wilkommen zu %s"
+
+#: imgboot.c:61
+msgid "Copyright (C) 1998-2016 J. Andrew McLaughlin"
+msgstr "Copyright (C) 1998-2016 J. Andrew McLaughlin"
+
+#: imgboot.c:63
+#, fuzzy
+msgid ""
+"  This program is free software; you can redistribute it and/or modify it\n"
+"  under the terms of the GNU General Public License as published by the\n"
+"  Free Software Foundation; either version 2 of the License, or (at your\n"
+"  option) any later version.\n"
+"\n"
+"  This program is distributed in the hope that it will be useful, but\n"
+"  WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"  the file /system/COPYING.txt for more details."
+msgstr ""
+"  This program is free software; you can redistribute it and/or modify it  \n"
+"  under the terms of the GNU General Public License as published by the\n"
+"  Free Software Foundation; either version 2 of the License, or (at your\n"
+"  option) any later version.\n"
+"\n"
+"  This program is distributed in the hope that it will be useful, but\n"
+"  WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
+"  the file /system/COPYING.txt for more details."
+
+#: imgboot.c:71
+msgid ""
+"Would you like to install Visopsys?\n"
+"(Choose continue to skip installing)"
+msgstr ""
+"Wollen Sie Visopsys installieren?\n"
+"(Wählen Sie Fortfahren wenn nicht)"
+
+#: imgboot.c:73
+msgid "Install"
+msgstr "Installieren"
+
+#: imgboot.c:74 imgboot.c:204
+msgid "Continue"
+msgstr "Weiter"
+
+#: imgboot.c:75
+msgid "Language"
+msgstr ""
+
+#: imgboot.c:76
+msgid "Don't ask me this again"
+msgstr "Frage mich nicht wieder"
+
+#: imgboot.c:84
+msgid "Would you like to reboot now?"
+msgstr "Wollen Sie jetzt neu starten?"
+
+#: imgboot.c:85
+msgid ""
+"Using the administrator account 'admin'.\n"
+"There is no password set."
+msgstr ""
+"Benutze das 'admin' - Administratorkonto.\n"
+"Kein Passwort konfiguriert."
+
+#: imgboot.c:160
+msgid "Error"
+msgstr "Fehler"
+
+#: imgboot.c:162
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"FEHLER: %s\n"
+"\n"
+
+#: imgboot.c:185
+#, c-format
+msgid "%s  Quitting."
+msgstr "%s  Schliesse."
+
+#: imgboot.c:203
+msgid "Reboot?"
+msgstr "Neu starten?"
+
+#: imgboot.c:204
+msgid "Reboot"
+msgstr "Neu starten"
+
+#: imgboot.c:213
+#, c-format
+msgid ""
+"\n"
+"%s (y/n): "
+msgstr ""
+"\n"
+"%s (y/n): "
+
+#: imgboot.c:222
+msgid "Yes\n"
+msgstr "Ja\n"
+
+#: imgboot.c:228
+msgid "No\n"
+msgstr "Nein\n"
+
+#: imgboot.c:438
+msgid "Can't create window!"
+msgstr "Fenster kann nicht erstellt werden!"
+
+#: imgboot.c:558
+msgid "o Install                    "
+msgstr "o Installieren"
+
+#: imgboot.c:559
+msgid "o Continue                   "
+msgstr "o Fortfahren"
+
+#: imgboot.c:560
+msgid "o Always continue (never ask)"
+msgstr "o Immer fortfahren (nie fragen)"
+
+#: imgboot.c:574
+msgid ""
+"This program can only be run as a privileged user.\n"
+"(Try logging in as user \"admin\")."
+msgstr ""
+"Dieses Programm kann nur von einem berechtigtem Benutzer ausgeführt werden.\n"
+"(Versuchen Sie, sich als \"admin\" einzuloggen)."
+
+#: imgboot.c:588
+#, c-format
+msgid "Unknown option '%c'"
+msgstr ""
+
+#: imgboot.c:622
+msgid "Administrator account"
+msgstr "Administrator Konto"
+
+#: imgboot.c:654
+msgid ""
+"\n"
+"Please select from the following options"
+msgstr ""
+"\n"
+"Bitte wählen Sie eine der folgenden Optionen"

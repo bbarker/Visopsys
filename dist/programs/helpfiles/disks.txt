@@ -1,0 +1,22 @@
+
+ -- disks --
+
+Print all of the logical disks attached to the system.
+
+Usage:
+  disks
+
+This command will print all of the disks by name, along with any device,
+filesystem, or logical partition information that is appropriate.
+
+Disk names start with certain combinations of letters which tend to indicate
+the type of disk.  Examples
+
+cd0  - First CD-ROM disk
+fd1  - Second floppy disk
+hd0b - Second logical partition on the first hard disk.
+
+Note in the third example above, the physical device is the first hard disk,
+hd0.  Logical partitions are specified with letters, in partition table order
+(a = first partition, b = second partition, etc.).
+

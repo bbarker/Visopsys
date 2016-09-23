@@ -1,0 +1,72 @@
+Index: ntfsprogs/mkntfs.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/ntfsprogs/mkntfs.c,v
+retrieving revision 1.3
+diff -u -r1.3 mkntfs.c
+--- ntfsprogs/mkntfs.c	29 Jun 2014 15:34:58 -0000	1.3
++++ ntfsprogs/mkntfs.c	14 Dec 2014 03:56:11 -0000
+@@ -253,7 +253,7 @@
+       if (finished >= 100)
+ 	finished = 99;
+ 
+-      opts.prog->finished = finished;
++      opts.prog->numFinished = finished;
+       opts.prog->percentFinished = finished;
+ 
+       lockRelease(&opts.prog->progLock);
+@@ -5356,8 +5356,9 @@
+ 
+   if (prog && (lockGet(&prog->progLock) >= 0))
+     {
+-      prog->finished = prog->total;
++      prog->numFinished = prog->numTotal;
+       prog->percentFinished = 100;
++	  prog->complete = 1;
+       lockRelease(&prog->progLock);
+     }
+ 
+Index: ntfsprogs/ntfsresize.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/ntfsprogs/ntfsresize.c,v
+retrieving revision 1.15
+diff -u -r1.15 ntfsresize.c
+--- ntfsprogs/ntfsresize.c	29 Jun 2014 15:34:58 -0000	1.15
++++ ntfsprogs/ntfsresize.c	14 Dec 2014 03:57:11 -0000
+@@ -1013,7 +1013,7 @@
+       if (finished >= 100)
+ 	finished = 99;
+ 
+-      prog->finished = finished;
++      prog->numFinished = finished;
+       prog->percentFinished = finished;
+ 
+       lockRelease(&prog->progLock);
+@@ -2864,7 +2864,7 @@
+ 	if (resize->prog && (lockGet(&resize->prog->progLock) >= 0))
+ 	  {
+ 	    // Set initial values
+-	    resize->prog->total = 100;
++	    resize->prog->numTotal = 100;
+ 	    resize->prog->canCancel = 1;
+ 	    lockRelease(&resize->prog->progLock);
+ 	  }
+@@ -3015,12 +3015,18 @@
+ 
+ 	if (resize->prog && (lockGet(&resize->prog->progLock) >= 0))
+ 	  {
+-	    resize->prog->finished = resize->prog->total;
++	    resize->prog->numFinished = resize->prog->numTotal;
+ 	    resize->prog->percentFinished = 100;
+ 	    lockRelease(&resize->prog->progLock);
+ 	  }
+ 
+  out:
++	if (resize->prog && (lockGet(&resize->prog->progLock) >= 0))
++	{
++		resize->prog->complete = 1;
++	    lockRelease(&resize->prog->progLock);
++	}
++
+ 	free(resize);
+ 	return (0);
+  err_out:

@@ -1,0 +1,61 @@
+BUILDING VISOPSYS
+
+Visopsys is developed using Ubuntu 12.04 and CentOS 6.4.  To build Visopsys
+you will need the following tools (the first two of which are available as
+standard components of CentOS):
+
+- The GNU C Compiler (gcc) able to build 32-bit (with -m32).  The most recent
+  version tested with Visopsys is 4.6.3.
+
+- A "make" utility of some kind.  I use GNU Make version 3.81.
+
+- The Netwide Assembler (NASM).  The most recent version tested with Visopsys
+  is 2.09.10.  (Available at http://nasm.us)
+
+- GNU gettext, for generating language message files.  I use version 0.18.1
+
+You might be able to get away with using something other than gcc without
+modifications (doubtful), but you will need NASM-compatible assembler to
+build this code.
+
+Once you have the requisite tools listed above, you build by simply executing
+a 'make' or 'make debug' command in the top-level directory.
+
+After you've built the system, you might want to use it.  If this is the case,
+you can install it using the install.sh script in the utils directory.
+The script takes the name of a device or partition as its argument.  For
+example, change to the utils directory and do:
+
+	./install.sh -basic /dev/fd0
+
+to install a basic system on the first floppy disk, or
+
+	./install.sh /dev/hda2
+
+to install a full system on the second partition of the first IDE hard disk.
+
+If you want to create an ISO (CD-ROM) image, change to the utils directory,
+become the 'root' user, and do:
+
+	./image-cd.sh
+
+If you want to create a USB image, change to the utils directory, become the
+'root' user, and do:
+
+	./image-usb.sh
+
+If you want to create a floppy disk image, change to the utils directory,
+become the 'root' user, and do:
+
+	./image-floppy.sh
+
+If you want to create a source distribution, change to the utils directory
+and do:
+
+	./archive-source.sh
+
+Good luck, and let me know if there's any help I can offer.
+
+Andy McLaughlin <andy@visopsys.org>
+05/09/2016
+

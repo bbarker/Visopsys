@@ -1,0 +1,89 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-13 20:30+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ntfsprogs/ntfsresize.c:1030
+msgid "Accounting clusters"
+msgstr "Die Cluster werden berechnet"
+
+#: ntfsprogs/ntfsresize.c:1180
+msgid "Checking filesystem consistency"
+msgstr "Die Konsistenz des Dateisystems wird überprüft"
+
+#: ntfsprogs/ntfsresize.c:2350
+msgid "Checking for bad sectors"
+msgstr "Überprüfung auf falsche Sektoren"
+
+#: ntfsprogs/ntfsresize.c:1264
+msgid "Collecting resizing constraints"
+msgstr "Die Bedingungen für die Größenanpassung werden zusammengestellt"
+
+#: ntfsprogs/ntfsresize.c:1369
+msgid "Enlarging attribute header ..."
+msgstr "Die Attribut-Kopfzeile wird vergrößert..."
+
+#: ntfsprogs/ntfsresize.c:2595
+msgid "Mounting volume"
+msgstr "Laufwerk wird verbunden"
+
+#: ntfsprogs/ntfsresize.c:1791
+#, c-format
+msgid "Relocate record %llu 0x%llx->0x%llx"
+msgstr "Eintrag %llu 0x%llx->0x%llx wird neu platziert"
+
+#: ntfsprogs/ntfsresize.c:1979
+msgid "Relocating needed data"
+msgstr "Die benötigten Daten werden neu platziert"
+
+#: ntfsprogs/ntfsresize.c:872
+#, c-format
+msgid "Relocation needed for inode %8lld"
+msgstr "Es wird eine Neuplatzierung benötigt für inode %8lld"
+
+#: ntfsprogs/ntfsresize.c:2693
+msgid "Resetting $LogFile (this might take a while)"
+msgstr "Zurücksetzen von $LogFile (das könnte einen Moment dauern)"
+
+#: ntfsprogs/ntfsresize.c:2678
+msgid "Schedule chkdsk for NTFS consistency check at Windows boot time"
+msgstr "Zeitliche Durchführung von chkdsk für die Überprüfung der NTFS-Konsistenz beim Start von Windows festlegen"
+
+#: ntfsprogs/ntfsresize.c:2472
+msgid "Set up LCN bitmap"
+msgstr "LCN-Bitmap wird vorbereitet"
+
+#: ntfsprogs/ntfsresize.c:3007
+#, c-format
+msgid "Successfully resized NTFS on device '%s'."
+msgstr "NTFS wurde erfolgreich auf dem Gerät '%s' in der Größe angepasst"
+
+#: ntfsprogs/ntfsresize.c:3000
+msgid "Syncing device"
+msgstr "Gerät wird synchronisiert"
+
+#: ntfsprogs/ntfsresize.c:2418
+msgid "Updating $BadClust file"
+msgstr "Aktualisierung der Datei $BadClust"
+
+#: ntfsprogs/ntfsresize.c:2444
+msgid "Updating $Bitmap file"
+msgstr "Aktualisierung der Datei $Bitmap"
+
+#: ntfsprogs/ntfsresize.c:2495
+msgid "Updating Boot record"
+msgstr "Boot-Eintrag wird aktualisiert"

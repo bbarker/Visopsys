@@ -1,0 +1,13 @@
+
+ -- hexdump --
+
+A program for viewing files as hexadecimal listings.
+
+Usage:
+  hexdump <file_name>
+
+Example:
+
+This command is of only marginal usefulness to most users.  It is primarily
+intended for developers who want to look at binary files in detail.
+

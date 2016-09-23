@@ -1,0 +1,37 @@
+
+ -- shutdown --
+
+A command for shutting down (and/or rebooting) the computer.
+
+Usage:
+  shutdown [-T] [-e] [-f] [-h] [-r]
+
+This command causes the system to shut down.
+
+If the (optional) '-e' parameter is supplied, then 'shutdown' will attempt
+to eject the boot medium (if applicable, such as a CD-ROM).
+
+If the (optional) '-f' parameter is supplied, then it will attempt to ignore
+errors and shut down regardless.  Use this with caution if filesystems do not
+appear to be unmounting correctly; you may need to back up unsaved data before
+shutting down.
+
+If the (optional) '-h' parameter is supplied, then it will shut down and power
+off the system, if possible.  This is the default in text mode.
+
+If the (optional) '-r' parameter is supplied, then it will reboot the computer
+rather than simply halting.
+
+In graphics mode, if the '-h' and '-r' parameters are not supplied, the
+program prompts the user to select 'reboot' or 'shut down'.  If the system is
+currently booted from a CD-ROM, the dialog box also offers a checkbox to eject
+the disc.  If the '-h' or '-r' parameters are used, the dialog will not appear
+and the computer will halt or reboot.
+
+Options:
+-T  : Force text mode operation.
+-e  : Eject the boot medium.
+-f  : Force shutdown and ignore errors.
+-h  : Halt.
+-r  : Reboot.
+

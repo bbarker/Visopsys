@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: calendar\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 10:59-0300\n"
+"PO-Revision-Date: 2015-05-08 00:54+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: cal.c:58
+msgid "April"
+msgstr "Апрель"
+
+#: cal.c:59
+msgid "August"
+msgstr "Август"
+
+#: cal.c:206
+msgid "Calendar"
+msgstr "Календарь"
+
+#: cal.c:59
+msgid "December"
+msgstr "Декабрь"
+
+#: cal.c:58
+msgid "February"
+msgstr "Февраль"
+
+#: cal.c:54
+msgid "Fr"
+msgstr "Пт"
+
+#: cal.c:58
+msgid "January"
+msgstr "Январь"
+
+#: cal.c:58
+msgid "July"
+msgstr "Июль"
+
+#: cal.c:58
+msgid "June"
+msgstr "Июнь"
+
+#: cal.c:58
+msgid "March"
+msgstr "Март"
+
+#: cal.c:58
+msgid "May"
+msgstr "Май"
+
+#: cal.c:54
+msgid "Mo"
+msgstr "Пн"
+
+#: cal.c:59
+msgid "November"
+msgstr "Ноябрь"
+
+#: cal.c:59
+msgid "October"
+msgstr "Октябрь"
+
+#: cal.c:54
+msgid "Sa"
+msgstr "Сб"
+
+#: cal.c:59
+msgid "September"
+msgstr "Сентябрь"
+
+#: cal.c:54
+msgid "Su"
+msgstr "Вс"
+
+#: cal.c:54
+msgid "Th"
+msgstr "Чт"
+
+#: cal.c:54
+msgid "Tu"
+msgstr "Вт"
+
+#: cal.c:54
+msgid "We"
+msgstr "Ср"

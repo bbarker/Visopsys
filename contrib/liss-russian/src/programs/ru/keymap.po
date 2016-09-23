@@ -1,0 +1,206 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: keymap\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-13 02:01+0100\n"
+"PO-Revision-Date: 2015-05-08 02:04+0700\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+
+#: keymap.c:109
+#, c-format
+msgid ""
+"\n"
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"ОШИБКА: %s\n"
+"\n"
+
+#: keymap.c:1151
+msgid " (current)"
+msgstr "(текуший)"
+
+#: keymap.c:995
+#, c-format
+msgid "%s [-T] [-s file_name] [map_name]\n"
+msgstr "%s [-T] [-s имя_файла] имя_раскладки]\n"
+
+#: keymap.c:541
+msgid "ASCII codes:"
+msgstr "ASCII codes:"
+
+#: keymap.c:563
+msgid "Alt Gr code:"
+msgstr "Alt Gr code:"
+
+#: keymap.c:457
+msgid "Backspace"
+msgstr "Backspace"
+
+#: keymap.c:358
+#, c-format
+msgid ""
+"Can't write %s:\n"
+"Filesystem is read-only"
+msgstr ""
+"Не могу записать %s:\n"
+"ФС только для чтения"
+
+#: keymap.c:597
+msgid "Cancel"
+msgstr "Отмена"
+
+#: keymap.c:523
+msgid "Change key settings"
+msgstr "Выберите параметры клавиши"
+
+#: keymap.c:853
+msgid "Choose the output file:"
+msgstr "Выберите файл для вывода:"
+
+#: keymap.c:980
+msgid "Close"
+msgstr "Закрыть"
+
+#: keymap.c:332 keymap.c:409
+#, c-format
+msgid "Couldn't find keyboard map %s"
+msgstr "Не могу найти раскладку %s"
+
+#: keymap.c:423
+msgid "Couldn't get current keyboard map"
+msgstr "Не могу получить текущую раскладку"
+
+#: keymap.c:123 keymap.c:378
+#, c-format
+msgid "Couldn't open file %s"
+msgstr "Не могу прочитать файл %s"
+
+#: keymap.c:133
+#, c-format
+msgid "Couldn't read file %s"
+msgstr "Не могу прочитать файл %s"
+
+#: keymap.c:416
+#, c-format
+msgid "Couldn't set keyboard map to %s"
+msgstr "Не могу записать раскладку в %s"
+
+#: keymap.c:387
+#, c-format
+msgid "Couldn't write file %s"
+msgstr "Не могу записать файл %s"
+
+#: keymap.c:435
+msgid "Couldn't write keyboard map setting"
+msgstr "Не могу записать параметры раскладки"
+
+#: keymap.c:572
+msgid "Ctrl code:"
+msgstr ""
+
+#: keymap.c:937
+msgid "Current:"
+msgstr "Текущий:"
+
+#: keymap.c:484
+msgid "Del"
+msgstr ""
+
+#: keymap.c:463
+msgid "Enter"
+msgstr ""
+
+#: keymap.c:107
+msgid "Error"
+msgstr "Ошибка"
+
+#: keymap.c:478
+msgid "Esc"
+msgstr "Esc"
+
+#: keymap.c:910
+msgid "Keyboard Map"
+msgstr "Раскладка клавиатуры"
+
+#: keymap.c:885
+msgid "Map saved"
+msgstr "Раскладка сохранена"
+
+#: keymap.c:1029
+#, c-format
+msgid "Missing filename argument for -s option\n"
+msgstr "Пропущено имя файла для опции -s\n"
+
+#: keymap.c:1042
+#, c-format
+msgid "Missing parameter for %s option\n"
+msgstr "Пропущен параметр для опции %s\n"
+
+#: keymap.c:716
+msgid "Name:"
+msgstr "Имя:"
+
+#: keymap.c:593
+msgid "OK"
+msgstr "ОК"
+
+#: keymap.c:545
+msgid "Regular code:"
+msgstr "Regular code:"
+
+#: keymap.c:964
+msgid "Save"
+msgstr "Сохранить"
+
+#: keymap.c:853
+msgid "Save as"
+msgstr "Сохранить как..."
+
+#: keymap.c:885
+msgid "Saved"
+msgstr "Сохранено"
+
+#: keymap.c:536
+#, c-format
+msgid "Scan code: %d (0x%02x)"
+msgstr "Scan code: %d (0x%02x)"
+
+#: keymap.c:973
+msgid "Set as default"
+msgstr "Назначить по умолчанию"
+
+#: keymap.c:554
+msgid "Shift code:"
+msgstr "Shift code:"
+
+#: keymap.c:481
+msgid "Space"
+msgstr "Space"
+
+#: keymap.c:460
+msgid "Tab"
+msgstr "Tab"
+
+#: keymap.c:1048
+#, c-format
+msgid "Unknown option '%c'\n"
+msgstr "Неизвестная опция '%c'\n"
+
+#: keymap.c:994
+#, c-format
+msgid "usage:\n"
+msgstr "использование:\n"

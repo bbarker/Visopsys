@@ -1,0 +1,101 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+#  This German translation provided by Proxma AG - www.proxma.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ping.c:60
+msgid "Ping"
+msgstr "Ping"
+
+#: ping.c:88
+msgid "Error"
+msgstr "Fehler"
+
+#: ping.c:96
+#, c-format
+msgid ""
+"usage:\n"
+"%s [-T] <address | hostname>\n"
+msgstr ""
+"Benutzung:\n"
+"%s [-T] <address | hostname>\n"
+
+#: ping.c:164
+#, c-format
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
+msgstr "%d Byte von %d.%d.%d.%d: icmp_seq=%d ttl=%d Zeit=X ms\n"
+
+#: ping.c:253
+msgid "Stop"
+msgstr "Stopp"
+
+#: ping.c:296
+#, c-format
+msgid "Unknown option '%c'"
+msgstr ""
+
+#: ping.c:305
+msgid "Networking is not currently enabled"
+msgstr "Das Arbeiten im Netzwerk ist derzeit nicht aktiviert"
+
+#: ping.c:321
+msgid "Enter Address"
+msgstr "Addresse angeben"
+
+#: ping.c:322
+msgid "Enter the network address to ping:"
+msgstr ""
+"Geben Sie die Netzwerkadresse ein an die ein Ping geschickt werden soll:"
+
+#: ping.c:357
+msgid "Memory allocation error"
+msgstr "Fehler bei der Speicherverteilung"
+
+#: ping.c:376
+msgid "Error opening network connection"
+msgstr "Fehler beim öffnen der Netzwerkverbindung"
+
+#: ping.c:380
+#, c-format
+msgid "Ping %d.%d.%d.%d %d bytes of data\n"
+msgstr "Ping %d.%d.%d.%d %d Byte an Daten\n"
+
+#: ping.c:394
+msgid "Error setting signal handler"
+msgstr "Fehler beim setzen des Signal-Handlers"
+
+#: ping.c:407
+msgid "Error starting response thread"
+msgstr "Fehler beim starten des Antwort-Eintrages"
+
+#: ping.c:417
+msgid "Error pinging host"
+msgstr "Fehler beim anpingen des Hosts"
+
+#: ping.c:435
+#, c-format
+msgid ""
+"\n"
+"--- %d.%d.%d.%d ping statistics ---\n"
+msgstr ""
+"\n"
+"--- %d.%d.%d.%d Ping-Statistiken ---\n"
+
+#: ping.c:437
+#, c-format
+msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
+msgstr "%d Pakete übertragen, %d empfangen, %d%% verloren, Zeit Xms\n"

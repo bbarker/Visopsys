@@ -1,0 +1,13 @@
+
+ -- ifconfig --
+
+Network device control.
+
+Usage:
+  ifconfig [-T] [device_name]
+
+This command will show information about the system's network devices.
+
+Options:
+-T              : Force text mode operation
+

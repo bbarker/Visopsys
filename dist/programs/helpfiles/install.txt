@@ -1,0 +1,16 @@
+
+ -- install --
+
+This program will install a copy of Visopsys on another disk.
+
+Usage:
+  install [-T] [disk_name]
+
+The 'install' program is interactive, but a logical disk parameter can
+(optionally) be specified on the command line.  If no disk is specified,
+then the user will be prompted to choose from a menu.  Use the 'disks'
+command to list the available disks.
+
+Options:
+-T  : Force text mode operation
+

@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ramdisk\n"
+"Report-Msgid-Bugs-To: jenswagner20@ovi.com\n"
+"POT-Creation-Date: 2013-11-02 11:09-0300\n"
+"PO-Revision-Date: 2014-08-13 22:22+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: ramdisk.c:76
+#, c-format
+msgid ""
+"%s <create> <bytes>[unit]\n"
+"-or-\n"
+msgstr ""
+"%s <create> <байт>[unit]\n"
+"-or-\n"
+
+#: ramdisk.c:77
+#, c-format
+msgid "%s <destroy> <name>\n"
+msgstr "%s <destroy> <имя>\n"
+
+#: ramdisk.c:167
+#, c-format
+msgid "Created RAM disk %s size %u\n"
+msgstr "Создан RAM диск %s объемом %u\n"
+
+#: ramdisk.c:180
+#, c-format
+msgid "Destroyed RAM disk %s\n"
+msgstr "Уничтоден RAM диск %s\n"
+
+#: ramdisk.c:163
+#, c-format
+msgid "Error creating RAM disk\n"
+msgstr "Ошибка создания RAM диска\n"
+
+#: ramdisk.c:176
+#, c-format
+msgid "Error destroying RAM disk %s\n"
+msgstr "Ошибка уничтожения RAM диска %s\n"
+
+#: ramdisk.c:75
+#, c-format
+msgid "usage:\n"
+msgstr "использование:\n"

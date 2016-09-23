@@ -1,0 +1,96 @@
+#
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Russian translation by Liss <liss8608@list.ru>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libwindow.po\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 01:08+0100\n"
+"PO-Revision-Date: 2014-07-25 16:48+0800\n"
+"Last-Translator: Liss <liss8608@list.ru>\n"
+"Language-Team: liss <liss21@ya.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+
+#: windowArchiveList.c:55 windowFileList.c:182 windowProgressDialog.c:128
+msgid "Error"
+msgstr "Ошибка"
+
+#: windowArchiveList.c:78 windowFileList.c:534
+msgid "Memory allocation error creating icon parameters"
+msgstr "Ошибка распределения памяти при создании параметров значка"
+
+#: windowColorDialog.c:32
+msgid "Color Chooser"
+msgstr "Выбор цвета"
+
+#: windowColorDialog.c:152
+msgid "Red"
+msgstr "Красный"
+
+#: windowColorDialog.c:184
+msgid "Green"
+msgstr "Зеленый"
+
+#: windowColorDialog.c:215
+msgid "Blue"
+msgstr "Синий"
+
+#: windowColorDialog.c:268 windowFileDialog.c:219 windowLanguageDialog.c:199
+#: windowNumberDialog.c:167 windowOkDialog.c:125 windowPromptDialog.c:135
+#: windowQueryDialog.c:57 windowRadioDialog.c:157
+msgid "OK"
+msgstr "ОК"
+
+#: windowColorDialog.c:278 windowFileDialog.c:229 windowLanguageDialog.c:209
+#: windowNumberDialog.c:172 windowProgressDialog.c:260
+#: windowPromptDialog.c:145 windowQueryDialog.c:57 windowRadioDialog.c:169
+msgid "Cancel"
+msgstr "Отмена"
+
+#: windowFileList.c:393 windowFileList.c:418
+msgid "(up)"
+msgstr "(вверх)"
+
+#: windowFileList.c:468
+#, c-format
+msgid "Can't get directory \"%s\" file count"
+msgstr "Не могу получить количество файлов в каталоге \"%s\""
+
+#: windowFileList.c:479
+msgid "Memory allocation error"
+msgstr "Ошибка распределения памяти"
+
+#: windowFileList.c:492
+#, c-format
+msgid "Error reading files in \"%s\""
+msgstr "Ошибка чтения файлов в \"%s\""
+
+#: windowFileList.c:668
+#, c-format
+msgid "Can't change to directory %s"
+msgstr "Не могу перейти в каталог %s"
+
+#: windowFileList.c:692
+#, c-format
+msgid "Error deleting file %s"
+msgstr "Ошибка при удалении файла %s"
+
+#: windowFileList.c:746
+#, c-format
+msgid "Can't locate configuration file %s"
+msgstr "Не могу найти файл конфигурации %s"
+
+#: windowLanguageDialog.c:36
+msgid "Language Chooser"
+msgstr ""
+
+#: windowProgressDialog.c:117
+msgid "Confirmation"
+msgstr "Подтверждение"

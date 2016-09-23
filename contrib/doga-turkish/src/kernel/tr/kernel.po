@@ -1,0 +1,138 @@
+#
+#  Visopsys
+#  Copyright (C) 1998-2013 J. Andrew McLaughlin
+# 
+#  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
+#  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
+#  Doga.Ozkaraca - doga.ozkaraca@gmail.com - dogaozkaraca.com
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-27-03 22:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
+"Language-Team: Turkish/Türkçe\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: kernelInitialize.c:301
+msgid ""
+"\n"
+" *** Your boot disk appears to be running in unsupported native-SATA mode.\n"
+" *** You may be able to temporarily enable ATA or 'legacy' IDE mode in\n"
+" *** your BIOS setup.\n"
+msgstr ""
+"\n"
+" *** Es scheint so, dass Ihre Boot-Disk im nativen SATA-Modus läuft. Dieser\n"
+" *** wird jedoch nicht unterstützt. Sie sollten vielleicht zeitweise den ATA-\n"
+" *** oder IDE-Modus (Legacy-Modus) in Ihren BIOS-Einstellungen aktivieren.\n"
+
+#: kernelFilesystemFat.c:3949
+#, c-format
+msgid "%llu files need defragmentation"
+msgstr "%llu dosyalarinin birlestirilmesi gerekiyor"
+
+#: kernelFilesystemFat.c:3935
+#, c-format
+msgid "Analyzing"
+msgstr "Analiz ediliyor"
+
+#: kernelFilesystemFatPlus.c:281
+msgid "Checking constraints"
+msgstr "Kisitlamalar kontrol ediliyor"
+
+#: kernelFilesystemFatPlus.c:410
+msgid "Clearing new FAT sectors"
+msgstr "Yeni FAT sektörleri temizleniyor"
+
+#: kernelFilesystemFatPlus.c:353
+#, c-format
+msgid "Data exists outside the new size (%u >= %llu)"
+msgstr "Veri yeni boyutun disinda bulunuyor (%u >= %llu)"
+
+#: kernelFilesystemFat.c:3782
+#, c-format
+msgid "Defragmenting %llu/%llu: %s"
+msgstr "%llu/%llu: %s birlestiriliyor"
+
+#: kernelFilesystemFatPlus.c:437
+msgid "Error clearing new FAT sectors"
+msgstr "Yeni FAT sektörleri temizlenirken hata olustu"
+
+#: kernelFilesystemFatPlus.c:334
+msgid "Error defragmenting filesystem"
+msgstr "Dosya sistemi birlestirilirken hata olustu"
+
+#: kernelFilesystemFatPlus.c:417
+msgid "Error getting memory"
+msgstr "Bellege alinirken hata olustu"
+
+#: kernelFilesystemFatPlus.c:291
+msgid "Error getting resizing constraints"
+msgstr "Kisitlamalar yeniden boyutlandirilirken hata"
+
+#: kernelFilesystemFatPlus.c:399
+msgid "Error moving data"
+msgstr "Veri tasinirken hata olustu"
+
+#: kernelFilesystemFatPlus.c:318 kernelFilesystemFatPlus.c:342
+msgid "Error reading filesystem info"
+msgstr "Dosya sistemi bilgisi okunurken hata olustu"
+
+#: kernelFilesystemFatPlus.c:451
+msgid "Error synching FAT copies"
+msgstr "FAT kopyalari senkronize edilirken hata olustu"
+
+#: kernelFilesystemFatPlus.c:476 kernelFilesystemFatPlus.c:485
+msgid "Error updating filesystem info"
+msgstr "Dosya sistemi bilgisi güncellenirken hata olustu"
+
+#: kernelFilesystemFatPlus.c:301
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (maximum is %llu)"
+msgstr ""
+"Dosya sistemi %llu blok olarak yeniden boyutlandirilamadi "
+"(En fazla %llu)"
+
+#: kernelFilesystemFatPlus.c:298
+#, c-format
+msgid "Filesystem cannot resize to %llu blocks (minimum is %llu)"
+msgstr ""
+"Dosya sistemi %llu blok olarak yeniden boyutlandirilamadi "
+"(En az %llu)"
+
+#: kernelShutdown.c:45
+msgid "OK to power off now."
+msgstr "Simdi kapatabilirsiniz"
+
+#: kernelFilesystemFat.c:3910 kernelFilesystemFatPlus.c:310
+msgid "Reading filesystem info"
+msgstr "Dosya sistemi bilgisi okunuyor"
+
+#: kernelShutdown.c:44
+msgid "Rebooting."
+msgstr "Yeniden baslatiliyor."
+
+#: kernelShutdown.c:315
+#, c-format
+msgid "SYSTEM HALTED: Panic at %s:%s(%d)"
+msgstr "SISTEM ÇÖKTÜ: Panigin olustugu yer %s:%s(%d)"
+
+#: kernelShutdown.c:153
+msgid "Shutting down"
+msgstr "Kapatiliyor"
+
+#: kernelShutdown.c:42
+msgid "Shutting down Visopsys, please wait..."
+msgstr "Visopsys kapatiliyor, lütfen bekleyiniz..."
+
+#: kernelFilesystemFatPlus.c:461
+msgid "Updating filesystem info"
+msgstr "Dosya sistemi bilgisi güncelleniyor"
+
+#: kernelShutdown.c:43
+msgid "[ Wait for \"OK to power off\" message ]"
+msgstr "[ \"Simdi kapatabilirsiniz\" mesaji için bekleyiniz ]"

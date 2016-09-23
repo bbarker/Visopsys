@@ -1,0 +1,118 @@
+
+	Visopsys
+	Copyright (C) 1998-2016 J. Andrew McLaughlin
+
+Unless otherwise stated, all aspects of Visopsys are created/authored by
+Andy McLaughlin.  Other contributions are as follows (please notify me
+<andy@visopsys.org> if you believe I've missed anything):
+
+- All icons are from (or adapted from) the Oxygen icon set
+https://github.com/pasnox/oxygen-icons-png redistributed under the GNU Lesser
+General Public License, with thanks to the website http://www.iconarchive.com
+for packaging them up in .ico format.
+
+- Desktop wallpaper 'spirals' uploaded by gnome-look.org user neigemyst
+"Spirals", redistributed under the Creative Commons Attribution-NonCommercial-
+ShareAlike 3.0 license
+http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+
+- Desktop wallpaper 'pascual' uploaded by kde-look.org user kiov "Playa
+Pascual Uruguay", redistributed under the Creative Commons Attribution-
+NonCommercial-ShareAlike 3.0 license
+http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+
+- Desktop wallpaper 'madeira' uploaded by kde-look.org user Cycron "Madeira
+Portuguese Archipelago", redistributed under the Creative Commons Attribution
+3.0 license http://creativecommons.org/licenses/by/3.0/legalcode
+
+- Desktop wallpaper 'background' is a colourized version of "Blue Marble"
+from the website Tile-able http://tiled-bg.blogspot.com, redistributed under
+the Creative Commons Attribution 3.0 license
+http://creativecommons.org/licenses/by/3.0/legalcode
+
+- The Visopsys logo image visopsys.jpg uses the icon "Monitor icon" from "3D
+BlueFX Desktop Icons by WallpaperFX" found at http://www.iconarchive.com,
+redistributed under the Creative Commons Attribution 4.0 International license
+http://creativecommons.org/licenses/by/4.0/legalcode
+
+- The 'libmono' fonts are adapted from Liberation Mono, by Ascender Corp.,
+redistributed under the SIL Open Font License http://scripts.sil.org/OFL_web
+
+- Turkish translation by Doga Özkaracaabatlioglu <doga.ozkaraca@gmail.com>.
+See the directory contrib/doga-turkish.
+
+- Russian translation by Liss <liss8608@list.ru>.  See the directory
+contrib/liss-russian.
+
+- Spanish translation by ap0r <marianopbernacki@gmail.com> and Jens Leon
+Wagner <nikski280@gmail.com>.  See the directory contrib/ap0r-jens-spanish.
+
+- German translation by Jens Leon Wagner <nikski280@gmail.com> and
+Proxma AG - www.proxma.com.  See the directory contrib/jens-german.
+
+- ap0r <marianopbernacki@gmail.com> from the Visopsys forums added password
+length checking to the 'Users' program.  See the directory contrib/ap0r-users
+
+- espectalll123 <espectalll123@yahoo.es> from the Visopsys forums fixed up
+the Spanish keyboard map.
+
+- Giuseppe Gatta <tails92@gmail.com> wrote the PPM (portable pixmap) image
+support.  See the directory contrib/giuseppe-ppm.
+
+- Giuseppe Gatta <tails92@gmail.com> wrote the 'calc' calculator program.
+See the directory contrib/giuseppe-calc
+
+- Jonas Zaddach <jonaszaddach@gmx.de> has made a number of contributions
+including early 'Lance' network driver support, the foundations for PCI
+support, and German keyboard layouts and 'Alt-Gr' key support.  See the
+directories contrib/jonas-net, contrib/jonas-pci, and contrib/jonas-key.
+
+- Davide Airaghi <davide.airaghi@gmail.com> provided some initial work on
+FPU state saves, an Italian keyboard mapping, and implementations of
+I/O privilege mapping and RAM disks.  See the directories
+contrib/davide-fpu, contrib/davide-key, contrib/davide-priv-io, and
+contrib/davide-ramdisk
+
+- Bauer Vladislav <bauer@ccfit.nsu.ru> contributed the original 'cal'
+calendar program.  See the directory contrib/vlad-calendar.
+
+- Jens Leon Wagner <nikski280@gmail.com> helped out with ideas for improving
+slider and scrollbar dragging.  See the directory contrib/jens-scrollbar.
+
+- Grzesiek (Greg) <reqst@o2.pl> contributed an FPU exception handler fix
+to the multitasker.  See the directory contrib/greg-fpu.
+
+- Graeme McLaughlin <graememc@gmail.com> contributed the original 'mines'
+game.
+
+- Some of the descriptions in fcntl.h are Copyright (C) 1997 The Open Group
+from http://www.opennc.org/onlinepubs/7908799/xsh/fcntl.h.html
+
+- The values float.h are intelligent guesses based on reconciling the float.h
+files from Linux and Solaris on i386 machines, and based on the 'Standard C'
+specification Copyright (C) 1989-1996 P.J. Plauger and Jim Brodie.
+
+- Pseudorandom number generation in kernelRandom.c inspired by Nick
+Galbreath's <nickg@modp.com> re-implementation of the PRNG from Sun's
+java.util.Random at:
+http://javarng.googlecode.com/svn/trunk/com/modp/random/LinearSunJDK.java
+
+- sqrt.c is Copyright (C) 1996-2004 Paul Hsieh.  Paul's square root page is
+here: http://www.azillionmonkeys.com/qed/sqroot.html
+
+- cos.c, cosf.c, sin.c, and sinf.c use algorithms adapted from the web page
+at http://www.dontletgo.com/planets/math.html by Asaph Engel
+<ace@dontletgo.com>.
+
+- JPEG inverse discrete cosine transform (IDCT) algorithm is Copyright (C)
+1996, MPEG Software Simulation Group.  See the function inverseDctBlock()
+in the file src/kernel/kernelImageJpg.c
+
+- Thanks to Hugh Anderson <hugh@comp.nus.edu.sg> for debugging installation
+issues on Fedora FC5.
+
+- Leency <leency@mail.ru> for his icon contributions.
+
+- Thomas Kreitner for all his testing and interest, and for finding the weird
+bugs.  Only an evil genius would discover some of these things.
+

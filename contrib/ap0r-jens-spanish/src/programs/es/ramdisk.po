@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Jens Leon Wagner
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adduser 0.1\n"
+"Report-Msgid-Bugs-To: nikski280@gmail.com\n"
+"POT-Creation-Date: 2013-11-02 11:09-0300\n"
+"PO-Revision-Date: 2014-01-22 04:58-0400\n"
+"Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: ramdisk.c:76
+#, c-format
+msgid ""
+"%s <create> <bytes>[unit]\n"
+"-or-\n"
+msgstr ""
+"%s <create> <Bytes>[Unidad]\n"
+"-or-\n"
+
+#: ramdisk.c:77
+#, c-format
+msgid "%s <destroy> <name>\n"
+msgstr "%s <destroy> <Nombre>\n"
+
+#: ramdisk.c:167
+#, c-format
+msgid "Created RAM disk %s size %u\n"
+msgstr "Disco RAM %s creado tamaño %u\n"
+
+#: ramdisk.c:180
+#, c-format
+msgid "Destroyed RAM disk %s\n"
+msgstr "Disco RAM %s borrado\n"
+
+#: ramdisk.c:163
+#, c-format
+msgid "Error creating RAM disk\n"
+msgstr "Error al crear disco RAM\n"
+
+#: ramdisk.c:176
+#, c-format
+msgid "Error destroying RAM disk %s\n"
+msgstr "Error al borrar disco RAM %s\n"
+
+#: ramdisk.c:75
+#, c-format
+msgid "usage:\n"
+msgstr "Uso:\n"

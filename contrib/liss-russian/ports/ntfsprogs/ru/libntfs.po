@@ -1,0 +1,90 @@
+# Visopsys
+# Copyright (C) 1998-2013 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: libntfs.po\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-13 20:30+0100\n"
+"PO-Revision-Date: 2014-07-25 16:30+0800\n"
+"Last-Translator: Jens Leon Wagner <jenswagner20@ovi.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: ru\n"
+
+#: ntfsprogs/ntfsresize.c:1030
+msgid "Accounting clusters"
+msgstr "Подсчет кластеров"
+
+#: ntfsprogs/ntfsresize.c:1180
+msgid "Checking filesystem consistency"
+msgstr "Проверка целостности файловой системы"
+
+#: ntfsprogs/ntfsresize.c:2350
+msgid "Checking for bad sectors"
+msgstr "Проверка на сбойные секторы"
+
+#: ntfsprogs/ntfsresize.c:1264
+msgid "Collecting resizing constraints"
+msgstr "Сбор изменений размера"
+
+#: ntfsprogs/ntfsresize.c:1369
+msgid "Enlarging attribute header ..."
+msgstr "Увеличение заголовка атрибута ..."
+
+#: ntfsprogs/ntfsresize.c:2595
+msgid "Mounting volume"
+msgstr "Монтировать том"
+
+#: ntfsprogs/ntfsresize.c:1791
+#, c-format
+msgid "Relocate record %llu 0x%llx->0x%llx"
+msgstr "Перемещение записи %llu 0x%llx->0x%llx"
+
+#: ntfsprogs/ntfsresize.c:1979
+msgid "Relocating needed data"
+msgstr "Перемещение необходимых данных"
+
+#: ntfsprogs/ntfsresize.c:872
+#, c-format
+msgid "Relocation needed for inode %8lld"
+msgstr "Перемещение необходимое для inode %8lld"
+
+#: ntfsprogs/ntfsresize.c:2693
+msgid "Resetting $LogFile (this might take a while)"
+msgstr "Сброс $LogFile (это может занять некоторое время)"
+
+#: ntfsprogs/ntfsresize.c:2678
+msgid "Schedule chkdsk for NTFS consistency check at Windows boot time"
+msgstr ""
+"Планируем запуск chkdsk для проверки целостности NTFS во время следующей "
+"загрузки Windows"
+
+#: ntfsprogs/ntfsresize.c:2472
+msgid "Set up LCN bitmap"
+msgstr "Настройка LCN bitmap"
+
+#: ntfsprogs/ntfsresize.c:3007
+#, c-format
+msgid "Successfully resized NTFS on device '%s'."
+msgstr "Размер NTFS успешно изменен на устройстве '%s'."
+
+#: ntfsprogs/ntfsresize.c:3000
+msgid "Syncing device"
+msgstr "Синхронизация устройства"
+
+#: ntfsprogs/ntfsresize.c:2418
+msgid "Updating $BadClust file"
+msgstr "Обновление файла $BadClust"
+
+#: ntfsprogs/ntfsresize.c:2444
+msgid "Updating $Bitmap file"
+msgstr "Обновление файла $Bitmap"
+
+#: ntfsprogs/ntfsresize.c:2495
+msgid "Updating Boot record"
+msgstr "Обновление загрузочной записи"

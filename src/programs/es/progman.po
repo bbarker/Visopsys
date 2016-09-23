@@ -1,0 +1,142 @@
+# Visopsys
+# Copyright (C) 1998-2016 J. Andrew McLaughlin
+#
+# Spanish Translation - 2013 - marianopbernacki@gmail.com
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: progman.c:58
+msgid "Program Manager"
+msgstr "Administrador de programas"
+
+#: progman.c:59
+msgid "Memory blocks: "
+msgstr "Bloques de memoria: "
+
+#: progman.c:60
+msgid "Used memory: "
+msgstr "Memoria en uso: "
+
+#: progman.c:61
+msgid "Free memory: "
+msgstr "Memoria libre: "
+
+#: progman.c:62
+msgid "Disk performance:"
+msgstr "Performance de disco: "
+
+#: progman.c:63
+msgid "Read: "
+msgstr "Lectura: "
+
+#: progman.c:64
+msgid "Write: "
+msgstr "Escritura: "
+
+#: progman.c:65
+msgid "K/tick"
+msgstr " K/tick"
+
+#: progman.c:102
+msgid "Error"
+msgstr "Error"
+
+#: progman.c:229
+msgid "Can't get temporary memory for processes"
+msgstr "No se pudo obtener memoria temporal para procesos"
+
+#: progman.c:293
+msgid "running "
+msgstr "ejecutando "
+
+#: progman.c:297
+msgid "ready "
+msgstr "listo "
+
+#: progman.c:300
+msgid "waiting "
+msgstr "esperando "
+
+#: progman.c:303
+msgid "sleeping "
+msgstr "en espera "
+
+#: progman.c:306
+msgid "stopped "
+msgstr "detenido"
+
+#: progman.c:309
+msgid "finished "
+msgstr "finalizado "
+
+#: progman.c:312
+msgid "zombie "
+msgstr "zombie "
+
+#: progman.c:315
+msgid "unknown "
+msgstr "desconocido "
+
+#: progman.c:336
+msgid "Enter command"
+msgstr "Ingrese el comando"
+
+#: progman.c:337
+msgid "Please enter a command to run:"
+msgstr "Por favor ingrese un comando para ejecutar:"
+
+#: progman.c:366
+msgid "Unable to execute program"
+msgstr "No se puede ejecutar"
+
+#: progman.c:403 progman.c:612
+msgid "Set priority"
+msgstr "Configurar prioridad"
+
+#: progman.c:404
+msgid "Please enter the desired priority"
+msgstr "Ingrese la prioridad deseada"
+
+#: progman.c:500
+msgid "Unable to launch file dialog"
+msgstr "No se puede abrir dialogo de archivos"
+
+#: progman.c:571
+#, c-format
+msgid "Process                   PID PPID UID Pri Priv CPU% STATE   "
+msgstr "Proceso                   PID PPID UID Pri Priv CPU% STATUS   "
+
+#: progman.c:585
+msgid "Show all sub-processes"
+msgstr "Mostrar subprocesos"
+
+#: progman.c:605
+msgid "Run program"
+msgstr "Ejecutar Programa"
+
+#: progman.c:618
+msgid "Kill process"
+msgstr "Matar proceso"
+
+#: progman.c:641
+#, c-format
+msgid ""
+"\n"
+"The \"%s\" command only works in graphics mode\n"
+msgstr ""
+"\n"
+"El comando \"%s\" solo funciona en modo grafico\n"
+
+#: progman.c:660
+msgid "Error getting memory"
+msgstr "Error al obtener memoria"

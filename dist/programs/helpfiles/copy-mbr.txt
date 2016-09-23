@@ -1,0 +1,16 @@
+
+ -- copy-mbr --
+
+Write a Visopsys MBR sector.
+
+Usage:
+  copy-mbr <image> <disk>
+
+The copy-mbr command copies the MBR (master boot record) image to the
+named physical disk.  Not useful to most users under normal circumstances;
+Rather more useful in a system rescue situation, where a DOS-like automatic
+booting of the 'active' partition is desired.
+
+Example:
+  copy-mbr /system/boot/mbr.simple hd0
+

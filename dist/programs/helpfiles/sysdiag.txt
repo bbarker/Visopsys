@@ -1,0 +1,11 @@
+
+ -- sysdiag --
+
+Perform system diagnostics
+
+Usage:
+  sysdiag
+
+The sysdiag program is interactive, and can be used to perform diagnostic
+functions on hardware such as the RAM memory or hard disks.
+
