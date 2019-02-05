@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 ;;  bootsect-read.s
 ;;
 
-;; This code is a common disk reading routine for bootsector code.  It's just
+;; This code is a common disk reading routine for boot sector code.  It's just
 ;; meant to be %included, not compiled separately.
 
 
@@ -35,12 +35,6 @@ read:
 	cmp byte [DISK], 80h
 	jb .noExtended
 
-	mov AX, 4100h
-	mov BX, 55AAh
-	mov DL, byte [DISK]
-	int 13h
-	jc .noExtended
-
 	;; We have a nice extended read function which will allow us to
 	;; just use the logical sector number for the read
 
@@ -52,8 +46,8 @@ read:
 	mov AX, word [SS:(BP + 22)]
 	mov word [DISKPACKET + 6], AX		; Segment
 	mov EAX, dword [SS:(BP + 18)]
-	mov dword [DISKPACKET + 8], EAX		; Logical sector
-	mov dword [DISKPACKET + 12], 0		;
+	mov dword [DISKPACKET + 8], EAX		; > Logical sector
+	mov dword [DISKPACKET + 12], 0		; >
 	mov AX, 4200h
 	mov DL, byte [DISK]
 	mov SI, DISKPACKET
@@ -65,50 +59,42 @@ read:
 
 	.noExtended:
 	;; No extended functionality.  Read the sectors one at a time.
-	push word 0
 
 	.readSector:
 	;; Calculate the CHS.  First the sector
-	xor EAX, EAX
-	pop AX
-	push AX
-	add EAX, dword [SS:(BP + 18)]
+	mov EAX, dword [SS:(BP + 18)]	; Logical sector
 	xor EBX, EBX
 	xor EDX, EDX
 	mov BX, word [NUMSECTS]
 	div EBX
-	mov byte [SECTOR], DL		; The remainder
-	add byte [SECTOR], 1		; Sectors start at 1
+	mov byte [SECTOR], DL			; The remainder
+	add byte [SECTOR], 1			; Sectors start at 1
 
 	;; Now the head and track
-	xor EDX, EDX			; Don't need the remainder anymore
-	xor EBX, EBX
+	xor EDX, EDX					; Don't need the remainder anymore
 	mov BX, word [NUMHEADS]
 	div EBX
-	mov byte [HEAD], DL		; The remainder
+	mov byte [HEAD], DL				; The remainder
 	mov word [CYLINDER], AX
 
-	mov AX, 0201h			; Number to read, subfunction 2
-	mov CX, word [CYLINDER]		; >
-	rol CX, 8			; > Cylinder
-	shl CL, 6			; >
-	or CL, byte [SECTOR]		; Sector
-	mov DH, byte [HEAD]		; Head
-	mov DL, byte [DISK]		; Disk
-	mov BX, word [SS:(BP + 24)]	; Offset
-	push ES				; Save ES
-	mov ES, word [SS:(BP + 22)]	; Use user-supplied segment
+	mov AX, 0201h					; Number to read, subfunction 2
+	mov CX, word [CYLINDER]			; >
+	rol CX, 8						; > Cylinder
+	shl CL, 6						; >
+	or CL, byte [SECTOR]			; Sector
+	mov DH, byte [HEAD]				; Head
+	mov DL, byte [DISK]				; Disk
+	mov BX, word [SS:(BP + 24)]		; Offset
+	push ES							; Save ES
+	mov ES, word [SS:(BP + 22)]		; Use user-supplied segment
 	int 13h
-	pop ES				; Restore ES
+	pop ES							; Restore ES
 	jc IOError
 
 	add word [SS:(BP + 24)], 512	; Increment the memory pointer
-	pop AX				; Increment the counter
-	inc AX
-	push AX
-	cmp AX, word [SS:(BP + 26)]	; Check whether we're finished
-	jb .readSector
-	pop AX
+	inc dword [SS:(BP + 18)]		; Increment the sector
+	dec word [SS:(BP + 26)]			; Decrement the count
+	jnz .readSector					; Check whether we're finished
 
 	.done:
 	popa

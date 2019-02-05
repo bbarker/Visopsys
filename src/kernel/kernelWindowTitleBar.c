@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -31,6 +31,9 @@
 #include "kernelWindowEventStream.h"
 #include <stdlib.h>
 #include <string.h>
+
+#define BUTTON_PAD		2
+#define BUTTON_PAD2X	(BUTTON_PAD * 2)
 
 static image minimizeImage;
 static image closeImage;
@@ -138,8 +141,6 @@ static void minimizeWindow(kernelWindow *window, windowEvent *event)
 	// can find out about it.
 	event->type = EVENT_WINDOW_MINIMIZE;
 	kernelWindowEventStreamWrite(&window->events, event);
-
-	return;
 }
 
 
@@ -151,8 +152,6 @@ static void closeWindow(kernelWindow *window, windowEvent *event)
 	// can find out about it.
 	event->type = EVENT_WINDOW_CLOSE;
 	kernelWindowEventStreamWrite(&window->events, event);
-
-	return;
 }
 
 
@@ -164,13 +163,14 @@ static int draw(kernelWindowComponent *component)
 	kernelFont *font = (kernelFont *) component->params.font;
 	int titleWidth = 0;
 	char title[128];
+	int titleLen = 0;
 	color backgroundColor;
 
 	memcpy(&backgroundColor, (color *) &component->params.background,
 		sizeof(color));
 
-	// The color will be different depending on whether the window has
-	// the focus
+	// The color will be different depending on whether the window has the
+	// focus
 	if (!(component->window->flags & WINFLAG_HASFOCUS))
 	{
 		backgroundColor.red = (((int) backgroundColor.red * 2) / 3);
@@ -187,23 +187,28 @@ static int draw(kernelWindowComponent *component)
 	if (font)
 	{
 		strncpy(title, (char *) component->window->title, 128);
+		titleLen = strlen(title);
+
 		titleWidth = (component->width - 1);
 		if (titleBar->minimizeButton)
 			titleWidth -= titleBar->minimizeButton->width;
 		if (titleBar->closeButton)
 			titleWidth -= titleBar->closeButton->width;
 
-		while (kernelFontGetPrintedWidth(font, (char *) component->charSet,
-			title) > titleWidth)
+		while (titleLen && (kernelFontGetPrintedWidth(font, (char *)
+			component->charSet, title) > titleWidth))
 		{
-			title[strlen(title) - 2] = '\0';
+			title[titleLen--] = '\0';
 		}
 
-		kernelGraphicDrawText(component->buffer,
-			(color *) &component->params.foreground, &backgroundColor, font,
-			(char *) component->charSet, title, draw_translucent,
-			(component->xCoord + 5), (component->yCoord + ((component->height -
-				font->glyphHeight) / 2)));
+		if (titleLen)
+		{
+			kernelGraphicDrawText(component->buffer, (color *)
+				&component->params.foreground, &backgroundColor, font,
+				(char *) component->charSet, title, draw_translucent,
+				(component->xCoord + 5), (component->yCoord +
+					((component->height - font->glyphHeight) / 2)));
+		}
 	}
 
 	if (titleBar->minimizeButton && titleBar->minimizeButton->draw)
@@ -219,36 +224,49 @@ static int draw(kernelWindowComponent *component)
 static int move(kernelWindowComponent *component, int xCoord, int yCoord)
 {
 	kernelWindowTitleBar *titleBar = component->data;
-	int buttonX, buttonY = (yCoord + 2);
+	int buttonX = 0, buttonY = (yCoord + BUTTON_PAD);
 
-	// Move our buttons
+	// Move our buttons, if necessary
 
 	if (titleBar->closeButton)
 	{
 		buttonX = (xCoord + (component->width -
-			(titleBar->closeButton->width + 2)));
+			(titleBar->closeButton->width + BUTTON_PAD)));
 
-		if (titleBar->closeButton->move)
-			titleBar->closeButton->move(titleBar->closeButton, buttonX, buttonY);
+		if ((titleBar->closeButton->xCoord != buttonX) ||
+			(titleBar->closeButton->yCoord != buttonY))
+		{
+			if (titleBar->closeButton->move)
+			{
+				titleBar->closeButton->move(titleBar->closeButton, buttonX,
+					buttonY);
+			}
 
-		titleBar->closeButton->xCoord = buttonX;
-		titleBar->closeButton->yCoord = buttonY;
+			titleBar->closeButton->xCoord = buttonX;
+			titleBar->closeButton->yCoord = buttonY;
+		}
 	}
 
 	if (titleBar->minimizeButton)
 	{
 		buttonX = (xCoord + (component->width -
-			(titleBar->minimizeButton->width + 2)));
+			(titleBar->minimizeButton->width + BUTTON_PAD)));
 
 		if (titleBar->closeButton)
-			buttonX -= (titleBar->closeButton->width + 2);
+			buttonX -= (titleBar->closeButton->width + BUTTON_PAD);
 
-		if (titleBar->minimizeButton->move)
-			titleBar->minimizeButton
-				->move(titleBar->minimizeButton, buttonX, buttonY);
+		if ((titleBar->minimizeButton->xCoord != buttonX) ||
+			(titleBar->minimizeButton->yCoord != buttonY))
+		{
+			if (titleBar->minimizeButton->move)
+			{
+				titleBar->minimizeButton->move(titleBar->minimizeButton,
+					buttonX, buttonY);
+			}
 
-		titleBar->minimizeButton->xCoord = buttonX;
-		titleBar->minimizeButton->yCoord = buttonY;
+			titleBar->minimizeButton->xCoord = buttonX;
+			titleBar->minimizeButton->yCoord = buttonY;
+		}
 	}
 
 	return (0);
@@ -258,44 +276,78 @@ static int move(kernelWindowComponent *component, int xCoord, int yCoord)
 static int resize(kernelWindowComponent *component, int width, int height)
 {
 	kernelWindowTitleBar *titleBar = component->data;
-	int buttonX, buttonY = (component->yCoord + 2);
+	int buttonX = 0, buttonY = (component->yCoord + BUTTON_PAD);
+	int buttonSize = (height - BUTTON_PAD2X);
 
-	// Move our buttons
+	// Resize and move our buttons, if necessary
 
 	if (titleBar->closeButton)
 	{
-		buttonX =
-			(component->xCoord + (width - (titleBar->closeButton->width + 2)));
+		if ((buttonSize > 0) &&
+			((titleBar->closeButton->width != buttonSize) ||
+				(titleBar->closeButton->height != buttonSize)))
+		{
+			if (titleBar->closeButton->resize)
+			{
+				titleBar->closeButton->resize(titleBar->closeButton,
+					buttonSize, buttonSize);
+			}
 
-		if (titleBar->closeButton->move)
-			titleBar->closeButton->move(titleBar->closeButton, buttonX, buttonY);
+			titleBar->closeButton->width = buttonSize;
+			titleBar->closeButton->height = buttonSize;
+		}
 
-		titleBar->closeButton->width = (height - 4);
-		titleBar->closeButton->height = (height - 4);
-		titleBar->closeButton->minWidth = titleBar->closeButton->width;
-		titleBar->closeButton->minHeight = titleBar->closeButton->height;
-		titleBar->closeButton->xCoord = buttonX;
-		titleBar->closeButton->yCoord = buttonY;
+		buttonX = (component->xCoord + (width -
+			(titleBar->closeButton->width + BUTTON_PAD)));
+
+		if ((titleBar->closeButton->xCoord != buttonX) ||
+			(titleBar->closeButton->yCoord != buttonY))
+		{
+			if (titleBar->closeButton->move)
+			{
+				titleBar->closeButton->move(titleBar->closeButton, buttonX,
+					buttonY);
+			}
+
+			titleBar->closeButton->xCoord = buttonX;
+			titleBar->closeButton->yCoord = buttonY;
+		}
 	}
 
 	if (titleBar->minimizeButton)
 	{
-		buttonX =
-			(component->xCoord + (width - (titleBar->minimizeButton->width + 2)));
+		if ((buttonSize > 0) &&
+			((titleBar->minimizeButton->width != buttonSize) ||
+				(titleBar->minimizeButton->height != buttonSize)))
+		{
+			if (titleBar->minimizeButton->resize)
+			{
+				titleBar->minimizeButton->resize(titleBar->minimizeButton,
+					buttonSize, buttonSize);
+			}
+
+			titleBar->minimizeButton->width = buttonSize;
+			titleBar->minimizeButton->height = buttonSize;
+		}
+
+		buttonX = (component->xCoord + (width -
+			(titleBar->minimizeButton->width + BUTTON_PAD)));
 
 		if (titleBar->closeButton)
-			buttonX -= (titleBar->closeButton->width + 2);
+			buttonX -= (titleBar->closeButton->width + BUTTON_PAD);
 
-		if (titleBar->minimizeButton->move)
-			titleBar->minimizeButton->move(titleBar->minimizeButton, buttonX,
-				buttonY);
+		if ((titleBar->minimizeButton->xCoord != buttonX) ||
+			(titleBar->minimizeButton->yCoord != buttonY))
+		{
+			if (titleBar->minimizeButton->move)
+			{
+				titleBar->minimizeButton->move(titleBar->minimizeButton,
+					buttonX, buttonY);
+			}
 
-		titleBar->minimizeButton->width = (height - 4);
-		titleBar->minimizeButton->height = (height - 4);
-		titleBar->minimizeButton->minWidth = titleBar->minimizeButton->width;
-		titleBar->minimizeButton->minHeight = titleBar->minimizeButton->height;
-		titleBar->minimizeButton->xCoord = buttonX;
-		titleBar->minimizeButton->yCoord = buttonY;
+			titleBar->minimizeButton->xCoord = buttonX;
+			titleBar->minimizeButton->yCoord = buttonY;
+		}
 	}
 
 	return (0);
@@ -323,26 +375,29 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 
 			// Erase the xor'ed outline
 			kernelWindowRedrawArea(component->window->xCoord,
-				component->window->yCoord, component->window->buffer.width, 1);
+				component->window->yCoord, component->window->buffer.width,
+				1);
 			kernelWindowRedrawArea(component->window->xCoord,
-				component->window->yCoord, 1, component->window->buffer.height);
+				component->window->yCoord, 1,
+				component->window->buffer.height);
 			kernelWindowRedrawArea((component->window->xCoord +
 				component->window->buffer.width - 1),
-				component->window->yCoord, 1, component->window->buffer.height);
+				component->window->yCoord, 1,
+				component->window->buffer.height);
 			kernelWindowRedrawArea(component->window->xCoord,
 				(component->window->yCoord +
 					component->window->buffer.height - 1),
 				component->window->buffer.width, 1);
 
 			// Set the new position
-			component->window->xCoord +=
-				(event->xPosition - dragEvent.xPosition);
-			component->window->yCoord +=
-				(event->yPosition - dragEvent.yPosition);
+			component->window->xCoord += (event->xPosition -
+				dragEvent.xPosition);
+			component->window->yCoord += (event->yPosition -
+				dragEvent.yPosition);
 
 			// Draw an xor'ed outline
-			kernelGraphicDrawRect(NULL, &((color){ 255, 255, 255 }),
-				draw_xor, component->window->xCoord, component->window->yCoord,
+			kernelGraphicDrawRect(NULL, &((color){ 255, 255, 255 }), draw_xor,
+				component->window->xCoord, component->window->yCoord,
 				component->window->buffer.width,
 				component->window->buffer.height, 1, 0);
 
@@ -384,7 +439,10 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 	{
 		// Pass the event to the button
 		if (titleBar->minimizeButton->mouseEvent)
-			titleBar->minimizeButton->mouseEvent(titleBar->minimizeButton, event);
+		{
+			titleBar->minimizeButton->mouseEvent(titleBar->minimizeButton,
+				event);
+		}
 
 		// Minimize the window
 		if (event->type == EVENT_MOUSE_LEFTUP)
@@ -393,8 +451,8 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 		return (status = 0);
 	}
 
-	else if (titleBar->closeButton &&
-		isMouseInButton(event, titleBar->closeButton))
+	else if (titleBar->closeButton && isMouseInButton(event,
+		titleBar->closeButton))
 	{
 		// Pass the event to the button
 		if (titleBar->closeButton->mouseEvent)
@@ -423,9 +481,9 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 				component->window->buffer.height);
 
 			// Draw an xor'ed outline
-			kernelGraphicDrawRect(NULL, &((color){ 255, 255, 255 }),
-				draw_xor, component->window->xCoord,
-				component->window->yCoord, component->window->buffer.width,
+			kernelGraphicDrawRect(NULL, &((color){ 255, 255, 255 }), draw_xor,
+				component->window->xCoord, component->window->yCoord,
+				component->window->buffer.width,
 				component->window->buffer.height, 1, 0);
 
 			// Save a copy of the dragging event
@@ -502,7 +560,10 @@ kernelWindowComponent *kernelWindowNewTitleBar(kernelWindow *window,
 	}
 
 	if (!imagesCreated)
-		createImages((titleBarHeight - 4), (titleBarHeight - 4));
+	{
+		createImages((titleBarHeight - BUTTON_PAD2X), (titleBarHeight -
+			BUTTON_PAD2X));
+	}
 
 	// Get the basic component structure
 	component = kernelWindowComponentNew(window->sysContainer, params);
@@ -565,10 +626,11 @@ kernelWindowComponent *kernelWindowNewTitleBar(kernelWindow *window,
 
 	if (titleBar->minimizeButton)
 	{
-		titleBar->minimizeButton->width = (titleBarHeight - 4);
-		titleBar->minimizeButton->height = (titleBarHeight - 4);
+		titleBar->minimizeButton->width = (titleBarHeight - BUTTON_PAD2X);
+		titleBar->minimizeButton->height = (titleBarHeight - BUTTON_PAD2X);
 		titleBar->minimizeButton->minWidth = titleBar->minimizeButton->width;
-		titleBar->minimizeButton->minHeight = titleBar->minimizeButton->height;
+		titleBar->minimizeButton->minHeight =
+			titleBar->minimizeButton->height;
 
 		// We don't want minimize buttons to get the focus
 		titleBar->minimizeButton->flags &= ~WINFLAG_CANFOCUS;
@@ -582,8 +644,8 @@ kernelWindowComponent *kernelWindowNewTitleBar(kernelWindow *window,
 
 	if (titleBar->closeButton)
 	{
-		titleBar->closeButton->width = (titleBarHeight - 4);
-		titleBar->closeButton->height = (titleBarHeight - 4);
+		titleBar->closeButton->width = (titleBarHeight - BUTTON_PAD2X);
+		titleBar->closeButton->height = (titleBarHeight - BUTTON_PAD2X);
 		titleBar->closeButton->minWidth = titleBar->closeButton->width;
 		titleBar->closeButton->minHeight = titleBar->closeButton->height;
 

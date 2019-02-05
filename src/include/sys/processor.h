@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -23,6 +23,8 @@
 
 // This file contains macros for processor-specific operations.  At the moment
 // it's only for X86 processors.
+
+#define PROCESSOR_LITTLE_ENDIAN			1
 
 // Model-specific registers that we use
 #define X86_MSR_APICBASE				0x1B

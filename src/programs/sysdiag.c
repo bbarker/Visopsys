@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -165,7 +165,7 @@ static void error(const char *format, ...)
 static void printBanner(void)
 {
 	textScreenClear();
-	printf(_("%s\nCopyright (C) 1998-2016 J. Andrew McLaughlin\n"), PROGNAME);
+	printf(_("%s\nCopyright (C) 1998-2018 J. Andrew McLaughlin\n"), PROGNAME);
 }
 
 
@@ -260,8 +260,8 @@ static void showResults(int status, testError *testErrors, int numErrors)
 			if (numErrors)
 			{
 				choice = windowNewChoiceDialog(window,
-					((status == ERR_CANCELLED)? TESTCANCELLED : TESTCOMPLETED),
-					tmp, choiceStrings, 2, 0);
+					((status == ERR_CANCELLED)? TESTCANCELLED :
+						TESTCOMPLETED), tmp, choiceStrings, 2, 0);
 			}
 			else
 			{
@@ -275,8 +275,9 @@ static void showResults(int status, testError *testErrors, int numErrors)
 			printf("\n%s\n\n", tmp);
 			if (numErrors)
 			{
-				choice = vshCursorMenu(_("Do you want to view the results?\n"),
-					choiceStrings, 2, 0 /* no max rows */, 0 /* selected */);
+				choice = vshCursorMenu(_("Do you want to view the "
+					"results?\n"), choiceStrings, 2, 0 /* no max rows */,
+					0 /* selected */);
 			}
 			else
 			{
@@ -382,7 +383,8 @@ static void showResults(int status, testError *testErrors, int numErrors)
 static int diskError(testError **testErrors, uquad_t *numErrors,
 	errorType type, uquad_t location)
 {
-	*testErrors = realloc(*testErrors, ((*numErrors + 1) * sizeof(testError)));
+	*testErrors = realloc(*testErrors, ((*numErrors + 1) *
+		sizeof(testError)));
 	if (!(*testErrors))
 		return (ERR_MEMORY);
 
@@ -455,8 +457,8 @@ static int doDiskTest(disk *theDisk, testError **testErrors,
 			// sector individually to see which one(s) are the problem.
 			for (count2 = count1; count2 < (count1 + sectorsPerOp); count2 ++)
 			{
-				status = diskReadSectors(theDisk->name, count2, 1, dataBuffer);
-
+				status = diskReadSectors(theDisk->name, count2, 1,
+					dataBuffer);
 				if (status < 0)
 				{
 					status = diskError(testErrors, numErrors, disk_read_error,
@@ -508,13 +510,13 @@ static int doDiskTest(disk *theDisk, testError **testErrors,
 				}
 				else
 				{
-					// Compare the data we read to make sure it's the data from
-					// the pattern.
+					// Compare the data we read to make sure it's the data
+					// from the pattern.
 					if (memcmp(patternBuffer, compareBuffer, bufferSize))
 					{
-						// Eeek, the write actually failed.  Don't quit here if
-						// this call fails, as we need to attempt to write the
-						// real data back.
+						// Eeek, the write actually failed.  Don't quit here
+						// if this call fails, as we need to attempt to write
+						// the real data back.
 						diskError(testErrors, numErrors, disk_write_error,
 							count1);
 					}
@@ -525,8 +527,8 @@ static int doDiskTest(disk *theDisk, testError **testErrors,
 					dataBuffer);
 				if (status < 0)
 				{
-					status = diskError(testErrors, numErrors, disk_write_error,
-						count1);
+					status = diskError(testErrors, numErrors,
+						disk_write_error, count1);
 					if (status < 0)
 						goto out;
 				}
@@ -632,7 +634,8 @@ static int doMemoryTest(testError **testErrors, uquad_t *numErrors)
 	#define MB 1048576
 
 	// Allocate memory for the pattern buffers
-	patternBuffers = malloc((MB / MEMORY_PAGE_SIZE) * sizeof(unsigned char *));
+	patternBuffers = malloc((MB / MEMORY_PAGE_SIZE) *
+		sizeof(unsigned char *));
 	if (!patternBuffers)
 	{
 		status = ERR_MEMORY;
@@ -912,30 +915,27 @@ static void constructWindow(void)
 	memset(&params, 0, sizeof(componentParameters));
 	params.gridWidth = 1;
 	params.gridHeight = 1;
+	params.padTop = 5;
+	params.padLeft = 5;
 	params.orientationX = orient_left;
 	params.orientationY = orient_top;
+	params.flags |= WINDOW_COMPFLAG_FIXEDWIDTH;
 
 	// Make a container for the left hand side components
 	container = windowNewContainer(window, "leftContainer", &params);
 
 	// Try to load an icon image to go at the top of the window
-	params.padTop = 5;
-	params.padLeft = 5;
-	params.padRight = 5;
+	params.padTop = params.padLeft = 0;
 	if (imageLoad(PATH_SYSTEM_ICONS "/sysdiag.ico", 0, 0, &iconImage) >= 0)
 	{
 		// Create an image component from it, and add it to the container
 		iconImage.transColor.green = 255;
-		params.flags |= (WINDOW_COMPFLAG_FIXEDWIDTH |
-			WINDOW_COMPFLAG_FIXEDHEIGHT);
 		windowNewImage(container, &iconImage, draw_alphablend, &params);
 		imageFree(&iconImage);
 	}
 
 	// Create the test type radio button
 	params.gridY += 1;
-	params.flags &= ~(WINDOW_COMPFLAG_FIXEDWIDTH |
-		WINDOW_COMPFLAG_FIXEDHEIGHT);
 	testTypeRadio = windowNewRadioButton(container, 2, 1, (char *[])
 			{ DISK_TEST, MEMORY_TEST }, 2, &params);
 	windowRegisterEventHandler(testTypeRadio, &eventHandler);
@@ -943,15 +943,15 @@ static void constructWindow(void)
 	// A little divider between the containers
 	params.gridX += 1;
 	params.gridY = 0;
+	params.padLeft = 15;
+	params.padTop = params.padRight = 5;
 	params.orientationX = orient_center;
-	params.flags |= WINDOW_COMPFLAG_FIXEDWIDTH;
 	windowNewDivider(window, divider_vertical, &params);
 
 	// Make a container for the right hand side components
 	params.gridX += 1;
-	params.padTop = 0;
-	params.padLeft = 0;
-	params.padRight = 0;
+	params.padLeft = 5;
+	params.orientationX = orient_left;
 	params.flags &= ~WINDOW_COMPFLAG_FIXEDWIDTH;
 	container = windowNewContainer(window, "rightContainer", &params);
 
@@ -959,19 +959,22 @@ static void constructWindow(void)
 	params.gridX = 0;
 	params.gridY = 0;
 	params.gridWidth = 2;
-	params.padTop = 5;
-	params.padLeft = 5;
-	params.padRight = 5;
+	params.padTop = params.padLeft = params.padRight = 0;
 	diskList = windowNewList(container, windowlist_textonly, 4, 1, 0,
 		diskListParams, numberDisks, &params);
 
 	// A radio button for choosing read-only or read-write tests
 	params.gridY += 1;
 	params.gridWidth = 1;
+	params.padTop = 5;
+	params.flags |= WINDOW_COMPFLAG_FIXEDWIDTH;
 	readWriteRadio = windowNewRadioButton(container, 2, 1, (char *[])
 		{ READ_ONLY, READ_WRITE }, 2, &params);
 
+	// A description of read-only vs. read-write tests
 	params.gridX += 1;
+	params.padLeft = 5;
+	params.flags &= ~WINDOW_COMPFLAG_FIXEDWIDTH;
 	params.font = fontGet(FONT_FAMILY_LIBMONO, (FONT_STYLEFLAG_BOLD |
 		FONT_STYLEFLAG_FIXED), 10, NULL);
 	readWriteLabel = windowNewTextLabel(container, READWRITE, &params);
@@ -980,28 +983,27 @@ static void constructWindow(void)
 	params.gridX = 0;
 	params.gridY = 1;
 	params.gridWidth = 3;
-	params.padTop = 0;
-	params.padLeft = 0;
-	params.padRight = 0;
+	params.padLeft = params.padRight = params.padTop = params.padBottom = 5;
 	params.orientationX = orient_center;
 	params.font = NULL;
-	params.flags |= (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
+	params.flags |= (WINDOW_COMPFLAG_FIXEDWIDTH |
+		WINDOW_COMPFLAG_FIXEDHEIGHT);
 	container = windowNewContainer(window, "buttonContainer", &params);
 
 	// Create the Test button
 	params.gridY = 0;
 	params.gridWidth = 1;
-	params.padTop = 5;
-	params.padBottom = 5;
-	params.padLeft = 5;
-	params.padRight = 5;
+	params.padRight = 3;
+	params.padLeft = params.padTop = params.padBottom = 0;
 	params.orientationX = orient_right;
 	testButton = windowNewButton(container, TEST, NULL, &params);
 	windowRegisterEventHandler(testButton, &eventHandler);
 	windowComponentFocus(testButton);
 
 	// Create the Quit button
-	params.gridX++;
+	params.gridX += 1;
+	params.padLeft = 3;
+	params.padRight = 0;
 	params.orientationX = orient_left;
 	quitButton = windowNewButton(container, QUIT, NULL, &params);
 	windowRegisterEventHandler(quitButton, &eventHandler);

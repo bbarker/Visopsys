@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 	diskName = argv[1];
 
 	// Print a message
-	printf("%s", _("\nVisopsys CHKDISK Utility\nCopyright (C) 1998-2016 J. "
+	printf("%s", _("\nVisopsys CHKDISK Utility\nCopyright (C) 1998-2018 J. "
 		"Andrew McLaughlin\n\n"));
 
 	status = filesystemCheck(diskName, force, repair, NULL);

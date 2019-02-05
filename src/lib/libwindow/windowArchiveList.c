@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -107,9 +107,14 @@ static int update(windowArchiveList *archList, archiveMemberInfo *members,
 
 	// Clear the list
 	windowComponentSetData(archList->key, NULL, 0, 0 /* no redraw */);
+
+	// Re-populate the list
 	windowComponentSetData(archList->key, iconParams, archList->numMembers,
 		1 /* redraw */);
-	windowComponentSetSelected(archList->key, 0);
+
+	// If it has any members, select the first one
+	if (archList->numMembers)
+		windowComponentSetSelected(archList->key, 0);
 
 	if (iconParams)
 		free(iconParams);

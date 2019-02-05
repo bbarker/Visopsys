@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -627,19 +627,27 @@ _X_ windowPixelEditor *windowNewPixelEditor(objectKey parent, int width, int hei
 
 	// Was a foreground color specified?
 	if (params->flags & WINDOW_COMPFLAG_CUSTOMFOREGROUND)
+	{
 		// Use the one we were given
 		memcpy(&editor->foreground, &params->foreground, sizeof(color));
+	}
 	else
+	{
 		// Use our default
 		editor->foreground = COLOR_BLACK;
+	}
 
 	// Was a background color specified?
 	if (params->flags & WINDOW_COMPFLAG_CUSTOMBACKGROUND)
+	{
 		// Use the one we were given
 		memcpy(&editor->background, &params->background, sizeof(color));
+	}
 	else
+	{
 		// Use our default
 		editor->background = COLOR_WHITE;
+	}
 
 	// Set some defaults for drawing
 	editor->mode = pixedmode_draw;

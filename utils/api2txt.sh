@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  api2txt.sh
 ##
@@ -19,4 +19,3 @@ sed -n -e 's/[ 	]*_X_[ ]*//p' -e '/[ ]*\/\/[ ]*Desc[ ]*: /a\
 \
 ' -e 's/[ ]*\/\/[ ]*Desc[ ]*: /\n	/p' $1
 
-#sed -n -e 's/[  ]*_X_ /<p><font face="Courier New">/p ; /<font/a</font></p>' -e 's/[ ]*\/\/[ ]*Desc[ ]*: /<blockquote>\n  <p>/p ; /<block/a</p></blockquote>' $1

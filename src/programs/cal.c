@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -36,7 +36,7 @@ In graphics mode, the program is interactive and allows the user to change
 the month and year to display.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 
 </help>
 */
@@ -105,8 +105,8 @@ static listItemParameters *calListParams = NULL;
 
 static int leapYear(int y)
 {
-	// There is a leap year in every year divisible by 4 except for years which
-	// are both divisible by 100 and not by 400.  Got it?
+	// There is a leap year in every year divisible by 4 except for years
+	// which are both divisible by 100 and not divisible by 400.  Got it?
 	if (!(y % 4) && ((y % 100) || !(y % 400)))
 		return (1);
 	else
@@ -131,7 +131,7 @@ static int getDays(int m, int y)
 static void textCalendar(void)
 {
 	int days = getDays((month - 1), year);
-	int firstDay  = rtcDayOfWeek(1, month, year);
+	int firstDay = rtcDayOfWeek(1, month, year);
 	int spaceSkip = (10 - (strlen(_(monthName[month - 1])) + 5) / 2);
 	int count;
 
@@ -167,7 +167,7 @@ static void textCalendar(void)
 static void initCalListParams(void)
 {
 	int days = getDays((month - 1), year);
-	int firstDay  = rtcDayOfWeek(1, month, year);
+	int firstDay = rtcDayOfWeek(1, month, year);
 	int count;
 
 	for (count = 0; count < 49; count++)
@@ -197,8 +197,8 @@ static void getUpdate(void)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -257,6 +257,7 @@ static void eventHandler(objectKey key, windowEvent *event)
 
 static void constructWindow(void)
 {
+	objectKey container = NULL;
 	componentParameters params;
 	struct tm theTime;
 
@@ -267,39 +268,40 @@ static void constructWindow(void)
 	memset(&params, 0, sizeof(componentParameters));
 	params.gridWidth = 1;
 	params.gridHeight = 1;
-	params.padRight = 1;
-	params.padLeft = 1;
-	params.padTop = 5;
-	params.padBottom = 5;
 	params.orientationX = orient_center;
 	params.orientationY = orient_middle;
+	params.flags = WINDOW_COMPFLAG_FIXEDWIDTH;
 
-	minusMonthButton = windowNewButton(window, "<", NULL, &params);
+	params.padLeft = params.padTop = params.padRight = 5;
+	container = windowNewContainer(window, "container", &params);
+
+	params.padLeft = params.padTop = params.padRight = 0;
+	minusMonthButton = windowNewButton(container, "<", NULL, &params);
 	windowRegisterEventHandler(minusMonthButton, &eventHandler);
 
 	params.gridX += 1;
-	plusMonthButton = windowNewButton(window, ">", NULL, &params);
+	params.padLeft = 5;
+	plusMonthButton = windowNewButton(container, ">", NULL, &params);
 	windowRegisterEventHandler(plusMonthButton, &eventHandler);
 
 	params.gridX += 1;
-	monthLabel = windowNewTextLabel(window, "", &params);
+	monthLabel = windowNewTextLabel(container, "XXXXXXXXX", &params);
 	windowComponentSetWidth(monthLabel, 80);
 
 	params.gridX += 1;
-	yearLabel = windowNewTextLabel(window, "", &params);
+	yearLabel = windowNewTextLabel(container, "XXXX", &params);
 
 	params.gridX += 1;
-	minusYearButton = windowNewButton(window, "<", NULL, &params);
+	minusYearButton = windowNewButton(container, "<", NULL, &params);
 	windowRegisterEventHandler(minusYearButton, &eventHandler);
 
 	params.gridX += 1;
-	plusYearButton = windowNewButton(window, ">", NULL, &params);
+	plusYearButton = windowNewButton(container, ">", NULL, &params);
 	windowRegisterEventHandler(plusYearButton, &eventHandler);
 
 	params.gridX = 0;
-	params.gridY = 1;
-	params.gridWidth = 6;
-	params.flags = WINDOW_COMPFLAG_FIXEDWIDTH;
+	params.gridY += 1;
+	params.padLeft = params.padTop = params.padRight = params.padBottom = 5;
 	initCalListParams();
 	calList = windowNewList(window, windowlist_textonly, 7, 7, 0,
 		calListParams, 49, &params);
@@ -362,9 +364,9 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	date  = rtcReadDayOfMonth();
+	date = rtcReadDayOfMonth();
 	month = rtcReadMonth();
-	year  = rtcReadYear();
+	year = rtcReadYear();
 
 	if (graphics)
 		graphCalendar();

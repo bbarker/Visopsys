@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -66,6 +66,9 @@ struct stat {
 	time_t st_mtime;		// time of last modification
 	time_t st_ctime;		// time of last change
 };
+
+int mkdir(const char *, mode_t);
+int stat(const char *, struct stat *);
 
 #define _STAT_H
 #endif

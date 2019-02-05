@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -165,8 +165,8 @@ int _fmtinpt(const char *input, const char *format, va_list list)
 		{
 			case 'd':
 			case 'i':
-				// This is an integer.  Read the characters for the integer
-				// from the input string
+				// This is a decimal integer.  Read the characters for the
+				// integer from the input string
 				if (isLong)
 				{
 					*argument = atoll(input + inputCount);
@@ -180,8 +180,8 @@ int _fmtinpt(const char *input, const char *format, va_list list)
 				break;
 
 			case 'u':
-				// This is an unsigned integer.  Put the characters for
-				// the integer into the destination string
+				// This is an unsigned decimal integer.  Put the characters
+				// for the integer into the destination string
 				if (isLong)
 				{
 					*argument = atoull(input + inputCount);
@@ -200,13 +200,29 @@ int _fmtinpt(const char *input, const char *format, va_list list)
 				break;
 
 			case 's':
-				// This is a string.  Copy until we meet a whitespace character.
+				// This is a string.  Copy until we meet a whitespace
+				// character
 				for (count = 0; ((inputCount < inputLen) &&
 					!isspace(input[inputCount])); count ++)
 				{
 					((char *) argument)[count] = input[inputCount++];
 				}
 				((char *) argument)[count] = '\0';
+				break;
+
+			case 'o':
+				// This is an octal number.  Put the characters for the number
+				// into the destination string
+				if (isLong)
+				{
+					*argument = atooll(input + inputCount);
+					inputCount += _ldigits(*argument, 8, 1);
+				}
+				else
+				{
+					*((int *) argument) = atoo(input + inputCount);
+					inputCount += _digits(*argument, 8, 1);
+				}
 				break;
 
 			case 'p':

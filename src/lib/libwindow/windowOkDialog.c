@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -93,7 +93,7 @@ static int okDialog(dialogType type, objectKey parentWindow, const char *title,
 	params.orientationY = orient_top;
 	params.flags = (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
 
-	// If our 'info' or 'error' image hasn't been loaded, try to load it
+	// Try to load the 'info' or 'error' image
 	if (type == infoDialog)
 		status = imageLoad(INFOIMAGE_NAME, 64, 64, &iconImage);
 	else
@@ -103,6 +103,7 @@ static int okDialog(dialogType type, objectKey parentWindow, const char *title,
 	{
 		iconImage.transColor.green = 0xFF;
 		windowNewImage(container, &iconImage, draw_alphablend, &params);
+		imageFree(&iconImage);
 	}
 
 	// Create the label

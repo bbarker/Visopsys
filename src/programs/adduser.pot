@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,11 +26,11 @@ msgstr ""
 msgid "%s <username>\n"
 msgstr ""
 
-#: adduser.c:79
+#: adduser.c:78
 #, c-format
 msgid "User %s already exists.\n"
 msgstr ""
 
-#: adduser.c:103
+#: adduser.c:102
 msgid "User added.\n"
 msgstr ""

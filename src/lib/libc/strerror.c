@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -23,12 +23,13 @@
 // other standard C libraries
 
 #include <string.h>
-#include <errno.h>
+#include <sys/errors.h>
 
 
 static struct {
 	int code;
 	char *string;
+
 } errorStringTable[] = {
 	{ 0, "No error." },
 	{ ERR_INVALID, "Invalid operation." },
@@ -37,6 +38,7 @@ static struct {
 	{ ERR_BUSY, "The resource is busy." },
 	{ ERR_NOSUCHENTRY, "Object does not exist." },
 	{ ERR_BADADDRESS, "Invalid memory address." },
+	{ ERR_TIMEOUT, "Operation timed out." },
 	{ ERR_NOTINITIALIZED, "Resource has not been initialized." },
 	{ ERR_NOTIMPLEMENTED, "Requested functionality not implemented." },
 	{ ERR_NULLPARAMETER, "Required parameter was NULL." },
@@ -57,15 +59,19 @@ static struct {
 	{ ERR_ARGUMENTCOUNT, "Incorrect number of parameters." },
 	{ ERR_ALREADY, "Requested action is unnecessary." },
 	{ ERR_DIVIDEBYZERO, "Divide by zero error." },
-	{ ERR_DOMAIN, "Math operation is not in the domain" },
-	{ ERR_RANGE, "Math operation is out of range" },
-	{ ERR_KILLED, "Process killed" },
-	{ ERR_NOMEDIA, "No media present" },
+	{ ERR_DOMAIN, "Math operation is not in the domain." },
+	{ ERR_RANGE, "Math operation is out of range." },
+	{ ERR_CANCELLED, "Operation was cancelled." },
+	{ ERR_KILLED, "Process killed." },
+	{ ERR_NOMEDIA, "No media present." },
 	{ ERR_NOSUCHFILE, "No such file." },
 	{ ERR_NOSUCHDIR, "No such directory." },
 	{ ERR_NOTAFILE, "Object is not a file." },
 	{ ERR_NOTADIR, "Object is not a directory." },
 	{ ERR_NOWRITE, "Cannot write data." },
+	{ ERR_HOSTUNKNOWN, "Host lookup failed." },
+	{ ERR_NOROUTETOHOST, "No route to host." },
+	{ ERR_NOCONNECTION, "Couldn't connect." },
 	{ ERR_NOSUCHUSER, "No such user." },
 	{ ERR_NOSUCHPROCESS, "No such process." },
 	{ ERR_NOSUCHDRIVER, "There is no driver for this operation." },
@@ -83,8 +89,10 @@ char *strerror(int error)
 	int count;
 
 	for (count = 0; errorStringTable[count].string; count ++)
+	{
 		if (errorStringTable[count].code == error)
 			return (errorStringTable[count].string);
+	}
 
 	// Not found.  Don't change errno.
 	return (NULL);

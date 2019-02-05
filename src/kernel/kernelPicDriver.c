@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -164,9 +164,9 @@ static int driverDisable(kernelPic *pic)
 
 static int driverDetect(void *parent, kernelDriver *driver)
 {
-	// Normally, this routine is used to detect and initialize each device,
-	// as well as registering each one with any higher-level interfaces.  Since
-	// we can assume that there's a PIC, just initialize it.
+	// Normally, this function is used to detect and initialize each device,
+	// as well as registering each one with any higher-level interfaces.
+	// Since we can assume that there's a PIC, just initialize it.
 
 	int status = 0;
 	kernelPic *pic = NULL;

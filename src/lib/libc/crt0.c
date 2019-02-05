@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -36,6 +36,9 @@ int errno = 0;
 // within the kernel.
 int visopsys_in_kernel = 0;
 
+// For linking C++ programs
+void *__dso_handle = NULL;
+
 
 void _start(void)
 {
@@ -52,7 +55,7 @@ void _start(void)
 	// Our return address should be sitting near the current top of our stack
 	// after any stack frame allocated by the compiler.  We don't want the
 	// stack frame or return address (we never do a return), since we want to
-	// pass our arguments straight to the main() routine.  Basically, we want
+	// pass our arguments straight to the main() function.  Basically, we want
 	// to simply pop that stuff off the stack.  This assumes that register EBP
 	// contains the original stack pointer.
 	//

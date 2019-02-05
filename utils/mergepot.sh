@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  mergepot.sh
 ##
@@ -19,6 +19,7 @@ TEMPLATE=$1
 LANGDIR=$2
 MSGFILE=$LANGDIR/`basename $TEMPLATE .pot`.po
 echo -n Merge $TEMPLATE into message file $MSGFILE
-msgmerge -o $MSGFILE $MSGFILE $TEMPLATE
+msgmerge -U $MSGFILE $TEMPLATE
 
 exit 0
+

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -38,11 +38,11 @@ This command will remove one or more files.  Normally it will not remove
 directories.  To remove a directory, use the 'rmdir' command.
 
 Options:
--R              : Force recursive deletion, including directories.
--S[number]      : Securely delete the file by overwriting it with random
-                  data (number minus 1 times) and then NULLs, and then
-                  deleting the file.  The default number value is 5 if no
-                  value is supplied.
+-R          : Force recursive deletion, including directories.
+-S[number]  : Securely delete the file by overwriting it with random
+            : data (number minus 1 times) and then NULLs, and then
+            : deleting the file.  The default number value is 5 if no
+            : value is supplied.
 
 Note the -S option is not allowed if the -R option is used.
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelPciDriver.c
 //
 
-// These routines allow access to PCI configuration space.  Based on an
+// These functions allow access to PCI configuration space.  Based on an
 // original version contributed by Jonas Zaddach: See the file
 // contrib/jonas-pci/src/kernel/kernelBusPCI.c
 
@@ -38,12 +38,14 @@
 #include <sys/processor.h>
 
 
+// Class 0x00: Unclassified device
 static pciSubClass subclass_old[] = {
 	{ 0x00, "other", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x01, "VGA", DEVICECLASS_GRAPHIC, DEVICESUBCLASS_NONE },
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x01: Mass storage controller
 static pciSubClass subclass_diskctrl[] = {
 	{ 0x00, "SCSI", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_DISKCTRL_SCSI },
 	{ 0x01, "IDE", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_DISKCTRL_IDE },
@@ -53,10 +55,12 @@ static pciSubClass subclass_diskctrl[] = {
 	{ 0x05, "ATA", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_NONE },
 	{ 0x06, "SATA", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_DISKCTRL_SATA },
 	{ 0x07, "SAS", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_NONE },
+	{ 0x08, "NVM", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_NONE },
 	{ 0x80, "other", DEVICECLASS_DISKCTRL, DEVICESUBCLASS_NONE },
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x02: Network controller
 static pciSubClass subclass_net[] = {
 	{ 0x00, "ethernet", DEVICECLASS_NETWORK, DEVICESUBCLASS_NETWORK_ETHERNET },
 	{ 0x01, "token ring", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
@@ -65,10 +69,13 @@ static pciSubClass subclass_net[] = {
 	{ 0x04, "ISDN", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
 	{ 0x05, "WorldFip", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
 	{ 0x06, "PICMG", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
+	{ 0x07, "InfiniBand", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
+	{ 0x08, "fabric", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
 	{ 0x80, "other", DEVICECLASS_NETWORK, DEVICESUBCLASS_NONE },
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x03: Display controller
 static pciSubClass subclass_graphics[] = {
 	{ 0x00, "VGA", DEVICECLASS_GRAPHIC, DEVICESUBCLASS_NONE },
 	{ 0x01, "XGA", DEVICECLASS_GRAPHIC, DEVICESUBCLASS_NONE },
@@ -77,6 +84,7 @@ static pciSubClass subclass_graphics[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x04: Multimedia controller
 static pciSubClass subclass_multimed[] = {
 	{ 0x00, "video", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x01, "audio", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -86,6 +94,7 @@ static pciSubClass subclass_multimed[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x05: Memory controller
 static pciSubClass subclass_mem[] = {
 	{ 0x00, "RAM", DEVICECLASS_MEMORY, DEVICESUBCLASS_NONE },
 	{ 0x01, "flash", DEVICECLASS_MEMORY, DEVICESUBCLASS_NONE },
@@ -93,6 +102,7 @@ static pciSubClass subclass_mem[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x06: Bridge
 static pciSubClass subclass_bridge[] = {
 	{ 0x00, "host", DEVICECLASS_BRIDGE, DEVICESUBCLASS_NONE },
 	{ 0x01, "ISA", DEVICECLASS_BRIDGE, DEVICESUBCLASS_BRIDGE_ISA },
@@ -109,6 +119,7 @@ static pciSubClass subclass_bridge[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x07: Communication controller
 static pciSubClass subclass_comm[] = {
 	{ 0x00, "serial", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x01, "parallel", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -120,6 +131,7 @@ static pciSubClass subclass_comm[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x08: Generic system peripheral
 static pciSubClass subclass_sys[] = {
 	{ 0x00, "(A)PIC", DEVICECLASS_INTCTRL, DEVICESUBCLASS_NONE },
 	{ 0x01, "DMA", DEVICECLASS_DMA, DEVICESUBCLASS_NONE },
@@ -127,10 +139,12 @@ static pciSubClass subclass_sys[] = {
 	{ 0x03, "RTC", DEVICECLASS_RTC, DEVICESUBCLASS_NONE },
 	{ 0x04, "PCI hotplug", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x05, "SD controller", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
+	{ 0x06, "IOMMU", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x80, "other", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x09: Input device controller
 static pciSubClass subclass_input[] = {
 	{ 0x00, "keyboard", DEVICECLASS_KEYBOARD, DEVICESUBCLASS_NONE },
 	{ 0x01, "digitizer", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -141,12 +155,14 @@ static pciSubClass subclass_input[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x0A: Docking station
 static pciSubClass subclass_dock[] = {
 	{ 0x00, "generic", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x80, "other", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x0B: Processor
 static pciSubClass subclass_cpu[] = {
 	{ 0x00, "386", DEVICECLASS_CPU, DEVICESUBCLASS_CPU_X86 },
 	{ 0x01, "486", DEVICECLASS_CPU, DEVICESUBCLASS_CPU_X86 },
@@ -159,6 +175,7 @@ static pciSubClass subclass_cpu[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x0C: Serial bus controller
 static pciSubClass subclass_serial[] = {
 	{ 0x00, "FireWire", DEVICECLASS_BUS, DEVICESUBCLASS_NONE },
 	{ 0x01, "ACCESS.bus", DEVICECLASS_BUS, DEVICESUBCLASS_NONE },
@@ -173,6 +190,7 @@ static pciSubClass subclass_serial[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x0D: Wireless controller
 static pciSubClass subclass_wireless[] = {
 	{ 0x00, "iRDA", DEVICECLASS_NETWORK, DEVICESUBCLASS_NETWORK_WIRELESS },
 	{ 0x01, "infrared", DEVICECLASS_NETWORK, DEVICESUBCLASS_NETWORK_WIRELESS },
@@ -187,11 +205,13 @@ static pciSubClass subclass_wireless[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x0E: Intelligent controller
 static pciSubClass subclass_intelio[] = {
-	{ 0x00, "I20/message", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
+	{ 0x00, "I2O/message", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x0F: Satellite communications controller
 static pciSubClass subclass_sat[] = {
 	{ 0x01, "television", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x02, "audio", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -200,6 +220,7 @@ static pciSubClass subclass_sat[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x10: Encryption controller
 static pciSubClass subclass_encrypt[] = {
 	{ 0x00, "network", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x10, "entertainment", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -207,6 +228,7 @@ static pciSubClass subclass_encrypt[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x11: Signal processing controller
 static pciSubClass subclass_sigproc[] = {
 	{ 0x00, "DPIO", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x01, "performance counter", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -216,6 +238,21 @@ static pciSubClass subclass_sigproc[] = {
 	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
 };
 
+// Class 0x12: Processing accelerators
+static pciSubClass subclass_procacc[] = {
+	{ 0x00, "unknown", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
+	{ 0x80, "other", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
+	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
+};
+
+// Class 0x13: Non-Essential Instrumentation
+static pciSubClass subclass_noness[] = {
+	{ 0x00, "unknown", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
+	{ 0x80, "other", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
+	{ PCI_INVALID_SUBCLASSCODE, "", DEVICECLASS_NONE, DEVICESUBCLASS_NONE }
+};
+
+// Class 0xFF: Proprietary/unassigned class
 static pciSubClass subclass_prop[] = {
 	{ 0x00, "unknown", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
 	{ 0x80, "other", DEVICECLASS_NONE, DEVICESUBCLASS_NONE },
@@ -241,6 +278,8 @@ static pciClass pciClassNames[] = {
 	{ 0x0F, "satellite controller", subclass_sat },
 	{ 0x10, "encryption controller", subclass_encrypt },
 	{ 0x11, "signal processing controller", subclass_sigproc },
+	{ 0x12, "processing accelerator", subclass_procacc },
+	{ 0x13, "nonessential instrumentation", subclass_noness },
 	{ 0xFF, "proprietary device", subclass_prop },
 	{ PCI_INVALID_CLASSCODE, "", NULL }
 };
@@ -678,7 +717,7 @@ static int driverSetMaster(kernelBusTarget *target, int master)
 
 static int driverDetect(void *parent, kernelDriver *driver)
 {
-	// This routine is used to detect and initialize each PCI controller
+	// This function is used to detect and initialize each PCI controller
 	// device, as well as registering each one with any higher-level
 	// interfaces.
 
@@ -699,9 +738,11 @@ static int driverDetect(void *parent, kernelDriver *driver)
 	processorInPort32(PCI_CONFIG_PORT, reply);
 
 	if (reply != 0x80000000L)
-		// No device that uses configuration mechanism #1.  Fine enough: No PCI
-		// functionality for you.
+	{
+		// No device that uses configuration mechanism #1.  Fine enough: No
+		// PCI functionality for you.
 		return (status = 0);
+	}
 
 	// First count all the devices on the bus
 	for (busCount = 0; busCount < PCI_MAX_BUSES; busCount ++)

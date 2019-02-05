@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -24,9 +24,10 @@
 
 #include "kernelApi.h"
 #include "kernelCharset.h"
+#include "kernelCpu.h"
+#include "kernelCrypt.h"
 #include "kernelDebug.h"
 #include "kernelDisk.h"
-#include "kernelEncrypt.h"
 #include "kernelEnvironment.h"
 #include "kernelError.h"
 #include "kernelFile.h"
@@ -625,9 +626,6 @@ static kernelArgInfo args_memoryGetBlocks[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
 		{ 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL } };
-static kernelArgInfo args_memoryBlockInfo[] =
-	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
-		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
 
 static kernelFunctionIndex memoryFunctionIndex[] = {
 	{ _fnum_memoryGet, kernelMemoryGet,
@@ -639,9 +637,7 @@ static kernelFunctionIndex memoryFunctionIndex[] = {
 	{ _fnum_memoryGetStats, kernelMemoryGetStats,
 		PRIVILEGE_USER, 2, args_memoryGetStats, type_val },
 	{ _fnum_memoryGetBlocks, kernelMemoryGetBlocks,
-		PRIVILEGE_USER, 3, args_memoryGetBlocks, type_val },
-	{ _fnum_memoryBlockInfo, kernelMemoryBlockInfo,
-		PRIVILEGE_USER, 2, args_memoryBlockInfo, type_val }
+		PRIVILEGE_USER, 3, args_memoryGetBlocks, type_val }
 };
 
 // Multitasker functions (0x6000-0x6FFF range)
@@ -685,7 +681,7 @@ static kernelArgInfo args_multitaskerSetTextInput[] =
 static kernelArgInfo args_multitaskerSetTextOutput[] =
 	{ { 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_ptr, API_ARG_ANYPTR | API_ARG_KERNPTR } };
-static kernelArgInfo args_multitaskerDuplicateIO[] =
+static kernelArgInfo args_multitaskerDuplicateIo[] =
 	{ { 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL } };
@@ -712,10 +708,10 @@ static kernelArgInfo args_multitaskerSignal[] =
 		{ 1, type_val, API_ARG_ANYVAL } };
 static kernelArgInfo args_multitaskerSignalRead[] =
 	{ { 1, type_val, API_ARG_ANYVAL } };
-static kernelArgInfo args_multitaskerGetIOPerm[] =
+static kernelArgInfo args_multitaskerGetIoPerm[] =
 	{ { 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL } };
-static kernelArgInfo args_multitaskerSetIOPerm[] =
+static kernelArgInfo args_multitaskerSetIoPerm[] =
 	{ { 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL } };
@@ -755,8 +751,8 @@ static kernelFunctionIndex multitaskerFunctionIndex[] = {
 		PRIVILEGE_USER, 0, NULL, type_ptr },
 	{ _fnum_multitaskerSetTextOutput, kernelMultitaskerSetTextOutput,
 		PRIVILEGE_USER, 2, args_multitaskerSetTextOutput, type_val },
-	{ _fnum_multitaskerDuplicateIO, kernelMultitaskerDuplicateIO,
-		PRIVILEGE_USER, 3, args_multitaskerDuplicateIO, type_val },
+	{ _fnum_multitaskerDuplicateIo, kernelMultitaskerDuplicateIo,
+		PRIVILEGE_USER, 3, args_multitaskerDuplicateIo, type_val },
 	{ _fnum_multitaskerGetProcessorTime, kernelMultitaskerGetProcessorTime,
 		PRIVILEGE_USER, 1, args_multitaskerGetProcessorTime, type_val },
 	{ _fnum_multitaskerYield, kernelMultitaskerYield,
@@ -779,10 +775,10 @@ static kernelFunctionIndex multitaskerFunctionIndex[] = {
 		PRIVILEGE_USER, 2, args_multitaskerSignal, type_val },
 	{ _fnum_multitaskerSignalRead, kernelMultitaskerSignalRead,
 		PRIVILEGE_USER, 1, args_multitaskerSignalRead, type_val },
-	{ _fnum_multitaskerGetIOPerm, kernelMultitaskerGetIOPerm,
-		PRIVILEGE_USER, 2, args_multitaskerGetIOPerm, type_val },
-	{ _fnum_multitaskerSetIOPerm, kernelMultitaskerSetIOPerm,
-		PRIVILEGE_SUPERVISOR, 3, args_multitaskerSetIOPerm, type_val },
+	{ _fnum_multitaskerGetIoPerm, kernelMultitaskerGetIoPerm,
+		PRIVILEGE_USER, 2, args_multitaskerGetIoPerm, type_val },
+	{ _fnum_multitaskerSetIoPerm, kernelMultitaskerSetIoPerm,
+		PRIVILEGE_SUPERVISOR, 3, args_multitaskerSetIoPerm, type_val },
 	{ _fnum_multitaskerStackTrace, kernelMultitaskerStackTrace,
 		PRIVILEGE_USER, 1, args_multitaskerStackTrace, type_val }
 };
@@ -1402,6 +1398,10 @@ static kernelArgInfo args_windowNewMenu[] =
 static kernelArgInfo args_windowNewMenuBar[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_KERNPTR },
 		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
+static kernelArgInfo args_windowNewMenuBarIcon[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_KERNPTR },
+		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
 static kernelArgInfo args_windowNewMenuItem[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_KERNPTR },
 		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
@@ -1601,6 +1601,8 @@ static kernelFunctionIndex windowFunctionIndex[] = {
 		PRIVILEGE_USER, 5, args_windowNewMenu, type_ptr },
 	{ _fnum_windowNewMenuBar, kernelWindowNewMenuBar,
 		PRIVILEGE_USER, 2, args_windowNewMenuBar, type_ptr },
+	{ _fnum_windowNewMenuBarIcon, kernelWindowNewMenuBarIcon,
+		PRIVILEGE_USER, 3, args_windowNewMenuBarIcon, type_ptr },
 	{ _fnum_windowNewMenuItem, kernelWindowNewMenuItem,
 		PRIVILEGE_USER, 3, args_windowNewMenuItem, type_ptr },
 	{ _fnum_windowNewPasswordField, kernelWindowNewPasswordField,
@@ -1703,12 +1705,9 @@ static kernelFunctionIndex userFunctionIndex[] = {
 
 // Network functions (0x11000-0x11FFF range)
 
-static kernelArgInfo args_networkDeviceGet[] =
-	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
-		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
 static kernelArgInfo args_networkOpen[] =
 	{ { 1, type_val, API_ARG_ANYVAL },
-		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_ptr, API_ARG_USERPTR },
 		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
 static kernelArgInfo args_networkClose[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_KERNPTR } };
@@ -1739,17 +1738,32 @@ static kernelArgInfo args_networkGetDomainName[] =
 static kernelArgInfo args_networkSetDomainName[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
 		{ 1, type_val, API_ARG_ANYVAL } };
+static kernelArgInfo args_networkDeviceEnable[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
+static kernelArgInfo args_networkDeviceDisable[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
+static kernelArgInfo args_networkDeviceGet[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
+static kernelArgInfo args_networkDeviceHook[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_val, API_ARG_ANYVAL } };
+static kernelArgInfo args_networkDeviceUnhook[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_KERNPTR },
+		{ 1, type_val, API_ARG_ANYVAL } };
+static kernelArgInfo args_networkDeviceSniff[] =
+	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_KERNPTR },
+		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_val, API_ARG_ANYVAL } };
 
 static kernelFunctionIndex networkFunctionIndex[] = {
-	{ _fnum_networkDeviceGetCount, kernelNetworkDeviceGetCount,
+	{ _fnum_networkEnabled, kernelNetworkEnabled,
 		PRIVILEGE_USER, 0, NULL, type_val },
-	{ _fnum_networkDeviceGet, kernelNetworkDeviceGet,
-		PRIVILEGE_USER, 2, args_networkDeviceGet, type_val },
-	{ _fnum_networkInitialized, kernelNetworkInitialized,
-		PRIVILEGE_USER, 0, NULL, type_val },
-	{ _fnum_networkInitialize, kernelNetworkInitialize,
+	{ _fnum_networkEnable, kernelNetworkEnable,
 		PRIVILEGE_SUPERVISOR, 0, NULL, type_val },
-	{ _fnum_networkShutdown, kernelNetworkShutdown,
+	{ _fnum_networkDisable, kernelNetworkDisable,
 		PRIVILEGE_SUPERVISOR, 0, NULL, type_val },
 	{ _fnum_networkOpen, kernelNetworkOpen,
 		PRIVILEGE_USER, 3, args_networkOpen, type_ptr },
@@ -1771,11 +1785,25 @@ static kernelFunctionIndex networkFunctionIndex[] = {
 		PRIVILEGE_USER, 2, args_networkGetDomainName, type_val },
 	{ _fnum_networkSetDomainName, kernelNetworkSetDomainName,
 		PRIVILEGE_SUPERVISOR, 2, args_networkSetDomainName, type_val },
+	{ _fnum_networkDeviceEnable, kernelNetworkDeviceEnable,
+		PRIVILEGE_SUPERVISOR, 1, args_networkDeviceEnable, type_val },
+	{ _fnum_networkDeviceDisable, kernelNetworkDeviceDisable,
+		PRIVILEGE_SUPERVISOR, 1, args_networkDeviceDisable, type_val },
+	{ _fnum_networkDeviceGetCount, kernelNetworkDeviceGetCount,
+		PRIVILEGE_USER, 0, NULL, type_val },
+	{ _fnum_networkDeviceGet, kernelNetworkDeviceGet,
+		PRIVILEGE_USER, 2, args_networkDeviceGet, type_val },
+	{ _fnum_networkDeviceHook, kernelNetworkDeviceHook,
+		PRIVILEGE_SUPERVISOR, 3, args_networkDeviceHook, type_val },
+	{ _fnum_networkDeviceUnhook, kernelNetworkDeviceUnhook,
+		PRIVILEGE_SUPERVISOR, 3, args_networkDeviceUnhook, type_val },
+	{ _fnum_networkDeviceSniff, kernelNetworkDeviceSniff,
+		PRIVILEGE_SUPERVISOR, 3, args_networkDeviceSniff, type_val }
 };
 
 // Miscellaneous functions (0xFF000-0xFFFFF range)
 
-static kernelArgInfo args_shutdown[] =
+static kernelArgInfo args_systemShutdown[] =
 	{ { 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_val, API_ARG_ANYVAL } };
 static kernelArgInfo args_getVersion[] =
@@ -1783,8 +1811,9 @@ static kernelArgInfo args_getVersion[] =
 		{ 1, type_val, API_ARG_ANYVAL } };
 static kernelArgInfo args_systemInfo[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
-static kernelArgInfo args_encryptMD5[] =
+static kernelArgInfo args_cryptHashMd5[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR },
+		{ 1, type_val, API_ARG_ANYVAL },
 		{ 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
 static kernelArgInfo args_lockGet[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_USERPTR } };
@@ -1842,16 +1871,18 @@ static kernelArgInfo args_charsetToUnicode[] =
 static kernelArgInfo args_charsetFromUnicode[] =
 	{ { 1, type_ptr, API_ARG_NONNULLPTR | API_ARG_ANYPTR },
 		{ 1, type_val, API_ARG_ANYVAL } };
+static kernelArgInfo args_cpuSpinMs[] =
+	{ { 1, type_val, API_ARG_ANYVAL } };
 
 static kernelFunctionIndex miscFunctionIndex[] = {
-	{ _fnum_shutdown, kernelShutdown,
-		PRIVILEGE_USER, 2, args_shutdown, type_val },
+	{ _fnum_systemShutdown, kernelSystemShutdown,
+		PRIVILEGE_USER, 2, args_systemShutdown, type_val },
 	{ _fnum_getVersion, kernelGetVersion,
 		PRIVILEGE_USER, 2, args_getVersion, type_void },
 	{ _fnum_systemInfo, kernelSystemInfo,
 		PRIVILEGE_USER, 1, args_systemInfo, type_val },
-	{ _fnum_encryptMD5, kernelEncryptMD5,
-		PRIVILEGE_USER, 2, args_encryptMD5, type_val },
+	{ _fnum_cryptHashMd5, kernelCryptHashMd5,
+		PRIVILEGE_USER, 3, args_cryptHashMd5, type_val },
 	{ _fnum_lockGet, kernelLockGet,
 		PRIVILEGE_USER, 1, args_lockGet, type_val },
 	{ _fnum_lockRelease, kernelLockRelease,
@@ -1891,7 +1922,11 @@ static kernelFunctionIndex miscFunctionIndex[] = {
 	{ _fnum_charsetToUnicode, kernelCharsetToUnicode,
 		PRIVILEGE_USER, 2, args_charsetToUnicode, type_val },
 	{ _fnum_charsetFromUnicode, kernelCharsetFromUnicode,
-		PRIVILEGE_USER, 2, args_charsetFromUnicode, type_val }
+		PRIVILEGE_USER, 2, args_charsetFromUnicode, type_val },
+	{ _fnum_cpuGetMs, kernelCpuGetMs,
+		PRIVILEGE_USER, 0, NULL, type_val },
+	{ _fnum_cpuSpinMs, kernelCpuSpinMs,
+		PRIVILEGE_USER, 1, args_cpuSpinMs, type_void }
 };
 
 static kernelFunctionIndex *functionIndex[] = {
@@ -2124,6 +2159,6 @@ out:
 	kernelDebug(debug_api, "ret=%lld", status);
 	#endif
 
-	processorApiExit(stackAddress, (int) status, (status >> 32));
+	processorApiExit(stackAddress, (status & 0xFFFFFFFF), (status >> 32));
 }
 

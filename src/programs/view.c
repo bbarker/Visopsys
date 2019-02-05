@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -77,12 +77,10 @@ static windowMenuContents imageMenuContents = {
 	}
 };
 
-static int graphics = 0;
 static char *fileName = NULL;
 static char *shortName = NULL;
 static char *windowTitle = NULL;
 static image origImage;
-static image showImage;
 static objectKey window = NULL;
 static objectKey windowImage = NULL;
 static objectKey imageMenu = NULL;
@@ -101,10 +99,7 @@ static void error(const char *format, ...)
 	vsnprintf(output, MAXSTRINGLENGTH, format, list);
 	va_end(list);
 
-	if (graphics)
-		windowNewErrorDialog(NULL, _("Error"), output);
-	else
-		printf(_("ERROR: %s\n"), output);
+	windowNewErrorDialog(NULL, _("Error"), output);
 }
 
 
@@ -123,12 +118,14 @@ static int countTextLines(int columns, char *data, int size)
 			lines += 1;
 			columnCount = 0;
 		}
-
 		else if (data[count] == '\0')
+		{
 			break;
-
+		}
 		else
+		{
 			columnCount += 1;
+		}
 	}
 
 	return (lines);
@@ -158,31 +155,36 @@ static void printTextLines(char *data, int size)
 static int resizeImage(double scale)
 {
 	int status = 0;
+	image showImage;
 	componentParameters params;
 
 	if (scale == imageScale)
 		return (status = 0);
 
 	status = imageCopy(&origImage, &showImage);
-	if (status >= 0)
+	if (status < 0)
+		return (status);
+
+	if (scale != 1.0)
 	{
-		if (scale == 1.0)
+		status = imageResize(&showImage, (unsigned)((double) showImage.width *
+			scale), (unsigned)((double) showImage.height * scale));
+		if (status < 0)
 		{
-			// Already original size
-			imageScale = scale;
-		}
-		else
-		{
-			status = imageResize(&showImage,
-				(unsigned)((double) showImage.width * scale),
-				(unsigned)((double) showImage.height * scale));
-			if (status >= 0)
-			{
-				imageScale = ((double) showImage.width /
-					(double) origImage.width);
-			}
+			error("%s", _("Failed to resize image"));
+
+			if (showImage.data)
+				imageFree(&showImage);
+
+			status = imageCopy(&origImage, &showImage);
+			if (status < 0)
+				return (status);
+
+			scale = 1.0;
 		}
 	}
+
+	imageScale = scale;
 
 	if (windowImage)
 		windowComponentDestroy(windowImage);
@@ -194,7 +196,14 @@ static int resizeImage(double scale)
 	params.orientationY = orient_middle;
 
 	windowImage = windowNewImage(window, &showImage, draw_normal, &params);
-	windowContextSet(windowImage, imageMenu);
+
+	imageFree(&showImage);
+
+	if (!windowImage)
+		return (status = ERR_NOCREATE);
+
+	if (imageMenu)
+		windowContextSet(windowImage, imageMenu);
 
 	windowLayout(window);
 
@@ -244,23 +253,29 @@ static int viewImage(void)
 	int status = 0;
 	unsigned screenWidth = graphicGetScreenWidth();
 	unsigned screenHeight = graphicGetScreenHeight();
-	double xScale = 0, yScale = 0;
+	double xScale = 1.0, yScale = 1.0;
 	objectKey bannerDialog = NULL;
 	componentParameters params;
 	int count;
 
 	memset(&origImage, 0, sizeof(image));
-	memset(&showImage, 0, sizeof(image));
 
 	bannerDialog = windowNewBannerDialog(NULL, _("Loading"),
 		_("Loading image..."));
 
 	// Try to load the image file
 	status = imageLoad(fileName, 0, 0, &origImage);
+
+	if (bannerDialog)
+		windowDestroy(bannerDialog);
+
 	if (status < 0)
 	{
 		if (origImage.data)
+		{
 			error(_("Error loading the image \"%s\"\n"), fileName);
+			return (status);
+		}
 		else
 		{
 			error(_("Unable to load the image \"%s\"\n"), fileName);
@@ -268,11 +283,6 @@ static int viewImage(void)
 		}
 	}
 
-	if (bannerDialog)
-		windowDestroy(bannerDialog);
-
-	// Copy the original image to one we can mess with.
-	imageCopy(&origImage, &showImage);
 	imageScale = 1.0;
 
 	memset(&params, 0, sizeof(componentParameters));
@@ -281,26 +291,41 @@ static int viewImage(void)
 	params.orientationX = orient_center;
 	params.orientationY = orient_middle;
 
-	windowImage = windowNewImage(window, &showImage, draw_normal, &params);
+	windowImage = windowNewImage(window, &origImage, draw_normal, &params);
+	if (!windowImage)
+		return (status = ERR_NOCREATE);
 
 	imageMenu = windowNewMenu(window, NULL, _("Image"), &imageMenuContents,
 		&params);
+	if (imageMenu)
+	{
+		for (count = 0; count < imageMenuContents.numItems; count ++)
+		{
+			windowRegisterEventHandler(imageMenuContents.items[count].key,
+				&eventHandler);
+		}
 
-	for (count = 0; count < imageMenuContents.numItems; count ++)
-		windowRegisterEventHandler(imageMenuContents.items[count].key,
-			&eventHandler);
+		windowContextSet(windowImage, imageMenu);
+	}
 
-	windowContextSet(windowImage, imageMenu);
-
-	// If the image is big, shrink it by default, to 2/3 of the screen.
-	if (showImage.width > ((screenWidth * 2) / 3))
-		xScale = ((double)((screenWidth * 2) / 3) / (double) showImage.width);
-	if (showImage.height > ((screenHeight * 2) / 3))
+	// If the image is big, shrink it by default, to max 2/3 of the screen in
+	// either dimension.
+	if (origImage.width > ((screenWidth * 2) / 3))
+	{
+		xScale = ((double)((screenWidth * 2) / 3) / (double) origImage.width);
+	}
+	if (origImage.height > ((screenHeight * 2) / 3))
+	{
 		yScale = ((double)((screenHeight * 2) / 3) /
-			(double) showImage.height);
+			(double) origImage.height);
+	}
 
-	if (xScale || yScale)
-		resizeImage(min(xScale, yScale));
+	if ((xScale != 1.0) || (yScale != 1.0))
+	{
+		status = resizeImage(min(xScale, yScale));
+		if (status < 0)
+			return (status);
+	}
 
 	return (status = 0);
 }
@@ -361,23 +386,18 @@ static int viewText(void)
 int main(int argc, char *argv[])
 {
 	int status = 0;
-	int processId = 0;
 	loaderFileClass class;
 
 	setlocale(LC_ALL, getenv(ENV_LANG));
 	textdomain("view");
 
-	graphics = graphicsAreEnabled();
-
 	// Only work in graphics mode
-	if (!graphics)
+	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			argv[0]);
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (status = ERR_NOTINITIALIZED);
 	}
-
-	processId = multitaskerGetCurrentProcessId();
 
 	fileName = malloc(MAX_PATH_NAME_LENGTH);
 	windowTitle = malloc(MAX_PATH_NAME_LENGTH + 8);
@@ -402,7 +422,9 @@ int main(int argc, char *argv[])
 		}
 	}
 	else
+	{
 		strncpy(fileName, argv[argc - 1], MAX_PATH_NAME_LENGTH);
+	}
 
 	// Make sure the file exists
 	if (fileFind(fileName, NULL) < 0)
@@ -420,21 +442,26 @@ int main(int argc, char *argv[])
 		goto deallocate;
 	}
 
-	if (!(class.class & LOADERFILECLASS_IMAGE) &&
-		!(class.class & LOADERFILECLASS_TEXT))
+	if (!(class.type & LOADERFILECLASS_IMAGE) &&
+		!(class.type & LOADERFILECLASS_TEXT))
 	{
 		error(_("Can't display the file type of \"%s\" (%s)"), fileName,
-		class.className);
+			class.name);
 		goto deallocate;
 	}
 
 	// Create a new window
 	sprintf(windowTitle, WINDOW_TITLE, shortName);
-	window = windowNew(processId, windowTitle);
+	window = windowNew(multitaskerGetCurrentProcessId(), windowTitle);
+	if (!window)
+	{
+		status = ERR_NOCREATE;
+		goto deallocate;
+	}
 
-	if (class.class & LOADERFILECLASS_IMAGE)
+	if (class.type & LOADERFILECLASS_IMAGE)
 		status = viewImage();
-	else if (class.class & LOADERFILECLASS_TEXT)
+	else if (class.type & LOADERFILECLASS_TEXT)
 		status = viewText();
 
 	if (status >= 0)
@@ -461,8 +488,8 @@ deallocate:
 		free(shortName);
 	if (windowTitle)
 		free(windowTitle);
-	imageFree(&origImage);
-	imageFree(&showImage);
+	if (origImage.data)
+		imageFree(&origImage);
 
 	return (status);
 }

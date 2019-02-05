@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 00:05+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -37,68 +37,68 @@ msgid ""
 "change anything."
 msgstr ""
 
-#: login.c:144
+#: login.c:148
 msgid "login: "
 msgstr "логин:"
 
-#: login.c:153
+#: login.c:157
 msgid "That login name is too long."
 msgstr "Логин слишком длинный."
 
-#: login.c:154
+#: login.c:158
 msgid "That password is too long."
 msgstr "Пароль слишком длинный."
 
-#: login.c:171 login.c:486
+#: login.c:175 login.c:494
 msgid "Error"
 msgstr "Ошибка"
 
-#: login.c:267
+#: login.c:272
 #, fuzzy
 msgid "Login"
 msgstr "логин:"
 
-#: login.c:320
+#: login.c:328
 msgid "Reboot"
 msgstr "Перезагрузка"
 
-#: login.c:326
+#: login.c:334
 msgid "Shut down"
 msgstr "Завершение работы"
 
-#: login.c:385
+#: login.c:393
 msgid "password: "
 msgstr "пароль:"
 
-#: login.c:440
+#: login.c:448
 #, c-format
 msgid "Missing parameter for %s option\n"
 msgstr ""
 
-#: login.c:445
+#: login.c:453
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""
 
-#: login.c:509
+#: login.c:517
 msgid "Login Failed"
 msgstr "Вход не удался"
 
-#: login.c:510
+#: login.c:518
 #, fuzzy
 msgid "Unable to log in to the Window Manager!"
 msgstr "Невозможно войти в менеджер окон!"
 
-#: login.c:518
+#: login.c:526
 msgid "Read Only"
 msgstr "Только чтение"
 
-#: login.c:533
+#: login.c:541
 #, fuzzy, c-format
 msgid "Couldn't load login shell %s!"
 msgstr "Не могу загрузить оболочку входа %s!"
 
-#: login.c:540
+#: login.c:548
 #, fuzzy, c-format
 msgid ""
 "\n"

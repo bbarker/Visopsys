@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -32,31 +32,65 @@
 	%include "loader.h"
 
 
+biosQuery:
+	;; Ask the BIOS which A20 methods are supported
+
+	push word -1	; return code
+	pusha			; save regs
+	mov BP, SP		; save stack ptr
+
+	;; SYSTEM - later PS/2s - QUERY A20 GATE SUPPORT
+	mov AX, 2403h
+	int 15h
+	jc .done
+
+	mov word [SS:(BP + 16)], BX
+
+	.done:
+	popa
+	pop AX
+	ret
+
+
 biosMethod:
 	;; This method attempts the easiest thing, which is to try to let the
 	;; BIOS set A20 for us.
 
-	;; Save space on the stack for the return code
-	sub SP, 2
-	pusha
+	push word -1	; return code
+	pusha			; save regs
+	mov BP, SP		; save stack ptr
 
-	;; Save the stack pointer
-	mov BP, SP
+	;; Check
 
-	;; By default, return the value -1
-	mov word [SS:(BP + 16)], -1
+	;; SYSTEM - later PS/2s - GET A20 GATE STATUS
+	mov AX, 2402h
+	int 15h
+	jc .done
 
-	;; Do the 'enable' call.
+	;; Already set?
+	cmp AL, 01h
+	jne .set
+
+	;; Already set
+	mov word [SS:(BP + 16)], 0
+	jmp .done
+
+	.set:
+	;; Do the 'enable' call
+
+	;; SYSTEM - later PS/2s - ENABLE A20 GATE
 	mov AX, 2401h
 	int 15h
 	jc .done
 
 	;; Check
+
+	;; SYSTEM - later PS/2s - GET A20 GATE STATUS
 	mov AX, 2402h
 	int 15h
 	jc .done
 
-	;; On?
+	;; Set?
 	cmp AL, 01h
 	jne .done
 
@@ -73,15 +107,9 @@ port92Method:
 	;; This method attempts the second easiest thing, which is to try
 	;; writing a bit to port 92h
 
-	;; Save space on the stack for the return code
-	sub SP, 2
-	pusha
-
-	;; Save the stack pointer
-	mov BP, SP
-
-	;; By default, return the value -1
-	mov word [SS:(BP + 16)], -1
+	push word -1	; return code
+	pusha			; save regs
+	mov BP, SP		; save stack ptr
 
 	;; Read port 92h
 	xor AX, AX
@@ -185,15 +213,9 @@ keyboardWrite60:
 
 
 keyboardMethod:
-	;; Save space on the stack for the return code
-	sub SP, 2
-	pusha
-
-	;; Save the stack pointer
-	mov BP, SP
-
-	;; By default, return the value -1
-	mov word [SS:(BP + 16)], -1
+	push word -1	; return code
+	pusha			; save regs
+	mov BP, SP		; save stack ptr
 
 	;; Make sure interrupts are disabled
 	cli
@@ -226,15 +248,9 @@ altKeyboardMethod:
 	;; This is alternate way to set A20 using the keyboard (which is
 	;; supposedly not supported on many chipsets).
 
-	;; Save space on the stack for the return code
-	sub SP, 2
-	pusha
-
-	;; Save the stack pointer
-	mov BP, SP
-
-	;; By default, return the value -1
-	mov word [SS:(BP + 16)], -1
+	push word -1	; return code
+	pusha			; save regs
+	mov BP, SP		; save stack ptr
 
 	;; Make sure interrupts are disabled
 	cli
@@ -272,20 +288,46 @@ loaderEnableA20:
 
 	pusha
 
+	;; Supported methods: all available by default
+	mov BL, 03h
+
+	;; Try asking the BIOS what methods are supported
+	call biosQuery
+	cmp AX, 0
+	jl .try		; unknown - just try everything
+
+	;; Bitmask of supported methods.  Specifically, don't try something if
+	;; the BIOS told us it's unsupported
+	and BL, AL
+
+	.try:
 	;; Try to let the BIOS do it for us
 	call biosMethod
 	cmp AX, 0
 	jz .done
+
+	;; Didn't work.  Is the 'port 92h' method supported?
+	test BL, 02h
+	jz .noPort92
 
 	;; Try the 'port 92h' method
 	call port92Method
 	cmp AX, 0
 	jz .done
 
+	.noPort92:
+	;; Didn't work, or not supported.  Is the standard keyboard method
+	;; supported?
+	test BL, 01h
+	jz .noKeyboard
+
 	;; Try the standard keyboard method
 	call keyboardMethod
 	cmp AX, 0
 	jz .done
+
+	.noKeyboard:
+	;; Didn't work, or not supported.
 
 	;; Try an alternate keyboard method
 	call altKeyboardMethod

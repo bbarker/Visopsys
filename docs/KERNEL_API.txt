@@ -1,4 +1,4 @@
-THE VISOPSYS KERNEL API (Version 0.7)
+THE VISOPSYS KERNEL API (Version 0.8)
 
 All of the kernel's functions are defined in the file /system/headers/sys/api.h. In future, this file may be split into smaller chunks, by functional area. Data structures referred to in these function definitions are found in header files in the /system/headers/sys directory. For example, a 'disk' object is defined in /system/headers/sys/disk.h.
 

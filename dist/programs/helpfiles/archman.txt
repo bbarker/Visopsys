@@ -4,7 +4,7 @@
 A graphical program for managing archive files.
 
 Usage:
-  filebrowse [archive]
+  archman [archive]
 
 The archman program is interactive, and may only be used in graphics
 mode.  It displays a window with icons representing archive menbers.

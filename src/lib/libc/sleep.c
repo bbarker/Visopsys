@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,7 @@
 // This is the standard "sleep" function, as found in standard C libraries
 
 #include <errno.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/api.h>
 
@@ -38,7 +39,7 @@ unsigned sleep(unsigned seconds)
 	}
 
 	for ( ; seconds > 0; seconds --)
-		multitaskerWait(1000);
+		multitaskerWait(MS_PER_SEC);
 
 	return (seconds);
 }

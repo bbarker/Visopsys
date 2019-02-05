@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelFilesystemUdf.c
 //
 
-// This file contains the routines designed to interpret the UDF filesystem
+// This file contains the functions designed to interpret the UDF filesystem
 // (commonly found on DVD disks)
 
 #include "kernelFilesystemUdf.h"
@@ -39,7 +39,7 @@ static void decodeDstring(char *dest, const char *src, int length)
 
 	int count;
 
-	//kernelDebugHex((char *)src, length);
+	kernelDebugHex((char *) src, length);
 
 	// Not interested in the byte at the end.
 	length -= 1;

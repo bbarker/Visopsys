@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mount\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 01:08+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21>\n"
@@ -32,7 +32,7 @@ msgstr "%s <диск> [точка подключения]\n"
 msgid "No mount point specified for %s in %s\n"
 msgstr "Нет заданной точки подключения для %s в %s\n"
 
-#: mount.c:204
+#: mount.c:206
 #, c-format
 msgid "No media in disk %s\n"
 msgstr "Нет носителя в %s\n"

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -50,6 +50,7 @@ static void calcSliderSizePos(kernelWindowScrollBar *scrollBar, int width,
 				scrollBar->state.positionPercent) / 100);
 		scrollBar->sliderY = 0;
 	}
+
 	else if (scrollBar->type == scrollbar_vertical)
 	{
 		scrollBar->sliderWidth = (width -
@@ -91,6 +92,7 @@ static void calcSliderPosPercent(kernelWindowScrollBar *scrollBar, int width,
 			scrollBar->state.positionPercent = 0;
 		}
 	}
+
 	else if (scrollBar->type == scrollbar_vertical)
 	{
 		extraSpace = ((height - (windowVariables->border.thickness * 2)) -
@@ -200,12 +202,13 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 	eventX = (event->xPosition - component->window->xCoord - component->xCoord);
 	eventY = (event->yPosition - component->window->yCoord - component->yCoord);
 
-	// Is the mouse event in the slider?
+	// Is the mouse event in the slider, or a mouse scroll?
 	if (scrollBar->dragging ||
 		((eventX >= scrollBar->sliderX) &&
 		(eventX < (scrollBar->sliderX + scrollBar->sliderWidth)) &&
 		(eventY >= scrollBar->sliderY) &&
-		(eventY < (scrollBar->sliderY + scrollBar->sliderHeight))))
+		(eventY < (scrollBar->sliderY + scrollBar->sliderHeight))) ||
+		(event->type & EVENT_MOUSE_SCROLL))
 	{
 		if (event->type == EVENT_MOUSE_DRAG)
 		{
@@ -227,14 +230,46 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 			scrollBar->dragX = eventX;
 			scrollBar->dragY = eventY;
 		}
+
 		else
 		{
-			// Not dragging.  Do nothing.
+			if (event->type & EVENT_MOUSE_SCROLL)
+			{
+				if (scrollBar->type == scrollbar_horizontal)
+				{
+					if (event->type == EVENT_MOUSE_SCROLLUP)
+					{
+						scrollBar->sliderX -=
+							max(1, (scrollBar->sliderWidth / 3));
+					}
+					else
+					{
+						scrollBar->sliderX +=
+							max(1, (scrollBar->sliderWidth / 3));
+					}
+				}
+
+				else if (scrollBar->type == scrollbar_vertical)
+				{
+					if (event->type == EVENT_MOUSE_SCROLLUP)
+					{
+						scrollBar->sliderY -=
+							max(1, (scrollBar->sliderHeight / 3));
+					}
+					else
+					{
+						scrollBar->sliderY +=
+							max(1, (scrollBar->sliderHeight / 3));
+					}
+				}
+			}
+
+			// Not dragging.
 			scrollBar->dragging = 0;
 		}
 	}
 
-	// Not in the slider.
+	// Not in the slider, or a mouse scroll.  A click in the empty space?
 
 	else if (scrollBar->type == scrollbar_horizontal)
 	{
@@ -246,6 +281,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 			// It's to the left of the slider
 			scrollBar->sliderX -= scrollBar->sliderWidth;
 		}
+
 		else if ((event->type == EVENT_MOUSE_LEFTDOWN) &&
 			(eventX >= (scrollBar->sliderX + scrollBar->sliderWidth)) &&
 			(eventX < (component->width - windowVariables->border.thickness)))
@@ -253,6 +289,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 			// It's to the right of the slider
 			scrollBar->sliderX += scrollBar->sliderWidth;
 		}
+
 		else
 		{
 			// Do nothing.
@@ -270,6 +307,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 			// It's above the slider
 			scrollBar->sliderY -= scrollBar->sliderHeight;
 		}
+
 		else if ((event->type == EVENT_MOUSE_LEFTDOWN) &&
 			(eventY >= (scrollBar->sliderY + scrollBar->sliderHeight)) &&
 			(eventY < (component->height - windowVariables->border.thickness)))
@@ -277,6 +315,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 			// It's below the slider
 			scrollBar->sliderY += scrollBar->sliderHeight;
 		}
+
 		else
 		{
 			// Do nothing.
@@ -299,6 +338,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 				scrollBar->sliderWidth);
 		}
 	}
+
 	else if (scrollBar->type == scrollbar_vertical)
 	{
 		if (scrollBar->sliderY < 0)

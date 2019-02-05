@@ -1,12 +1,12 @@
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Spanish Translation - 2013 - marianopbernacki@gmail.com
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,19 +19,19 @@ msgstr ""
 msgid "System Diagnostics"
 msgstr "Diagnostico de sistema"
 
-#: sysdiag.c:55 sysdiag.c:1023
+#: sysdiag.c:55 sysdiag.c:1026
 msgid "Disk test"
 msgstr "Prueba de disco"
 
-#: sysdiag.c:56 sysdiag.c:1024
+#: sysdiag.c:56 sysdiag.c:1027
 msgid "Memory test"
 msgstr "Prueba de memoria"
 
-#: sysdiag.c:57 sysdiag.c:1028
+#: sysdiag.c:57 sysdiag.c:1031
 msgid "Read-only"
 msgstr "Solo lectura"
 
-#: sysdiag.c:58 sysdiag.c:1029
+#: sysdiag.c:58 sysdiag.c:1032
 msgid "Read-write"
 msgstr "Lectoescritura"
 
@@ -113,10 +113,10 @@ msgstr "Error"
 #, c-format
 msgid ""
 "%s\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 msgstr ""
 "%s\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 
 #: sysdiag.c:223
 msgid "Please choose the disk to test:"
@@ -130,34 +130,34 @@ msgstr "Ver resultados"
 msgid "Do you want to view the results?\n"
 msgstr "Desea ver los resultados?\n"
 
-#: sysdiag.c:292
+#: sysdiag.c:293
 msgid "Test results"
 msgstr "Resultados"
 
-#: sysdiag.c:324
+#: sysdiag.c:325
 #, c-format
 msgid "Disk read error at sector %llu\n"
 msgstr "Error de lectura en sector %llu\n"
 
-#: sysdiag.c:328
+#: sysdiag.c:329
 #, c-format
 msgid "Disk write error at sector %llu\n"
 msgstr "Error de escritura en sector %llu\n"
 
-#: sysdiag.c:332
+#: sysdiag.c:333
 #, c-format
 msgid "Memory error at %llu\n"
 msgstr "Error de memoria en %llu\n"
 
-#: sysdiag.c:426 sysdiag.c:437
+#: sysdiag.c:428 sysdiag.c:439
 msgid "read-write"
 msgstr "lectoescritura"
 
-#: sysdiag.c:426 sysdiag.c:437
+#: sysdiag.c:428 sysdiag.c:439
 msgid "read-only"
 msgstr "solo lectura"
 
-#: sysdiag.c:428 sysdiag.c:675
+#: sysdiag.c:430 sysdiag.c:678
 msgid ""
 "\n"
 "[ Press 'Q' to cancel ]\n"
@@ -165,17 +165,17 @@ msgstr ""
 "\n"
 "[ Presione 'Q' para cancelar ]\n"
 
-#: sysdiag.c:547
+#: sysdiag.c:549
 #, c-format
 msgid "Testing disk sectors %llu/%llu"
 msgstr "Probando los sectores %llu/%llu"
 
-#: sysdiag.c:763
+#: sysdiag.c:766
 #, c-format
 msgid "Testing memory MB %llu/%llu"
 msgstr "Probando memoria %llu/%llu MB"
 
-#: sysdiag.c:1074
+#: sysdiag.c:1077
 msgid "Do you want to do a disk test, or a memory test?\n"
 msgstr "Quiere realizar una prueba de memoria o de disco?\n"
 

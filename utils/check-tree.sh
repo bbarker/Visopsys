@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  check-tree.sh
 ##

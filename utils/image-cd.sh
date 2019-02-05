@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  image-cd.sh
 ##
@@ -69,7 +69,7 @@ echo Done
 
 echo -n "Creating ISO image... "
 rm -f $ISOIMAGE
-mkisofs -U -D -b $FLOPPYIMAGE -c boot.catalog -hide $FLOPPYIMAGE -hide boot.catalog -V "Visopsys $RELEASE" -iso-level 3 -allow-leading-dots -o $ISOIMAGE $TMPDIR > $MKISOFSLOG 2>&1
+mkisofs -iso-level 4 -D -b $FLOPPYIMAGE -c boot.catalog -hide $FLOPPYIMAGE -hide boot.catalog -V "Visopsys $RELEASE" -iso-level 3 -allow-leading-dots -o $ISOIMAGE $TMPDIR > $MKISOFSLOG 2>&1
 if [ $? -ne 0 ] ; then
 	echo ""
 	echo -n "Not able to create ISO image $ISOIMAGE.  "
@@ -82,7 +82,7 @@ echo Done
 
 echo -n "Archiving... "
 echo "Visopsys $RELEASE CD-ROM Release" > /tmp/comment
-echo "Copyright (C) 1998-2016 J. Andrew McLaughlin" >> /tmp/comment
+echo "Copyright (C) 1998-2018 J. Andrew McLaughlin" >> /tmp/comment
 rm -f $ZIPFILE
 zip -9 -z -r $ZIPFILE $ISOIMAGE < /tmp/comment > $ZIPLOG 2>&1
 if [ $? -ne 0 ] ; then

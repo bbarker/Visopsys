@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -39,17 +39,6 @@
 #define COLOR_SETTING_FOREGROUND		"foreground"
 #define COLOR_SETTING_BACKGROUND		"background"
 #define COLOR_SETTING_DESKTOP			"desktop"
-
-// Strings used in configuration files to specify settings components
-#define COLOR_FOREGROUND_RED			"color.foreground.red"
-#define COLOR_FOREGROUND_GREEN			"color.foreground.green"
-#define COLOR_FOREGROUND_BLUE			"color.foreground.blue"
-#define COLOR_BACKGROUND_RED			"color.background.red"
-#define COLOR_BACKGROUND_GREEN			"color.background.green"
-#define COLOR_BACKGROUND_BLUE			"color.background.blue"
-#define COLOR_DESKTOP_RED				"color.desktop.red"
-#define COLOR_DESKTOP_GREEN				"color.desktop.green"
-#define COLOR_DESKTOP_BLUE				"color.desktop.blue"
 
 // A structure to represent an RGB color value
 typedef struct {

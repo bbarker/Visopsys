@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -22,6 +22,7 @@
 ;; This code is the boot menu MBR code, which loads the boot menu program
 ;; from the rest of the track and runs it.
 
+
 	ORG 7C00h
 	SEGMENT .text
 	BITS 16
@@ -32,7 +33,7 @@
 ;; Heap memory for storing things...
 
 ;; The place where we relocate our code
-%define NEWCODELOCATION		0600h
+%define NEWCODELOCATION	0600h
 %define CODE_SIZE		512
 
 ;; Device info
@@ -53,7 +54,7 @@
 
 ;; Disk cmd packet for extended int13 disk ops
 %define DISKPACKET		(CYLINDER + CYLINDER_SZ)
-%define DISKPACKET_SZ		(BYTE * 16)
+%define DISKPACKET_SZ	(BYTE * 16)
 
 %define	IOERR			(NEWCODELOCATION + (DATA_IOERR - main))
 %define	PART_TABLE		(NEWCODELOCATION + (DATA_PART_TABLE - main))
@@ -61,8 +62,8 @@
 
 main:
 	;; A jump is expected at the start of a boot sector, sometimes.
-	jmp short .bootCode			; 00 - 01 Jump instruction
-	nop					; 02 - 02 No op
+	jmp short .bootCode		; 00 - 01 Jump instruction
+	nop						; 02 - 02 No op
 
 	.bootCode:
 	cli
@@ -109,10 +110,10 @@ jmpTarget:
 	xor EAX, EAX
 	mov AX, word [NUMSECTS]
 	sub AX, 1
-	push word AX				; Read (NUMSECTS - 1) sectors
-	push word 0				; Offset where we'll move it
+	push word AX							; Read (NUMSECTS - 1) sectors
+	push word 0								; Offset where we'll move it
 	push word (LDRCODESEGMENTLOCATION / 16)	; Segment where we'll move it
-	push dword 1				; Start at logical sector 1
+	push dword 1							; Start at logical sector 1
 	call read
 	add SP, 10
 
@@ -137,7 +138,7 @@ jmpTarget:
 ;; after relocation these are not so meaningful
 
 ;; Messages
-DATA_IOERR	db 'I/O Error reading boot sector', 0Dh, 0Ah, 0
+DATA_IOERR		db 'I/O Error reading boot sector', 0Dh, 0Ah, 0
 
 ;; Move to the end of the sector
 times (440-($-$$)) db 0
@@ -146,7 +147,7 @@ times (440-($-$$)) db 0
 DATA_DISKSIG	dd 0
 
 ;; NULLs
-DATA_NULLS	dw 0
+DATA_NULLS		dw 0
 
 ;; Here's where the partition table goes
 DATA_PART_TABLE:

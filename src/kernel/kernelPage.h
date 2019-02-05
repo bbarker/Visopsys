@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -81,11 +81,10 @@ typedef volatile struct {
 } kernelPageTable;
 
 // Little macros for rounding up or down to the nearest page size
-#define kernelPageRoundUp(size) \
-	(((((unsigned)(size)) / MEMORY_PAGE_SIZE) + \
-		((((unsigned) size) % MEMORY_PAGE_SIZE) != 0)) * MEMORY_PAGE_SIZE)
-#define kernelPageRoundDown(size) \
-	((((unsigned)(size)) / MEMORY_PAGE_SIZE) * MEMORY_PAGE_SIZE)
+#define kernelPageRoundDown(val) \
+	((unsigned)(val) & ~(MEMORY_PAGE_SIZE - 1))
+#define kernelPageRoundUp(val) \
+	kernelPageRoundDown((unsigned)(val) + (MEMORY_PAGE_SIZE - 1))
 
 // Functions exported by kernelPage.c
 int kernelPageInitialize(unsigned);

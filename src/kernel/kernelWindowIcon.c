@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -66,9 +66,11 @@ static void splitLabelAt(kernelWindowIcon *icon, int line, int splitAt,
 
 	// Set the new pointer
 	icon->labelLine[line][splitAt] = '\0';
-	icon->labelLine[line + 1] = (icon->labelLine[line] + splitAt + 1);
 	if (icon->labelLines < WINDOW_MAX_LABEL_LINES)
+	{
+		icon->labelLine[line + 1] = (icon->labelLine[line] + splitAt + 1);
 		icon->labelLines += 1;
+	}
 }
 
 
@@ -84,7 +86,8 @@ static void splitLabelsAtNewlines(kernelWindowIcon *icon)
 		{
 			if (icon->labelLine[labelCount][charCount] == '\n')
 			{
-				splitLabelAt(icon, labelCount, charCount, 0 /* no preserve */);
+				splitLabelAt(icon, labelCount, charCount,
+					0 /* no preserve */);
 				break;
 			}
 		}
@@ -96,37 +99,54 @@ static void splitLongLabel(kernelWindowIcon *icon, int line, kernelFont *font,
 	char *charSet)
 {
 	int labelLen = 0;
-	char tmp[WINDOW_MAX_LABEL_LENGTH];
+	char tmp[WINDOW_MAX_LABEL_LENGTH + 1];
 	int count;
 
-	// Try to find a 'space' character, starting at the end of the string
-
-	strcpy(tmp, icon->labelLine[line]);
-	labelLen = strlen(tmp);
-
-	for (count = (labelLen - 1); count > 0; count --)
+	if (line < (WINDOW_MAX_LABEL_LINES - 1))
 	{
-		if (tmp[count] == ' ')
+		// Try to find a 'space' character, starting at the end of the string
+
+		strcpy(tmp, icon->labelLine[line]);
+		labelLen = strlen(tmp);
+
+		for (count = (labelLen - 1); count > 0; count --)
 		{
-			tmp[count] = '\0';
-			if (kernelFontGetPrintedWidth(font, charSet, tmp) <=
-				MAX_LABEL_WIDTH)
+			if (tmp[count] == ' ')
 			{
-				splitLabelAt(icon, line, count, 0 /* no preserve */);
-				return;
+				tmp[count] = '\0';
+				if (kernelFontGetPrintedWidth(font, charSet, tmp) <=
+					MAX_LABEL_WIDTH)
+				{
+					splitLabelAt(icon, line, count, 0 /* no preserve */);
+					return;
+				}
 			}
 		}
+
+		// Just split at the longest point
+
+		strcpy(tmp, icon->labelLine[line]);
+		labelLen = strlen(tmp);
+
+		while (kernelFontGetPrintedWidth(font, charSet, tmp) >
+			MAX_LABEL_WIDTH)
+		{
+			tmp[--labelLen] = '\0';
+		}
+
+		splitLabelAt(icon, line, labelLen, 1 /* preserve */);
 	}
+	else
+	{
+		// Truncate
 
-	// Just split at the longest point
-
-	strcpy(tmp, icon->labelLine[line]);
-	labelLen = strlen(tmp);
-
-	while (kernelFontGetPrintedWidth(font, charSet, tmp) > MAX_LABEL_WIDTH)
-		tmp[--labelLen] = '\0';
-
-	splitLabelAt(icon, line, labelLen, 1 /* preserve */);
+		for (count = 0; kernelFontGetPrintedWidth(font, charSet,
+			icon->labelLine[line]) > MAX_LABEL_WIDTH ; count ++)
+		{
+			strcpy((char *)(icon->labelData + (WINDOW_MAX_LABEL_LENGTH -
+				(4 + count))), " ...");
+		}
+	}
 }
 
 
@@ -154,6 +174,7 @@ static void setLabel(kernelWindowIcon *icon, const char *label,
 	// it up in a sensible and pleasing way.
 
 	int labelLen = 0;
+	int tmpWidth = 0;
 	int count;
 
 	labelLen = min(strlen(label), WINDOW_MAX_LABEL_LENGTH);
@@ -174,12 +195,11 @@ static void setLabel(kernelWindowIcon *icon, const char *label,
 	icon->labelWidth = 0;
 	for (count = 0; count < icon->labelLines; count ++)
 	{
-		if (kernelFontGetPrintedWidth(font, charSet, icon->labelLine[count]) >
-			icon->labelWidth)
-		{
-			icon->labelWidth = kernelFontGetPrintedWidth(font, charSet,
-				icon->labelLine[count]);
-		}
+		tmpWidth = kernelFontGetPrintedWidth(font, charSet,
+			icon->labelLine[count]);
+
+		if (tmpWidth > icon->labelWidth)
+			icon->labelWidth = tmpWidth;
 	}
 }
 
@@ -216,20 +236,19 @@ static int draw(kernelWindowComponent *component)
 	{
 		if (font)
 		{
-			labelX = (component->xCoord +
-				((component->width -
-					kernelFontGetPrintedWidth(font,
-						(char *) component->charSet,
-						(char *) icon->labelLine[count])) / 2) + 1);
+			labelX = (component->xCoord + ((component->width -
+				kernelFontGetPrintedWidth(font, (char *) component->charSet,
+				(char *) icon->labelLine[count])) / 2) + 1);
 			labelY = (component->yCoord + icon->iconImage.height + 4 +
 				(font->glyphHeight * count));
 
-			kernelGraphicDrawText(component->buffer, textBackground, textColor,
-				font, (char *) component->charSet, icon->labelLine[count],
-				draw_translucent, (labelX + 1), (labelY + 1));
-			kernelGraphicDrawText(component->buffer, textColor, textBackground,
-				font, (char *) component->charSet, icon->labelLine[count],
-				draw_translucent, labelX, labelY);
+			kernelGraphicDrawText(component->buffer, textBackground,
+				textColor, font, (char *) component->charSet,
+				icon->labelLine[count], draw_translucent, (labelX + 1),
+				(labelY + 1));
+			kernelGraphicDrawText(component->buffer, textColor,
+				textBackground, font, (char *) component->charSet,
+				icon->labelLine[count], draw_translucent, labelX, labelY);
 		}
 	}
 
@@ -274,8 +293,10 @@ static int setData(kernelWindowComponent *component, void *label,
 	kernelDebug(debug_gui, "WindowIcon set data");
 
 	if (component->params.font)
+	{
 		setLabel(icon, label, (kernelFont *) component->params.font,
 			(char *) component->charSet);
+	}
 
 	// Re-draw
 	if (component->draw)
@@ -305,9 +326,8 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 
 			// Erase the moving image
 			kernelWindowRedrawArea((component->window->xCoord +
-				component->xCoord),
-				(component->window->yCoord + component->yCoord),
-					component->width, component->height);
+				component->xCoord), (component->window->yCoord +
+				component->yCoord), component->width, component->height);
 
 			// Set the new position
 			component->xCoord += (event->xPosition - dragEvent.xPosition);
@@ -330,9 +350,8 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 
 			// Erase the moving image
 			kernelWindowRedrawArea((component->window->xCoord +
-				component->xCoord),
-				(component->window->yCoord + component->yCoord),
-				component->width, component->height);
+				component->xCoord), (component->window->yCoord +
+				component->yCoord), component->width, component->height);
 
 			icon->selected = 0;
 
@@ -342,24 +361,23 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 
 			// If we've moved the icon outside the parent container, expand
 			// the container to contain it.
+
 			if ((component->xCoord + component->width) >=
 				(component->container->xCoord + component->container->width))
 			{
-				component->container->width =
-					((component->xCoord - component->container->xCoord) +
-						component->width + 1);
+				component->container->width = ((component->xCoord -
+					component->container->xCoord) + component->width + 1);
 			}
+
 			if ((component->yCoord + component->height) >=
 				(component->container->yCoord + component->container->height))
 			{
-				component->container->height =
-					((component->yCoord - component->container->yCoord) +
-						component->height + 1);
+				component->container->height = ((component->yCoord -
+					component->container->yCoord) + component->height + 1);
 			}
 
-			component->window
-				->update(component->window, component->xCoord,
-					component->yCoord, component->width, component->height);
+			component->window->update(component->window, component->xCoord,
+				component->yCoord, component->width, component->height);
 
 			// If the new location intersects any other components of the
 			// window, we need to focus the icon
@@ -372,7 +390,8 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 		kernelMouseDraw();
 	}
 
-	else if (event->type == EVENT_MOUSE_DRAG)
+	else if ((event->type == EVENT_MOUSE_DRAG) &&
+		(component->params.flags & WINDOW_COMPFLAG_CANDRAG))
 	{
 		// The icon has started moving
 
@@ -380,9 +399,8 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 		component->flags &= ~WINFLAG_VISIBLE;
 
 		if (component->window->drawClip)
-			component->window
-				->drawClip(component->window, component->xCoord,
-					component->yCoord, component->width, component->height);
+			component->window->drawClip(component->window, component->xCoord,
+				component->yCoord, component->width, component->height);
 
 		// Draw the moving image.
 		kernelGraphicDrawImage(NULL, (image *) &icon->selectedImage,
@@ -409,6 +427,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 
 			icon->selected = 1;
 		}
+
 		else if (event->type == EVENT_MOUSE_LEFTUP)
 		{
 			kernelDebug(debug_gui, "WindowIcon mouse unclick");
@@ -418,12 +437,14 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 			// Remove the focus from the icon.  This will cause it to be
 			// redrawn in its default way.
 			if (component->window->changeComponentFocus)
+			{
 				component->window->changeComponentFocus(component->window,
 					NULL);
+			}
 		}
 
-		component->window->update(component->window, IMAGEX, component->yCoord,
-			icon->iconImage.width, icon->iconImage.height);
+		component->window->update(component->window, IMAGEX,
+			component->yCoord, icon->iconImage.width, icon->iconImage.height);
 	}
 
 	return (0);
@@ -478,7 +499,7 @@ static int destroy(kernelWindowComponent *component)
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
-kernelWindowComponent *kernelWindowNewIcon(objectKey parent, image *imageCopy,
+kernelWindowComponent *kernelWindowNewIcon(objectKey parent, image *origImage,
 	const char *label, componentParameters *params)
 {
 	// Formats a kernelWindowComponent as a kernelWindowIcon
@@ -489,13 +510,13 @@ kernelWindowComponent *kernelWindowNewIcon(objectKey parent, image *imageCopy,
 	unsigned count;
 
 	// Check params.  Label can be NULL.
-	if (!parent || !imageCopy || !params)
+	if (!parent || !origImage || !params)
 	{
 		kernelError(kernel_error, "NULL parameter");
 		return (component = NULL);
 	}
 
-	if (!imageCopy->data)
+	if (!origImage->data)
 	{
 		kernelError(kernel_error, "Image data is NULL");
 		return (component = NULL);
@@ -546,7 +567,7 @@ kernelWindowComponent *kernelWindowNewIcon(objectKey parent, image *imageCopy,
 	component->data = (void *) icon;
 
 	// Copy the image to kernel memory
-	if (kernelImageCopyToKernel(imageCopy, (image *) &icon->iconImage) < 0)
+	if (kernelImageCopyToKernel(origImage, (image *) &icon->iconImage) < 0)
 	{
 		kernelWindowComponentDestroy(component);
 		return (component = NULL);
@@ -559,7 +580,8 @@ kernelWindowComponent *kernelWindowNewIcon(objectKey parent, image *imageCopy,
 
 	// When the icon is selected, we do a little effect that makes the image
 	// appear yellowish.
-	if (kernelImageCopyToKernel(imageCopy, (image *) &icon->selectedImage) < 0)
+	if (kernelImageCopyToKernel(origImage, (image *)
+		&icon->selectedImage) < 0)
 	{
 		kernelWindowComponentDestroy(component);
 		return (component = NULL);
@@ -583,16 +605,22 @@ kernelWindowComponent *kernelWindowNewIcon(objectKey parent, image *imageCopy,
 	}
 
 	if (label && component->params.font)
+	{
 		setLabel(icon, label, (kernelFont *) component->params.font,
 			(char *) component->charSet);
+	}
 
 	// Now populate the main component
-	component->width = max(imageCopy->width,
+
+	component->width = max(origImage->width,
 		((unsigned)(icon->labelWidth + 3)));
-	component->height = (imageCopy->height + 5);
+	component->height = (origImage->height + 5);
+
 	if (component->params.font)
+	{
 		component->height += (((kernelFont *)
 			component->params.font)->glyphHeight * icon->labelLines);
+	}
 
 	component->minWidth = component->width;
 	component->minHeight = component->height;

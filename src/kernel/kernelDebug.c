@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -29,7 +29,6 @@
 #include "kernelText.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/cdefs.h>
 
 static debug_category categories[MAX_DEBUG_CATEGORIES];
 static int numDebugCategories = 0;
@@ -104,6 +103,7 @@ void kernelDebugInitialize(void)
 	// kernelDebugAddCategory(debug_memory);
 	// kernelDebugAddCategory(debug_misc);
 	// kernelDebugAddCategory(debug_multitasker);
+	// kernelDebugAddCategory(debug_net);
 	// kernelDebugAddCategory(debug_pci);
 	// kernelDebugAddCategory(debug_power);
 	// kernelDebugAddCategory(debug_scsi);
@@ -137,15 +137,20 @@ void kernelDebugAddCategory(debug_category category)
 	// Used to turn on a category of debug messages
 
 	if (category == debug_all)
+	{
 		debugAll = 1;
-
+	}
 	else if (!isCategory(category))
 	{
 		if (numDebugCategories >= MAX_DEBUG_CATEGORIES)
+		{
 			kernelError(kernel_error, "Max debug categories (%d) already "
 				"registered", MAX_DEBUG_CATEGORIES);
+		}
 		else
+		{
 			categories[numDebugCategories++] = category;
+		}
 	}
 
 	return;
@@ -156,13 +161,17 @@ void kernelDebugAddFile(const char *fileName)
 {
 	// Used to turn on debug messages for a source file
 
-	if (!isFileName(fileName))
+	if (isFileName(fileName))
+		return;
+
+	if (numDebugFileNames >= MAX_DEBUG_FILENAMES)
 	{
-		if (numDebugFileNames >= MAX_DEBUG_FILENAMES)
-			kernelError(kernel_error, "Max debug file names (%d) already "
-				"registered", MAX_DEBUG_FILENAMES);
-		else
-			fileNames[numDebugFileNames++] = fileName;
+		kernelError(kernel_error, "Max debug file names (%d) already "
+			"registered", MAX_DEBUG_FILENAMES);
+	}
+	else
+	{
+		fileNames[numDebugFileNames++] = fileName;
 	}
 
 	return;
@@ -193,7 +202,7 @@ void kernelDebugRemoveFile(const char *fileName)
 void kernelDebugOutput(const char *fileName, const char *function, int line,
 	debug_category category, const char *message, ...)
 {
-	// This routine takes a bunch of parameters and outputs the message,
+	// This function takes a bunch of parameters and outputs the message,
 	// depending on a couple of filtering parameters.
 
 	va_list list;
@@ -220,10 +229,14 @@ void kernelDebugOutput(const char *fileName, const char *function, int line,
 		else
 		{
 			if (kernelCurrentProcess)
+			{
 				sprintf((debugText + strlen(debugText)), "%s:",
 					kernelCurrentProcess->name);
+			}
 			else
+			{
 				strcat(debugText, "kernel:");
+			}
 		}
 	}
 
@@ -248,23 +261,47 @@ void kernelDebugOutput(const char *fileName, const char *function, int line,
 }
 
 
-void kernelDebugHex(void *ptr, unsigned length)
+void kernelDebugHexOutput(const char *fileName, void *ptr, unsigned length)
 {
 	unsigned char *buff = ptr;
 	char debugText[MAX_DEBUGTEXT_LENGTH];
+	unsigned char tmp = 0;
 	kernelTextOutputStream *console = kernelTextGetConsoleOutput();
 	unsigned count1, count2;
+
+	// See whether we should skip this
+	if (!debugAll && !isFileName(fileName))
+		return;
 
 	for (count1 = 0; count1 < ((length / 16) + ((length % 16)? 1 : 0));
 		count1 ++)
 	{
 		strcpy(debugText, "DEBUG HEX " );
 
+		for (count2 = 0; count2 < 16; count2 ++)
+		{
+			if (((count1 * 16) + count2) < length)
+			{
+				sprintf((debugText + strlen(debugText)), "%02x ",
+					buff[(count1 * 16) + count2]);
+			}
+			else
+			{
+				strcat((debugText + strlen(debugText)), "   ");
+			}
+		}
+
+		strcat((debugText + strlen(debugText)), "  ");
+
 		for (count2 = 0; (count2 < 16) && (((count1 * 16) + count2) < length);
 			count2 ++)
 		{
-			sprintf((debugText + strlen(debugText)),
-				"%02x ", buff[(count1 * 16) + count2]);
+			tmp = buff[(count1 * 16) + count2];
+
+			if ((tmp >= 32) && (tmp <= 126))
+				sprintf((debugText + strlen(debugText)), "%c", tmp);
+			else
+				strcat((debugText + strlen(debugText)), ".");
 		}
 
 		kernelTextStreamPrintLine(console, debugText);
@@ -272,12 +309,17 @@ void kernelDebugHex(void *ptr, unsigned length)
 }
 
 
-void kernelDebugHexDwords(void *ptr, unsigned length)
+void kernelDebugHexDwordsOutput(const char *fileName, void *ptr,
+	unsigned length)
 {
 	unsigned *buff = ptr;
 	char debugText[MAX_DEBUGTEXT_LENGTH];
 	kernelTextOutputStream *console = kernelTextGetConsoleOutput();
 	unsigned count1, count2;
+
+	// See whether we should skip this
+	if (!debugAll && !isFileName(fileName))
+		return;
 
 	for (count1 = 0; count1 < ((length / 4) + ((length % 4)? 1 : 0));
 		count1 ++)
@@ -287,8 +329,8 @@ void kernelDebugHexDwords(void *ptr, unsigned length)
 		for (count2 = 0; (count2 < 4) && (((count1 * 4) + count2) < length);
 			count2 ++)
 		{
-			sprintf((debugText + strlen(debugText)),
-				"%08x ", buff[(count1 * 4) + count2]);
+			sprintf((debugText + strlen(debugText)), "%08x ",
+				buff[(count1 * 4) + count2]);
 		}
 
 		kernelTextStreamPrintLine(console, debugText);
@@ -296,13 +338,17 @@ void kernelDebugHexDwords(void *ptr, unsigned length)
 }
 
 
-void kernelDebugBinary(void *ptr, unsigned length)
+void kernelDebugBinaryOutput(const char *fileName, void *ptr, unsigned length)
 {
 	unsigned char *buff = ptr;
 	char tmp = 0;
 	char debugText[MAX_DEBUGTEXT_LENGTH];
 	kernelTextOutputStream *console = kernelTextGetConsoleOutput();
 	unsigned count1, count2, count3;
+
+	// See whether we should skip this
+	if (!debugAll && !isFileName(fileName))
+		return;
 
 	for (count1 = 0; count1 < ((length / 4) + ((length % 4)? 1 : 0));
 		count1 ++)

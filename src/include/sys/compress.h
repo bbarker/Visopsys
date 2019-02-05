@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -195,6 +195,8 @@ int deflateCompress(deflateState *);
 int deflateDecompress(deflateState *);
 
 // Can be used in user space only
+int deflateCompressFileData(deflateState *, FILE *, FILE *, progress *);
+int deflateDecompressFileData(deflateState *, FILE *, FILE *, progress *);
 int gzipAddMember(FILE *, FILE *, const char *, const char *, unsigned, int,
 	progress *);
 int gzipCompressFile(const char *, const char *, const char *, int,
@@ -205,12 +207,18 @@ int gzipExtractMember(const char *, const char *, int, const char *,
 	progress *);
 int gzipExtract(const char *, progress *);
 int gzipDeleteMember(const char *, const char *, int, progress *);
+int tarAddMember(const char *, const char *, progress *);
 int tarMemberInfo(FILE *, archiveMemberInfo *, progress *);
 int tarExtractNextMember(FILE *, progress *);
 int tarExtractMember(const char *, const char *, int, progress *);
 int tarExtract(const char *, progress *);
-int archiveAddMember(const char *, const char *, const char *, progress *);
+int tarDeleteMember(const char *, const char *, int, progress *);
+int archiveAddMember(const char *, const char *, int, const char *,
+	progress *);
+int archiveAddRecursive(const char *, const char *, int, const char *,
+	progress *);
 int archiveInfo(const char *, archiveMemberInfo **, progress *);
+void archiveInfoContentsFree(archiveMemberInfo *);
 void archiveInfoFree(archiveMemberInfo *, int);
 int archiveExtractMember(const char *, const char *, int, const char *,
 	progress *);

@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -19,15 +19,15 @@
 ;;  bootsect-fatnoboot.s
 ;;
 
-;; This code is for a non-bootable FAT12/16 filesystem
+;; This is boot sector code for non-bootable FAT filesystems
+
 
 	ORG 7C00h
 	SEGMENT .text
 
-
 main:
-	jmp short bootCode		; 00 - 01 Jump instruction
-	nop				; 02 - 02 No op
+	jmp short bootCode	; 00 - 01 Jump instruction
+	nop					; 02 - 02 No op
 
 	%include "bootsect-fatBPB.s"
 
@@ -57,7 +57,7 @@ bootCode:
 	call print
 
 	;; Wait for a key press
-	mov AX, 0000h
+	xor AX, AX
 	int 16h
 
 	popa
@@ -71,9 +71,7 @@ bootCode:
 	cli
 	hlt
 
-
-%include "bootsect-print.s"
-
+	%include "bootsect-print.s"
 
 ;; Data.  There is no data segment, so this space will have to do
 
@@ -85,5 +83,5 @@ NOBOOT		db 'This is not a bootable Visopsys disk', 0Dh, 0Ah
 ;; meant to be booted from (and also helps prevent us from making the
 ;; boot sector code larger than 512 bytes)
 times (510-($-$$))	db 0
-ENDSECTOR:			dw 0AA55h
+ENDSECTOR:	dw 0AA55h
 

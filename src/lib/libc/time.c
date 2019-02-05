@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@
 time_t time(time_t *t)
 {
 	// The time() function returns the value of time in seconds since 00:00:00
-	// UTC, January 1, 1970.  If t is non-zero, the return value is also
+	// UTC, January 1, 1970.  If t is non-NULL, the return value is also
 	// stored in the location to which t points.  On error, ((time_t) -1)
 	// is returned, and errno is set appropriately.
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -298,13 +298,7 @@ typedef enum {
 
 } xhciDevSpeed;
 
-// Generic context structure
-typedef volatile struct {
-	unsigned dwords[8];
-
-} __attribute__((packed)) xhciCtxt;
-
-// Input control context structure
+// Slot context structures
 typedef volatile struct {
 	unsigned entFlagsSpeedRoute;
 	unsigned numPortsPortLat;
@@ -312,9 +306,18 @@ typedef volatile struct {
 	unsigned slotStateDevAddr;
 	unsigned res[4];
 
-} __attribute__((packed)) xhciSlotCtxt;
+} __attribute__((packed)) xhciSlotCtxt32;
 
-// Endpoint context structure
+typedef volatile struct {
+	unsigned entFlagsSpeedRoute;
+	unsigned numPortsPortLat;
+	unsigned targetTT;
+	unsigned slotStateDevAddr;
+	unsigned res[12];
+
+} __attribute__((packed)) xhciSlotCtxt64;
+
+// Endpoint context structures
 typedef volatile struct {
 	unsigned intvlLsaMaxPstrMultEpState;
 	unsigned maxPSizeMaxBSizeEpTypeCerr;
@@ -323,29 +326,58 @@ typedef volatile struct {
 	unsigned maxEpEsitAvTrbLen;
 	unsigned res[3];
 
-} __attribute__((packed)) xhciEndpointCtxt;
+} __attribute__((packed)) xhciEndpointCtxt32;
 
-// Slot context structure
+typedef volatile struct {
+	unsigned intvlLsaMaxPstrMultEpState;
+	unsigned maxPSizeMaxBSizeEpTypeCerr;
+	unsigned trDeqPtrLo;
+	unsigned trDeqPtrHi;
+	unsigned maxEpEsitAvTrbLen;
+	unsigned res[11];
+
+} __attribute__((packed)) xhciEndpointCtxt64;
+
+// Input control context structures
 typedef volatile struct {
 	unsigned drop;
 	unsigned add;
 	unsigned res[6];
 
-} __attribute__((packed)) xhciInputCtrlCtxt;
+} __attribute__((packed)) xhciInputCtrlCtxt32;
 
-// Device context structure
 typedef volatile struct {
-	xhciSlotCtxt slotCtxt;
-	xhciEndpointCtxt endpointCtxt[31];
+	unsigned drop;
+	unsigned add;
+	unsigned res[14];
 
-} __attribute__((packed)) xhciDevCtxt;
+} __attribute__((packed)) xhciInputCtrlCtxt64;
 
-// Device context structure
+// Device context structures
 typedef volatile struct {
-	xhciInputCtrlCtxt inputCtrlCtxt;
-	xhciDevCtxt devCtxt;
+	xhciSlotCtxt32 slotCtxt;
+	xhciEndpointCtxt32 endpointCtxt[31];
 
-} __attribute__((packed)) xhciInputCtxt;
+} __attribute__((packed)) xhciDevCtxt32;
+
+typedef volatile struct {
+	xhciSlotCtxt64 slotCtxt;
+	xhciEndpointCtxt64 endpointCtxt[31];
+
+} __attribute__((packed)) xhciDevCtxt64;
+
+// Input context structures
+typedef volatile struct {
+	xhciInputCtrlCtxt32 inputCtrlCtxt;
+	xhciDevCtxt32 devCtxt;
+
+} __attribute__((packed)) xhciInputCtxt32;
+
+typedef volatile struct {
+	xhciInputCtrlCtxt64 inputCtrlCtxt;
+	xhciDevCtxt64 devCtxt;
+
+} __attribute__((packed)) xhciInputCtxt64;
 
 typedef volatile struct {
 	unsigned baseAddrLo;
@@ -476,11 +508,13 @@ typedef struct {
 typedef struct {
 	int num;
 	usbDevice *usbDev;
-	xhciInputCtxt *inputCtxt;
+	xhciInputCtxt32 *inputCtxt32;
+	xhciInputCtxt64 *inputCtxt64;
 	unsigned inputCtxtPhysical;
-	xhciDevCtxt *devCtxt;
+	xhciDevCtxt32 *devCtxt32;
+	xhciDevCtxt64 *devCtxt64;
 	unsigned devCtxtPhysical;
-	xhciTrbRing *transRings[USB_MAX_ENDPOINTS];
+	xhciTrbRing *transRings[USB_MAX_ENDPOINTS << 1];
 
 } xhciSlot;
 

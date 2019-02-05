@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -127,10 +127,10 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 	if (!strncmp(vbfHeader->common.magic, VBF_MAGIC, VBF_MAGIC_LEN))
 	{
 		// We'll accept that.
-		sprintf(class->className, "%s %s", FILECLASS_NAME_VBF,
+		sprintf(class->name, "%s %s", FILECLASS_NAME_VBF,
 			FILECLASS_NAME_FONT);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_FONT);
-		class->subClass = LOADERFILESUBCLASS_VBF;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_FONT);
+		class->subType = LOADERFILESUBCLASS_VBF;
 		return (1);
 	}
 	else

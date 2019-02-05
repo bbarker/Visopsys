@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,7 @@
 //  malloc.c
 //
 
-// These routines comprise Visopsys heap memory management system.  It relies
+// These functions comprise Visopsys heap memory management system.  It relies
 // upon the kernelMemory code, and does similar things, but instead of whole
 // memory pages, it allocates arbitrary-sized chunks.
 
@@ -170,8 +170,8 @@ static int sortInsertBlock(mallocBlock **list, mallocBlock *block)
 	mallocBlock *nextBlock = NULL;
 
 	debug("Sort insert block %08x->%08x (%u) in %s list", block->start,
-		blockEnd(block), block->size,
-		((list == USEDLIST_REF)? "used" : "free"));
+		blockEnd(block), block->size, ((list == USEDLIST_REF)? "used" :
+			"free"));
 
 	if (*list)
 	{
@@ -216,9 +216,14 @@ static int allocVacantBlocks(void)
 	debug("Allocating new vacant blocks");
 
 	if (visopsys_in_kernel)
-		vacantBlockList = memory_get(MEMORY_BLOCK_SIZE, "kernel heap metadata");
+	{
+		vacantBlockList = memory_get(MEMORY_BLOCK_SIZE, "kernel heap "
+			"metadata");
+	}
 	else
+	{
 		vacantBlockList = memory_get(MEMORY_BLOCK_SIZE, "user heap metadata");
+	}
 
 	if (!vacantBlockList)
 	{
@@ -275,8 +280,8 @@ static void removeBlock(mallocBlock **list, mallocBlock *block)
 	// Remove a block from a list
 
 	debug("Remove block %08x->%08x (%u) from %s list", block->start,
-		blockEnd(block), block->size,
-		((list == USEDLIST_REF)? "used" : "free"));
+		blockEnd(block), block->size, ((list == USEDLIST_REF)? "used" :
+			"free"));
 
 	if (block->prev)
 		block->prev->next = block->next;
@@ -323,7 +328,8 @@ static int createBlock(mallocBlock **list, unsigned start, unsigned size,
 	mallocBlock *block = NULL;
 
 	debug("Create block %08x-%08x (%u) in %s list", start,
-		(start + (size - 1)), size, ((list == USEDLIST_REF)? "used" : "free"));
+		(start + (size - 1)), size, ((list == USEDLIST_REF)? "used" :
+			"free"));
 
 	block = getBlock();
 	if (!block)
@@ -475,11 +481,13 @@ static void *allocateBlock(unsigned size, const char *function)
 		block->size = size;
 
 		debug("Split block of size %u from remainder of size %u", size,
-		remainder);
+			remainder);
 
 		if (createBlock(FREELIST_REF, (block->start + size), remainder,
 			block->heapAlloc, block->heapAllocSize) < 0)
-		return (NULL);
+		{
+			return (NULL);
+		}
 	}
 
 	usedMemory += size;
@@ -734,7 +742,6 @@ static int checkBlocks(void)
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
-
 void *_doMalloc(unsigned size, const char *function)
 {
 	// These are the guts of malloc() and kernelMalloc()
@@ -782,11 +789,14 @@ void *_malloc(size_t size, const char *function)
 
 	if (visopsys_in_kernel)
 	{
-		error("Cannot call malloc() directly from kernel space (%s)", function);
+		error("Cannot call malloc() directly from kernel space (%s)",
+			function);
 		return (NULL);
 	}
 	else
+	{
 		return (_doMalloc(size, function));
+	}
 }
 
 
@@ -846,7 +856,9 @@ void _free(void *start, const char *function)
 		return;
 	}
 	else
+	{
 		return (_doFree(start, function));
+	}
 }
 
 

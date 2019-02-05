@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  makemsgs.sh
 ##
@@ -37,3 +37,4 @@ for FILE in `find $SRCDIR -name '*.po'` ; do
 done
 
 exit 0
+

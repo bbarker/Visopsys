@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,6 @@
 extern int libwindow_initialized;
 extern void libwindowInitialize(void);
 
-static volatile image waitImage;
 static objectKey dialogWindow = NULL;
 static objectKey progressBar = NULL;
 static objectKey statusLabel = NULL;
@@ -172,6 +171,7 @@ _X_ objectKey windowNewProgressDialog(objectKey parentWindow, const char *title,
 
 	int status = 0;
 	objectKey container = NULL;
+	image iconImage;
 	componentParameters params;
 
 	if (!libwindow_initialized)
@@ -215,16 +215,14 @@ _X_ objectKey windowNewProgressDialog(objectKey parentWindow, const char *title,
 	params.orientationY = orient_top;
 	params.flags = (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
 
-	if (!waitImage.data)
+	// Try to load the 'wait' image
+	status = imageLoad(WAITIMAGE_NAME, 0, 0, &iconImage);
+	if (!status && iconImage.data)
 	{
-		status = imageLoad(WAITIMAGE_NAME, 0, 0, (image *) &waitImage);
-		if (status >= 0)
-			waitImage.transColor.green = 0xFF;
+		iconImage.transColor.green = 0xFF;
+		windowNewImage(container, &iconImage, draw_alphablend, &params);
+		imageFree(&iconImage);
 	}
-
-	if (waitImage.data)
-		windowNewImage(container, (image *) &waitImage, draw_alphablend,
-			&params);
 
 	// Create the progress bar
 	params.gridX++;

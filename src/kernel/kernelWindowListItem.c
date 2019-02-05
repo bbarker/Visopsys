@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -89,25 +89,27 @@ static int draw(kernelWindowComponent *component)
 	char *textBuffer = NULL;
 
 	if (!item->selected)
+	{
 		kernelGraphicDrawRect(component->buffer, (color *)
 			&component->params.background, draw_normal, component->xCoord,
 			component->yCoord, component->width, component->height, 1, 1);
+	}
 
 	if (item->type == windowlist_textonly)
 	{
 		textBuffer = kernelMalloc(strlen((char *) item->params.text) + 1);
 		if (!textBuffer)
 			return (status = ERR_MEMORY);
+
 		strncpy(textBuffer, (char *) item->params.text,
 			strlen((char *) item->params.text));
 
 		if (component->params.font)
 		{
 			// Don't draw text outside our component area
-			while (((int) kernelFontGetPrintedWidth(
-				(kernelFont *) component->params.font,
-				(char *) component->charSet, textBuffer) >
-				(component->width - 2)) && strlen(textBuffer))
+			while (((int) kernelFontGetPrintedWidth((kernelFont *)
+				component->params.font, (char *) component->charSet,
+				textBuffer) > (component->width - 2)) && strlen(textBuffer))
 			{
 				textBuffer[strlen(textBuffer) - 1] = '\0';
 			}
@@ -115,28 +117,31 @@ static int draw(kernelWindowComponent *component)
 
 		if (item->selected)
 		{
-			kernelGraphicDrawRect(component->buffer,
-				(color *) &component->params.foreground,
-				draw_normal, component->xCoord, component->yCoord,
-				component->width, component->height, 1, 1);
+			kernelGraphicDrawRect(component->buffer, (color *)
+				&component->params.foreground, draw_normal, component->xCoord,
+				component->yCoord, component->width, component->height, 1, 1);
 
 			if (component->params.font)
+			{
 				kernelGraphicDrawText(component->buffer,
 					(color *) &component->params.background,
 					(color *) &component->params.foreground,
 					(kernelFont *) component->params.font,
 					(char *) component->charSet, textBuffer, draw_normal,
 					(component->xCoord + 1), (component->yCoord + 1));
+			}
 		}
 		else
 		{
 			if (component->params.font)
+			{
 				kernelGraphicDrawText(component->buffer,
 					(color *) &component->params.foreground,
 					(color *) &component->params.background,
 					(kernelFont *) component->params.font,
 					(char *) component->charSet, textBuffer, draw_normal,
 					(component->xCoord + 1), (component->yCoord + 1));
+			}
 		}
 
 		kernelFree(textBuffer);
@@ -144,10 +149,12 @@ static int draw(kernelWindowComponent *component)
 	else if (item->type == windowlist_icononly)
 	{
 		if (item->selected)
+		{
 			kernelGraphicDrawRect(component->buffer, (color *)
 				&component->params.foreground, draw_normal,
 				(item->icon->xCoord - 1), (item->icon->yCoord - 1),
 				(item->icon->width + 2), (item->icon->height + 2), 1, 1);
+		}
 
 		if (item->icon && item->icon->draw)
 			item->icon->draw(item->icon);
@@ -220,11 +227,9 @@ static int setData(kernelWindowComponent *component, void *itemParams,
 		if (listItem->icon)
 			kernelWindowComponentDestroy(listItem->icon);
 
-		listItem->icon =
-			kernelWindowNewIcon(listItem->parent,
-				(image *) &listItem->params.iconImage,
-				(char *) listItem->params.text,
-				(componentParameters *) &component->params);
+		listItem->icon = kernelWindowNewIcon(listItem->parent, (image *)
+			&listItem->params.iconImage, (char *) listItem->params.text,
+			(componentParameters *) &component->params);
 		if (!listItem->icon)
 			return (ERR_NOCREATE);
 
@@ -272,9 +277,8 @@ static int setSelected(kernelWindowComponent *component, int selected)
 		// window buffer
 		if (component->buffer == &component->window->buffer)
 		{
-			component->window
-				->update(component->window, component->xCoord,
-					component->yCoord, component->width, component->height);
+			component->window->update(component->window, component->xCoord,
+				component->yCoord, component->width, component->height);
 		}
 	}
 
@@ -358,11 +362,13 @@ kernelWindowComponent *kernelWindowNewListItem(objectKey parent,
 	component->mouseEvent = &mouseEvent;
 	component->destroy = &destroy;
 
-	// If default colors were requested, override the standard background color
-	// with the one we prefer (white)
+	// If default colors were requested, override the standard background
+	// color with the one we prefer (white)
 	if (!(component->params.flags & WINDOW_COMPFLAG_CUSTOMBACKGROUND))
+	{
 		memcpy((color *) &component->params.background, &COLOR_WHITE,
 			sizeof(color));
+	}
 
 	// If font is NULL, use the default
 	if (!component->params.font)

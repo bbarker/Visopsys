@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -36,14 +36,12 @@
 #include <sys/multiproc.h>
 #include <sys/processor.h>
 
-#include "kernelText.h"
-
-#define READSLOTLO(ioApic, num) readIoReg(ioApic, (0x10 + (num * 2)))
-#define READSLOTHI(ioApic, num) readIoReg(ioApic, (0x10 + (num * 2) + 1))
+#define READSLOTLO(ioApic, num) readIoReg((ioApic), (0x10 + (num * 2)))
+#define READSLOTHI(ioApic, num) readIoReg((ioApic), (0x10 + (num * 2) + 1))
 #define WRITESLOTLO(ioApic, num, value) \
-	writeIoReg(ioApic, (0x10 + (num * 2)), value)
+	writeIoReg((ioApic), (0x10 + (num * 2)), value)
 #define WRITESLOTHI(ioApic, num, value) \
-	writeIoReg(ioApic, (0x10 + (num * 2) + 1), value)
+	writeIoReg((ioApic), (0x10 + (num * 2) + 1), value)
 
 static volatile void *localApicRegs = NULL;
 
@@ -188,10 +186,10 @@ static int calcVector(int intNumber)
 	// There should ideally be no more than 2 vectors per priority level.
 	//
 	// Since ISA IRQs 0-15 are numbered by priority (ish), with the highest
-	// being 0, we want IRQs 0+1 at level F, IRQs 2+3 at level E, etc.  We only
-	// go down to level 2, because below that are the CPU exceptions.  That
-	// leaves up to 14 priority levels available.  This gives us a sensible
-	// distribution for up to 28 IRQs.
+	// being 0, we want IRQs 0+1 at level F, IRQs 2+3 at level E, etc.  We
+	// only go down to level 2, because below that are the CPU exceptions.
+	// That leaves up to 14 priority levels available.  This gives us a
+	// sensible distribution for up to 28 IRQs.
 	//
 	// After 28 IRQs, we fudge it and start back at the top, so IRQs 28+29
 	// become vectors F2+F3, IRQs 30+31 become vectors E2+E3, etc.
@@ -266,22 +264,26 @@ static int setupIsaInts(kernelPic *pic, kernelDevice *mpDevice)
 	if (!cpuEntry)
 		return (status = ERR_NOSUCHENTRY);
 
-	// Set up default, identity-mapped ISA vectors
-	for (count1 = 0; count1 < 16; count1 ++)
+	if (!pic->startIrq)
 	{
-		slotLo = 0, slotHi = 0;
+		// For the first I/O APIC handling IRQs starting at 0, set up default,
+		// identity-mapped ISA vectors
+		for (count1 = 0; count1 < 16; count1 ++)
+		{
+			slotLo = 0, slotHi = 0;
 
-		// Destination (boot processor)
-		slotHi = (cpuEntry->localApicId << 24);
+			// Destination (boot processor)
+			slotHi = (cpuEntry->localApicId << 24);
 
-		// Mask it off
-		slotLo |= (1 << 16);
+			// Mask it off
+			slotLo |= (1 << 16);
 
-		// Vector
-		slotLo |= calcVector(count1);
+			// Vector
+			slotLo |= calcVector(count1);
 
-		WRITESLOTLO(ioApic, count1, slotLo);
-		WRITESLOTHI(ioApic, count1, slotHi);
+			WRITESLOTLO(ioApic, count1, slotLo);
+			WRITESLOTHI(ioApic, count1, slotHi);
+		}
 	}
 
 	// Loop through the MP bus entries
@@ -314,8 +316,9 @@ static int setupIsaInts(kernelPic *pic, kernelDevice *mpDevice)
 			if (intEntry->busId != busEntry->busId)
 				continue;
 
-			kernelDebug(debug_io, "APIC processing ISA int entry %d",
-				intEntry->busIrq);
+			kernelDebug(debug_io, "APIC processing ISA int entry IRQ=%d "
+				"vector=%02x", intEntry->busIrq,
+				calcVector(intEntry->busIrq));
 
 			slotLo = 0, slotHi = 0;
 
@@ -407,10 +410,11 @@ static int setupPciInts(kernelPic *pic, kernelDevice *mpDevice)
 			if (intEntry->busId != busEntry->busId)
 				continue;
 
-			kernelDebug(debug_io, "APIC processing PCI int entry %d:%c IRQ=%d",
-				((intEntry->busIrq >> 2) & 0x1F),
-				('A' + (intEntry->busIrq & 0x03)),
-				(pic->startIrq + intEntry->ioApicIntPin));
+			kernelDebug(debug_io, "APIC processing PCI int entry %d:%c "
+				"pin=%d IRQ=%d vector=%02x", ((intEntry->busIrq >> 2) & 0x1F),
+				('A' + (intEntry->busIrq & 0x03)), intEntry->ioApicIntPin,
+				(pic->startIrq + intEntry->ioApicIntPin),
+				calcVector(pic->startIrq + intEntry->ioApicIntPin));
 
 			slotLo = 0, slotHi = 0;
 
@@ -514,13 +518,22 @@ static int enableLocalApic(kernelDevice *mpDevice)
 	localApicRegs = (void *) apicBase;
 
 	// Identity-map the local APIC's registers (4KB)
-	status = kernelPageMap(KERNELPROCID, apicBase, (void *) localApicRegs,
-		0x1000);
-
-	if (status < 0)
+	if (!kernelPageMapped(KERNELPROCID, (void *) localApicRegs, 0x1000))
 	{
-		kernelError(kernel_error, "Couldn't map local APIC registers");
-		return (status);
+		kernelDebug(debug_io, "APIC CPU local APIC registers memory is not "
+			"mapped");
+		status = kernelPageMap(KERNELPROCID, apicBase, (void *) localApicRegs,
+			0x1000);
+		if (status < 0)
+		{
+			kernelError(kernel_error, "Couldn't map local APIC registers");
+			return (status);
+		}
+	}
+	else
+	{
+		kernelDebug(debug_io, "APIC CPU local APIC registers memory is "
+			"already mapped");
 	}
 
 	// Make it non-cacheable, since this memory represents memory-mapped
@@ -546,8 +559,8 @@ static int enableLocalApic(kernelDevice *mpDevice)
 	// Loop through the local interrupt assignments
 	for (count = 0; ; count ++)
 	{
-		intEntry = mpOps->driverGetEntry(mpDevice, MULTIPROC_ENTRY_LOCINTASSMT,
-			count);
+		intEntry = mpOps->driverGetEntry(mpDevice,
+			MULTIPROC_ENTRY_LOCINTASSMT, count);
 		if (!intEntry)
 			break;
 
@@ -781,7 +794,7 @@ static int driverGetActive(kernelPic *pic __attribute__((unused)))
 
 static int driverDetect(void *parent, kernelDriver *driver)
 {
-	// This routine is used to detect and initialize each I/O APIC device, as
+	// This function is used to detect and initialize each I/O APIC device, as
 	// well as registering each one with the higher-level interface.
 
 	int status = 0;
@@ -831,6 +844,11 @@ static int driverDetect(void *parent, kernelDriver *driver)
 		if (cpuEntry->localApicId < 16)
 			apicIdBitmap |= (1 << cpuEntry->localApicId);
 	}
+
+	// Enable this processor's (the boot processor's) local APIC
+	status = enableLocalApic(mpDevice);
+	if (status < 0)
+		goto out;
 
 	// Loop through the multiprocessor entries looking for I/O APICs
 	for (count1 = 0; ; count1 ++)
@@ -897,10 +915,21 @@ static int driverDetect(void *parent, kernelDriver *driver)
 		ioApic->regs = (volatile unsigned *) ioApicEntry->apicPhysical;
 
 		// Identity-map the registers
-		status = kernelPageMap(KERNELPROCID, ioApicEntry->apicPhysical,
-			(void *) ioApic->regs, (5 * sizeof(unsigned)));
-		if (status < 0)
-			break;
+		if (!kernelPageMapped(KERNELPROCID, (void *) ioApic->regs,
+			(5 * sizeof(unsigned))))
+		{
+			kernelDebug(debug_io, "APIC I/O APIC registers memory is not "
+				"mapped");
+			status = kernelPageMap(KERNELPROCID, ioApicEntry->apicPhysical,
+				(void *) ioApic->regs, (5 * sizeof(unsigned)));
+			if (status < 0)
+				break;
+		}
+		else
+		{
+			kernelDebug(debug_io, "APIC I/O APIC registers memory is already "
+				"mapped");
+		}
 
 		// Make it non-cacheable, since this memory represents memory-mapped
 		// hardware registers.
@@ -911,8 +940,8 @@ static int driverDetect(void *parent, kernelDriver *driver)
 			kernelDebugError("Error setting page attrs");
 
 		// Make sure the APIC ID is correctly set
-		writeIoReg(ioApic, 0,
-			((readIoReg(ioApic, 0) & 0xF0FFFFFF) | (ioApic->id << 24)));
+		writeIoReg(ioApic, 0, ((readIoReg(ioApic, 0) & 0xF0FFFFFF) |
+			(ioApic->id << 24)));
 
 		kernelDebug(debug_io, "APIC id=0x%08x", readIoReg(ioApic, 0));
 		kernelDebug(debug_io, "APIC ver=0x%08x", readIoReg(ioApic, 1));
@@ -932,6 +961,9 @@ static int driverDetect(void *parent, kernelDriver *driver)
 		pic->numIrqs = (((readIoReg(ioApic, 1) >> 16) & 0xFF) + 1);
 		pic->driver = driver;
 		pic->driverData = ioApic;
+
+		kernelDebug(debug_io, "APIC startIrq=%d numIrqs=%d", pic->startIrq,
+			pic->numIrqs);
 
 		// The next PIC's IRQs will start where this one left off
 		startIrq += pic->numIrqs;
@@ -954,17 +986,9 @@ static int driverDetect(void *parent, kernelDriver *driver)
 			break;
 
 		for (count2 = 0; count2 < pic->numIrqs; count2 ++)
+		{
 			kernelDebug(debug_io, "APIC slot %d %08x %08x", count2,
 				READSLOTHI(ioApic, count2), READSLOTLO(ioApic, count2));
-
-		// Enable this processor's (the boot processor's) local APIC
-		status = enableLocalApic(mpDevice);
-		if (status >= 0)
-		{
-			// Add the PIC to the higher-level interface
-			status = kernelPicAdd(pic);
-			if (status < 0)
-				break;
 		}
 
 		// Allocate memory for the kernel device
@@ -985,8 +1009,17 @@ static int driverDetect(void *parent, kernelDriver *driver)
 		status = kernelDeviceAdd(parent, dev);
 		if (status < 0)
 			break;
+
+		// Can't free this now
+		dev = NULL;
+
+		// Add the PIC to the higher-level interface
+		status = kernelPicAdd(pic);
+		if (status < 0)
+			break;
 	}
 
+out:
 	if (status < 0)
 	{
 		if (dev)
@@ -1040,9 +1073,11 @@ void kernelApicDebug(void)
 	debugLocalRegs();
 
 	for (count1 = 0; count1 < 128; count1 += 32)
+	{
 		kernelDebug(debug_io, "APIC IRR %08x %08x",
 			readLocalReg(APIC_LOCALREG_IRR + count1 + 16),
 			readLocalReg(APIC_LOCALREG_IRR + count1));
+	}
 
 	for (count1 = 112, vector = 0xFF; count1 >= 0; count1 -= 16)
 	{
@@ -1051,8 +1086,10 @@ void kernelApicDebug(void)
 		for (count2 = 0; count2 < 32; count2 ++)
 		{
 			if (isrReg & 0x80000000)
+			{
 				kernelDebug(debug_io, "APIC request=%02x irq=%d", vector,
 					calcIntNumber(vector));
+			}
 
 			isrReg <<= 1;
 			vector -= 1;
@@ -1060,9 +1097,11 @@ void kernelApicDebug(void)
 	}
 
 	for (count1 = 0; count1 < 128; count1 += 32)
+	{
 		kernelDebug(debug_io, "APIC ISR %08x %08x",
 			readLocalReg(APIC_LOCALREG_ISR + count1 + 16),
 			readLocalReg(APIC_LOCALREG_ISR + count1));
+	}
 
 	for (count1 = 112, vector = 0xFF; count1 >= 0; count1 -= 16)
 	{
@@ -1071,8 +1110,10 @@ void kernelApicDebug(void)
 		for (count2 = 0; count2 < 32; count2 ++)
 		{
 			if (isrReg & 0x80000000)
+			{
 				kernelDebug(debug_io, "APIC in service=%02x irq=%d", vector,
 					calcIntNumber(vector));
+			}
 
 			isrReg <<= 1;
 			vector -= 1;

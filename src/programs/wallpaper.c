@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -48,7 +48,7 @@ Currently, bitmap (.bmp) and JPEG (.jpg) image formats are supported.
 #include <stdlib.h>
 #include <string.h>
 #include <sys/api.h>
-#include <sys/desktop.h>
+#include <sys/deskconf.h>
 #include <sys/env.h>
 #include <sys/paths.h>
 #include <sys/user.h>
@@ -84,9 +84,9 @@ static int writeFileConfig(const char *configName, const char *imageName)
 
 	// Save the wallpaper variable
 	if (imageName)
-		status = configSet(configName, DESKTOP_BACKGROUND, imageName);
+		status = configSet(configName, DESKVAR_BACKGROUND_IMAGE, imageName);
 	else
-		status = configUnset(configName, DESKTOP_BACKGROUND);
+		status = configUnset(configName, DESKVAR_BACKGROUND_IMAGE);
 
 	return (status);
 }
@@ -105,7 +105,7 @@ static int writeConfig(const char *imageName)
 	if (!strcmp(currentUser, USER_ADMIN))
 	{
 		// The user 'admin' doesn't have user settings.  Use the system one.
-		sprintf(configName, PATH_SYSTEM_CONFIG "/" DESKTOP_CONFIGFILE);
+		sprintf(configName, PATH_SYSTEM_CONFIG "/" DESKTOP_CONFIG);
 	}
 	else
 	{
@@ -122,7 +122,7 @@ static int writeConfig(const char *imageName)
 		}
 
 		// Use the user's window config file?
-		sprintf(configName, PATH_USERS_CONFIG "/" DESKTOP_CONFIGFILE,
+		sprintf(configName, PATH_USERS_CONFIG "/" DESKTOP_CONFIG,
 			currentUser);
 	}
 
@@ -144,8 +144,8 @@ int main(int argc, char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			argv[0]);
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (status = ERR_NOTINITIALIZED);
 	}
 
@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 		strncpy(fileName, argv[1], MAX_PATH_NAME_LENGTH);
 	}
 
-	if (strncmp(fileName, DESKTOP_BACKGROUND_NONE, MAX_PATH_NAME_LENGTH))
+	if (strncmp(fileName, DESKVAR_BACKGROUND_NONE, MAX_PATH_NAME_LENGTH))
 	{
 		status = fileFind(fileName, NULL);
 		if (status < 0)

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelFilesystem.c
 //
 
-// This file contains the routines designed to manage file systems
+// This file contains the functions designed to manage file systems
 
 #include "kernelFilesystem.h"
 #include "kernelFile.h"
@@ -71,7 +71,7 @@ static kernelFilesystemDriver *detectType(kernelDisk *theDisk)
 	// This function takes a disk structure (initialized, with its driver
 	// accounted for) and calls functions to determine its type.  At the
 	// moment there will be a set number of known filesystem types that
-	// will be more-or-less hard-coded into this routine.  Of course this
+	// will be more-or-less hard-coded into this function.  Of course this
 	// isn't desirable and should/will be fixed to be more flexible in
 	// the future.  The function returns an enumeration value reflecting
 	// the type it found (including possibly "unknown").
@@ -81,7 +81,7 @@ static kernelFilesystemDriver *detectType(kernelDisk *theDisk)
 	kernelFilesystemDriver *driver = NULL;
 	int count;
 
-	// We will assume that the detection routines being called will do
+	// We will assume that the detection functions being called will do
 	// all of the necessary checking of the kernelDisk before using
 	// it.  Since we're not actually using it here, we won't duplicate
 	// that work.
@@ -406,7 +406,7 @@ int kernelFilesystemFormat(const char *diskName, const char *type,
 		return (status = ERR_NOSUCHENTRY);
 	}
 
-	// Make sure the driver's formatting routine is not NULL
+	// Make sure the driver's formatting function is not NULL
 	if (!theDriver->driverFormat)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -503,7 +503,7 @@ int kernelFilesystemCheck(const char *diskName, int force, int repair,
 
 	theDriver = theDisk->filesystem.driver;
 
-	// Make sure the driver's checking routine is not NULL
+	// Make sure the driver's checking function is not NULL
 	if (!theDriver->driverCheck)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -552,7 +552,7 @@ int kernelFilesystemDefragment(const char *diskName, progress *prog)
 
 	theDriver = theDisk->filesystem.driver;
 
-	// Make sure the driver's checking routine is not NULL
+	// Make sure the driver's checking function is not NULL
 	if (!theDriver->driverDefragment)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -601,7 +601,7 @@ int kernelFilesystemStat(const char *diskName, kernelFilesystemStats *stat)
 
 	theDriver = theDisk->filesystem.driver;
 
-	// Make sure the driver's stat routine is not NULL
+	// Make sure the driver's stat function is not NULL
 	if (!theDriver->driverStat)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -651,7 +651,7 @@ int kernelFilesystemResizeConstraints(const char *diskName, uquad_t *minBlocks,
 
 	theDriver = theDisk->filesystem.driver;
 
-	// Make sure the driver's resizing constraints routine is not NULL
+	// Make sure the driver's resizing constraints function is not NULL
 	if (!theDriver->driverResizeConstraints)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -702,7 +702,7 @@ int kernelFilesystemResize(const char *diskName, uquad_t blocks,
 
 	theDriver = theDisk->filesystem.driver;
 
-	// Make sure the driver's resizing routine is not NULL
+	// Make sure the driver's resizing function is not NULL
 	if (!theDriver->driverResize)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -764,7 +764,7 @@ int kernelFilesystemMount(const char *diskName, const char *path)
 
 	theDriver = theDisk->filesystem.driver;
 
-	// Make sure the driver's mounting routine is not NULL
+	// Make sure the driver's mounting function is not NULL
 	if (!theDriver->driverMount)
 	{
 		kernelError(kernel_error, "The filesystem driver does not support the "
@@ -814,7 +814,8 @@ int kernelFilesystemMount(const char *diskName, const char *path)
 	// Fill in any information that we already know for this filesystem
 
 	// Make "mountPoint" be the filesystem's mount point
-	strcpy((char *) theDisk->filesystem.mountPoint, mountPoint);
+	strncpy((char *) theDisk->filesystem.mountPoint, mountPoint,
+		MAX_PATH_LENGTH);
 
 	// Get a new file entry for the filesystem's root directory
 	theDisk->filesystem.filesystemRoot = kernelFileNewEntry(theDisk);

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -37,6 +37,7 @@ int vshDeleteFile(const char *);
 int vshDumpFile(const char *);
 int vshFileList(const char *);
 void vshMakeAbsolutePath(const char *, char *);
+int vshMakeDirRecursive(char *);
 int vshMoveFile(const char *, const char *);
 int vshParseCommand(char *, char *, int *, char *[]);
 void vshPasswordPrompt(const char *, char *);

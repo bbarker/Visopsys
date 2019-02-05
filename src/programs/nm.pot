@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,12 +66,12 @@ msgstr ""
 msgid "File type of \"%s\" is unknown\n"
 msgstr ""
 
-#: nm.c:125
+#: nm.c:127
 #, c-format
-msgid "\"%s\" is not a dynamic library or executable\n"
+msgid "\"%s\" is not an executable or dynamic library\n"
 msgstr ""
 
-#: nm.c:138
+#: nm.c:140
 #, c-format
 msgid "Unable to get dynamic symbols from \"%s\".\n"
 msgstr ""

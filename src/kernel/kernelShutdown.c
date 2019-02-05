@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -38,6 +38,7 @@
 #include "kernelWindow.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <sys/processor.h>
 
 #define _(string) kernelGetText(string)
@@ -111,7 +112,7 @@ static void messageBox(kernelFont *font, int numLines, char *message[])
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
-int kernelShutdown(int reboot, int force)
+int kernelSystemShutdown(int reboot, int force)
 {
 	// This function will shut down the kernel, and reboot the computer
 	// if the 'reboot' argument dictates.  This function must include
@@ -194,7 +195,7 @@ int kernelShutdown(int reboot, int force)
 		kernelTextPrintLine("%s", SHUTDOWN_MSG2);
 
 	// Stop networking
-	status = kernelNetworkShutdown();
+	status = kernelNetworkDisable();
 	if (status < 0)
 		kernelError(kernel_error, "Network shutdown failed");
 
@@ -292,14 +293,14 @@ int kernelShutdown(int reboot, int force)
 	// Finally, we either halt or reboot the computer
 	if (reboot)
 	{
-		kernelCpuSpinMs(1000); // Wait 1 second
+		kernelCpuSpinMs(MS_PER_SEC); // Wait 1 second
 		// Disable interrupts
 		processorDisableInts();
 		processorReboot();
 	}
 	else
 	{
-		// Try to power off, if the appropriate power management routines are
+		// Try to power off, if the appropriate power management functions are
 		// installed
 		kernelPowerOff();
 

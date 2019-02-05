@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelStream.c
 //
 
-// This file contains all of the basic routines for dealing with generic
+// This file contains all of the basic functions for dealing with generic
 // data streams.  Data streams in Visopsys are implemented as circular
 // buffers of variable size.
 
@@ -33,8 +33,8 @@
 
 static int clear(stream *theStream)
 {
-	// Removes all data from the stream.  Returns 0 if successful,
-	// negative otherwise.
+	// Removes all data from the stream.  Returns 0 if successful, negative
+	// otherwise.
 
 	int status = 0;
 
@@ -46,7 +46,7 @@ static int clear(stream *theStream)
 	if (status < 0)
 		return (status);
 
-	// We clear the buffer and set first, next, and count to zero
+	// We clear the buffer and set first, last, and count to zero
 	memset(theStream->buffer, 0, theStream->buffSize);
 
 	theStream->first = 0;
@@ -75,15 +75,27 @@ static int appendByte(stream *theStream, unsigned char byte)
 	if (status < 0)
 		return (status);
 
-	// Add the character
+	// Add the byte to the end of the stream
 	theStream->buffer[theStream->last++] = byte;
-
-	// Increase the count
-	theStream->count++;
 
 	// Watch for buffer-wrap
 	if (theStream->last >= theStream->size)
 		theStream->last = 0;
+
+	if (theStream->count < theStream->size)
+	{
+		// Increase the count
+		theStream->count += 1;
+	}
+	else
+	{
+		// The buffer is full.  Move the head of the stream.
+		theStream->first += 1;
+
+		// Watch for buffer-wrap
+		if (theStream->first >= theStream->size)
+			theStream->first = 0;
+	}
 
 	kernelLockRelease(&theStream->lock);
 
@@ -107,15 +119,27 @@ static int appendDword(stream *theStream, unsigned dword)
 	if (status < 0)
 		return (status);
 
-	// Add the dword
+	// Add the dword to the end of the stream
 	((unsigned *) theStream->buffer)[theStream->last++] = dword;
-
-	// Increase the count
-	theStream->count++;
 
 	// Watch for buffer-wrap
 	if (theStream->last >= theStream->size)
 		theStream->last = 0;
+
+	if (theStream->count < theStream->size)
+	{
+		// Increase the count
+		theStream->count += 1;
+	}
+	else
+	{
+		// The buffer is full.  Move the head of the stream.
+		theStream->first += 1;
+
+		// Watch for buffer-wrap
+		if (theStream->first >= theStream->size)
+			theStream->first = 0;
+	}
 
 	kernelLockRelease(&theStream->lock);
 
@@ -132,6 +156,7 @@ static int appendBytes(stream *theStream, unsigned number,
 
 	int status = 0;
 	unsigned added = 0;
+	unsigned doBytes = 0;
 
 	// Check parameters
 	if (!theStream || !buffer)
@@ -141,19 +166,40 @@ static int appendBytes(stream *theStream, unsigned number,
 	if (status < 0)
 		return (status);
 
-	// Do a loop to add the characters
+	// Do a loop to add the bytes
 	while (added < number)
 	{
-		// Add 1 character
-		theStream->buffer[theStream->last++] = buffer[added++];
+		doBytes = min((number - added), (theStream->size - theStream->last));
+
+		memcpy((theStream->buffer + theStream->last), (buffer + added),
+			doBytes);
+
+		theStream->last += doBytes;
 
 		// Watch for buffer-wrap
 		if (theStream->last >= theStream->size)
 			theStream->last = 0;
-	}
 
-	// Increase the count
-	theStream->count = min((theStream->count + number), theStream->size);
+		if ((theStream->count + doBytes) <= theStream->size)
+		{
+			// Increase the count
+			theStream->count += doBytes;
+		}
+		else
+		{
+			// The buffer is full.  Move the head of the stream.
+			theStream->first += ((theStream->count + doBytes) -
+				theStream->size);
+
+			// Watch for buffer-wrap
+			if (theStream->first >= theStream->size)
+				theStream->first = (theStream->first - theStream->size);
+
+			theStream->count = theStream->size;
+		}
+
+		added += doBytes;
+	}
 
 	kernelLockRelease(&theStream->lock);
 
@@ -169,6 +215,7 @@ static int appendDwords(stream *theStream, unsigned number, unsigned *buffer)
 
 	int status = 0;
 	unsigned added = 0;
+	unsigned doDwords = 0;
 
 	// Check parameters
 	if (!theStream || !buffer)
@@ -181,132 +228,37 @@ static int appendDwords(stream *theStream, unsigned number, unsigned *buffer)
 	// Do a loop to add the dwords
 	while (added < number)
 	{
-		// Add 1 dword
-		((unsigned *) theStream->buffer)[theStream->last++] = buffer[added++];
+		doDwords = min((number - added), (theStream->size - theStream->last));
+
+		memcpy((theStream->buffer + (theStream->last * sizeof(unsigned))),
+			&buffer[added], (doDwords * sizeof(unsigned)));
+
+		theStream->last += doDwords;
 
 		// Watch for buffer-wrap
 		if (theStream->last >= theStream->size)
 			theStream->last = 0;
-	}
 
-	// Increase the count
-	theStream->count = min((theStream->count + number), theStream->size);
-
-	kernelLockRelease(&theStream->lock);
-
-	// Return success
-	return (status = 0);
-}
-
-
-static int pushByte(stream *theStream, unsigned char byte)
-{
-	// Adds a single byte to the beginning of the stream.  Returns 0 on
-	// success, negative otherwise.
-
-	int status = 0;
-
-	// Make sure the stream pointer isn't NULL
-	if (!theStream)
-		return (status = ERR_NULLPARAMETER);
-
-	status = kernelLockGet(&theStream->lock);
-	if (status < 0)
-		return (status);
-
-	// Move the head of the buffer backwards.  Watch out for backwards
-	// wrap-around.
-	if (theStream->first > 0)
-		theStream->first--;
-	else
-		theStream->first = (theStream->size - 1);
-
-	// Add the byte to the head of the buffer
-	theStream->buffer[theStream->first] = byte;
-
-	// Increase the count
-	theStream->count++;
-
-	kernelLockRelease(&theStream->lock);
-
-	// Return success
-	return (status = 0);
-}
-
-
-static int pushDword(stream *theStream, unsigned dword)
-{
-	// Adds a single dword to the beginning of the stream.  Returns 0 on
-	// success, negative otherwise.
-
-	int status = 0;
-
-	// Make sure the stream pointer isn't NULL
-	if (!theStream)
-		return (status = ERR_NULLPARAMETER);
-
-	status = kernelLockGet(&theStream->lock);
-	if (status < 0)
-		return (status);
-
-	// Move the head of the buffer backwards.  Watch out for backwards
-	// wrap-around
-	if (theStream->first > 0)
-		theStream->first--;
-	else
-		theStream->first = (theStream->size - 1);
-
-	// Add the byte to the head of the buffer
-	((unsigned *) theStream->buffer)[theStream->first] = dword;
-
-	// Increase the count
-	theStream->count++;
-
-	kernelLockRelease(&theStream->lock);
-
-	// Return success
-	return (status = 0);
-}
-
-
-static int pushBytes(stream *theStream, unsigned number, unsigned char *buffer)
-{
-	// Adds the requested number of bytes to the beginning of the stream.
-	// On success, it returns 0, negative otherwise
-
-	int status = 0;
-	int added = 0;
-
-	// Check parameters
-	if (!theStream || !buffer)
-		return (status = ERR_NULLPARAMETER);
-
-	// Make sure the number of bytes to push is greater than zero
-	if (number <= 0)
-		return (status = ERR_INVALID);
-
-	status = kernelLockGet(&theStream->lock);
-	if (status < 0)
-		return (status);
-
-	// Do a loop to add bytes
-	while (number > 0)
-	{
-		// Move the head of the buffer backwards.  Watch out for backwards
-		// wrap-around
-		if (theStream->first > 0)
-			theStream->first--;
+		if ((theStream->count + doDwords) <= theStream->size)
+		{
+			// Increase the count
+			theStream->count += doDwords;
+		}
 		else
-			theStream->first = (theStream->size - 1);
+		{
+			// The buffer is full.  Move the head of the stream.
+			theStream->first += ((theStream->count + doDwords) -
+				theStream->size);
 
-		// Add the byte to the head of the buffer
-		theStream->buffer[theStream->first] = buffer[--number];
+			// Watch for buffer-wrap
+			if (theStream->first >= theStream->size)
+				theStream->first = (theStream->first - theStream->size);
 
-		added++;
+			theStream->count = theStream->size;
+		}
+
+		added += doDwords;
 	}
-
-	// Increase the count
-	theStream->count += added;
 
 	kernelLockRelease(&theStream->lock);
 
@@ -315,56 +267,10 @@ static int pushBytes(stream *theStream, unsigned number, unsigned char *buffer)
 }
 
 
-static int pushDwords(stream *theStream, unsigned number, unsigned *buffer)
+static int getByte(stream *theStream, unsigned char *byte, int pop)
 {
-	// Adds the requested number of dwords to the beginning of the stream.
-	// On success, it returns 0, negative otherwise
-
-	int status = 0;
-	int added = 0;
-
-	// Check parameters
-	if (!theStream || !buffer)
-		return (status = ERR_NULLPARAMETER);
-
-	// Make sure the number of dwords to push is greater than zero
-	if (number <= 0)
-		return (status = ERR_INVALID);
-
-	status = kernelLockGet(&theStream->lock);
-	if (status < 0)
-		return (status);
-
-	// Do a loop to add dwords
-	while (number > 0)
-	{
-		// Move the head of the buffer backwards.  Watch out for backwards
-		// wrap-around
-		if (theStream->first > 0)
-			theStream->first--;
-		else
-			theStream->first = (theStream->size - 1);
-
-		// Add the byte to the head of the buffer
-		((unsigned *) theStream->buffer)[theStream->first] = buffer[--number];
-
-		added++;
-	}
-
-	// Increase the count
-	theStream->count += added;
-
-	kernelLockRelease(&theStream->lock);
-
-	// Return success
-	return (status = 0);
-}
-
-
-static int popByte(stream *theStream, unsigned char *byte)
-{
-	// Removes a single byte from the beginning of the stream and returns
-	// it to the caller.  On error, it returns a NULL byte.
+	// Returns a single byte from the beginning of the stream, and optionally
+	// 'pops' it.  On error, it returns a NULL byte.
 
 	int status = 0;
 
@@ -383,15 +289,18 @@ static int popByte(stream *theStream, unsigned char *byte)
 	// Get the byte at the head of the buffer
 	*byte = theStream->buffer[theStream->first];
 
-	// Put a new NULL at the head of the buffer, and increment the head
-	theStream->buffer[theStream->first++] = NULL;
+	if (pop)
+	{
+		// Increment the head
+		theStream->first += 1;
 
-	// Watch out for wrap-around
-	if (theStream->first >= theStream->size)
-		theStream->first = 0;
+		// Watch out for wrap-around
+		if (theStream->first >= theStream->size)
+			theStream->first = 0;
 
-	// Decrease the count
-	theStream->count--;
+		// Decrease the count
+		theStream->count -= 1;
+	}
 
 	kernelLockRelease(&theStream->lock);
 
@@ -400,10 +309,26 @@ static int popByte(stream *theStream, unsigned char *byte)
 }
 
 
-static int popDword(stream *theStream, unsigned *dword)
+static int peekByte(stream *theStream, unsigned char *byte)
 {
-	// Removes a single dword from the beginning of the stream and returns
+	// Reads a single byte from the beginning of the stream and returns
 	// it to the caller.  On error, it returns a NULL byte.
+	return (getByte(theStream, byte, 0 /* no pop */));
+}
+
+
+static int popByte(stream *theStream, unsigned char *byte)
+{
+	// Removes a single byte from the beginning of the stream and returns
+	// it to the caller.  On error, it returns a NULL byte.
+	return (getByte(theStream, byte, 1 /* pop */));
+}
+
+
+static int getDword(stream *theStream, unsigned *dword, int pop)
+{
+	// Returns a single dword from the beginning of the stream, and optionally
+	// 'pops' it.  On error, it returns a NULL dword.
 
 	int status = 0;
 
@@ -419,18 +344,21 @@ static int popDword(stream *theStream, unsigned *dword)
 	if (status < 0)
 		return (status);
 
-	// Get the byte at the head of the buffer
+	// Get the dword at the head of the buffer
 	*dword = ((unsigned *) theStream->buffer)[theStream->first];
 
-	// Put a new NULL at the head of the buffer and increment the head
-	((unsigned *) theStream->buffer)[theStream->first++] = NULL;
+	if (pop)
+	{
+		// Increment the head
+		theStream->first += 1;
 
-	// Watch out for wrap-around
-	if (theStream->first >= theStream->size)
-		theStream->first = 0;
+		// Watch out for wrap-around
+		if (theStream->first >= theStream->size)
+			theStream->first = 0;
 
-	// Decrease the count
-	theStream->count--;
+		// Decrease the count
+		theStream->count -= 1;
+	}
 
 	kernelLockRelease(&theStream->lock);
 
@@ -439,22 +367,35 @@ static int popDword(stream *theStream, unsigned *dword)
 }
 
 
+static int peekDword(stream *theStream, unsigned *dword)
+{
+	// Reads a single dword from the beginning of the stream and returns
+	// it to the caller.  On error, it returns a NULL dword.
+	return (getDword(theStream, dword, 0 /* no pop */));
+}
+
+
+static int popDword(stream *theStream, unsigned *dword)
+{
+	// Removes a single dword from the beginning of the stream and returns
+	// it to the caller.  On error, it returns a NULL dword.
+	return (getDword(theStream, dword, 1 /* pop */));
+}
+
+
 static int popBytes(stream *theStream, unsigned number, unsigned char *buffer)
 {
 	// Removes the requested number of bytes from the beginning of the stream
 	// and returns them in the buffer provided.  On success, it returns the
-	// number of characters it actually removed.  Returns negative on error.
+	// number of bytes it actually removed.  Returns negative on error.
 
 	int status = 0;
 	unsigned removed = 0;
+	unsigned doBytes = 0;
 
-	// Check parameters
+	// Check params
 	if (!theStream || !buffer)
 		return (removed = ERR_NULLPARAMETER);
-
-	// Make sure the buffer isn't empty
-	if (!theStream->count)
-		return (removed = 0);
 
 	status = kernelLockGet(&theStream->lock);
 	if (status < 0)
@@ -467,18 +408,22 @@ static int popBytes(stream *theStream, unsigned number, unsigned char *buffer)
 		if (!theStream->count)
 			break;
 
-		// Get the byte at the head of the buffer
-		buffer[removed++] = theStream->buffer[theStream->first];
+		doBytes = min(theStream->count, (number - removed));
+		doBytes = min(doBytes, (theStream->size - theStream->first));
 
-		// Put a new NULL at this spot in the stream's buffer
-		theStream->buffer[theStream->first++] = NULL;
+		memcpy((buffer + removed), (theStream->buffer + theStream->first),
+			doBytes);
 
-		// Watch out for wrap-around
+		theStream->first += doBytes;
+
+		// Watch for buffer-wrap
 		if (theStream->first >= theStream->size)
 			theStream->first = 0;
 
 		// Decrease the count
-		theStream->count--;
+		theStream->count -= doBytes;
+
+		removed += doBytes;
 	}
 
 	kernelLockRelease(&theStream->lock);
@@ -496,14 +441,11 @@ static int popDwords(stream *theStream, unsigned number, unsigned *buffer)
 
 	int status = 0;
 	unsigned removed = 0;
+	unsigned doDwords = 0;
 
-	// Check parameters
+	// Check params
 	if (!theStream || !buffer)
 		return (removed = ERR_NULLPARAMETER);
-
-	// Make sure the buffer isn't empty
-	if (!theStream->count)
-		return (removed = 0);
 
 	status = kernelLockGet(&theStream->lock);
 	if (status < 0)
@@ -516,23 +458,27 @@ static int popDwords(stream *theStream, unsigned number, unsigned *buffer)
 		if (!theStream->count)
 			break;
 
-		// Get the dword at the head of the buffer
-		buffer[removed++] = ((unsigned *) theStream->buffer)[theStream->first];
+		doDwords = min(theStream->count, (number - removed));
+		doDwords = min(doDwords, (theStream->size - theStream->first));
 
-		// Put a new NULL at this spot in the stream's buffer
-		((unsigned *) theStream->buffer)[theStream->first++] = NULL;
+		memcpy(&buffer[removed], (theStream->buffer + (theStream->first *
+			sizeof(unsigned))), (doDwords * sizeof(unsigned)));
 
-		// Watch out for wrap-around
+		theStream->first += doDwords;
+
+		// Watch for buffer-wrap
 		if (theStream->first >= theStream->size)
 			theStream->first = 0;
 
 		// Decrease the count
-		theStream->count--;
+		theStream->count -= doDwords;
+
+		removed += doDwords;
 	}
 
 	kernelLockRelease(&theStream->lock);
 
-	// Return the number of bytes we copied
+	// Return the number of dwords we copied
 	return (removed);
 }
 
@@ -565,13 +511,16 @@ int kernelStreamNew(stream *theStream, unsigned size, streamItemSize itemSize)
 	theStream->size = size;
 
 	// What is the size, in bytes, of the requested stream?
-	switch(itemSize)
+	switch (itemSize)
 	{
 		case itemsize_byte:
 			theStream->buffSize = (theStream->size * sizeof(char));
 			break;
 		case itemsize_dword:
 			theStream->buffSize = (theStream->size * sizeof(unsigned));
+			break;
+		case itemsize_pointer:
+			theStream->buffSize = (theStream->size * sizeof(void *));
 			break;
 		default:
 			return (status = ERR_INVALID);
@@ -592,9 +541,9 @@ int kernelStreamNew(stream *theStream, unsigned size, streamItemSize itemSize)
 		case itemsize_byte:
 			// Copy the byte stream functions
 			theStream->append = (int(*)(stream *, ...)) &appendByte;
-			theStream->appendN = (int(*)(stream *, unsigned, ...)) &appendBytes;
-			theStream->push = (int(*)(stream *, ...)) &pushByte;
-			theStream->pushN = (int(*)(stream *, unsigned, ...)) &pushBytes;
+			theStream->appendN = (int(*)(stream *, unsigned, ...))
+				&appendBytes;
+			theStream->peek = (int(*)(stream *, ...)) &peekByte;
 			theStream->pop = (int(*)(stream *, ...)) &popByte;
 			theStream->popN = (int(*)(stream *, unsigned, ...)) &popBytes;
 			break;
@@ -602,11 +551,31 @@ int kernelStreamNew(stream *theStream, unsigned size, streamItemSize itemSize)
 		case itemsize_dword:
 			// Copy the dword stream functions
 			theStream->append = (int(*)(stream *, ...)) &appendDword;
-			theStream->appendN = (int(*)(stream *, unsigned, ...)) &appendDwords;
-			theStream->push = (int(*)(stream *, ...)) &pushDword;
-			theStream->pushN = (int(*)(stream *, unsigned, ...)) &pushDwords;
+			theStream->appendN = (int(*)(stream *, unsigned, ...))
+				&appendDwords;
+			theStream->peek = (int(*)(stream *, ...)) &peekDword;
 			theStream->pop = (int(*)(stream *, ...)) &popDword;
 			theStream->popN = (int(*)(stream *, unsigned, ...)) &popDwords;
+			break;
+
+		case itemsize_pointer:
+			if (sizeof(void *) == 4)
+			{
+				// Copy the dword stream functions
+				theStream->append = (int(*)(stream *, ...)) &appendDword;
+				theStream->appendN = (int(*)(stream *, unsigned, ...))
+					&appendDwords;
+				theStream->peek = (int(*)(stream *, ...)) &peekDword;
+				theStream->pop = (int(*)(stream *, ...)) &popDword;
+				theStream->popN = (int(*)(stream *, unsigned, ...))
+					&popDwords;
+			}
+			else
+			{
+				kernelError(kernel_error, "Non-32-bit pointer streams are "
+					"not yet supported");
+				return (status = ERR_NOTIMPLEMENTED);
+			}
 			break;
 	}
 

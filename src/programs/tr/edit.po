@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
 #  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
 "Language-Team: Turkish/Türkçe\n"
@@ -63,37 +63,37 @@ msgstr " (degistirildi)"
 msgid "Enter filename"
 msgstr "Dosya ismi girin"
 
-#: edit.c:967
+#: edit.c:966
 msgid "Discard changes?"
 msgstr "Degisiklikleri iptal etmek istiyor musunuz?"
 
-#: edit.c:968
+#: edit.c:967
 msgid "Discard"
 msgstr "Vazgeç"
 
-#: edit.c:968
+#: edit.c:967
 msgid "Cancel"
 msgstr "Iptal"
 
-#: edit.c:1003 edit.c:1331
+#: edit.c:1002 edit.c:1330
 msgid "Couldn't create file in a read-only filesystem"
 msgstr "Sadece okunabilir dosya sisteminde dosya olusturulamiyor"
 
-#: edit.c:1005 edit.c:1333
+#: edit.c:1004 edit.c:1332
 #, c-format
 msgid "Error %d loading file"
 msgstr "%d dosyasi yüklenirken hata olustu"
 
-#: edit.c:1133
+#: edit.c:1132
 msgid "Unable to launch file dialog"
 msgstr "Dosya diyalogu olusturulamadi"
 
-#: edit.c:1145
+#: edit.c:1144
 #, c-format
 msgid "Error %d saving file"
 msgstr "%d dosyasi kaydedilirken hata olustu"
 
-#: edit.c:1278
+#: edit.c:1277
 #, c-format
 msgid ""
 "\n"
@@ -102,7 +102,7 @@ msgstr ""
 "\n"
 "\"%s\" komutu sadece grafik modda çalisabilir \n"
 
-#: edit.c:1294
+#: edit.c:1293
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -52,6 +52,7 @@ Options:
 #include <sys/api.h>
 #include <sys/ascii.h>
 #include <sys/env.h>
+#include <sys/kernconf.h>
 #include <sys/lang.h>
 #include <sys/paths.h>
 #include <sys/user.h>
@@ -61,7 +62,7 @@ Options:
 #define gettext_noop(string) (string)
 
 #define WINDOW_TITLE		_("Install")
-#define TITLE_STRING		_("Visopsys Installer\nCopyright (C) 1998-2016 " \
+#define TITLE_STRING		_("Visopsys Installer\nCopyright (C) 1998-2018 " \
 	"J. Andrew McLaughlin")
 #define INSTALL_DISK		_("[ Installing on disk %s ]")
 #define BASIC_INSTALL		_("Basic install")
@@ -235,17 +236,14 @@ static int loadFlagImage(const char *lang, image *img)
 {
 	int status = 0;
 	char path[MAX_PATH_LENGTH];
-	file f;
 
 	sprintf(path, "%s/flag-%s.bmp", PATH_SYSTEM_LOCALE, lang);
 
-	status = fileFind(path, &f);
+	status = fileFind(path, NULL);
 	if (status < 0)
 		return (status);
 
-	status = imageLoad(path, 30, 20, img);
-
-	return (status);
+	return (status = imageLoad(path, 30, 20, img));
 }
 
 
@@ -288,20 +286,28 @@ static void eventHandler(objectKey key, windowEvent *event)
 	}
 
 	else if ((key == fsTypeCheckbox) && (event->type & EVENT_SELECTION))
+	{
 		windowComponentGetSelected(fsTypeCheckbox, &chooseFsType);
+	}
 
 	// Check the the 'language' button
 	else if ((key == langButton) && (event->type == EVENT_MOUSE_LEFTUP))
+	{
 		chooseLanguage();
+	}
 
 	// Check for the 'install' button
 	else if ((key == installButton) && (event->type == EVENT_MOUSE_LEFTUP))
+	{
 		// Stop the GUI here and the installation will commence
 		windowGuiStop();
+	}
 
 	// Check for the 'quit' button
 	else if ((key == quitButton) && (event->type == EVENT_MOUSE_LEFTUP))
+	{
 		quit(0, NULL);
+	}
 }
 
 
@@ -356,8 +362,10 @@ static void constructWindow(void)
 		params.gridWidth = 1;
 		params.flags |= WINDOW_COMPFLAG_FIXEDWIDTH;
 		if (loadFlagImage(installLanguage, &flagImage) >= 0)
+		{
 			langImage = windowNewImage(container1, &flagImage, draw_normal,
 				&params);
+		}
 
 		params.gridX++;
 		langButton = windowNewButton(container1, LANGUAGE, NULL, &params);
@@ -367,6 +375,7 @@ static void constructWindow(void)
 		{
 			if (langImage)
 				windowComponentSetEnabled(langImage, 0);
+
 			windowComponentSetEnabled(langButton, 0);
 		}
 	}
@@ -418,7 +427,9 @@ static int yesOrNo(char *question)
 	char character;
 
 	if (graphics)
+	{
 		return (windowNewQueryDialog(window, _("Confirmation"), question));
+	}
 
 	else
 	{
@@ -479,8 +490,10 @@ start:
 
 	memset(diskListParams, 0, (numberDisks * sizeof(listItemParameters)));
 	for (count = 0; count < numberDisks; count ++)
+	{
 		snprintf(diskListParams[count].text, WINDOW_MAX_LABEL_LENGTH,
 			"%s  [ %s ]", diskInfo[count].name, diskInfo[count].partType);
+	}
 
 	if (graphics)
 	{
@@ -569,9 +582,12 @@ start:
 	{
 		for (count = 0; count < numberDisks; count ++)
 			diskStrings[count] = diskListParams[count].text;
+
 		diskStrings[numberDisks] = _(partitionString);
+
 		diskNumber = vshCursorMenu(_(chooseVolumeString), diskStrings,
 			(numberDisks + 1), 10 /* max rows */, 0 /* selected */);
+
 		if (diskNumber == numberDisks)
 		{
 			// The user wants to repartition the disks.  Run the disk
@@ -628,13 +644,15 @@ static unsigned getInstallSize(const char *installFileName)
 	{
 		status = fileStreamReadLine(&installFile, BUFFSIZE, buffer);
 		if (status < 0)
+		{
 			// End of file
 			break;
-
+		}
 		else if (!status || (buffer[0] == '#'))
+		{
 			// Ignore blank lines and comments
 			continue;
-
+		}
 		else
 		{
 			// Use the line of data as the name of a file.  We try to find the
@@ -703,7 +721,9 @@ static void updateStatus(const char *message)
 			strcat((char *) prog.statusMessage, message);
 		}
 		else
+		{
 			strcpy((char *) prog.statusMessage, message);
+		}
 
 		statusLength = strlen((char *) prog.statusMessage);
 		if (statusLength >= PROGRESS_MAX_MESSAGELEN)
@@ -711,12 +731,15 @@ static void updateStatus(const char *message)
 			statusLength = (PROGRESS_MAX_MESSAGELEN - 1);
 			prog.statusMessage[statusLength] = '\0';
 		}
+
 		if (prog.statusMessage[statusLength - 1] == '\n')
 			statusLength -= 1;
 
 		if (graphics)
+		{
 			windowComponentSetData(statusLabel, (char *) prog.statusMessage,
 				statusLength, 1 /* redraw */);
+		}
 
 		lockRelease(&prog.progLock);
 	}
@@ -730,12 +753,11 @@ static int mountedCheck(disk *theDisk)
 	int status = 0;
 	char tmpChar[160];
 
-	if (!(theDisk->mounted))
+	if (!theDisk->mounted)
 		return (status = 0);
 
 	sprintf(tmpChar, _("The disk is mounted as %s.  It must be unmounted\n"
-		"before continuing.  Unmount?"),
-		theDisk->mountPoint);
+		"before continuing.  Unmount?"), theDisk->mountPoint);
 
 	if (!yesOrNo(tmpChar))
 		return (status = ERR_CANCELLED);
@@ -797,6 +819,7 @@ static int copyBootSector(disk *theDisk)
 	// Use our companion program to do the work
 	sprintf(command, PATH_PROGRAMS "/copy-boot %s %s", bootSectFilename,
 		theDisk->name);
+
 	status = system(command);
 
 	diskSync(theDisk->name);
@@ -850,12 +873,15 @@ static int copyFiles(const char *installFileName)
 	{
 		status = fileStreamReadLine(&installFile, BUFFSIZE, buffer);
 		if (status < 0)
+		{
 			// End of file
 			break;
-
+		}
 		else if (!status || (buffer[0] == '#'))
+		{
 			// Ignore blank lines and comments
 			continue;
+		}
 
 		// Get the source filename, and the destination filename if it
 		// follows (separated by an '=')
@@ -1044,8 +1070,9 @@ static void setAdminPassword(void)
 					(event.type == EVENT_KEY_DOWN)))
 			{
 				if (event.key == keyEnter)
+				{
 					break;
-
+				}
 				else
 				{
 					windowComponentGetData(passwordField1, newPassword,
@@ -1098,7 +1125,9 @@ static void setAdminPassword(void)
 			goto graphicsRestart;
 		}
 		else
+		{
 			goto textRestart;
+		}
 	}
 
 	if (graphics)
@@ -1175,8 +1204,10 @@ int main(int argc, char *argv[])
 
 	// Check privilege level
 	if (multitaskerGetProcessPrivilege(processId))
+	{
 		quit(ERR_PERMISSION, "%s", _("You must be a privileged user to use "
 			"this command.\n(Try logging in as user \"admin\")."));
+	}
 
 	// Get the root disk
 	status = diskGetBoot(rootDisk);
@@ -1235,9 +1266,11 @@ int main(int argc, char *argv[])
 
 	// Make sure there's at least room for a basic install
 	if (diskSize < basicInstallSize)
+	{
 		quit((status = ERR_NOFREE), _("Disk %s is too small (%dK) to install "
 			"Visopsys\n(%dK required)"), diskInfo[diskNumber].name,
 			(diskSize / 1024), (basicInstallSize / 1024));
+	}
 
 	// Show basic/full install choices based on whether there's enough space
 	// to do both
@@ -1258,6 +1291,7 @@ int main(int argc, char *argv[])
 		// We're ready to go, enable the buttons
 		windowComponentSetEnabled(installButton, 1);
 		windowComponentSetEnabled(quitButton, 1);
+
 		// Focus the 'install' button by default
 		windowComponentFocus(installButton);
 
@@ -1280,12 +1314,13 @@ int main(int argc, char *argv[])
 		if (selected == 1)
 			installType = install_full;
 	}
-	else if (fullInstallSize &&
-		((basicInstallSize + fullInstallSize) < diskSize))
+	else if (fullInstallSize && ((basicInstallSize + fullInstallSize) <
+		diskSize))
 	{
 		status = vshCursorMenu(_("Please choose the install type:"),
 			(char *[]){ _("Basic"), _("Full") }, 2, 0 /* no max rows */,
 			1 /* selected */);
+
 		if (status < 0)
 		{
 			textScreenRestore(&screen);
@@ -1317,8 +1352,10 @@ int main(int argc, char *argv[])
 	if (doFormat)
 	{
 		if (!graphics || chooseFsType)
+		{
 			if (askFsType() < 0)
 				quit(0, "%s", _(cancelString));
+		}
 
 		updateStatus(_("Formatting... "));
 
@@ -1419,8 +1456,8 @@ int main(int argc, char *argv[])
 	{
 		// Set the start program of the target installation to be the login
 		// program
-		configSet(MOUNTPOINT PATH_SYSTEM_CONFIG "/kernel.conf",
-			"start.program", PATH_PROGRAMS "/login");
+		configSet(MOUNTPOINT KERNEL_DEFAULT_CONFIG, KERNELVAR_START_PROGRAM,
+			PATH_PROGRAMS "/login");
 
 		// Set the system language variable
 		configSet(MOUNTPOINT PATH_SYSTEM_CONFIG "/environment.conf", ENV_LANG,

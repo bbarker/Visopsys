@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
 #  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
 "Language-Team: Turkish/Türkçe\n"
@@ -19,27 +19,27 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: shutdown.c:70
+#: shutdown.c:79
 msgid "Reboot"
 msgstr "Yeniden baslat"
 
-#: shutdown.c:71
+#: shutdown.c:80
 msgid "Shut down"
 msgstr "Kapat"
 
-#: shutdown.c:72
+#: shutdown.c:81
 msgid "Eject CD-ROM"
 msgstr "CD-ROM'u çikart"
 
-#: shutdown.c:74
+#: shutdown.c:83
 msgid "Ejecting, please wait..."
 msgstr "Çikartiliyor, lütfen bekleyin..."
 
-#: shutdown.c:75
+#: shutdown.c:84
 msgid "Unable to unlock the media door"
 msgstr "Medya kapisi kilidi açilamiyor"
 
-#: shutdown.c:76
+#: shutdown.c:85
 msgid ""
 "Can't seem to eject.  Try pushing\n"
 "the 'eject' button now."
@@ -47,20 +47,20 @@ msgstr ""
 "Görünüse bakilirsa çikartilamiyor.\n"
 "'çikartma' tusuna basmayi deneyin."
 
-#: shutdown.c:96
+#: shutdown.c:104
 msgid "Ejecting"
 msgstr "Çikartiliyor"
 
-#: shutdown.c:111
+#: shutdown.c:119
 msgid "Error"
 msgstr "Hata"
 
-#: shutdown.c:335
+#: shutdown.c:349
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""
 
-#: shutdown.c:363
+#: shutdown.c:377
 #, c-format
 msgid "Use \"%s -f\" to force.\n"
 msgstr "Zorlamak için \"%s -f\" 'i kullanin.\n"

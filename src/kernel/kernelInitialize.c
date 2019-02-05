@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -49,6 +49,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/kernconf.h>
 #include <sys/paths.h>
 
 #define _(string) kernelGetText(string)
@@ -91,10 +92,6 @@ static void logLoaderInfo(void)
 	char *memType = NULL;
 	int count;
 
-	kernelLog("OS Loader: CPU type=%d", kernelOsLoaderInfo->cpuType);
-	kernelLog("OS Loader: CPU vendor=%s", kernelOsLoaderInfo->cpuVendor);
-	kernelLog("OS Loader: MMS extensions=%s",
-		(kernelOsLoaderInfo->mmxExtensions? "yes" : "no"));
 	kernelLog("OS Loader: Extended mem=%uK",
 		kernelOsLoaderInfo->extendedMemory);
 
@@ -138,7 +135,7 @@ static void logLoaderInfo(void)
 		kernelLog("OS Loader: video memory=%uK",
 			kernelOsLoaderInfo->graphicsInfo.videoMemory);
 		kernelLog("OS Loader: video framebuffer=%p",
-			kernelOsLoaderInfo->graphicsInfo.framebuffer);
+			(void *) kernelOsLoaderInfo->graphicsInfo.framebuffer);
 		kernelLog("OS Loader: video mode=0x%x: %dx%d @%dbpp",
 			kernelOsLoaderInfo->graphicsInfo.mode,
 			kernelOsLoaderInfo->graphicsInfo.xRes,
@@ -173,12 +170,6 @@ static void logLoaderInfo(void)
 			kernelOsLoaderInfo->fddInfo[count].tracks,
 			kernelOsLoaderInfo->fddInfo[count].sectors);
 	}
-
-	kernelLog("OS Loader: serial ports 0x%04x 0x%04x 0x%04x 0x%04x",
-		kernelOsLoaderInfo->serialPorts.port1,
-		kernelOsLoaderInfo->serialPorts.port2,
-		kernelOsLoaderInfo->serialPorts.port3,
-		kernelOsLoaderInfo->serialPorts.port4);
 
 	return;
 }
@@ -294,7 +285,7 @@ int kernelInitialize(unsigned kernelMemory, void *kernelStack,
 	kernelLogSetToConsole(0);
 
 	// Log a starting message
-	sprintf(welcomeMessage, "%s %s\nCopyright (C) 1998-2016 J. Andrew "
+	sprintf(welcomeMessage, "%s %s\nCopyright (C) 1998-2018 J. Andrew "
 		"McLaughlin", kernelVersion[0], kernelVersion[1]);
 	kernelLog("%s", welcomeMessage);
 
@@ -336,8 +327,7 @@ int kernelInitialize(unsigned kernelMemory, void *kernelStack,
 		return (status);
 	}
 
-	// Initialize the kernel's random number generator.
-	// has been initialized.
+	// Initialize the kernel's random number generator
 	status = kernelRandomInitialize();
 	if (status < 0)
 	{
@@ -434,19 +424,21 @@ int kernelInitialize(unsigned kernelMemory, void *kernelStack,
 
 	// Read the kernel config file
 	kernelDebug(debug_misc, "Reading kernel variables");
-	status = kernelConfigRead(DEFAULT_KERNEL_CONFIG, kernelVariables);
+	status = kernelConfigRead(KERNEL_DEFAULT_CONFIG, kernelVariables);
 	if (status < 0)
 		kernelVariables = NULL;
 
 	if (kernelVariables)
 	{
 		// Get the keyboard mapping
-		value = kernelVariableListGet(kernelVariables, "keyboard.map");
+		value = kernelVariableListGet(kernelVariables,
+			KERNELVAR_KEYBOARD_MAP);
 		if (value)
 			kernelKeyboardSetMap(value);
 
 		// Get the messages locale
-		value = kernelVariableListGet(kernelVariables, "locale.messages");
+		value = kernelVariableListGet(kernelVariables,
+			KERNELVAR_LOCALE_MESSAGES);
 		if (value)
 			kernelSetLocale(LC_ALL, value);
 
@@ -455,50 +447,52 @@ int kernelInitialize(unsigned kernelMemory, void *kernelStack,
 			// Get the default color values, if they're set in this file
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_FOREGROUND_RED);
+				KERNELVAR_COLOR_FG_RED);
 			if (value)
 				kernelDefaultForeground.red = atoi(value);
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_FOREGROUND_GREEN);
+				KERNELVAR_COLOR_FG_GREEN);
 			if (value)
 				kernelDefaultForeground.green = atoi(value);
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_FOREGROUND_BLUE);
+				KERNELVAR_COLOR_FG_BLUE);
 			if (value)
 				kernelDefaultForeground.blue = atoi(value);
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_BACKGROUND_RED);
+				KERNELVAR_COLOR_BG_RED);
 			if (value)
 				kernelDefaultBackground.red = atoi(value);
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_BACKGROUND_GREEN);
+				KERNELVAR_COLOR_BG_GREEN);
 			if (value)
 				kernelDefaultBackground.green = atoi(value);
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_BACKGROUND_BLUE);
+				KERNELVAR_COLOR_BG_BLUE);
 			if (value)
 				kernelDefaultBackground.blue = atoi(value);
 
-			value = kernelVariableListGet(kernelVariables, COLOR_DESKTOP_RED);
+			value = kernelVariableListGet(kernelVariables,
+				KERNELVAR_COLOR_DT_RED);
 			if (value)
 				kernelDefaultDesktop.red = atoi(value);
 
 			value = kernelVariableListGet(kernelVariables,
-				COLOR_DESKTOP_GREEN);
+				KERNELVAR_COLOR_DT_GREEN);
 			if (value)
 				kernelDefaultDesktop.green = atoi(value);
 
-			value = kernelVariableListGet(kernelVariables, COLOR_DESKTOP_BLUE);
+			value = kernelVariableListGet(kernelVariables,
+				KERNELVAR_COLOR_DT_BLUE);
 			if (value)
 				kernelDefaultDesktop.blue = atoi(value);
 		}
 
-		value = kernelVariableListGet(kernelVariables, "network");
+		value = kernelVariableListGet(kernelVariables, KERNELVAR_NETWORK);
 		if (value && !strcmp(value, "yes"))
 			networking = 1;
 	}
@@ -544,17 +538,26 @@ int kernelInitialize(unsigned kernelMemory, void *kernelStack,
 	kernelDebug(debug_misc, "Reading kernel symbols");
 	kernelReadSymbols();
 
-	// Initialize network functions?
-	if (networking)
+	// Initialize the network system
+	kernelDebug(debug_misc, "Initializing networking");
+	status = kernelNetworkInitialize();
+	if (status >= 0)
 	{
-		kernelDebug(debug_misc, "Initializing networking");
-
-		status = kernelNetworkInitialize();
-		if (status < 0)
+		// Enable network functionality?
+		if (networking)
 		{
-			kernelError(kernel_error, "Network initialization failed");
-			return (status = ERR_NOTINITIALIZED);
+			kernelDebug(debug_misc, "Enabling networking");
+
+			status = kernelNetworkEnable();
+			if (status < 0)
+				// Make a warning, but don't return error.  This is not fatal.
+				kernelError(kernel_warn, "Network enabling failed");
 		}
+	}
+	else
+	{
+		// Make a warning, but don't return error.  This is not fatal.
+		kernelError(kernel_warn, "Network initialization failed");
 	}
 
 	// Initialize user functions
@@ -576,9 +579,6 @@ int kernelInitialize(unsigned kernelMemory, void *kernelStack,
 		if (status < 0)
 			// Make a warning, but don't return error.  This is not fatal.
 			kernelError(kernel_warn, "Unable to start the window manager");
-
-		// Clear the screen with our default desktop color
-		kernelGraphicClearScreen(&kernelDefaultDesktop);
 	}
 	else
 	{

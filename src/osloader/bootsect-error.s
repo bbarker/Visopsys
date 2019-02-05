@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 ;;  bootsect-error.s
 ;;
 
-;; This code is a common error reporting for bootsector code.  It's just
+;; This code is common error reporting code for boot sectors.  It's just
 ;; meant to be %included, not compiled separately.
 
 
@@ -33,7 +33,7 @@ IOError:
 	call print
 
 	;; Wait for a key press
-	mov AX, 0000h
+	xor AX, AX
 	int 16h
 
 	;; Continue to the next bootable media

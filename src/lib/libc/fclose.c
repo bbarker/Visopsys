@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,8 +22,8 @@
 // This is the standard "fclose" function, as found in standard C libraries
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <sys/api.h>
 
 
@@ -34,15 +34,27 @@ int fclose(FILE *theStream)
 	int status = 0;
 
 	if (visopsys_in_kernel)
-		return (errno = ERR_BUG);
+	{
+		errno = ERR_BUG;
+		return (status = EOF);
+	}
 
 	// Check params
 	if (!theStream)
-		return (errno = ERR_NULLPARAMETER);
+	{
+		errno = ERR_NULLPARAMETER;
+		return (status = EOF);
+	}
 
 	status = fileStreamClose(theStream);
+	if (status < 0)
+	{
+		errno = status;
+		return (status = EOF);
+	}
+
 	free(theStream);
 
-	return (status);
+	return (status = 0);
 }
 

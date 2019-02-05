@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -76,7 +76,7 @@ int kernelDescriptorInitialize(void)
 	// but the GDT is much more dynamic in our implementation.
 
 	// Make note of the fact that we are initialized BEFORE we try to call
-	// the SetXXXEntry routines
+	// the SetXXXEntry functions
 	initialized = 1;
 
 	// Now, we have to install some basic descriptors in the GDT.  The

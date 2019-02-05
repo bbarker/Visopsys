@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -37,7 +37,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 
-int kernelNetworkPacketStreamNew(kernelNetworkPacketStream *newStream)
+int kernelNetworkPacketStreamNew(kernelNetworkPacketStream *theStream)
 {
 	// This function initializes the new network packet stream.  Returns 0 on
 	// success, negative otherwise.
@@ -45,60 +45,91 @@ int kernelNetworkPacketStreamNew(kernelNetworkPacketStream *newStream)
 	int status = 0;
 
 	// Check params
-	if (!newStream)
+	if (!theStream)
 	{
 		kernelError(kernel_error, "NULL parameter");
 		return (status = ERR_NULLPARAMETER);
 	}
 
 	// Get a new stream
-	status = kernelStreamNew(newStream, (NETWORK_PACKETS_PER_STREAM *
-		(sizeof(kernelNetworkPacket) / sizeof(unsigned))), itemsize_dword);
+	status = kernelStreamNew(theStream, NETWORK_PACKETS_PER_STREAM,
+		itemsize_pointer);
 	if (status < 0)
 		return (status);
 
 	// Clear the stream
-	newStream->clear(newStream);
+	theStream->clear(theStream);
 
-	// Yahoo, all set.
 	return (status = 0);
 }
 
 
-int kernelNetworkPacketStreamRead(kernelNetworkPacketStream *theStream,
-	kernelNetworkPacket *packet)
+int kernelNetworkPacketStreamDestroy(kernelNetworkPacketStream *theStream)
 {
-	// This function will read a packet from the packet stream into the
-	// supplied kernelNetworkPacket structure
+	return (kernelStreamDestroy(theStream));
+}
+
+
+int kernelNetworkPacketStreamRead(kernelNetworkPacketStream *theStream,
+	kernelNetworkPacket **packet)
+{
+	// This function will read a packet pointer from the packet stream into
+	// the supplied packet pointer.  Does not release the packet; that's up to
+	// the caller to do when finished with it.
+
+	int status = 0;
 
 	// Check params
 	if (!theStream || !packet)
 	{
 		kernelError(kernel_error, "NULL parameter");
-		return (ERR_NULLPARAMETER);
+		return (status = ERR_NULLPARAMETER);
 	}
 
-	// Read the requisite number of dwords from the stream
-	return (theStream->popN(theStream, (sizeof(kernelNetworkPacket) /
-		sizeof(unsigned)), packet));
+	if (theStream->count < 1)
+		return (status = ERR_NODATA);
+
+	// Read the pointer from the stream
+	status = theStream->pop(theStream, packet);
+	if (status < 0)
+		kernelError(kernel_error, "Couldn't read packet stream");
+
+	return (status);
 }
 
 
 int kernelNetworkPacketStreamWrite(kernelNetworkPacketStream *theStream,
 	kernelNetworkPacket *packet)
 {
-	// This function will write the data from the supplied packet into the
-	// network packet stream
+	// This function will write the pointer to the supplied packet into the
+	// network packet stream, and add a reference count to it.
 
-	// Check arguments
+	int status = 0;
+	kernelNetworkPacket *lostPacket = NULL;
+
+	// Check params
 	if (!theStream || !packet)
 	{
 		kernelError(kernel_error, "NULL parameter");
-		return (ERR_NULLPARAMETER);
+		return (status = ERR_NULLPARAMETER);
 	}
 
-	// Append the requisite number of unsigneds to the stream
-	return (theStream->appendN(theStream, (sizeof(kernelNetworkPacket) /
-		sizeof(unsigned)), packet));
+	// If the stream is full, release the one at the head
+	if (theStream->count >= NETWORK_PACKETS_PER_STREAM)
+	{
+		kernelError(kernel_error, "Packet stream is full");
+		if (theStream->pop(theStream, &lostPacket) >= 0)
+			kernelNetworkPacketRelease(lostPacket);
+	}
+
+	// Write the pointer to the stream
+	status = theStream->append(theStream, packet);
+	if (status < 0)
+		return (status);
+
+	// Add a reference count
+	kernelNetworkPacketHold(packet);
+
+	return (status = 0);
 }
 

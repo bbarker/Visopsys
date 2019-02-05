@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -30,16 +30,17 @@
 #include <unistd.h>
 #include <sys/api.h>
 #include <sys/paths.h>
+#include <sys/processor.h>
 #include <sys/vsh.h>
 
 // Tests should save/restore the text screen if they (deliberately) spew
 // output or errors.
 static textScreen screen;
 
-#define MAXFAILMESS 80
-static char failMess[MAXFAILMESS];
-#define FAILMESS(message, arg...) \
-	snprintf(failMess, MAXFAILMESS, message, ##arg)
+#define MAXFAILMSG 80
+static char failMsg[MAXFAILMSG];
+#define FAILMSG(message, arg...) \
+	snprintf(failMsg, MAXFAILMSG, message, ##arg)
 
 
 static int format_strings(void)
@@ -63,6 +64,8 @@ static int format_strings(void)
 		{ "lld", 64, 1 },
 		{ "u", 32, 0 },
 		{ "llu", 64, 0 },
+		{ "o", 32, 1 },
+		{ "llo", 64, 1 },
 		{ "p", 32, 0 },
 		{ "x", 32, 0 },
 		{ "X", 32, 0 },
@@ -77,8 +80,10 @@ static int format_strings(void)
 
 			if (widthCount == 3)
 				strcat(format, "-");
+
 			if (widthCount == 2)
 				strcat(format, "0");
+
 			if (widthCount > 0)
 			{
 				if (types[typeCount].bits == 32)
@@ -106,7 +111,7 @@ static int format_strings(void)
 
 				if (status < 0)
 				{
-					FAILMESS("Error expanding \"%s\" format", format);
+					FAILMSG("Error expanding \"%s\" format", format);
 					goto out;
 				}
 
@@ -118,14 +123,14 @@ static int format_strings(void)
 
 				if (status < 0)
 				{
-					FAILMESS("Error code %d while reading \"%s\" input", status,
-						format);
+					FAILMSG("Error code %d while reading \"%s\" input",
+						status, format);
 					goto out;
 				}
 
 				if (status != 1)
 				{
-					FAILMESS("Couldn't read \"%s\" input", format);
+					FAILMSG("Couldn't read \"%s\" input", format);
 					status = ERR_INVALID;
 					goto out;
 				}
@@ -133,11 +138,15 @@ static int format_strings(void)
 				if (val[1] != val[0])
 				{
 					if (types[typeCount].sign)
-						FAILMESS("\"%s\" output %lld does not match input %lld",
-							format, val[1], val[0]);
+					{
+						FAILMSG("\"%s\" output %lld does not match input "
+							"%lld", format, val[1], val[0]);
+					}
 					else
-						FAILMESS("\"%s\" output %llu does not match input %llu",
-							format, val[1], val[0]);
+					{
+						FAILMSG("\"%s\" output %llu does not match input "
+							"%llu", format, val[1], val[0]);
+					}
 					status = ERR_INVALID;
 					goto out;
 				}
@@ -145,33 +154,35 @@ static int format_strings(void)
 		}
 	}
 
-	for (count = 0; count < 10; count ++)
+	for (count = 0; count < 100; count ++)
 	{
 		// Test character output first, then input, by reading back the output
 		charVal[0] = randomFormatted(' ', '~');
 		strcpy(format, "%c");
+
 		status = snprintf(buff, 80, format, charVal[0]);
 		if (status < 0)
 		{
-			FAILMESS("Error expanding char format");
+			FAILMSG("Error expanding char format");
 			goto out;
 		}
+
 		status = sscanf(buff, format, &charVal[1]);
 		if (status < 0)
 		{
-			FAILMESS("Error formatting char input");
+			FAILMSG("Error formatting char input");
 			goto out;
 		}
 		if (status != 1)
 		{
-			FAILMESS("Error formatting char input");
+			FAILMSG("Error formatting char input");
 			status = ERR_INVALID;
 			goto out;
 		}
 		if (charVal[0] != charVal[1])
 		{
-			FAILMESS("Char output '%c' does not match input '%c'",
-				charVal[1], charVal[0]);
+			FAILMSG("Char output '%c' does not match input '%c'", charVal[1],
+				charVal[0]);
 			status = ERR_INVALID;
 			goto out;
 		}
@@ -179,27 +190,29 @@ static int format_strings(void)
 
 	// Test string output first, then input, by reading back the output
 	strcpy(format, "%s");
+
 	status = snprintf(buff, 80, format, "FOOBAR!");
 	if (status < 0)
 	{
-		FAILMESS("Error expanding string format");
+		FAILMSG("Error expanding string format");
 		goto out;
 	}
+
 	status = sscanf(buff, format, stringVal);
 	if (status < 0)
 	{
-		FAILMESS("Error formatting string input");
+		FAILMSG("Error formatting string input");
 		goto out;
 	}
 	if (status != 1)
 	{
-		FAILMESS("Error formatting string input");
+		FAILMSG("Error formatting string input");
 		status = ERR_INVALID;
 		goto out;
 	}
 	if (strcmp(stringVal, "FOOBAR!"))
 	{
-		FAILMESS("String output %s does not match input %s",
+		FAILMSG("String output %s does not match input %s",
 			stringVal, "FOOBAR!");
 		status = ERR_INVALID;
 		goto out;
@@ -218,9 +231,13 @@ static int crashThread(void)
 
 	int a = 1;
 	int b = 0;
-	int c = (a / b);
 
-	exit(c);
+	if (a / b)
+		multitaskerYield();
+
+	while (1);
+
+	exit(0);
 }
 
 
@@ -241,20 +258,26 @@ static int exceptions(void)
 	{
 		procId = multitaskerSpawn(&crashThread, "crashy thread", 0, NULL);
 		if (procId < 0)
-			return (status = procId);
+		{
+			FAILMSG("Couldn't spawn exception-causing process");
+			status = procId;
+			goto out;
+		}
 
 		// Let it run
 		multitaskerYield();
 		multitaskerYield();
 
 		if (graphicsAreEnabled())
-		// Try to get rid of any exception dialogs we caused
-		multitaskerKillByName("error dialog thread", 0);
+		{
+			// Try to get rid of any exception dialogs we caused
+			multitaskerKillByName("error dialog thread", 0);
+		}
 
 		// Now it should be dead
 		if (multitaskerProcessIsAlive(procId))
 		{
-			FAILMESS("Kernel did not kill exception-causing process");
+			FAILMSG("Kernel did not kill exception-causing process");
 			status = ERR_INVALID;
 			goto out;
 		}
@@ -262,8 +285,7 @@ static int exceptions(void)
 
 	status = 0;
 
-	 out:
-
+out:
 	// Restore the text screen
 	textScreenRestore(&screen);
 
@@ -295,6 +317,7 @@ static int text_output(void)
 		status = columns;
 		goto out;
 	}
+
 	rows = textGetNumRows();
 	if (rows < 0)
 	{
@@ -310,7 +333,7 @@ static int text_output(void)
 	buffer = malloc(bufferSize);
 	if (!buffer)
 	{
-		FAILMESS("Error getting memory");
+		FAILMSG("Error getting memory");
 		status = ERR_MEMORY;
 		goto out;
 	}
@@ -318,17 +341,15 @@ static int text_output(void)
 	// Fill it with random printable data
 	for (count = 0; count < bufferSize; count ++)
 	{
-		char tmp = (char) randomFormatted(32, 126);
+		buffer[count] = (char) randomFormatted(32, 126);
 
 		// We don't want '%' format characters 'cause that could cause
 		// unpredictable results
-		if (tmp == '%')
+		if (buffer[count] == '%')
 		{
 			count -= 1;
 			continue;
 		}
-
-		buffer[count] = tmp;
 	}
 
 	// Randomly sprinkle newlines and tabs
@@ -341,18 +362,18 @@ static int text_output(void)
 	// Print the buffer
 	for (count = 0; count < bufferSize; count ++)
 	{
-		// Look out for tab characters
 		if (buffer[count] == (char) 9)
 		{
+			// Tab character
 			status = textTab();
 			if (status < 0)
-			goto out;
+				goto out;
 		}
-
-		// Look out for newline characters
 		else if (buffer[count] == (char) 10)
+		{
+			// Newline character
 			textNewline();
-
+		}
 		else
 		{
 			status = textPutc(buffer[count]);
@@ -364,9 +385,8 @@ static int text_output(void)
 	// Stick in a bunch of NULLs
 	for (count = 0; count < (screenFulls * 30); count ++)
 		buffer[randomFormatted(0, (bufferSize - 1))] = '\0';
-	{
-		buffer[bufferSize - 1] = '\0';
-	}
+
+	buffer[bufferSize - 1] = '\0';
 
 	// Print the buffer again as lines
 	for (count = 0; count < bufferSize; )
@@ -395,6 +415,7 @@ static int text_output(void)
 			count += 1;
 	}
 
+	sleep(3);
 	status = 0;
 
 out:
@@ -421,10 +442,10 @@ static int text_colors(void)
 	int count1, count2;
 
 	color allColors[16] = {
-		COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN,
-		COLOR_RED, COLOR_MAGENTA, COLOR_BROWN, COLOR_LIGHTGRAY,
-		COLOR_DARKGRAY, COLOR_LIGHTBLUE, COLOR_LIGHTGREEN, COLOR_LIGHTCYAN,
-		COLOR_LIGHTRED, COLOR_LIGHTMAGENTA, COLOR_YELLOW, COLOR_WHITE
+		COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
+		COLOR_MAGENTA, COLOR_BROWN, COLOR_LIGHTGRAY, COLOR_DARKGRAY,
+		COLOR_LIGHTBLUE, COLOR_LIGHTGREEN, COLOR_LIGHTCYAN, COLOR_LIGHTRED,
+		COLOR_LIGHTMAGENTA, COLOR_YELLOW, COLOR_WHITE
 	};
 
 	// Save the current text screen
@@ -447,13 +468,14 @@ static int text_colors(void)
 	buffer = malloc(columns);
 	if (!buffer)
 	{
-		FAILMESS("Error getting memory");
+		FAILMSG("Error getting memory");
 		status = ERR_MEMORY;
 		goto out;
 	}
 
 	for (count1 = 0; count1 < (columns - 1); count1 ++)
 		buffer[count1] = '#';
+
 	buffer[columns - 1] = '\0';
 
 	textNewline();
@@ -463,20 +485,20 @@ static int text_colors(void)
 		status = textSetForeground(&allColors[count1]);
 		if (status < 0)
 		{
-			FAILMESS("Failed to set the foreground color");
+			FAILMSG("Failed to set the foreground color");
 			goto out;
 		}
 
 		status = textGetForeground(&tmpColor);
 		if (status < 0)
 		{
-			FAILMESS("Failed to get the foreground color");
+			FAILMSG("Failed to get the foreground color");
 			goto out;
 		}
 
 		if (memcmp(&allColors[count1], &tmpColor, sizeof(color)))
 		{
-			FAILMESS("Foreground color not set correctly");
+			FAILMSG("Foreground color not set correctly");
 			status = ERR_INVALID;
 			goto out;
 		}
@@ -499,6 +521,9 @@ static int text_colors(void)
 
 	textNewline();
 
+	sleep(3);
+	status = 0;
+
 out:
 	if (buffer)
 		free(buffer);
@@ -515,7 +540,7 @@ out:
 
 static int xtra_chars(void)
 {
-	// Just print out the 'extended ASCII' (actually ISO 8859-15) characters
+	// Just print out the 'extended ASCII' (actually ISO-8859-15) characters
 	// so we can see whether or not they're appearing properly in our fonts
 
 	int status = 0;
@@ -533,11 +558,11 @@ static int xtra_chars(void)
 	if (graphics)
 	{
 		// Create a new window
-		window = windowNew(multitaskerGetCurrentProcessId(),
-			"Xtra chars test window");
+		window = windowNew(multitaskerGetCurrentProcessId(), "Xtra chars "
+			"test window");
 		if (!window)
 		{
-			FAILMESS("Error getting window");
+			FAILMSG("Error getting window");
 			status = ERR_NOTINITIALIZED;
 			goto out;
 		}
@@ -555,12 +580,13 @@ static int xtra_chars(void)
 			NULL);
 		if (!params.font)
 		{
-			FAILMESS("Error %d getting font", status);
+			FAILMSG("Error %d getting font", status);
 			goto out;
 		}
 	}
 
 	printf("\n");
+
 	lineBuffer[0] = '\0';
 	for (count = 160; count <= 255; count ++)
 	{
@@ -578,6 +604,7 @@ static int xtra_chars(void)
 			lineBuffer[0] = '\0';
 		}
 	}
+
 	printf("\n");
 
 	if (window)
@@ -585,7 +612,7 @@ static int xtra_chars(void)
 		status = windowSetVisible(window, 1);
 		if (status < 0)
 		{
-			FAILMESS("Error %d setting window visible", status);
+			FAILMSG("Error %d setting window visible", status);
 			goto out;
 		}
 	}
@@ -615,13 +642,10 @@ static int port_io(void)
 	unsigned char ch;
 	int count;
 
-	#define inPort8(port, data) \
-		__asm__ __volatile__ ("inb %%dx, %%al" : "=a" (data) : "d" (port))
-
 	pid = multitaskerGetCurrentProcessId();
 	if (pid < 0)
 	{
-		FAILMESS("Error %d getting PID", res);
+		FAILMSG("Error %d getting PID", res);
 		goto fail;
 	}
 
@@ -630,22 +654,22 @@ static int port_io(void)
 		portN = randomFormatted(0, 65535);
 		setClear = ((rand() % 2) == 0);
 
-		res = multitaskerSetIOPerm(pid, portN, setClear);
+		res = multitaskerSetIoPerm(pid, portN, setClear);
 		if (res < 0)
 		{
-			FAILMESS("Error %d setting perms on port %d", res, portN);
+			FAILMSG("Error %d setting perms on port %d", res, portN);
 			goto fail;
 		}
 
 		if (setClear)
 			// Read from the port
-			inPort8(portN, ch);
+			processorInPort8(portN, ch);
 
 		// Clear permissions again
-		res = multitaskerSetIOPerm(pid, portN, 0);
+		res = multitaskerSetIoPerm(pid, portN, 0);
 		if (res < 0)
 		{
-			FAILMESS("Error %d clearing perms on port %d", res, portN);
+			FAILMSG("Error %d clearing perms on port %d", res, portN);
 			goto fail;
 		}
 	}
@@ -671,23 +695,25 @@ static int disk_reads(disk *theDisk)
 	for (count = 0; count < 1024; count ++)
 	{
 		numSectors = randomFormatted(1, min(theDisk->numSectors, 512));
-		startSector = randomFormatted(0, (theDisk->numSectors - numSectors - 1));
+		startSector = randomFormatted(0, (theDisk->numSectors - numSectors -
+			1));
 
 		buffer = malloc(numSectors * theDisk->sectorSize);
 		if (!buffer)
 		{
-			FAILMESS("Error getting %u bytes disk %s buffer memory",
+			FAILMSG("Error getting %u bytes disk %s buffer memory",
 				(numSectors * theDisk->sectorSize), theDisk->name);
 			return (status = ERR_MEMORY);
 		}
 
-		status = diskReadSectors(theDisk->name, startSector, numSectors, buffer);
+		status = diskReadSectors(theDisk->name, startSector, numSectors,
+			buffer);
 
 		free(buffer);
 
 		if (status < 0)
 		{
-			FAILMESS("Error %d reading %u sectors at %u on %s", status,
+			FAILMSG("Error %d reading %u sectors at %u on %s", status,
 				numSectors, startSector, theDisk->name);
 			return (status);
 		}
@@ -715,7 +741,7 @@ static int disk_io(void)
 	status = diskGetBoot(diskName);
 	if (status < 0)
 	{
-		FAILMESS("Error %d getting disk name", status);
+		FAILMSG("Error %d getting disk name", status);
 		goto fail;
 	}
 
@@ -727,14 +753,18 @@ static int disk_io(void)
 			diskName[strlen(diskName) - 1] = '\0';
 
 		if (count)
+		{
 			// Add a partition letter
 			sprintf((diskName + strlen(diskName)), "%c", ('a' + count - 1));
+		}
 
 		// Get the disk info
 		status = diskGet(diskName, &theDisk);
 		if (status < 0)
+		{
 			// No such disk.  Fine.
 			break;
+		}
 
 		// Do random reads
 		status = disk_reads(&theDisk);
@@ -756,7 +786,6 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 {
 	int status = 0;
 	file theFile;
-	file tmpFile;
 	int numFiles = 0;
 	int fileNum = 0;
 	char relPath[MAX_PATH_NAME_LENGTH];
@@ -768,12 +797,12 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 	memset(&theFile, 0, sizeof(file));
 
 	// Loop through the contents of the directory
-	while (rtcUptimeSeconds() < (startTime + 10))
+	while (rtcUptimeSeconds() < (startTime + 30))
 	{
 		numFiles = fileCount(dirPath);
 		if (numFiles <= 0)
 		{
-			FAILMESS("Error %d getting directory %s file count", numFiles,
+			FAILMSG("Error %d getting directory %s file count", numFiles,
 				dirPath);
 			return (numFiles);
 		}
@@ -790,7 +819,7 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 				status = fileFirst(dirPath, &theFile);
 				if (status < 0)
 				{
-					FAILMESS("Error %d finding first file in %s", status,
+					FAILMSG("Error %d finding first file in %s", status,
 						dirPath);
 					return (status);
 				}
@@ -800,8 +829,8 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 				status = fileNext(dirPath, &theFile);
 				if (status < 0)
 				{
-					FAILMESS("Error %d finding next file after %s in %s", status,
-						theFile.name, dirPath);
+					FAILMSG("Error %d finding next file after %s in %s",
+						status, theFile.name, dirPath);
 					return (status);
 				}
 			}
@@ -812,9 +841,11 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 
 		// And a new one in case we want to move/rename it
 		strncpy(newPath, relPath, MAX_PATH_NAME_LENGTH);
-		while (fileFind(newPath, &tmpFile) >= 0)
-			snprintf(newPath, MAX_PATH_NAME_LENGTH, "%s/%c%s", dirPath,
+		while (fileFind(newPath, NULL) >= 0)
+		{
+			snprintf(newPath, MAX_PATH_NAME_LENGTH, "%s/%c-%s", dirPath,
 				randomFormatted(65, 90), theFile.name);
+		}
 
 		if (theFile.type == dirT)
 		{
@@ -824,21 +855,26 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 			switch (op)
 			{
 				case 0:
+				{
 					if (numFiles < 4)
 					{
 						// Recursively copy it
-						printf("Recursively copy %s to %s\n", relPath, newPath);
+						printf("Recursively copy %s to %s\n", relPath,
+							newPath);
 						status = fileCopyRecursive(relPath, newPath);
 						if (status < 0)
 						{
-							FAILMESS("Error %d copying directory %s", status,
+							FAILMSG("Error %d copying directory %s", status,
 								relPath);
 							return (status);
 						}
 					}
+
 					break;
+				}
 
 				case 1:
+				{
 					if (numFiles > 4)
 					{
 						// Recursively delete it
@@ -846,42 +882,55 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 						status = fileDeleteRecursive(relPath);
 						if (status < 0)
 						{
-							FAILMESS("Error %d deleting directory %s", status,
+							FAILMSG("Error %d deleting directory %s", status,
 								relPath);
 							return (status);
 						}
 					}
+
 					break;
+				}
 
 				case 2:
+				{
 					// Make a new directory
 					printf("Create %s\n", newPath);
 					status = fileMakeDir(newPath);
 					if (status < 0)
 					{
-						FAILMESS("Error %d creating directory %s", status, newPath);
+						FAILMSG("Error %d creating directory %s", status,
+							newPath);
 						return (status);
 					}
+
 					break;
+				}
 
 				case 3:
+				{
 					// Recursively process it the normal way
 					status = file_recurse(relPath, startTime);
 					if (status < 0)
 						return (status);
+
 					// Remove the directory.
 					printf("Remove %s\n", relPath);
-					status = fileRemoveDir(relPath);
+					status = fileDeleteRecursive(relPath);
 					if (status < 0)
 					{
-						FAILMESS("Error %d removing directory %s", status, relPath);
+						FAILMSG("Error %d removing directory %s", status,
+							relPath);
 						return (status);
 					}
+
 					break;
+				}
 
 				default:
-					FAILMESS("Unknown op %d for file %s", op, relPath);
+				{
+					FAILMSG("Unknown op %d for file %s", op, relPath);
 					return (status = ERR_BUG);
+				}
 			}
 		}
 		else
@@ -892,122 +941,153 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 			switch (op)
 			{
 				case 0:
+				{
 					// Just find the file
-					status = fileFind(relPath, &theFile);
+					status = fileFind(relPath, NULL);
 					if (status < 0)
 					{
-						FAILMESS("Error %d finding file %s", status, relPath);
+						FAILMSG("Error %d finding file %s", status, relPath);
 						return (status);
 					}
+
 					break;
+				}
 
 				case 1:
+				{
 					// Read and write the file using block IO
 					printf("Read/write %s (block)\n", relPath);
 					status = fileOpen(relPath, OPENMODE_READWRITE, &theFile);
 					if (status < 0)
 					{
-						FAILMESS("Error %d opening file %s", status, relPath);
+						FAILMSG("Error %d opening file %s", status, relPath);
 						return (status);
 					}
-					unsigned char *buffer =
-						malloc(theFile.blocks * theFile.blockSize);
+
+					unsigned char *buffer = malloc(theFile.blocks *
+						theFile.blockSize);
 					if (!buffer)
 					{
-						FAILMESS("Couldn't get %u bytes memory for file %s",
+						FAILMSG("Couldn't get %u bytes memory for file %s",
 							(theFile.blocks * theFile.blockSize), relPath);
 						return (status = ERR_MEMORY);
 					}
+
 					status = fileRead(&theFile, 0, theFile.blocks, buffer);
 					if (status < 0)
 					{
-						FAILMESS("Error %d reading file %s", status, relPath);
+						FAILMSG("Error %d reading file %s", status, relPath);
 						free(buffer);
 						return (status);
 					}
+
 					status = fileWrite(&theFile, 0, theFile.blocks, buffer);
 					if (status < 0)
 					{
-						FAILMESS("Error %d writing file %s", status, relPath);
+						FAILMSG("Error %d writing file %s", status, relPath);
 						free(buffer);
 						return (status);
 					}
+
 					status = fileWrite(&theFile, theFile.blocks, 1, buffer);
+
 					free(buffer);
+
 					if (status < 0)
 					{
-						FAILMESS("Error %d rewriting file %s", status, relPath);
+						FAILMSG("Error %d rewriting file %s", status,
+							relPath);
 						return (status);
 					}
+
 					status = fileClose(&theFile);
 					if (status < 0)
 					{
-						FAILMESS("Error %d closing file %s", status, relPath);
+						FAILMSG("Error %d closing file %s", status, relPath);
 						return (status);
 					}
+
 					break;
+				}
 
-					case 2:
-						// Delete the file
-						printf("Delete %s\n", relPath);
-						status = fileDelete(relPath);
-						if (status < 0)
-						{
-							FAILMESS("Error %d deleting file %s", status, relPath);
-							return (status);
-						}
-						break;
+				case 2:
+				{
+					// Delete the file
+					printf("Delete %s\n", relPath);
+					status = fileDelete(relPath);
+					if (status < 0)
+					{
+						FAILMSG("Error %d deleting file %s", status, relPath);
+						return (status);
+					}
 
-					case 3:
-						// Delete the file securely
-						printf("Securely delete %s\n", relPath);
-						status = fileDeleteSecure(relPath, 9);
-						if (status < 0)
-						{
-							FAILMESS("Error %d securely deleting file %s", status,
-								relPath);
-							return (status);
-						}
-						break;
+					break;
+				}
 
-					case 4:
-						// Copy the file
-						printf("Copy %s to %s\n", relPath, newPath);
-						status = fileCopy(relPath, newPath);
-						if (status < 0)
-						{
-							FAILMESS("Error %d copying file %s to %s", status,
-								relPath, newPath);
-							return (status);
-						}
-						break;
+				case 3:
+				{
+					// Delete the file securely
+					printf("Securely delete %s\n", relPath);
+					status = fileDeleteSecure(relPath, 9);
+					if (status < 0)
+					{
+						FAILMSG("Error %d securely deleting file %s", status,
+							relPath);
+						return (status);
+					}
 
-					case 5:
-						// Move the file
-						printf("Move %s to %s\n", relPath, newPath);
-						status = fileMove(relPath, newPath);
-						if (status < 0)
-						{
-							FAILMESS("Error %d moving file %s to %s", status,
-								relPath, newPath);
-							return (status);
-						}
-						break;
+					break;
+				}
 
-					case 6:
-						printf("Timestamp file %s\n", relPath);
-						status = fileTimestamp(relPath);
-						if (status < 0)
-						{
-							FAILMESS("Error %d timestamping file %s", status,
-								relPath);
-							return (status);
-						}
-						break;
+				case 4:
+				{
+					// Copy the file
+					printf("Copy %s to %s\n", relPath, newPath);
+					status = fileCopy(relPath, newPath);
+					if (status < 0)
+					{
+						FAILMSG("Error %d copying file %s to %s", status,
+							relPath, newPath);
+						return (status);
+					}
 
-					default:
-						FAILMESS("Unknown op %d for file %s", op, relPath);
-						return (status = ERR_BUG);
+					break;
+				}
+
+				case 5:
+				{
+					// Move the file
+					printf("Move %s to %s\n", relPath, newPath);
+					status = fileMove(relPath, newPath);
+					if (status < 0)
+					{
+						FAILMSG("Error %d moving file %s to %s", status,
+							relPath, newPath);
+						return (status);
+					}
+
+					break;
+				}
+
+				case 6:
+				{
+					printf("Timestamp file %s\n", relPath);
+					status = fileTimestamp(relPath);
+					if (status < 0)
+					{
+						FAILMSG("Error %d timestamping file %s", status,
+							relPath);
+						return (status);
+					}
+
+					break;
+				}
+
+				default:
+				{
+					FAILMSG("Unknown op %d for file %s", op, relPath);
+					return (status = ERR_BUG);
+				}
 			}
 		}
 	}
@@ -1019,18 +1099,14 @@ static int file_recurse(const char *dirPath, unsigned startTime)
 
 static int file_ops(void)
 {
-	// Test filesystem IO
+	// Test filesystem operations
 
 	int status = 0;
-	file theFile;
 	unsigned startTime = 0;
 	int count;
 
 	char *useFiles[] = { PATH_PROGRAMS, PATH_SYSTEM, "/visopsys", NULL };
 	#define DIRNAME "./test_tmp"
-
-	// Initialize the file structure
-	memset(&theFile, 0, sizeof(file));
 
 	// Save the current text screen
 	status = textScreenSave(&screen);
@@ -1038,13 +1114,13 @@ static int file_ops(void)
 		goto fail;
 
 	// If the test directory exists, delete it
-	if (fileFind(DIRNAME, &theFile) >= 0)
+	if (fileFind(DIRNAME, NULL) >= 0)
 	{
 		printf("Recursively delete %s\n", DIRNAME);
 		status = fileDeleteRecursive(DIRNAME);
 		if (status < 0)
 		{
-			FAILMESS("Error %d recursively deleting %s", status, DIRNAME);
+			FAILMSG("Error %d recursively deleting %s", status, DIRNAME);
 			goto fail;
 		}
 	}
@@ -1052,7 +1128,7 @@ static int file_ops(void)
 	status = fileMakeDir(DIRNAME);
 	if (status < 0)
 	{
-		FAILMESS("Error %d creating test directory", status);
+		FAILMSG("Error %d creating test directory", status);
 		goto fail;
 	}
 
@@ -1068,7 +1144,7 @@ static int file_ops(void)
 			status = fileCopyRecursive(useFiles[count], tmpName);
 			if (status < 0)
 			{
-				FAILMESS("Error %d recursively copying files from %s", status,
+				FAILMSG("Error %d recursively copying files from %s", status,
 					useFiles[count]);
 				goto fail;
 			}
@@ -1082,7 +1158,7 @@ static int file_ops(void)
 	}
 
 fail:
-	if (fileFind(DIRNAME, &theFile) >= 0)
+	if (fileFind(DIRNAME, NULL) >= 0)
 	{
 		printf("Recursively delete %s\n", DIRNAME);
 		fileDeleteRecursive(DIRNAME);
@@ -1109,7 +1185,8 @@ static int divide64(void)
 		{ 0x99999999LL, 0x11111111LL, 0x9LL, 0x0LL },
 		{ 0x999999999LL, 0x11111111LL, 0x90LL, 0x9LL },
 		{ 0x999999999LL, 0x111111111LL, 0x9LL, 0x0LL },
-		{ 0x4321432143214321LL, 0x1234123412341234LL, 0x3LL, 0xC850C850C850C85LL },
+		{ 0x4321432143214321LL, 0x1234123412341234LL, 0x3LL,
+				0xC850C850C850C85LL },
 		{ 0xF00F00F00F00LL, 0xABCABCABCLL, 0x165BLL, 0x72C72D62CLL },
 		{ 0xF00F00F00F00LL, 0xF00F00F00LL, 0x1000LL, 0xF00LL },
 		{ 0, 0, 0, 0 }
@@ -1123,7 +1200,7 @@ static int divide64(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
@@ -1134,7 +1211,7 @@ static int divide64(void)
 
 		if ((res != array[count].result) || (rem != array[count].remainder))
 		{
-			FAILMESS("%llx / %llx != %llx r %llx (%llx r %llx)",
+			FAILMSG("%llx / %llx != %llx r %llx (%llx r %llx)",
 				array[count].dividend, array[count].divisor,
 				array[count].result, array[count].remainder, res, rem);
 			status = ERR_INVALID;
@@ -1145,7 +1222,6 @@ static int divide64(void)
 	status = 0;
 
 out:
-
 	// Restore the text screen
 	textScreenRestore(&screen);
 
@@ -1167,7 +1243,8 @@ static int sines(void)
 	struct {
 		float rad;
 		float res;
-	} farray[]= {
+
+	} farray[] = {
 		{ -8.0, -0.989358246 },
 		{ -7.0, -0.656986594 },
 		{ -6.0, 0.279815882 },
@@ -1200,7 +1277,8 @@ static int sines(void)
 	struct {
 		double rad;
 		double res;
-	} darray[]= {
+
+	} darray[] = {
 		{ -8.0, -0.9893582466233817867 },
 		{ -7.0, -0.6569865987187892825 },
 		{ -6.0, 0.2794154980429556230 },
@@ -1233,7 +1311,7 @@ static int sines(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
@@ -1243,7 +1321,7 @@ static int sines(void)
 		fres = sinf(farray[count].rad);
 		if (fres != farray[count].res)
 		{
-			FAILMESS("Sine of float %f is incorrect (%f != %f)",
+			FAILMSG("Sine of float %f is incorrect (%f != %f)",
 				farray[count].rad, fres, farray[count].res);
 			status = ERR_INVALID;
 			goto out;
@@ -1256,7 +1334,7 @@ static int sines(void)
 		dres = sin(darray[count].rad);
 		if (dres != darray[count].res)
 		{
-			FAILMESS("Sine of double %f is incorrect (%f != %f)",
+			FAILMSG("Sine of double %f is incorrect (%f != %f)",
 				darray[count].rad, dres, darray[count].res);
 			status = ERR_INVALID;
 			goto out;
@@ -1274,7 +1352,7 @@ static int sines(void)
 		fres = sinf(rad);
 		if ((fres < -1) || (fres == 0) || (fres > 1))
 		{
-			FAILMESS("Sine of %f is incorrect (%f)", rad, fres);
+			FAILMSG("Sine of %f is incorrect (%f)", rad, fres);
 			status = ERR_INVALID;
 			goto out;
 		}
@@ -1283,7 +1361,6 @@ static int sines(void)
 	status = 0;
 
 out:
-
 	// Restore the text screen
 	textScreenRestore(&screen);
 
@@ -1305,7 +1382,8 @@ static int cosines(void)
 	struct {
 		float rad;
 		float res;
-	} farray[]= {
+
+	} farray[] = {
 		{ -8.0, -0.145499974 },
 		{ -7.0, 0.753902254 },
 		{ -6.0, 0.958777964 },
@@ -1339,7 +1417,8 @@ static int cosines(void)
 	struct {
 		double rad;
 		double res;
-	} darray[]= {
+
+	} darray[] = {
 		{ -8.0, -0.1455000338086137870 },
 		{ -7.0, 0.7539022543433044892 },
 		{ -6.0, 0.9601702874545081640 },
@@ -1373,7 +1452,7 @@ static int cosines(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
@@ -1383,7 +1462,7 @@ static int cosines(void)
 		fres = cosf(farray[count].rad);
 		if (fres != farray[count].res)
 		{
-			FAILMESS("Cosine of float %f is incorrect (%f != %f)",
+			FAILMSG("Cosine of float %f is incorrect (%f != %f)",
 				farray[count].rad, fres, farray[count].res);
 			status = ERR_INVALID;
 			goto out;
@@ -1396,7 +1475,7 @@ static int cosines(void)
 		dres = cos(darray[count].rad);
 		if (dres != darray[count].res)
 		{
-			FAILMESS("Cosine of double %f is incorrect (%f != %f)",
+			FAILMSG("Cosine of double %f is incorrect (%f != %f)",
 				darray[count].rad, dres, darray[count].res);
 			status = ERR_INVALID;
 			goto out;
@@ -1414,7 +1493,7 @@ static int cosines(void)
 		fres = cosf(rad);
 		if ((fres < -1) || (fres == 0) || (fres > 1))
 		{
-			FAILMESS("Cosine of %f is incorrect (%f)", rad, fres);
+			FAILMSG("Cosine of %f is incorrect (%f)", rad, fres);
 			status = ERR_INVALID;
 			goto out;
 		}
@@ -1423,7 +1502,6 @@ static int cosines(void)
 	status = 0;
 
 out:
-
 	// Restore the text screen
 	textScreenRestore(&screen);
 
@@ -1433,9 +1511,9 @@ out:
 
 static int floats(void)
 {
-	// Do calculations with floats (test's the kernel's FPU exception handling
-	// and state saving).  Adapted from an early version of our JPEG processing
-	// code.
+	// Do calculations with floats (tests the kernel's FPU exception handling
+	// and state saving).  Adapted from an early version of our JPEG
+	// processing code.
 
 	int coefficients[64];
 	int u = 0;
@@ -1481,7 +1559,8 @@ static int floats(void)
 		{
 			for (x = 0; x < 8; x++)
 			{
-				coefficients[(y * 8) + x] = (int)(temp[(y * 8) + x] / 4.0 + 0.5);
+				coefficients[(y * 8) + x] = (int)(temp[(y * 8) + x] / 4.0 +
+					0.5);
 				coefficients[(y * 8) + x] += 128;
 			}
 		}
@@ -1503,7 +1582,7 @@ static int libdl(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
@@ -1511,7 +1590,7 @@ static int libdl(void)
 	libHandle = dlopen(libName, RTLD_NOW);
 	if (!libHandle)
 	{
-		FAILMESS("Error getting library %s", libName);
+		FAILMSG("Error getting library %s", libName);
 		status = ERR_NODATA;
 		goto out;
 	}
@@ -1520,12 +1599,15 @@ static int libdl(void)
 	fn = dlsym(libHandle, symbolName);
 	if (!fn)
 	{
-		FAILMESS("Error getting library symbol %s", symbolName);
+		FAILMSG("Error getting library symbol %s", symbolName);
 		status = ERR_NODATA;
 		goto out;
 	}
 
 	fn("If you can read this, it works\n", libName, symbolName, fn);
+
+	sleep(3);
+	status = 0;
 
 out:
 	// Restore the text screen
@@ -1548,7 +1630,7 @@ static int randoms(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
@@ -1565,10 +1647,12 @@ static int randoms(void)
 	difference = abs(evens - odds);
 	if (difference > (numRandoms / 10))
 	{
-		FAILMESS("Imbalance in evens (%d) and odds (%d) > 10%%", evens, odds);
+		FAILMSG("Imbalance in evens (%d) and odds (%d) > 10%%", evens, odds);
 		status = ERR_BADDATA;
 		goto out;
 	}
+
+	status = 0;
 
 out:
 	// Restore the text screen
@@ -1595,7 +1679,8 @@ static int gui(void)
 
 	#define FILEMENU_SAVE 0
 	#define FILEMENU_QUIT 1
-	static windowMenuContents fileMenuContents = {
+	static windowMenuContents fileMenuContents =
+	{
 		2,
 		{
 			{ "Save", NULL },
@@ -1607,7 +1692,7 @@ static int gui(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
@@ -1615,7 +1700,7 @@ static int gui(void)
 	window = windowNew(multitaskerGetCurrentProcessId(), "GUI test window");
 	if (!window)
 	{
-		FAILMESS("Error getting window");
+		FAILMSG("Error getting window");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1626,7 +1711,7 @@ static int gui(void)
 	objectKey menuBar = windowNewMenuBar(window, &params);
 	if (!menuBar)
 	{
-		FAILMESS("Error getting menu bar");
+		FAILMSG("Error getting menu bar");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1635,7 +1720,7 @@ static int gui(void)
 		&params);
 	if (!fileMenu)
 	{
-		FAILMESS("Error getting menu");
+		FAILMSG("Error getting menu");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1651,14 +1736,14 @@ static int gui(void)
 	params.font = fontGet(FONT_FAMILY_XTERM, FONT_STYLEFLAG_NORMAL, 10, NULL);
 	if (!params.font)
 	{
-		FAILMESS("Error %d getting font", status);
+		FAILMSG("Error %d getting font", status);
 		goto out;
 	}
 
 	listItemParams = malloc(numListItems * sizeof(listItemParameters));
 	if (!listItemParams)
 	{
-		FAILMESS("Error getting list parameters memory");
+		FAILMSG("Error getting list parameters memory");
 		status = ERR_MEMORY;
 		goto out;
 	}
@@ -1667,14 +1752,15 @@ static int gui(void)
 	{
 		for (count2 = 0; count2 < WINDOW_MAX_LABEL_LENGTH; count2 ++)
 			listItemParams[count1].text[count2] = '#';
+
 		listItemParams[count1].text[WINDOW_MAX_LABEL_LENGTH - 1] = '\0';
 	}
 
-	listList = windowNewList(window, windowlist_textonly, min(10, numListItems),
-		1, 0, listItemParams, numListItems, &params);
+	listList = windowNewList(window, windowlist_textonly, min(10,
+		numListItems), 1, 0, listItemParams, numListItems, &params);
 	if (!listList)
 	{
-		FAILMESS("Error getting list component");
+		FAILMSG("Error getting list component");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1689,7 +1775,7 @@ static int gui(void)
 	buttonContainer = windowNewContainer(window, "buttonContainer", &params);
 	if (!buttonContainer)
 	{
-		FAILMESS("Error getting button container");
+		FAILMSG("Error getting button container");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1704,7 +1790,7 @@ static int gui(void)
 	abcdButton = windowNewButton(buttonContainer, "ABCD", NULL, &params);
 	if (!abcdButton)
 	{
-		FAILMESS("Error getting button");
+		FAILMSG("Error getting button");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1714,7 +1800,7 @@ static int gui(void)
 	efghButton = windowNewButton(buttonContainer, "EFGH", NULL, &params);
 	if (!efghButton)
 	{
-		FAILMESS("Error getting button");
+		FAILMSG("Error getting button");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1723,7 +1809,7 @@ static int gui(void)
 	ijklButton = windowNewButton(buttonContainer, "IJKL", NULL, &params);
 	if (!ijklButton)
 	{
-		FAILMESS("Error getting button");
+		FAILMSG("Error getting button");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1731,7 +1817,7 @@ static int gui(void)
 	status = windowSetVisible(window, 1);
 	if (status < 0)
 	{
-		FAILMESS("Error %d setting window visible", status);
+		FAILMSG("Error %d setting window visible", status);
 		goto out;
 	}
 
@@ -1739,7 +1825,7 @@ static int gui(void)
 	status = windowGuiThread();
 	if (status < 0)
 	{
-		FAILMESS("Error %d starting GUI thread", status);
+		FAILMSG("Error %d starting GUI thread", status);
 		goto out;
 	}
 
@@ -1751,17 +1837,20 @@ static int gui(void)
 		{
 			int numChars = randomFormatted(1, (WINDOW_MAX_LABEL_LENGTH - 1));
 			for (count3 = 0; count3 < numChars; count3 ++)
-				listItemParams[count2].text[count3] =
-					(char) randomFormatted(32, 126);
+			{
+				listItemParams[count2].text[count3] = (char)
+					randomFormatted(32, 126);
+			}
+
 			listItemParams[count2].text[numChars] = '\0';
 		}
 
 		// Set the list data
-		status = windowComponentSetData(listList, listItemParams, numListItems,
-			1 /* redraw */);
+		status = windowComponentSetData(listList, listItemParams,
+			numListItems, 1 /* redraw */);
 		if (status < 0)
 		{
-			FAILMESS("Error %d setting list component data", status);
+			FAILMSG("Error %d setting list component data", status);
 			goto out;
 		}
 
@@ -1778,14 +1867,16 @@ static int gui(void)
 				// Illegal value, it should have failed.
 				if (status >= 0)
 				{
-					FAILMESS("Selection value %d should fail", rnd);
+					FAILMSG("Selection value %d should fail", rnd);
 					status = ERR_INVALID;
 					goto out;
 				}
 			}
 			else if (status < 0)
+			{
 				// Legal value, should have succeeded
 				goto out;
+			}
 		}
 	}
 
@@ -1795,7 +1886,7 @@ static int gui(void)
 	window = NULL;
 	if (status < 0)
 	{
-		FAILMESS("Error %d destroying window", status);
+		FAILMSG("Error %d destroying window", status);
 		goto out;
 	}
 
@@ -1834,14 +1925,14 @@ static int icons(void)
 	status = textScreenSave(&screen);
 	if (status < 0)
 	{
-		FAILMESS("Error %d saving screen", status);
+		FAILMSG("Error %d saving screen", status);
 		goto out;
 	}
 
 	fileName = malloc(MAX_PATH_NAME_LENGTH);
 	if (!fileName)
 	{
-		FAILMESS("Error getting file name memory");
+		FAILMSG("Error getting file name memory");
 		status = ERR_MEMORY;
 		goto out;
 	}
@@ -1850,7 +1941,7 @@ static int icons(void)
 	numIcons = fileCount(PATH_SYSTEM_ICONS);
 	if (numIcons < 0)
 	{
-		FAILMESS("Error getting icon count");
+		FAILMSG("Error getting icon count");
 		status = numIcons;
 		goto out;
 	}
@@ -1859,7 +1950,7 @@ static int icons(void)
 	window = windowNew(multitaskerGetCurrentProcessId(), "Icon test window");
 	if (!window)
 	{
-		FAILMESS("Error getting window");
+		FAILMSG("Error getting window");
 		status = ERR_NOTINITIALIZED;
 		goto out;
 	}
@@ -1886,7 +1977,7 @@ static int icons(void)
 
 		if (status < 0)
 		{
-			FAILMESS("Error getting next icon");
+			FAILMSG("Error getting next icon");
 			goto out;
 		}
 
@@ -1905,13 +1996,13 @@ static int icons(void)
 		status = imageLoad(fileName, 0, 0, &iconImage);
 		if (status < 0)
 		{
-			FAILMESS("Error loading icon image %s", fileName);
+			FAILMSG("Error loading icon image %s", fileName);
 			goto out;
 		}
 
 		if (!windowNewIcon(window, &iconImage, iconFile.name, &params))
 		{
-			FAILMESS("Error creating icon component for %s", iconFile.name);
+			FAILMSG("Error creating icon component for %s", iconFile.name);
 			status = ERR_NOCREATE;
 			imageFree(&iconImage);
 			goto out;
@@ -1925,7 +2016,7 @@ static int icons(void)
 	status = windowSetBackgroundColor(window, &params.background);
 	if (status < 0)
 	{
-		FAILMESS("Error %d setting window background color", status);
+		FAILMSG("Error %d setting window background color", status);
 		goto out;
 	}
 
@@ -1934,15 +2025,17 @@ static int icons(void)
 	status = windowSetVisible(window, 1);
 	if (status < 0)
 	{
-		FAILMESS("Error %d showing window", status);
+		FAILMSG("Error %d showing window", status);
 		goto out;
 	}
+
+	sleep(3);
 
 	status = windowDestroy(window);
 	window = NULL;
 	if (status < 0)
 	{
-		FAILMESS("Error %d destroying window", status);
+		FAILMSG("Error %d destroying window", status);
 		goto out;
 	}
 
@@ -1970,7 +2063,6 @@ struct {
 	int graphics;
 
 } functions[] = {
-
 	// function			name				run graphics
 	{ format_strings,	"format strings",	0,  0 },
 	{ exceptions,		"exceptions",		0,  0 },
@@ -1995,7 +2087,7 @@ struct {
 static void begin(const char *name)
 {
 	printf("Testing %s... ", name);
-	failMess[0] = '\0';
+	failMsg[0] = '\0';
 }
 
 
@@ -2008,8 +2100,8 @@ static void pass(void)
 static void fail(void)
 {
 	printf("failed");
-	if (failMess[0])
-		printf("   [ %s ]", failMess);
+	if (failMsg[0])
+		printf("   [ %s ]", failMsg);
 	printf("\n");
 }
 
@@ -2024,8 +2116,11 @@ static int run(void)
 		if (functions[count].run)
 		{
 			begin(functions[count].name);
+
 			if (functions[count].function() >= 0)
+			{
 				pass();
+			}
 			else
 			{
 				fail();
@@ -2065,6 +2160,7 @@ int main(int argc, char *argv[])
 		switch (opt)
 		{
 			case 'a':
+			{
 				// Run all tests
 				for (count1 = 0; functions[count1].function ; count1 ++)
 				{
@@ -2074,20 +2170,29 @@ int main(int argc, char *argv[])
 						testCount += 1;
 					}
 				}
+
 				break;
+			}
 
 			case 'l':
+			{
 				// List all tests
 				printf("\nTests:\n");
 				for (count1 = 0; functions[count1].function ; count1 ++)
+				{
 					printf("  \"%s\"%s\n", functions[count1].name,
 						(functions[count1].graphics? " (graphics)" : ""));
+				}
+
 				return (0);
+			}
 
 			default:
+			{
 				fprintf(stderr, "Unknown option '%c'\n", optopt);
 				usage(argv[0]);
 				return (-1);
+			}
 		}
 	}
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr "Descartar"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: imgedit.c:140 imgedit.c:805
+#: imgedit.c:140 imgedit.c:832
 msgid "Enter filename"
 msgstr "Ingresar nombre de archivo"
 
@@ -50,51 +50,51 @@ msgstr "Ingrese el nombre del archivo:"
 msgid "Error %d saving file"
 msgstr "Error %d al guardar archivo"
 
-#: imgedit.c:440 imgedit.c:731
+#: imgedit.c:463 imgedit.c:756
 msgid "Thickness"
 msgstr "Grosor"
 
-#: imgedit.c:441
+#: imgedit.c:464
 msgid "Enter line thickess"
 msgstr "Ingrese el grosor de la línea"
 
-#: imgedit.c:515
+#: imgedit.c:538
 msgid "Image Editor"
 msgstr "Editor de Imágenes"
 
-#: imgedit.c:594
+#: imgedit.c:619
 msgid "Save"
 msgstr "Guardar"
 
-#: imgedit.c:641
+#: imgedit.c:666
 msgid "Color"
 msgstr ""
 
-#: imgedit.c:656
+#: imgedit.c:681
 msgid "Pick"
 msgstr "Escoger"
 
-#: imgedit.c:673
+#: imgedit.c:698
 msgid "Draw"
 msgstr "Dibujar"
 
-#: imgedit.c:686
+#: imgedit.c:711
 msgid "Line"
 msgstr "Línea"
 
-#: imgedit.c:699
+#: imgedit.c:724
 msgid "Rect"
 msgstr ""
 
-#: imgedit.c:712
+#: imgedit.c:737
 msgid "Oval"
 msgstr ""
 
-#: imgedit.c:745
+#: imgedit.c:770
 msgid "Fill"
 msgstr "Llenar"
 
-#: imgedit.c:779
+#: imgedit.c:806
 #, c-format
 msgid ""
 "\n"
@@ -103,11 +103,11 @@ msgstr ""
 "\n"
 "El comando \"%s\" funciona solamente en modo gráfico\n"
 
-#: imgedit.c:797
+#: imgedit.c:824
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""
 
-#: imgedit.c:806
+#: imgedit.c:833
 msgid "Please enter an image file to edit:"
 msgstr "Por favor ingrese un archivo de imagen para editar:"

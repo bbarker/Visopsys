@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 ;;  bootsect-print.s
 ;;
 
-;; This code is a common print routine for bootsector code.  It's just meant
+;; This code is a common print routine for boot sector code.  It's just meant
 ;; to be %included, not compiled separately.
 
 
@@ -30,9 +30,8 @@ print:
 
 	.charLoop:
 	mov AH, 0Eh
-	mov BH, 0
-	mov AL, byte [SI]
-	cmp AL, 0
+	xor BH, BH
+	cmp byte [SI], 0
 	je .end
 	int 10h
 	inc SI

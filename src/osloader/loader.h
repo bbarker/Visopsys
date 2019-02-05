@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -115,14 +115,6 @@
 %define FAT16_NYBBLESPERCLUST	4
 %define FAT32_NYBBLESPERCLUST	8
 
-;; CPU types
-%define i486					0
-%define PENTIUM					1
-%define PENTIUMPRO				2
-%define PENTIUM2				3
-%define PENTIUM3				4
-%define PENTIUM4				5
-
 ;; Number of elements in our memory map
 %define MEMORYMAPSIZE			50
 
@@ -131,6 +123,8 @@
 
 ;; Our data structures that we pass to the kernel, mostly having to do with
 ;; hardware
+
+;; Graphics mode info, about the mode chosen, and other available modes
 STRUC graphicsInfoBlock
 	.videoMemory	resd 1 ;; Video memory in Kbytes
 	.framebuffer	resd 1 ;; Address of the framebuffer
@@ -143,37 +137,18 @@ STRUC graphicsInfoBlock
 	.supportedModes	resd (MAXVIDEOMODES * 4)
 ENDSTRUC
 
+;; Info about a memory region.  Used in an array to provide a memory map.
 STRUC memoryInfoBlock
 	.start	resq 1
 	.size	resq 1
 	.type	resd 1
 ENDSTRUC
 
-;; The data structure created by the loader to describe the particulars
-;; about a floppy disk drive to the kernel
+;; Describe the particulars about a floppy disk drive to the kernel
 STRUC fddInfoBlock
 	.type		resd 1
 	.heads		resd 1
 	.tracks		resd 1
 	.sectors	resd 1
-ENDSTRUC
-
-;; The data structure created by the loader to describe the particulars
-;; about a hard disk drive
-STRUC hddInfoBlock
-	.heads			resd 1
-	.cylinders		resd 1
-	.sectors		resd 1
-	.bytesPerSector	resd 1
-	.totalSectors	resd 1
-ENDSTRUC
-
-;; The data structure created by the loader to hold info about the serial
-;; ports
-STRUC serialInfoBlock
-	.port1	resd 1
-	.port2	resd 1
-	.port3	resd 1
-	.port4	resd 1
 ENDSTRUC
 

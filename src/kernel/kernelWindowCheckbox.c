@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -34,21 +34,22 @@ extern kernelWindowVariables *windowVariables;
 static void setSize(kernelWindowComponent *component)
 {
 	kernelWindowCheckbox *checkbox = component->data;
+	kernelFont *font = (kernelFont *) component->params.font;
 
 	// The width of the checkbox is the width of the checkbox, plus a bit
 	// of padding, plus the printed width of the text
 	component->width = (windowVariables->checkbox.size + 3);
-	if (component->params.font)
-		component->width +=
-			kernelFontGetPrintedWidth((kernelFont *) component->params.font,
-				(char *) component->charSet, checkbox->text);
+	if (font)
+	{
+		component->width += kernelFontGetPrintedWidth(font,
+			(char *) component->charSet, checkbox->text);
+	}
 
-	// The height of the checkbox is the height of the font, or the height
-	// of the checkbox, whichever is greater
+	// The height of the checkbox is the greater of the box size, or the font
+	// glyph height
 	component->height = windowVariables->checkbox.size;
-	if (component->params.font)
-		component->height = max(((kernelFont *) component->params.font)
-			->glyphHeight, windowVariables->checkbox.size);
+	if (font && (font->glyphHeight > component->height))
+		component->height = font->glyphHeight;
 
 	component->minWidth = component->width;
 	component->minHeight = component->height;
@@ -61,18 +62,37 @@ static int draw(kernelWindowComponent *component)
 
 	int status = 0;
 	kernelWindowCheckbox *checkbox = component->data;
+	kernelFont *font = (kernelFont *) component->params.font;
+	int boxOffset = 0, textOffset = 0;
 	int checkboxSize = windowVariables->checkbox.size;
 	int yCoord = 0;
+
+	// If the component height is greater than the box height, its Y coordinate
+	// needs to be offset
+	if (component->height > checkboxSize)
+	{
+		boxOffset = ((component->height - checkboxSize) / 2);
+		if (font)
+			// Adjust a little bit for font drop
+			boxOffset -= (font->glyphHeight / 8);
+	}
+
+	// If the component height is greater than the font glyph height, its Y
+	// coordinate needs to be offset
+	if (font && (component->height > font->glyphHeight))
+		textOffset = ((component->height - font->glyphHeight) / 2);
 
 	yCoord = (component->yCoord + ((component->height - checkboxSize) / 2));
 
 	// Draw the white center of the check box
 	kernelGraphicDrawRect(component->buffer, &COLOR_WHITE, draw_normal,
-		component->xCoord, yCoord, checkboxSize, checkboxSize, 1, 1);
+		component->xCoord, (yCoord + boxOffset), checkboxSize, checkboxSize,
+		1, 1);
 
 	// Draw a border around it
 	kernelGraphicDrawGradientBorder(component->buffer, component->xCoord,
-		yCoord, checkboxSize, checkboxSize,	windowVariables->border.thickness,
+		(yCoord + boxOffset), checkboxSize, checkboxSize,
+		windowVariables->border.thickness,
 		(color *) &component->params.background,
 		windowVariables->border.shadingIncrement, draw_reverse, border_all);
 
@@ -82,28 +102,30 @@ static int draw(kernelWindowComponent *component)
 		kernelGraphicDrawLine(component->buffer,
 			&COLOR_BLACK, draw_normal,
 			(component->xCoord + windowVariables->border.thickness + 1),
-			(yCoord + windowVariables->border.thickness + 1),
-			(component->xCoord +
-				(checkboxSize - windowVariables->border.thickness - 1)),
-			(yCoord + (checkboxSize - windowVariables->border.thickness - 1)));
+			(yCoord + boxOffset + windowVariables->border.thickness + 1),
+			(component->xCoord + (checkboxSize -
+				windowVariables->border.thickness - 2)),
+			(yCoord + boxOffset + (checkboxSize -
+				windowVariables->border.thickness - 2)));
 		kernelGraphicDrawLine(component->buffer,
 			&COLOR_BLACK, draw_normal,
 			(component->xCoord + windowVariables->border.thickness + 1),
-			(yCoord + (checkboxSize - windowVariables->border.thickness - 1)),
-			(component->xCoord +
-				(checkboxSize - windowVariables->border.thickness - 1)),
-			(yCoord + windowVariables->border.thickness + 1));
+			(yCoord + boxOffset + (checkboxSize -
+				windowVariables->border.thickness - 2)),
+			(component->xCoord + (checkboxSize -
+				windowVariables->border.thickness - 2)),
+			(yCoord + boxOffset + windowVariables->border.thickness + 1));
 	}
 
-	if (component->params.font)
+	if (font)
 	{
 		// Now draw the text next to the box
 		kernelGraphicDrawText(component->buffer,
 			(color *) &component->params.foreground,
-			(color *) &component->params.background,
-			(kernelFont *) component->params.font, (char *) component->charSet,
-			checkbox->text, draw_normal,
-			(component->xCoord + checkboxSize + 3), (component->yCoord));
+			(color *) &component->params.background, font,
+			(char *) component->charSet, checkbox->text, draw_normal,
+			(component->xCoord + checkboxSize + 3),
+			(component->yCoord + textOffset));
 	}
 
 	if (component->params.flags & WINDOW_COMPFLAG_HASBORDER)
@@ -145,9 +167,8 @@ static int setData(kernelWindowComponent *component, void *text, int length)
 	if (component->draw)
 		draw(component);
 
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-			component->width, component->height);
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
 
 	return (0);
 }
@@ -171,9 +192,8 @@ static int setSelected(kernelWindowComponent *component, int selected)
 	if (component->draw)
 		component->draw(component);
 
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-		 	component->width, component->height);
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
 
 	return (0);
 }
@@ -216,6 +236,7 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 			event->type = EVENT_MOUSE_LEFTDOWN;
 		if (event->type == EVENT_KEY_UP)
 			event->type = EVENT_MOUSE_LEFTUP;
+
 		status = mouseEvent(component, event);
 	}
 

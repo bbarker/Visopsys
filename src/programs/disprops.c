@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -44,12 +44,11 @@ the background wallpaper, and the base colors used by the window manager.
 #include <stdlib.h>
 #include <string.h>
 #include <sys/api.h>
-#include <sys/color.h>
-#include <sys/desktop.h>
+#include <sys/deskconf.h>
 #include <sys/env.h>
 #include <sys/paths.h>
 #include <sys/user.h>
-#include <sys/window.h>
+#include <sys/winconf.h>
 
 #define _(string) gettext(string)
 
@@ -68,7 +67,7 @@ the background wallpaper, and the base colors used by the window manager.
 #define SHOW_CLOCK				_("Show a clock on the desktop")
 #define OK						_("OK")
 #define CANCEL					_("Cancel")
-#define CLOCK_VARIABLE			DESKTOP_PROGRAM "clock"
+#define CLOCK_VARIABLE			DESKVAR_PROGRAM "clock"
 #define CLOCK_PROGRAM			PATH_PROGRAMS "/clock"
 #define WALLPAPER_PROGRAM		PATH_PROGRAMS "/wallpaper"
 #define MAX_IMAGE_DIMENSION		128
@@ -238,23 +237,23 @@ static void getFileColors(const char *fileName)
 	if ((fileFind(fileName, NULL) >= 0) &&
 		(configRead(fileName, &list) >= 0) && list.memory)
 	{
-		if ((value = variableListGet(&list, COLOR_FOREGROUND_RED)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_FG_RED)))
 			foreground.red = atoi(value);
-		if ((value = variableListGet(&list, COLOR_FOREGROUND_GREEN)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_FG_GREEN)))
 			foreground.green = atoi(value);
-		if ((value = variableListGet(&list, COLOR_FOREGROUND_BLUE)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_FG_BLUE)))
 			foreground.blue = atoi(value);
-		if ((value = variableListGet(&list, COLOR_BACKGROUND_RED)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_BG_RED)))
 			background.red = atoi(value);
-		if ((value = variableListGet(&list, COLOR_BACKGROUND_GREEN)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_BG_GREEN)))
 			background.green = atoi(value);
-		if ((value = variableListGet(&list, COLOR_BACKGROUND_BLUE)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_BG_BLUE)))
 			background.blue = atoi(value);
-		if ((value = variableListGet(&list, COLOR_DESKTOP_RED)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_DT_RED)))
 			desktop.red = atoi(value);
-		if ((value = variableListGet(&list, COLOR_DESKTOP_GREEN)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_DT_GREEN)))
 			desktop.green = atoi(value);
-		if ((value = variableListGet(&list, COLOR_DESKTOP_BLUE)))
+		if ((value = variableListGet(&list, WINVAR_COLOR_DT_BLUE)))
 			desktop.blue = atoi(value);
 
 		variableListDestroy(&list);
@@ -269,15 +268,14 @@ static void getColors(void)
 	char fileName[MAX_PATH_NAME_LENGTH];
 
 	// First read the values from the system config.
-	sprintf(fileName, PATH_SYSTEM_CONFIG "/" WINDOW_CONFIGFILE);
+	sprintf(fileName, PATH_SYSTEM_CONFIG "/" WINDOW_CONFIG);
 	getFileColors(fileName);
 
 	if (strcmp(currentUser, USER_ADMIN))
 	{
 		// Now, if the user has their own config, read that too (overrides
 		// any values we read previously)
-		sprintf(fileName, PATH_USERS_CONFIG "/" WINDOW_CONFIGFILE,
-			currentUser);
+		sprintf(fileName, PATH_USERS_CONFIG "/" WINDOW_CONFIG, currentUser);
 		getFileColors(fileName);
 	}
 }
@@ -305,7 +303,7 @@ static void setColors(void)
 		{
 			// The user 'admin' doesn't have user settings.  Use the system
 			// one.
-			sprintf(fileName, PATH_SYSTEM_CONFIG "/" WINDOW_CONFIGFILE);
+			sprintf(fileName, PATH_SYSTEM_CONFIG "/" WINDOW_CONFIG);
 		}
 		else
 		{
@@ -319,7 +317,7 @@ static void setColors(void)
 			}
 
 			// Use the user's window config file?
-			sprintf(fileName, PATH_USERS_CONFIG "/" WINDOW_CONFIGFILE,
+			sprintf(fileName, PATH_USERS_CONFIG "/" WINDOW_CONFIG,
 				currentUser);
 		}
 
@@ -339,23 +337,23 @@ static void setColors(void)
 		if (list.memory)
 		{
 			sprintf(value, "%d", foreground.red);
-			variableListSet(&list, COLOR_FOREGROUND_RED, value);
+			variableListSet(&list, WINVAR_COLOR_FG_RED, value);
 			sprintf(value, "%d", foreground.green);
-			variableListSet(&list, COLOR_FOREGROUND_GREEN, value);
+			variableListSet(&list, WINVAR_COLOR_FG_GREEN, value);
 			sprintf(value, "%d", foreground.blue);
-			variableListSet(&list, COLOR_FOREGROUND_BLUE, value);
+			variableListSet(&list, WINVAR_COLOR_FG_BLUE, value);
 			sprintf(value, "%d", background.red);
-			variableListSet(&list, COLOR_BACKGROUND_RED, value);
+			variableListSet(&list, WINVAR_COLOR_BG_RED, value);
 			sprintf(value, "%d", background.green);
-			variableListSet(&list, COLOR_BACKGROUND_GREEN, value);
+			variableListSet(&list, WINVAR_COLOR_BG_GREEN, value);
 			sprintf(value, "%d", background.blue);
-			variableListSet(&list, COLOR_BACKGROUND_BLUE, value);
+			variableListSet(&list, WINVAR_COLOR_BG_BLUE, value);
 			sprintf(value, "%d", desktop.red);
-			variableListSet(&list, COLOR_DESKTOP_RED, value);
+			variableListSet(&list, WINVAR_COLOR_DT_RED, value);
 			sprintf(value, "%d", desktop.green);
-			variableListSet(&list, COLOR_DESKTOP_GREEN, value);
+			variableListSet(&list, WINVAR_COLOR_DT_GREEN, value);
 			sprintf(value, "%d", desktop.blue);
-			variableListSet(&list, COLOR_DESKTOP_BLUE, value);
+			variableListSet(&list, WINVAR_COLOR_DT_BLUE, value);
 
 			configWrite(fileName, &list);
 
@@ -388,8 +386,8 @@ static color *getSelectedColor(void)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -484,8 +482,7 @@ static int readDesktopVariable(const char *variable, char *value, int len)
 	if (strcmp(currentUser, USER_ADMIN))
 	{
 		// First try the user's desktop config file
-		sprintf(fileName, PATH_USERS_CONFIG "/" DESKTOP_CONFIGFILE,
-			currentUser);
+		sprintf(fileName, PATH_USERS_CONFIG "/" DESKTOP_CONFIG, currentUser);
 
 		status = fileFind(fileName, NULL);
 		if (status >= 0)
@@ -497,7 +494,7 @@ static int readDesktopVariable(const char *variable, char *value, int len)
 	}
 
 	// Now try to read from the system desktop config
-	sprintf(fileName, PATH_SYSTEM_CONFIG "/" DESKTOP_CONFIGFILE);
+	sprintf(fileName, PATH_SYSTEM_CONFIG "/" DESKTOP_CONFIG);
 
 	status = configGet(fileName, variable, value, len);
 
@@ -521,7 +518,7 @@ static int writeDesktopVariable(const char *variable, char *value)
 	if (!strcmp(currentUser, USER_ADMIN))
 	{
 		// The user 'admin' doesn't have user settings.  Use the system one.
-		sprintf(fileName, PATH_SYSTEM_CONFIG "/" DESKTOP_CONFIGFILE);
+		sprintf(fileName, PATH_SYSTEM_CONFIG "/" DESKTOP_CONFIG);
 	}
 	else
 	{
@@ -538,7 +535,7 @@ static int writeDesktopVariable(const char *variable, char *value)
 		}
 
 		// Write the user's window config file
-		sprintf(fileName, PATH_USERS_CONFIG "/" DESKTOP_CONFIGFILE,
+		sprintf(fileName, PATH_USERS_CONFIG "/" DESKTOP_CONFIG,
 			currentUser);
 
 		status = fileFind(fileName, NULL);
@@ -595,7 +592,7 @@ static void eventHandler(objectKey key, windowEvent *event)
 		windowComponentSetEnabled(wallpaperButton, selected);
 		if (selected)
 		{
-			if ((readDesktopVariable(DESKTOP_BACKGROUND, string,
+			if ((readDesktopVariable(DESKVAR_BACKGROUND_IMAGE, string,
 					sizeof(string)) >= 0) &&
 				(fileFind(string, NULL) >= 0))
 			{
@@ -615,7 +612,7 @@ static void eventHandler(objectKey key, windowEvent *event)
 	{
 		loaderLoadAndExec(WALLPAPER_PROGRAM, privilege, 1);
 
-		if ((readDesktopVariable(DESKTOP_BACKGROUND, string,
+		if ((readDesktopVariable(DESKVAR_BACKGROUND_IMAGE, string,
 				sizeof(string)) >= 0) &&
 			(fileFind(string, NULL) >= 0))
 		{
@@ -860,7 +857,7 @@ static void constructWindow(void)
 	windowRegisterEventHandler(wallpaperCheckbox, &eventHandler);
 
 	// Try to get the wallpaper image name
-	if ((readDesktopVariable(DESKTOP_BACKGROUND, value, 128) >= 0) &&
+	if ((readDesktopVariable(DESKVAR_BACKGROUND_IMAGE, value, 128) >= 0) &&
 		(fileFind(value, NULL) >= 0))
 	{
 		windowThumbImageUpdate(wallpaperImage, value, wallpaperImageWidth,
@@ -955,7 +952,7 @@ static void constructWindow(void)
 }
 
 
-int main(int argc __attribute__((unused)), char *argv[])
+int main(int argc, char *argv[])
 {
 	int status = 0;
 	disk sysDisk;
@@ -968,8 +965,8 @@ int main(int argc __attribute__((unused)), char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			argv[0]);
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (status = ERR_NOTINITIALIZED);
 	}
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -47,7 +47,7 @@ char *strncat(char *destString, const char *sourceString, size_t maxLength)
 
 	// If this is true, then we probably have an unterminated string
 	// constant.  Checking for a string that exceeds MAXSTRINGLENGTH will
-	// help to prevent the routine from running off too far into memory.
+	// help to prevent the function from running off too far into memory.
 	if (count1 >= MAXSTRINGLENGTH)
 	{
 		errno = ERR_BOUNDS;

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -164,8 +164,8 @@ static void doEject(void)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -227,7 +227,7 @@ static void eventHandler(objectKey key, windowEvent *event)
 
 		windowDestroy(window);
 
-		shutdown((key == rebootIcon), 0);
+		systemShutdown((key == rebootIcon), 0);
 		while (1);
 	}
 }
@@ -370,7 +370,7 @@ int main(int argc, char *argv[])
 			doEject();
 
 		// There's a nice system function for doing this.
-		status = shutdown(reboot, force);
+		status = systemShutdown(reboot, force);
 		if (status < 0)
 		{
 			if (!force)

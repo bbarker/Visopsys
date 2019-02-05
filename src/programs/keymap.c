@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -81,6 +81,7 @@ Options:
 #include <sys/charset.h>
 #include <sys/env.h>
 #include <sys/font.h>
+#include <sys/kernconf.h>
 #include <sys/keyboard.h>
 #include <sys/paths.h>
 
@@ -93,7 +94,6 @@ Options:
 #define SAVE				_("Save")
 #define SET_DEFAULT			_("Set as default")
 #define CLOSE				_("Close")
-#define KERNEL_CONF			PATH_SYSTEM_CONFIG "/kernel.conf"
 #define KEYVAL_FIELDWIDTH	5
 
 static int graphics = 0;
@@ -297,9 +297,10 @@ static int setMap(const char *mapName)
 
 	// Find out whether the kernel config file is on a read-only filesystem
 	memset(&confDisk, 0, sizeof(disk));
-	if (!fileGetDisk(KERNEL_CONF, &confDisk) && !confDisk.readOnly)
+	if (!fileGetDisk(KERNEL_DEFAULT_CONFIG, &confDisk) && !confDisk.readOnly)
 	{
-		status = configSet(KERNEL_CONF, "keyboard.map", fileName);
+		status = configSet(KERNEL_DEFAULT_CONFIG, KERNELVAR_KEYBOARD_MAP,
+			fileName);
 		if (status < 0)
 			error("%s", _("Couldn't write keyboard map setting"));
 	}
@@ -527,8 +528,8 @@ out:
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -799,7 +800,7 @@ static int selectCharDialog(objectKey parentWindow)
 					case ASCII_BEL:
 						strcpy(keyChar, "BEL");
 						break;
-					case ASCII_BACKSPACE:
+					case ASCII_BS:
 						strcpy(keyChar, "BS");
 						break;
 					case ASCII_TAB:
@@ -808,13 +809,13 @@ static int selectCharDialog(objectKey parentWindow)
 					case ASCII_ENTER:
 						strcpy(keyChar, "LF");
 						break;
-					case ASCII_VERTTAB:
+					case ASCII_VT:
 						strcpy(keyChar, "VT");
 						break;
-					case ASCII_FORMFEED:
+					case ASCII_FF:
 						strcpy(keyChar, "FF");
 						break;
-					case ASCII_CRGRET:
+					case ASCII_CR:
 						strcpy(keyChar, "CR");
 						break;
 					case ASCII_ESC:

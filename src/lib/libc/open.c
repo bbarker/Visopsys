@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,10 +22,10 @@
 // This is the standard "open" function, as found in standard C libraries
 
 #include <fcntl.h>
-#include <stdlib.h>
-#include <string.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <sys/api.h>
+#include <sys/cdefs.h>
 
 
 int open(const char *fileName, int flags)
@@ -56,15 +56,16 @@ int open(const char *fileName, int flags)
 	//   If pathname is not a directory, cause the open to fail.
 
 	int status = 0;
-	fileStream *theStream = NULL;
 	int newFlags = 0;
+	fileStream *theStream = NULL;
+	int fd = 0;
 
 	// We have to adapt the UNIX/POSIX flags to our flags
 
 	if (visopsys_in_kernel)
 	{
 		errno = ERR_BUG;
-		return (-1);
+		return (status = -1);
 	}
 
 	// First the 'exclusive' ones
@@ -86,11 +87,11 @@ int open(const char *fileName, int flags)
 		newFlags &= ~OPENMODE_TRUNCATE;
 
 	// Get memory for the file stream
-	theStream = malloc(sizeof(fileStream));
+	theStream = calloc(1, sizeof(fileStream));
 	if (!theStream)
 	{
 		errno = ERR_MEMORY;
-		return (-1);
+		return (status = -1);
 	}
 
 	status = fileStreamOpen(fileName, newFlags, theStream);
@@ -98,7 +99,7 @@ int open(const char *fileName, int flags)
 	{
 		free(theStream);
 		errno = status;
-		return (-1);
+		return (status = -1);
 	}
 
 	if ((flags & O_DIRECTORY) && (theStream->f.type != dirT))
@@ -107,7 +108,7 @@ int open(const char *fileName, int flags)
 		fileStreamClose(theStream);
 		free(theStream);
 		errno = ERR_NOTADIR;
-		return (-1);
+		return (status = -1);
 	}
 
 	// If we're not appending, seek to the beginning of the file, since the
@@ -120,10 +121,20 @@ int open(const char *fileName, int flags)
 			fileStreamClose(theStream);
 			free(theStream);
 			errno = status;
-			return (-1);
+			return (status = -1);
 		}
 	}
 
-	return ((int) theStream);
+	// Get a POSIX-style file descriptor for it
+	fd = _fdalloc(filedesc_filestream, theStream, 1 /* free data on close */);
+	if (fd < 0)
+	{
+		fileStreamClose(theStream);
+		free(theStream);
+		errno = fd;
+		return (status = -1);
+	}
+
+	return (fd);
 }
 

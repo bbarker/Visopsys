@@ -11,5 +11,5 @@ parameter is the name of a new directory to create.  Any number of other
 (optional) directories to create can be specified at the same time.
 
 Options:
--p              : Create parent directories, if necessary.
+-p  : Create parent directories, if necessary.
 

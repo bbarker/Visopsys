@@ -1,15 +1,9 @@
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  Makefile
 ##
-
-ifdef DEBUG
-	override DEBUG = -DDEBUG
-else
-	STRIP = strip -s ${SHAREDLIB}
-endif
 
 ROOT = ../../..
 BUILDDIR = ${ROOT}/build/system/libraries
@@ -28,8 +22,10 @@ STDDEPS = ${ROOT}/Makefile.include Makefile ../shared/* ${INCDIR}/*.h \
 INCLUDE = -nostdinc -I${INCDIR}
 CFLAGS = ${OPT} ${ARCH} ${CCODEGEN} ${CWARN} ${INCLUDE} ${DEBUG}
 
-CDEFNAMES = _dbl2str \
+CDEFNAMES = \
+	_dbl2str \
 	_digits \
+	_fdesc \
 	_flt2str \
 	_fmtinpt \
 	_kernapi \
@@ -39,7 +35,8 @@ CDEFNAMES = _dbl2str \
 	_str2num \
 	_xpndfmt
 
-CTYPENAMES = isalnum \
+CTYPENAMES = \
+	isalnum \
 	isalpha \
 	isascii \
 	iscntrl \
@@ -54,14 +51,22 @@ CTYPENAMES = isalnum \
 	tolower \
 	toupper
 
+DIRENTNAMES = closedir \
+	opendir \
+	readdir \
+	readdir_r \
+	rewinddir
+
 FCNTLNAMES = open
 
-LIBGENNAMES = basename \
+LIBGENNAMES = \
+	basename \
 	dirname
 
 LOCALENAMES = setlocale
 
-MATHNAMES = ceil \
+MATHNAMES = \
+	ceil \
 	cos \
 	cosf \
 	fabs \
@@ -77,9 +82,32 @@ MATHNAMES = ceil \
 	tan \
 	tanf
 
+NETNAMES = \
+	accept \
+	bind \
+	connect \
+	getprotobyname \
+	getprotobynumber \
+	getservbyname \
+	getservbyport \
+	inet_ntop \
+	inet_pton \
+	listen \
+	poll \
+	recv \
+	send \
+	shutdown \
+	socket
+
 SIGNALNAMES = signal
 
-STDIONAMES = fclose \
+STATNAMES = \
+	mkdir \
+	stat
+
+STDIONAMES = \
+	fclose \
+	fdopen \
 	fflush \
 	fgetpos \
 	fgets \
@@ -110,6 +138,7 @@ STDIONAMES = fclose \
 	strtoll \
 	strtoul \
 	strtoull \
+	tmpfile \
 	vfprintf \
 	vfscanf \
 	vprintf \
@@ -118,15 +147,18 @@ STDIONAMES = fclose \
 	vsprintf \
 	vsscanf
 
-STDLIBNAMES = abort \
+STDLIBNAMES = \
+	abort \
 	abs \
 	calloc \
 	exit \
 	getenv \
 	labs \
 	malloc \
-	mbtowc \
 	mbstowcs \
+	mbtowc \
+	mkdtemp \
+	mkstemp \
 	rand \
 	realloc \
 	realpath \
@@ -135,7 +167,8 @@ STDLIBNAMES = abort \
 	system \
 	wctomb
 
-STRINGNAMES = bcopy \
+STRINGNAMES = \
+	bcopy \
 	bzero \
 	ffs \
 	fls \
@@ -160,9 +193,11 @@ STRINGNAMES = bcopy \
 	strrchr \
 	strspn \
 	strstr \
-	strtok
+	strtok \
+	strtok_r
 
-TIMENAMES = asctime \
+TIMENAMES = \
+	asctime \
 	clock \
 	ctime \
 	difftime \
@@ -170,22 +205,29 @@ TIMENAMES = asctime \
 	mktime \
 	time
 
-UNISTDNAMES = close \
+UNISTDNAMES = \
+	chdir \
+	close \
 	ftruncate \
+	getcwd \
 	getopt \
 	lseek \
 	read \
+	rmdir \
 	sleep \
-	stat \
 	swab \
 	truncate \
+	unlink \
 	write
 
-MISCNAMES = readline
+MISCNAMES = readline \
+	sched_yield \
+	uname
 
-ALLNAMES = ${CDEFNAMES} ${CTYPENAMES} ${FCNTLNAMES} ${LIBGENNAMES} \
-	${LOCALENAMES} ${MATHNAMES} ${SIGNALNAMES} ${STDIONAMES} ${STDLIBNAMES} \
-	${STRINGNAMES} ${TIMENAMES} ${UNISTDNAMES} ${MISCNAMES}
+ALLNAMES = ${CDEFNAMES} ${CTYPENAMES} ${DIRENTNAMES} ${FCNTLNAMES} \
+	${LIBGENNAMES} ${LOCALENAMES} ${MATHNAMES} ${NETNAMES} ${SIGNALNAMES} \
+	${STATNAMES} ${STDIONAMES} ${STDLIBNAMES} ${STRINGNAMES} ${TIMENAMES} \
+	${UNISTDNAMES} ${MISCNAMES}
 
 OBJDIR = obj
 PICOBJDIR = picobj

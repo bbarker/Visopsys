@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -60,10 +60,10 @@ static int textDetect(const char *fileName, void *dataPtr, unsigned size,
 
 	if (((textChars * 100) / size) >= 95)
 	{
-		// We will call this a text file.
-		sprintf(class->className, "%s %s", FILECLASS_NAME_TEXT,
+		// We will call this a text file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_TEXT,
 			FILECLASS_NAME_DATA);
-		class->class = (LOADERFILECLASS_TEXT | LOADERFILECLASS_DATA);
+		class->type = (LOADERFILECLASS_TEXT | LOADERFILECLASS_DATA);
 		return (1);
 	}
 	else
@@ -85,13 +85,15 @@ static int binaryDetect(const char *fileName, void *dataPtr, unsigned size,
 
 	if (!textDetect(fileName, dataPtr, size, class))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_BIN,
+		// We will call this a binary file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_BIN,
 			FILECLASS_NAME_DATA);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_DATA);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_DATA);
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -115,13 +117,15 @@ static int gifDetect(const char *fileName, void *dataPtr, unsigned size,
 	if (binaryDetect(fileName, dataPtr, size, class) &&
 		!strncmp(dataPtr, GIF_MAGIC, min(size, 3)))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_GIF,
+		// We will call this a GIF image
+		sprintf(class->name, "%s %s", FILECLASS_NAME_GIF,
 			FILECLASS_NAME_IMAGE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -140,19 +144,221 @@ static int pngDetect(const char *fileName, void *dataPtr, unsigned size,
 		return (0);
 
 	// Make sure there's enough data here for our detection
-	if (size < sizeof(PNG_MAGIC1))
+	if (size < (sizeof(PNG_MAGIC1) + sizeof(PNG_MAGIC2)))
 		return (0);
 
 	if (binaryDetect(fileName, dataPtr, size, class) &&
 		(sig[0] == PNG_MAGIC1) && (sig[1] == PNG_MAGIC2))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_PNG,
+		// We will call this a PNG image
+		sprintf(class->name, "%s %s", FILECLASS_NAME_PNG,
 			FILECLASS_NAME_IMAGE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
 		return (1);
 	}
 	else
 	{
+		// No
+		return (0);
+	}
+}
+
+
+static int mp3Detect(const char *fileName, void *dataPtr, unsigned size,
+	loaderFileClass *class)
+{
+	// Must be binary, and have the signature 'ID3'
+
+	#define MP3_MAGIC "ID3"
+
+	// Check params
+	if (!fileName || !dataPtr || !class)
+		return (0);
+
+	// Make sure there's enough data here for our detection
+	if (size < 3)
+		return (0);
+
+	if (binaryDetect(fileName, dataPtr, size, class) &&
+		!strncmp(dataPtr, MP3_MAGIC, 3))
+	{
+		// We will call this an MP3 audio file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_MP3,
+			FILECLASS_NAME_AUDIO);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_AUDIO);
+		return (1);
+	}
+	else
+	{
+		// No
+		return (0);
+	}
+}
+
+
+static int wavDetect(const char *fileName, void *dataPtr, unsigned size,
+	loaderFileClass *class)
+{
+	// Must be binary, and have the signatures 'RIFF' and 'WAVE'
+
+	#define WAV_MAGIC1 "RIFF" // followed by 4 bytes
+	#define WAV_MAGIC2 "WAVE"
+
+	// Check params
+	if (!fileName || !dataPtr || !class)
+		return (0);
+
+	// Make sure there's enough data here for our detection
+	if (size < 16)
+		return (0);
+
+	if (binaryDetect(fileName, dataPtr, size, class) &&
+		!strncmp(dataPtr, WAV_MAGIC1, 4) &&
+		!strncmp((dataPtr + 8), WAV_MAGIC2, 4))
+	{
+		// We will call this a WAV audio file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_WAV,
+			FILECLASS_NAME_AUDIO);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_AUDIO);
+		return (1);
+	}
+	else
+	{
+		// No
+		return (0);
+	}
+}
+
+
+static int flvDetect(const char *fileName, void *dataPtr, unsigned size,
+	loaderFileClass *class)
+{
+	// Must be binary, and have the signature 'FLV'
+
+	#define FLV_MAGIC "FLV"
+
+	// Check params
+	if (!fileName || !dataPtr || !class)
+		return (0);
+
+	// Make sure there's enough data here for our detection
+	if (size < 3)
+		return (0);
+
+	if (binaryDetect(fileName, dataPtr, size, class) &&
+		!strncmp(dataPtr, FLV_MAGIC, 3))
+	{
+		// We will call this a FLV (Flash) video
+		sprintf(class->name, "%s %s", FILECLASS_NAME_FLV,
+			FILECLASS_NAME_VIDEO);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_VIDEO);
+		return (1);
+	}
+	else
+	{
+		// No
+		return (0);
+	}
+}
+
+
+static int aviDetect(const char *fileName, void *dataPtr, unsigned size,
+	loaderFileClass *class)
+{
+	// Must be binary, and have the signatures 'RIFF' and 'AVI LIST'
+
+	#define AVI_MAGIC1 "RIFF" // followed by 4 bytes
+	#define AVI_MAGIC2 "AVI LIST"
+
+	// Check params
+	if (!fileName || !dataPtr || !class)
+		return (0);
+
+	// Make sure there's enough data here for our detection
+	if (size < 16)
+		return (0);
+
+	if (binaryDetect(fileName, dataPtr, size, class) &&
+		!strncmp(dataPtr, AVI_MAGIC1, 4) &&
+		!strncmp((dataPtr + 8), AVI_MAGIC2, 8))
+	{
+		// We will call this a FLV (flash) video
+		sprintf(class->name, "%s %s", FILECLASS_NAME_AVI,
+			FILECLASS_NAME_VIDEO);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_VIDEO);
+		return (1);
+	}
+	else
+	{
+		// No
+		return (0);
+	}
+}
+
+
+static int mp4Detect(const char *fileName, void *dataPtr, unsigned size,
+	loaderFileClass *class)
+{
+	// Must be binary, and have one of several possible signatures at offset 4
+
+	#define MP4_MAGIC1 "ftypMSNV"	// MPEG-4 video file
+	#define MP4_MAGIC2 "ftypisom"	// ISO Base Media file (MPEG-4) v1
+	#define MP4_MAGIC3 "ftypmp42"	// MPEG-4 video|QuickTime file
+
+	// Check params
+	if (!fileName || !dataPtr || !class)
+		return (0);
+
+	// Make sure there's enough data here for our detection
+	if (size < 12)
+		return (0);
+
+	if (binaryDetect(fileName, dataPtr, size, class) &&
+		(!strncmp((dataPtr + 4), MP4_MAGIC1, 8) ||
+			!strncmp((dataPtr + 4), MP4_MAGIC2, 8) ||
+			!strncmp((dataPtr + 4), MP4_MAGIC3, 8)))
+	{
+		// We will call this an MP4 video
+		sprintf(class->name, "%s %s", FILECLASS_NAME_MP4,
+			FILECLASS_NAME_VIDEO);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_VIDEO);
+		return (1);
+	}
+	else
+	{
+		// No
+		return (0);
+	}
+}
+
+
+static int movDetect(const char *fileName, void *dataPtr, unsigned size,
+	loaderFileClass *class)
+{
+	// Must be binary, and have the signature 'ftypqt  ' at offset 4
+
+	#define MOV_MAGIC "ftypqt  "
+
+	// Check params
+	if (!fileName || !dataPtr || !class)
+		return (0);
+
+	// Make sure there's enough data here for our detection
+	if (size < 12)
+		return (0);
+
+	if (binaryDetect(fileName, dataPtr, size, class) &&
+		!strncmp((dataPtr + 4), MOV_MAGIC, 8))
+	{
+		// We will call this a QuickTime video
+		sprintf(class->name, "%s %s", FILECLASS_NAME_MOV,
+			FILECLASS_NAME_VIDEO);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_VIDEO);
+		return (1);
+	}
+	else
+	{
+		// No
 		return (0);
 	}
 }
@@ -177,15 +383,17 @@ static int bootDetect(const char *fileName, void *dataPtr, unsigned size,
 	if (binaryDetect(fileName, dataPtr, size, class) &&
 		(*sig == MSDOS_BOOT_SIGNATURE))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_BOOT,
+		// We will call this a boot sector
+		sprintf(class->name, "%s %s", FILECLASS_NAME_BOOT,
 			FILECLASS_NAME_EXEC);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_EXEC |
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_EXEC |
 			LOADERFILECLASS_BOOT);
-		class->subClass = LOADERFILESUBCLASS_STATIC;
+		class->subType = LOADERFILESUBCLASS_STATIC;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -207,13 +415,15 @@ static int keymapDetect(const char *fileName, void *dataPtr, unsigned size,
 	if (binaryDetect(fileName, dataPtr, size, class) &&
 		!strncmp(dataPtr, KEYMAP_MAGIC, min(size, sizeof(KEYMAP_MAGIC))))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_BIN,
+		// We will call this a keymap fie
+		sprintf(class->name, "%s %s", FILECLASS_NAME_BIN,
 			FILECLASS_NAME_KEYMAP);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_KEYMAP);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_KEYMAP);
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -236,14 +446,15 @@ static int pdfDetect(const char *fileName, void *dataPtr, unsigned size,
 
 	if (!strncmp(dataPtr, PDF_MAGIC, min(size, 5)))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_PDF,
-			FILECLASS_NAME_DOC);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_DOC);
-		class->subClass = LOADERFILESUBCLASS_PDF;
+		// We will call this a PDF document
+		sprintf(class->name, "%s %s", FILECLASS_NAME_PDF, FILECLASS_NAME_DOC);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_DOC);
+		class->subType = LOADERFILESUBCLASS_PDF;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -268,14 +479,16 @@ static int zipDetect(const char *fileName, void *dataPtr, unsigned size,
 
 	if (binaryDetect(fileName, dataPtr, size, class) && (*sig == ZIP_MAGIC))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_ZIP,
+		// We will call this a ZIP archive
+		sprintf(class->name, "%s %s", FILECLASS_NAME_ZIP,
 			FILECLASS_NAME_ARCHIVE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_ARCHIVE);
-		class->subClass = LOADERFILESUBCLASS_ZIP;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_ARCHIVE);
+		class->subType = LOADERFILESUBCLASS_ZIP;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -298,14 +511,16 @@ static int gzipDetect(const char *fileName, void *dataPtr, unsigned size,
 
 	if (*sig == GZIP_MAGIC)
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_GZIP,
+		// We will call this a GZIP archive
+		sprintf(class->name, "%s %s", FILECLASS_NAME_GZIP,
 			FILECLASS_NAME_ARCHIVE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_ARCHIVE);
-		class->subClass = LOADERFILESUBCLASS_GZIP;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_ARCHIVE);
+		class->subType = LOADERFILESUBCLASS_GZIP;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -329,17 +544,19 @@ static int arDetect(const char *fileName, void *dataPtr, unsigned size,
 	if (binaryDetect(fileName, dataPtr, size, class) &&
 		!strncmp(dataPtr, AR_MAGIC, min(size, 8)))
 	{
-		// .a (ar) format is really just an archive file, but the typical usage
-		// is as a container for static libraries, so we'll treat it that way.
-		sprintf(class->className, "%s %s %s %s %s", FILECLASS_NAME_AR,
+		// We will call this an AR archive.  .a (ar) format is really just an
+		// archive file, but the typical usage is as a container for static
+		// libraries, so we'll treat it that way.
+		sprintf(class->name, "%s %s %s %s %s", FILECLASS_NAME_AR,
 			FILECLASS_NAME_BIN, FILECLASS_NAME_STATIC, FILECLASS_NAME_LIB,
 			FILECLASS_NAME_ARCHIVE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_LIB);
-		class->subClass = LOADERFILESUBCLASS_STATIC;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_LIB);
+		class->subType = LOADERFILESUBCLASS_STATIC;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -363,14 +580,16 @@ static int tarDetect(const char *fileName, void *dataPtr, unsigned size,
 	if (!memcmp(header->magic, TAR_MAGIC, sizeof(TAR_MAGIC)) ||
 		!memcmp(header->magic, TAR_OLDMAGIC, sizeof(TAR_OLDMAGIC)))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_TAR,
+		// We will call this a TAR archive
+		sprintf(class->name, "%s %s", FILECLASS_NAME_TAR,
 			FILECLASS_NAME_ARCHIVE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_ARCHIVE);
-		class->subClass = LOADERFILESUBCLASS_TAR;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_ARCHIVE);
+		class->subType = LOADERFILESUBCLASS_TAR;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -396,14 +615,16 @@ static int pcfDetect(const char *fileName, void *dataPtr, unsigned size,
 	// 'pcf1' at the beginning
 	if (*((unsigned *) dataPtr) == PCF_MAGIC)
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_PCF,
+		// We will call this a PCF font file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_PCF,
 			FILECLASS_NAME_FONT);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_FONT);
-		class->subClass = LOADERFILESUBCLASS_PCF;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_FONT);
+		class->subType = LOADERFILESUBCLASS_PCF;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -428,14 +649,16 @@ static int messageDetect(const char *fileName, void *dataPtr, unsigned size,
 	// See whether this file claims to be an MO file.
 	if (*((unsigned *) dataPtr) == MO_MAGIC)
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_MESSAGE,
+		// We will call this a message object file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_MESSAGE,
 			FILECLASS_NAME_OBJ);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_OBJ);
-		class->subClass = LOADERFILESUBCLASS_MESSAGE;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_OBJ);
+		class->subType = LOADERFILESUBCLASS_MESSAGE;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -475,7 +698,9 @@ static int configDetect(const char *fileName, void *data, unsigned size,
 			// Go to the end of the line
 			while ((count < size) && (dataPtr[count] != '\n') &&
 				(dataPtr[count] != '\0'))
-			count ++;
+			{
+				count ++;
+			}
 
 			configLines += 1;
 			continue;
@@ -502,14 +727,16 @@ static int configDetect(const char *fileName, void *data, unsigned size,
 
 	if (((configLines * 100) / totalLines) >= 95)
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_CONFIG,
+		// We will call this a configuration file
+		sprintf(class->name, "%s %s", FILECLASS_NAME_CONFIG,
 			FILECLASS_NAME_DATA);
-		class->class = (LOADERFILECLASS_TEXT | LOADERFILECLASS_DATA);
-		class->subClass = LOADERFILESUBCLASS_CONFIG;
+		class->type = (LOADERFILECLASS_TEXT | LOADERFILECLASS_DATA);
+		class->subType = LOADERFILESUBCLASS_CONFIG;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -534,14 +761,16 @@ static int htmlDetect(const char *fileName, void *dataPtr, unsigned size,
 	if (!strncasecmp(dataPtr, HTML_MAGIC1, min(size, 6)) ||
 		!strncasecmp(dataPtr, HTML_MAGIC2, min(size, 14)))
 	{
-		sprintf(class->className, "%s %s", FILECLASS_NAME_HTML,
+		// We will call this an HTML document
+		sprintf(class->name, "%s %s", FILECLASS_NAME_HTML,
 			FILECLASS_NAME_DOC);
-		class->class = (LOADERFILECLASS_TEXT | LOADERFILECLASS_DOC);
-		class->subClass = LOADERFILESUBCLASS_HTML;
+		class->type = (LOADERFILECLASS_TEXT | LOADERFILECLASS_DOC);
+		class->subType = LOADERFILESUBCLASS_HTML;
 		return (1);
 	}
 	else
 	{
+		// No
 		return (0);
 	}
 }
@@ -558,6 +787,48 @@ kernelFileClass gifFileClass = {
 kernelFileClass pngFileClass = {
 	FILECLASS_NAME_PNG,
 	&pngDetect,
+	{ }
+};
+
+// MP3 audio.
+kernelFileClass mp3FileClass = {
+	FILECLASS_NAME_MP3,
+	&mp3Detect,
+	{ }
+};
+
+// WAV audio.
+kernelFileClass wavFileClass = {
+	FILECLASS_NAME_WAV,
+	&wavDetect,
+	{ }
+};
+
+// FLV (Flash) videos.
+kernelFileClass flvFileClass = {
+	FILECLASS_NAME_FLV,
+	&flvDetect,
+	{ }
+};
+
+// AVI videos.
+kernelFileClass aviFileClass = {
+	FILECLASS_NAME_AVI,
+	&aviDetect,
+	{ }
+};
+
+// MP4 videos.
+kernelFileClass mp4FileClass = {
+	FILECLASS_NAME_MP4,
+	&mp4Detect,
+	{ }
+};
+
+// QuickTime videos.
+kernelFileClass movFileClass = {
+	FILECLASS_NAME_MOV,
+	&movDetect,
 	{ }
 };
 
@@ -674,6 +945,54 @@ kernelFileClass *kernelFileClassPng(void)
 	// The loader will call this function so that we can return a structure
 	// for managing PNG images
 	return (&pngFileClass);
+}
+
+
+kernelFileClass *kernelFileClassMp3(void)
+{
+	// The loader will call this function so that we can return a structure
+	// for managing MP3 audio files
+	return (&mp3FileClass);
+}
+
+
+kernelFileClass *kernelFileClassWav(void)
+{
+	// The loader will call this function so that we can return a structure
+	// for managing WAV audio files
+	return (&wavFileClass);
+}
+
+
+kernelFileClass *kernelFileClassFlv(void)
+{
+	// The loader will call this function so that we can return a structure
+	// for managing FLV (Flash) videos
+	return (&flvFileClass);
+}
+
+
+kernelFileClass *kernelFileClassAvi(void)
+{
+	// The loader will call this function so that we can return a structure
+	// for managing AVI videos
+	return (&aviFileClass);
+}
+
+
+kernelFileClass *kernelFileClassMp4(void)
+{
+	// The loader will call this function so that we can return a structure
+	// for managing MP4 videos
+	return (&mp4FileClass);
+}
+
+
+kernelFileClass *kernelFileClassMov(void)
+{
+	// The loader will call this function so that we can return a structure
+	// for managing MOV (QuickTime) videos
+	return (&movFileClass);
 }
 
 

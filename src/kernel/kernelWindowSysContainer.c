@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -101,18 +101,30 @@ static int layout(kernelWindowComponent *containerComponent)
 	if (window->titleBar)
 	{
 		// Resize the title bar
-		if (window->titleBar->resize)
-			window->titleBar->resize(window->titleBar, clientAreaWidth,
-				window->titleBar->height);
+		if (window->titleBar->width != clientAreaWidth)
+		{
+			if (window->titleBar->resize)
+			{
+				window->titleBar->resize(window->titleBar, clientAreaWidth,
+					window->titleBar->height);
+			}
 
-		window->titleBar->width = clientAreaWidth;
+			window->titleBar->width = clientAreaWidth;
+		}
 
 		// Move the title bar
-		if (window->titleBar->move)
-			window->titleBar->move(window->titleBar, clientAreaX, clientAreaY);
+		if ((window->titleBar->xCoord != clientAreaX) ||
+			(window->titleBar->yCoord != clientAreaY))
+		{
+			if (window->titleBar->move)
+			{
+				window->titleBar->move(window->titleBar, clientAreaX,
+					clientAreaY);
+			}
 
-		window->titleBar->xCoord = clientAreaX;
-		window->titleBar->yCoord = clientAreaY;
+			window->titleBar->xCoord = clientAreaX;
+			window->titleBar->yCoord = clientAreaY;
+		}
 
 		clientAreaY += window->titleBar->height;
 		clientAreaHeight -= window->titleBar->height;
@@ -124,25 +136,41 @@ static int layout(kernelWindowComponent *containerComponent)
 		kernelDebug(debug_gui, "WindowSysContainer layout: do menu bar");
 
 		// Do menu bar layout
-		if (window->menuBar->layout)
-			window->menuBar->layout(window->menuBar);
+		if (!window->menuBar->doneLayout)
+		{
+			if (window->menuBar->layout)
+				window->menuBar->layout(window->menuBar);
+		}
 
 		kernelDebug(debug_gui, "WindowSysContainer layout: resize menu bar");
 
 		// Resize the menu bar
-		if (window->menuBar->resize)
-			window->menuBar->resize(window->menuBar, clientAreaWidth,
-				window->menuBar->height);
+		if (window->menuBar->width != clientAreaWidth)
+		{
+			if (window->menuBar->resize)
+			{
+				window->menuBar->resize(window->menuBar, clientAreaWidth,
+					window->menuBar->height);
+			}
 
-		window->menuBar->width = clientAreaWidth;
+			window->menuBar->width = clientAreaWidth;
+		}
 
 		kernelDebug(debug_gui, "WindowSysContainer layout: move menu bar");
-		// Move the menu bar
-		if (window->menuBar->move)
-			window->menuBar->move(window->menuBar, clientAreaX, clientAreaY);
 
-		window->menuBar->xCoord = clientAreaX;
-		window->menuBar->yCoord = clientAreaY;
+		// Move the menu bar
+		if ((window->menuBar->xCoord != clientAreaX) ||
+			(window->menuBar->yCoord != clientAreaY))
+		{
+			if (window->menuBar->move)
+			{
+				window->menuBar->move(window->menuBar, clientAreaX,
+					clientAreaY);
+			}
+
+			window->menuBar->xCoord = clientAreaX;
+			window->menuBar->yCoord = clientAreaY;
+		}
 
 		clientAreaY += window->menuBar->height;
 		clientAreaHeight -= window->menuBar->height;
@@ -150,18 +178,19 @@ static int layout(kernelWindowComponent *containerComponent)
 
 	if (window->mainContainer)
 	{
-		kernelDebug(debug_gui, "WindowSysContainer layout: move main container");
 		// Move the window's main container
-		if (window->mainContainer->move)
-			window->mainContainer->move(window->mainContainer, clientAreaX,
-				clientAreaY);
+		if ((window->mainContainer->xCoord != clientAreaX) ||
+			(window->mainContainer->yCoord != clientAreaY))
+		{
+			if (window->mainContainer->move)
+			{
+				window->mainContainer->move(window->mainContainer,
+					clientAreaX, clientAreaY);
+			}
 
-		window->mainContainer->xCoord = clientAreaX;
-		window->mainContainer->yCoord = clientAreaY;
-		// Don't call the resize function because we don't want to redo all the
-		// layout.
-		window->mainContainer->width = clientAreaWidth;
-		window->mainContainer->height = clientAreaHeight;
+			window->mainContainer->xCoord = clientAreaX;
+			window->mainContainer->yCoord = clientAreaY;
+		}
 	}
 
 	containerComponent->xCoord = 0;
@@ -178,13 +207,42 @@ static int layout(kernelWindowComponent *containerComponent)
 
 static int resize(kernelWindowComponent *component, int width, int height)
 {
-	// Just redo the layout, setting the new size first (normally it gets done
-	// after this call returns)
+	int status = 0;
+	kernelWindow *window = component->window;
 
-	component->width = width;
-	component->height = height;
+	// Redo the layout of the system container
+	status = layout(component);
+	if (status < 0)
+		return (status);
 
-	return (layout(component));
+	// Resize the main container
+	if (window->mainContainer)
+	{
+		width = (window->buffer.width - window->mainContainer->xCoord);
+		height = (window->buffer.height - window->mainContainer->yCoord);
+
+		// Adjust for any right/bottom borders
+		if (window->flags & WINFLAG_HASBORDER)
+		{
+			width -= windowVariables->border.thickness;
+			height -= windowVariables->border.thickness;
+		}
+
+		if ((window->mainContainer->width != width) ||
+			(window->mainContainer->height != height))
+		{
+			if (window->mainContainer->resize)
+			{
+				status = window->mainContainer->resize(window->mainContainer,
+					width, height);
+			}
+
+			window->mainContainer->width = width;
+			window->mainContainer->height = height;
+		}
+	}
+
+	return (status);
 }
 
 

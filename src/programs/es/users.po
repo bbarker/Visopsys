@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2014-01-22 04:44-0400\n"
 "Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,89 +17,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: users.c:60
+#: users.c:63
 msgid "User Manager"
 msgstr "Administrador de usuarios"
 
-#: users.c:61 users.c:683
+#: users.c:64 users.c:683
 msgid "Add User"
 msgstr "Neuer Benutzer"
 
-#: users.c:62
+#: users.c:65
 msgid "Delete User"
 msgstr "Benutzer löschen"
 
-#: users.c:63
+#: users.c:66
 msgid "Set Password"
 msgstr "Configuar contraseña"
 
-#: users.c:64
+#: users.c:67
 msgid "Set Language"
 msgstr ""
 
-#: users.c:92
+#: users.c:95
 msgid "Error"
 msgstr "Error"
 
-#: users.c:110
+#: users.c:113
 msgid "Error getting user names"
 msgstr "Error al leer nombres de usuarios"
 
-#: users.c:186
+#: users.c:189
 #, c-format
 msgid "User name: %s"
 msgstr "Nombre de usuario: %s"
 
-#: users.c:199
+#: users.c:202
 msgid "Old password:"
 msgstr "Contraseña anterior:"
 
-#: users.c:213
+#: users.c:216
 msgid "New password:"
 msgstr "Nueva contraseña:"
 
-#: users.c:230
+#: users.c:233
 msgid "Confirm password:"
 msgstr "Passwortbestätigung:"
 
-#: users.c:244 users.c:415
+#: users.c:247 users.c:418
 msgid "Passwords do not match"
 msgstr "Contraseñas desiguales"
 
-#: users.c:248
+#: users.c:251
 msgid "Password should be longer"
 msgstr ""
 
-#: users.c:260
+#: users.c:263
 msgid "OK"
 msgstr "OK"
 
-#: users.c:265
+#: users.c:268
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: users.c:409 users.c:514
+#: users.c:412 users.c:515
 msgid "Permission denied"
 msgstr "Permiso denegado"
 
-#: users.c:411
+#: users.c:414
 msgid "Error setting password"
 msgstr "Error al configurar la contraseña"
 
-#: users.c:464
+#: users.c:465
 #, c-format
 msgid "User \"%s\" already exists."
 msgstr "El usuario \"%s\" ya existe."
 
-#: users.c:472
+#: users.c:473
 msgid "Error adding user"
 msgstr "Error al agregar usuario"
 
-#: users.c:482
+#: users.c:483
 msgid "Warning: couldn't create user directory"
 msgstr ""
 
-#: users.c:516
+#: users.c:517
 msgid "Error deleting user"
 msgstr "Error al eliminar usuario"
 

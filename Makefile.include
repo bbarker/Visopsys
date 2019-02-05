@@ -1,6 +1,6 @@
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  Makefile.include
 ##
@@ -18,7 +18,7 @@ CODEGEN = -pipe -fno-common -fno-strict-aliasing -fno-builtin \
 	-fno-omit-frame-pointer -fno-asynchronous-unwind-tables \
 	-fno-stack-protector
 CCODEGEN = ${CODEGEN} -ffreestanding
-C++CODEGEN = ${CODEGEN} -fno-rtti -fno-exceptions
+C++CODEGEN = ${CODEGEN} -ffreestanding -fno-rtti -fno-exceptions
 WARN = -Wall -W -Wshadow -Wcast-align -Wsign-compare -Waggregate-return \
 	-Wmissing-format-attribute -Wredundant-decls -Werror
 CWARN = ${WARN} -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations

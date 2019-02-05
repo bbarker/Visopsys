@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -52,11 +52,11 @@
 
 
 headTrackSector:
-	;; This routine takes the logical sector number in EAX.  From this it
-	;; calculates the head, track and sector number on disk.
+	;; Takes the logical sector number in EAX.  From this it calculates the
+	;; head, track and sector number on disk.
 
 	;; We destroy a bunch of registers, so save them
-	pusha
+	pushad
 
 	;; First the sector
 	xor EDX, EDX
@@ -74,7 +74,7 @@ headTrackSector:
 	mov byte [HEAD], DL				; The remainder
 	mov word [CYLINDER], AX
 
-	popa
+	popad
 	ret
 
 
@@ -171,7 +171,7 @@ read:
 
 
 loadFAT:
-	;; This routine will load the entire FAT table into memory at
+	;; This routine will load up to a segment of the FAT table into memory at
 	;; location [FATSEGMENT:0000]
 
 	;; Save 1 word for our return code
@@ -182,13 +182,6 @@ loadFAT:
 	;; Save the stack pointer
 	mov BP, SP
 
-	;; Don't want to read more than 128 FAT sectors (one segment's worth)
-	mov EBX, dword [FATSECS]
-	cmp EBX, 64
-	jb .noShrink
-	mov EBX, 64
-	.noShrink:
-
 	xor EAX, EAX
 	mov AX, word [RESSECS]			; FAT starts after reserved sectors
 
@@ -197,7 +190,7 @@ loadFAT:
 	add EAX, dword [PARTENTRY + 8]
 	.noOffset:
 
-	push dword EBX					; Number of FAT sectors
+	push dword [FATSECSLOADED]		; Number of FAT sectors
 	push word 0						; Offset (beginning of buffer)
 	push word [FATSEGMENT]			; Segment of data buffer
 	push dword EAX
@@ -222,14 +215,14 @@ loadFAT:
 
 
 loadDirectory:
-	;; This subroutine finds the root directory of the boot volume
-	;; and loads it into memory at location [FATSEGMENT:0000]
+	;; Finds the root directory of the boot volume and loads it into memory
+	;; at location [FATSEGMENT:0000]
 
 	;; Save 1 word for our return code
 	push word 0
 
 	;; Save regs
-	pusha
+	pushad
 
 	;; Save the stack pointer
 	mov BP, SP
@@ -273,10 +266,10 @@ loadDirectory:
 	call loaderDiskError
 
 	;; Put a -1 as our return code
-	mov word [SS:(BP + 16)], -1
+	mov word [SS:(BP + 32)], -1
 
 	.done:
-	popa
+	popad
 	;; Pop the return code
 	xor EAX, EAX
 	pop AX
@@ -284,14 +277,13 @@ loadDirectory:
 
 
 searchFile:
-	;; This routine will search the pre-loaded root directory of the
-	;; boot volume at LDRDATABUFFER and return the starting cluster of
-	;; the requested file.
+	;; Search the pre-loaded root directory of the boot volume at
+	;; LDRDATABUFFER and return the starting cluster of the requested file.
+	;;
 	;; Proto:
 	;;   int searchFile(char *filename);
 
-	;; Save a word for our return code (the starting cluster of the
-	;; file)
+	;; Save a dword for our return code (the starting cluster of the file)
 	push dword 0
 
 	;; Save regs
@@ -390,7 +382,7 @@ searchFile:
 
 
 makeProgress:
-	;; This routine sets up a little progress indicator.
+	;; Sets up a little progress indicator.
 
 	pusha
 
@@ -466,19 +458,19 @@ killProgress:
 
 
 clusterToLogical:
-	;; This takes the cluster number in EAX and returns the logical
-	;; sector number in EAX
+	;; This takes the cluster number in EAX and returns the logical sector
+	;; number in EAX
 
-	;; Save a word for our return code
-	sub SP, 4
+	;; Save a dword for our return code
+	push dword 0
 
 	;; Save regs
-	pusha
+	pushad
 
 	;; Save the stack pointer
 	mov BP, SP
 
-	sub EAX, 2						;  Subtract 2 (because they start at 2)
+	sub EAX, 2						; Subtract 2 (because they start at 2)
 	xor EBX, EBX
 	mov BX, word [SECPERCLUST]		; How many sectors per cluster?
 	mul EBX
@@ -505,17 +497,17 @@ clusterToLogical:
 	add EAX, dword [PARTENTRY + 8]
 	.noOffset:
 
-	mov dword [SS:(BP + 16)], EAX
+	mov dword [SS:(BP + 32)], EAX
 
-	popa
+	popad
 	pop EAX
 	ret
 
 
 loadFile:
-	;; This routine is responsible for loading the requested file into
-	;; the requested memory location.  The FAT table must have previously
-	;; been loaded at memory location LDRDATABUFFER
+	;; Loads the requested file into the requested memory location.  The FAT
+	;; table must have previously been loaded at memory location LDRDATABUFFER
+	;;
 	;; Proto:
 	;;   word loadFile(dword cluster, dword memory_address);
 
@@ -523,7 +515,7 @@ loadFile:
 	push word 0
 
 	;; Save regs
-	pusha
+	pushad
 
 	;; Save the stack pointer
 	mov BP, SP
@@ -542,11 +534,11 @@ loadFile:
 	call makeProgress
 
 	;; Put the starting cluster number in NEXTCLUSTER
-	mov EAX, dword [SS:(BP + 20)]
+	mov EAX, dword [SS:(BP + 36)]
 	mov dword [NEXTCLUSTER], EAX
 
 	;; Put the starting memory offset in MEMORYMARKER
-	mov EAX, dword [SS:(BP + 24)]
+	mov EAX, dword [SS:(BP + 40)]
 	mov dword [MEMORYMARKER], EAX
 
 	;; Save ES, because we're going to dick with it throughout.
@@ -577,7 +569,7 @@ loadFile:
 	call loaderDiskError
 
 	;; Return -1 as our error code
-	mov word [SS:(BP + 16)], -1
+	mov word [SS:(BP + 32)], -1
 	jmp .done
 
 	.gotCluster:
@@ -619,7 +611,7 @@ loadFile:
 	call loaderPrintNewline
 
 	;; Return -2 as our error code
-	mov word [SS:(BP + 16)], -2
+	mov word [SS:(BP + 32)], -2
 	jmp .done
 
 	.copiedData:
@@ -690,13 +682,13 @@ loadFile:
 
 	.success:
 	;; Return 0 for success
-	mov word [SS:(BP + 16)], 0
+	mov word [SS:(BP + 32)], 0
 	call killProgress
 
 	.done:
 	;; Restore ES
 	pop ES
-	popa
+	popad
 	;; Pop our return code
 	xor EAX, EAX
 	pop AX
@@ -704,9 +696,9 @@ loadFile:
 
 
 loaderCalcVolInfo:
-	;; This routine will calculate some constant things that are dependent
-	;;  upon the type of the current volume.  It stores the results in
-	;; the static data area for the use of the other routines
+	;; Calculate some constant things that are dependent upon the type of the
+	;; current volume.  It stores the results in the static data area for the
+	;; use of the other functions
 
 	pusha
 
@@ -740,9 +732,19 @@ loaderCalcVolInfo:
 	mov AX, (LDRDATABUFFER / 16)
 	mov word [FATSEGMENT], AX
 
-	;; Calculate a buffer where we will load cluster data.  It comes
-	;; after the FAT data in the LDRDATABUFFER
+	;; Calculate the number of FAT sectors we will load.  Don't want to read
+	;; more than 128 FAT sectors (one segment's worth) but these disk
+	;; operations are usually limited to 127 in any case.
 	mov EAX, dword [FATSECS]
+	cmp EAX, 127
+	jbe .noShrink
+	mov EAX, 127
+	.noShrink:
+	mov dword [FATSECSLOADED], EAX
+
+	;; Calculate a buffer where we will load cluster data.  It comes after the
+	;; FAT data in the LDRDATABUFFER.
+	mov EAX, dword [FATSECSLOADED]
 	mul word [BYTESPERSECT]
 	add EAX, LDRDATABUFFER
 	mov dword [CLUSTERBUFFER], EAX
@@ -760,9 +762,9 @@ loaderCalcVolInfo:
 
 
 loaderFindFile:
-	;; This routine is will simply search for the requested file, and
-	;; return the starting cluster number if it is present.  Returns
-	;; negative otherwise.
+	;; This function will simply search for the requested file, and return the
+	;; starting cluster number if it is present.  Returns negative otherwise.
+	;;
 	;; Proto:
 	;;   int loaderFindFile(char *filename);
 
@@ -816,9 +818,9 @@ loaderFindFile:
 
 
 loaderLoadFile:
-	;; This routine is responsible for loading the requested file into
-	;; the requested memory location.  It is specific to the FAT-12
-	;; filesystem.
+	;; This function is responsible for loading the requested file into the
+	;; requested memory location.
+	;;
 	;; Proto:
 	;;   dword loaderLoadFile(char *filename, dword loadOffset,
 	;;			  word showProgress)
@@ -924,6 +926,7 @@ loaderLoadFile:
 
 MEMORYMARKER	dd 0		;; Offset to load next data cluster
 FATSEGMENT		dw 0		;; The segment for FAT and directory data
+FATSECSLOADED	dd 0		;; The number of FAT sectors we loaded
 CLUSTERBUFFER	dd 0		;; The buffer for cluster data
 CLUSTERSEGMENT	dw 0		;; The segment of the buffer for cluster data
 FILEDATABUFFER	dd 0		;; The buffer for general file data

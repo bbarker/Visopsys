@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -36,7 +36,8 @@ FILE *fopen(const char *fileName, const char *mode)
 	// by fileName and associates a stream with it.
 	//
 	// The argument mode points to a string beginning with one of the
-	// following sequences (Additional characters may follow these sequences.):
+	// following sequences (Additional characters may follow these
+	// sequences.):
 	//
 	// r      Open text file for reading.  The stream is positioned at the
 	//        beginning of the file.
@@ -51,9 +52,9 @@ FILE *fopen(const char *fileName, const char *mode)
 	//        not exist, otherwise it is truncated.  The stream is positioned
 	//        at the beginning of the file.
 	//
-	// a      Open for appending (writing at end of file).  The file is created
-	//        if it does not exist.  The stream is positioned at the end
-	//        of the file.
+	// a      Open for appending (writing at end of file).  The file is
+	//        created if it does not exist.  The stream is positioned at the
+	//        end of the file.
 	//
 	// a+     Open for reading and appending (writing at end of file).  The
 	//        file is created if it does not exist.  The initial file position
@@ -61,8 +62,8 @@ FILE *fopen(const char *fileName, const char *mode)
 	//        always appended to the end of the file.
 	//
 	// N.B.:  The a+ argument will always be broken in Visopsys.  Reading from
-	//        the start of the file and writing to the end of the file are silly
-	//        IMO and have no equivalent in Visopsys.
+	//        the start of the file and writing to the end of the file are
+	//        silly IMO and have no equivalent in Visopsys.
 
 	int status = 0;
 	fileStream *theStream = NULL;

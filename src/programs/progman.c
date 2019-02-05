@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -62,7 +62,7 @@ usage.  It is a graphical utility combining the same functionalities as the
 #define DISKPERF_STRING			_("Disk performance:")
 #define READPERF_STRING			_("Read: ")
 #define WRITEPERF_STRING		_("Write: ")
-#define IORATE_STRING			_("K/tick")
+#define IORATE_STRING			_("K/sec")
 #define SHOW_MAX_PROCESSES		100
 #define PROCESS_STRING_LENGTH	64
 
@@ -197,14 +197,18 @@ static int getUpdate(void)
 	status = diskGetStats(NULL, &dskStats);
 	if (status >= 0)
 	{
-		if (!dskStats.readTime)
-			dskStats.readTime = 1;
+		// Convert ms times to seconds
+		dskStats.readTimeMs /= 1000;
+		dskStats.writeTimeMs /= 1000;
 
-		if (!dskStats.writeTime)
-			dskStats.writeTime = 1;
+		if (!dskStats.readTimeMs)
+			dskStats.readTimeMs = 1;
 
-		readPerf = (dskStats.readKbytes / dskStats.readTime);
-		writePerf = (dskStats.writeKbytes / dskStats.writeTime);
+		if (!dskStats.writeTimeMs)
+			dskStats.writeTimeMs = 1;
+
+		readPerf = (dskStats.readKbytes / dskStats.readTimeMs);
+		writePerf = (dskStats.writeKbytes / dskStats.writeTimeMs);
 
 		if (diskReadPerfLabel)
 		{
@@ -405,8 +409,8 @@ static int setPriority(int whichProcess)
 	if (newPriority < 0)
 		return (newPriority);
 
-	status =
-		multitaskerSetProcessPriority(changeProcess->processId, newPriority);
+	status = multitaskerSetProcessPriority(changeProcess->processId,
+		newPriority);
 
 	// Refresh our list of processes
 	getUpdate();
@@ -440,8 +444,8 @@ static int killProcess(int whichProcess)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -521,6 +525,7 @@ static void constructWindow(void)
 	// command line.
 
 	componentParameters params;
+	int containersGridY = 0;
 	objectKey container = NULL;
 	char tmp[80];
 
@@ -533,97 +538,109 @@ static void constructWindow(void)
 	params.gridWidth = 1;
 	params.gridHeight = 1;
 	params.padLeft = 5;
+	params.padRight = 5;
 	params.padTop = 5;
 	params.orientationX = orient_left;
 	params.orientationY = orient_top;
+	params.flags = WINDOW_COMPFLAG_FIXEDHEIGHT;
 	params.font = fontGet(FONT_FAMILY_ARIAL, FONT_STYLEFLAG_BOLD, 10, NULL);
 
-	memoryBlocksLabel = windowNewTextLabel(window, USEDBLOCKS_STRING, &params);
+	// A container for the memory and disk statistics
+	container = windowNewContainer(window, "stats", &params);
+
+	params.padLeft = params.padRight = params.padTop = 0;
+	params.flags &= ~WINDOW_COMPFLAG_FIXEDHEIGHT;
+	sprintf(tmp, "%sXXX", USEDBLOCKS_STRING);
+	memoryBlocksLabel = windowNewTextLabel(container, tmp, &params);
 
 	params.gridY += 1;
-	memoryUsedLabel = windowNewTextLabel(window, USEDMEM_STRING, &params);
+	params.padTop = 5;
+	sprintf(tmp, "%sXXXXXXX Kb - XX%%", USEDMEM_STRING);
+	memoryUsedLabel = windowNewTextLabel(container, tmp, &params);
 
 	params.gridY += 1;
-	params.padBottom = 10;
-	memoryFreeLabel = windowNewTextLabel(window, FREEMEM_STRING, &params);
+	sprintf(tmp, "%sXXXXXXX Kb - XX%%", FREEMEM_STRING);
+	memoryFreeLabel = windowNewTextLabel(container, FREEMEM_STRING, &params);
 
 	params.gridX += 1;
 	params.gridY = 0;
-	params.padBottom = 0;
-	diskPerfLabel = windowNewTextLabel(window, DISKPERF_STRING, &params);
+	params.padLeft = 20;
+	params.padTop = 0;
+	diskPerfLabel = windowNewTextLabel(container, DISKPERF_STRING, &params);
 
 	params.gridY += 1;
-	sprintf(tmp, "%s0%s", READPERF_STRING, IORATE_STRING);
-	diskReadPerfLabel = windowNewTextLabel(window, tmp, &params);
+	params.padTop = 5;
+	sprintf(tmp, "%sXXXX%s", READPERF_STRING, IORATE_STRING);
+	diskReadPerfLabel = windowNewTextLabel(container, tmp, &params);
 
 	params.gridY += 1;
-	params.padBottom = 10;
-	sprintf(tmp, "%s0%s", WRITEPERF_STRING, IORATE_STRING);
-	diskWritePerfLabel = windowNewTextLabel(window, tmp, &params);
-
-	params.gridX = 0;
-	params.gridY += 2;
-	params.gridWidth = 2;
-	params.padBottom = 0;
-	params.font = fontGet(FONT_FAMILY_LIBMONO, FONT_STYLEFLAG_FIXED, 8, NULL);
+	sprintf(tmp, "%sXXXX%s", WRITEPERF_STRING, IORATE_STRING);
+	diskWritePerfLabel = windowNewTextLabel(container, tmp, &params);
 
 	// Create the label of column headers for the list below
+	params.gridX = 0;
+	params.gridY = ++containersGridY;
+	params.padLeft = params.padTop = params.padRight = 5;
+	params.font = fontGet(FONT_FAMILY_LIBMONO, FONT_STYLEFLAG_FIXED, 8, NULL);
 	windowNewTextLabel(window, _("Process                   "
 		"PID PPID UID Pri Priv CPU% STATE   "), &params);
 
+	// A container for the process list
+	params.gridY = ++containersGridY;
+	params.padRight = 0;
+	params.padBottom = 5;
+	container = windowNewContainer(window, "processes", &params);
+
 	// Create the list of processes
-	params.gridY += 1;
-	processList = windowNewList(window, windowlist_textonly, 20, 1, 0,
+	params.gridY = 0;
+	params.padLeft = params.padTop = params.padBottom = 0;
+	processList = windowNewList(container, windowlist_textonly, 20, 1, 0,
 		processListParams, numProcesses, &params);
 	windowComponentFocus(processList);
 
 	// Create a 'show sub-processes' checkbox
 	params.gridY += 1;
-	params.padBottom = 5;
+	params.padTop = 5;
 	params.font = NULL;
-	showThreadsCheckbox =
-		windowNewCheckbox(window, _("Show all sub-processes"), &params);
+	showThreadsCheckbox = windowNewCheckbox(container,
+		_("Show all sub-processes"), &params);
 	windowComponentSetSelected(showThreadsCheckbox, 1);
 	windowRegisterEventHandler(showThreadsCheckbox, &eventHandler);
 
 	// Make a container for the right hand side components
-	params.gridX += 2;
-	params.gridY -= 1;
-	params.gridWidth = 1;
-	params.padRight = 5;
-	params.flags |= WINDOW_COMPFLAG_FIXEDHEIGHT;
-	container = windowNewContainer(window, "rightContainer", &params);
+	params.gridX += 1;
+	params.gridY = containersGridY;
+	params.padLeft = params.padRight = params.padBottom = 5;
+	params.flags |= (WINDOW_COMPFLAG_FIXEDWIDTH |
+		WINDOW_COMPFLAG_FIXEDHEIGHT);
+	container = windowNewContainer(window, "buttons", &params);
 
 	// Create a 'run program' button
 	params.gridX = 0;
 	params.gridY = 0;
-	params.padLeft = 0;
-	params.padRight = 0;
-	params.padTop = 0;
-	params.padBottom = 0;
-	runProgramButton =
-		windowNewButton(container, _("Run program"), NULL, &params);
+	params.padLeft = params.padRight = params.padTop = params.padBottom = 0;
+	params.flags &= ~WINDOW_COMPFLAG_FIXEDWIDTH;
+	runProgramButton = windowNewButton(container, _("Run program"), NULL,
+		&params);
 	windowRegisterEventHandler(runProgramButton, &eventHandler);
 
 	// Create a 'set priority' button
 	params.gridY += 1;
 	params.padTop = 5;
-	setPriorityButton =
-		windowNewButton(container, _("Set priority"), NULL, &params);
+	setPriorityButton = windowNewButton(container, _("Set priority"), NULL,
+		&params);
 	windowRegisterEventHandler(setPriorityButton, &eventHandler);
 
 	// Create a 'kill process' button
 	params.gridY += 1;
-	killProcessButton =
-		windowNewButton(container, _("Kill process"), NULL, &params);
+	killProcessButton = windowNewButton(container, _("Kill process"), NULL,
+		&params);
 	windowRegisterEventHandler(killProcessButton, &eventHandler);
 
 	// Register an event handler to catch window close events
 	windowRegisterEventHandler(window, &eventHandler);
 
 	windowSetVisible(window, 1);
-
-	return;
 }
 
 
@@ -638,8 +655,8 @@ int main(int argc, char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			(argc? argv[0] : ""));
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (status = ERR_NOTINITIALIZED);
 	}
 

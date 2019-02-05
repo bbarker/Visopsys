@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,8 +22,11 @@
 // This is common library code for the DEFLATE algorithm.
 
 #include "libcompress.h"
+#include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/deflate.h>
+#include <sys/api.h>
 
 #ifdef DEBUG
 	#define DEBUG_OUTMAX	160
@@ -153,6 +156,296 @@ static void makeHuffmanCodes(unsigned char *codeLens, huffmanTable *table)
 //
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
+
+int deflateCompressFileData(deflateState *deflate, FILE *inStream,
+	FILE *outStream, progress *prog)
+{
+	int status = 0;
+	unsigned totalBytes = inStream->f.size;
+	unsigned maxInBytes = 0;
+	unsigned maxOutBytes = 0;
+	unsigned doneBytes = 0;
+
+	maxInBytes = min(totalBytes, COMPRESS_MAX_BUFFERSIZE);
+	maxInBytes = max(maxInBytes, 1); // Makes dealing with empty files easier
+
+	// Worst case scenario, DEFLATE expands to 5 extra bytes per 32K block,
+	// but give it a bit of extra working space in any case.
+	maxOutBytes = (maxInBytes +
+		max((((maxInBytes + (DEFLATE_MAX_INBUFFERSIZE - 1)) /
+			DEFLATE_MAX_INBUFFERSIZE) * 5),
+		(maxInBytes / 10)));
+	maxOutBytes = max(maxOutBytes, 5);
+
+	memset(deflate, 0, sizeof(deflateState));
+	deflate->inBuffer = calloc(maxInBytes, 1);
+	deflate->outBuffer = calloc(maxOutBytes, 1);
+
+	if (!deflate->inBuffer || !deflate->outBuffer)
+	{
+		fprintf(stderr, "Memory error\n");
+		return (status = ERR_MEMORY);
+	}
+
+	if (prog)
+	{
+		memset((void *) prog, 0, sizeof(progress));
+		prog->numTotal = totalBytes;
+	}
+
+	do
+	{
+		maxInBytes = min((totalBytes - doneBytes), maxInBytes);
+
+		if (doneBytes < totalBytes)
+		{
+			DEBUGMSG("Reading %u bytes\n", maxInBytes);
+			if (prog && (lockGet(&prog->progLock) >= 0))
+			{
+				sprintf((char *) prog->statusMessage, "Reading %u bytes",
+					maxInBytes);
+				lockRelease(&prog->progLock);
+			}
+
+			if (fread((void *)(deflate->inBuffer + deflate->inByte), 1,
+				maxInBytes, inStream) < maxInBytes)
+			{
+				fprintf(stderr, "Error reading %s\n", inStream->f.name);
+				status = ERR_IO;
+				break;
+			}
+		}
+
+		deflate->inBytes = maxInBytes;
+		deflate->outBytes = maxOutBytes;
+		deflate->outByte = 0;
+
+		DEBUGMSG("Compressing %u bytes\n", deflate->inBytes);
+		if (prog && (lockGet(&prog->progLock) >= 0))
+		{
+			sprintf((char *) prog->statusMessage, "Compressing %u bytes",
+				deflate->inBytes);
+			lockRelease(&prog->progLock);
+		}
+
+		status = deflateCompress(deflate);
+		if (status < 0)
+		{
+			fprintf(stderr, "Error compressing %s\n", inStream->f.name);
+			break;
+		}
+
+		DEBUGMSG("Writing %u bytes\n", deflate->outByte);
+		if (prog && (lockGet(&prog->progLock) >= 0))
+		{
+			sprintf((char *) prog->statusMessage, "Writing %u bytes",
+				deflate->outByte);
+			lockRelease(&prog->progLock);
+		}
+
+		if (fwrite((void *) deflate->outBuffer, 1, deflate->outByte,
+			outStream) < deflate->outByte)
+		{
+			fprintf(stderr, "Error writing %s\n", outStream->f.name);
+			status = ERR_IO;
+			break;
+		}
+
+		doneBytes += maxInBytes;
+
+		if (prog && (lockGet(&prog->progLock) >= 0))
+		{
+			prog->numFinished = doneBytes;
+			if (totalBytes)
+				prog->percentFinished = ((doneBytes * 100) / totalBytes);
+			else
+				prog->percentFinished = 100;
+			lockRelease(&prog->progLock);
+		}
+
+		if (!deflate->final)
+		{
+			// This is not mandatory for the DEFLATE compression code, but for
+			// maximum compression, we should keep the last
+			// DEFLATE_MAX_DISTANCE (32K) bytes at the top of the input buffer
+			// for more matches.
+			memmove((void *) deflate->inBuffer,
+				(deflate->inBuffer + (deflate->inByte - DEFLATE_MAX_DISTANCE)),
+				DEFLATE_MAX_DISTANCE);
+			deflate->inByte = DEFLATE_MAX_DISTANCE;
+			maxInBytes -= DEFLATE_MAX_DISTANCE;
+
+			// If the previous round produced an incomplete output byte,
+			// preserve it for the next round in byte 0, and clear the rest.
+			// Otherwise, just clear.
+			if (deflate->bitOut.bit)
+			{
+				deflate->outBuffer[0] = deflate->outBuffer[deflate->outByte];
+				memset((deflate->outBuffer + 1), 0, deflate->outByte);
+			}
+			else
+			{
+				memset(deflate->outBuffer, 0, deflate->outByte);
+			}
+		}
+
+	} while (!deflate->final);
+
+	if (deflate->outBuffer)
+		free(deflate->outBuffer);
+
+	if (deflate->inBuffer)
+		free((void *) deflate->inBuffer);
+
+	return (status);
+}
+
+
+int deflateDecompressFileData(deflateState *deflate, FILE *inStream,
+	FILE *outStream, progress *prog)
+{
+	int status = 0;
+	unsigned totalBytes = inStream->f.size;
+	unsigned maxInBytes = 0;
+	unsigned maxOutBytes = 0;
+	unsigned doneBytes = 0;
+	unsigned skipOutBytes = 0;
+
+	maxInBytes = min(totalBytes, COMPRESS_MAX_BUFFERSIZE);
+	maxOutBytes = COMPRESS_MAX_BUFFERSIZE;
+
+	memset(deflate, 0, sizeof(deflateState));
+	deflate->inBuffer = calloc(maxInBytes, 1);
+	deflate->outBuffer = calloc(maxOutBytes, 1);
+
+	if (!deflate->inBuffer || !deflate->outBuffer)
+	{
+		fprintf(stderr, "Memory error\n");
+		return (status = ERR_MEMORY);
+	}
+
+	if (prog)
+	{
+		memset((void *) prog, 0, sizeof(progress));
+		prog->numTotal = totalBytes;
+	}
+
+	while (doneBytes < totalBytes)
+	{
+		maxInBytes = (min((totalBytes - doneBytes), COMPRESS_MAX_BUFFERSIZE) -
+			deflate->inBytes);
+
+		DEBUGMSG("Reading %u bytes\n", maxInBytes);
+		if (prog && (lockGet(&prog->progLock) >= 0))
+		{
+			sprintf((char *) prog->statusMessage, "Reading %u bytes",
+				maxInBytes);
+			lockRelease(&prog->progLock);
+		}
+
+		maxInBytes = (fread((void *)(deflate->inBuffer + deflate->inBytes), 1,
+			maxInBytes, inStream) + deflate->inBytes);
+
+		if (!maxInBytes)
+		{
+			fprintf(stderr, "Error reading %s\n", inStream->f.name);
+			status = ERR_IO;
+			break;
+		}
+
+		deflate->inBytes = maxInBytes;
+		deflate->inByte = 0;
+		deflate->outBytes = maxOutBytes;
+		deflate->outByte = skipOutBytes;
+
+		DEBUGMSG("Decompressing %u bytes\n", deflate->inBytes);
+		if (prog && (lockGet(&prog->progLock) >= 0))
+		{
+			sprintf((char *) prog->statusMessage, "Decompressing %u bytes",
+				deflate->inBytes);
+			lockRelease(&prog->progLock);
+		}
+
+		status = deflateDecompress(deflate);
+		if (status < 0)
+		{
+			fprintf(stderr, "Error decompressing %s\n", inStream->f.name);
+			break;
+		}
+
+		if (outStream)
+		{
+			DEBUGMSG("Writing %u bytes\n", (deflate->outByte - skipOutBytes));
+			if (prog && (lockGet(&prog->progLock) >= 0))
+			{
+				sprintf((char *) prog->statusMessage, "Writing %u bytes",
+					(deflate->outByte - skipOutBytes));
+				lockRelease(&prog->progLock);
+			}
+
+			if (fwrite((void *)(deflate->outBuffer + skipOutBytes), 1,
+				(deflate->outByte - skipOutBytes), outStream) <
+				(deflate->outByte - skipOutBytes))
+			{
+				fprintf(stderr, "Error writing %s\n", outStream->f.name);
+				status = ERR_IO;
+				break;
+			}
+		}
+
+		doneBytes += (maxInBytes - deflate->inBytes);
+
+		if (prog && (lockGet(&prog->progLock) >= 0))
+		{
+			prog->numFinished = doneBytes;
+			prog->percentFinished = ((doneBytes * 100) / totalBytes);
+			lockRelease(&prog->progLock);
+		}
+
+		if (deflate->final)
+			break;
+
+		// If there are unprocessed bytes remaining in the input buffer, we
+		// need to copy them to the top before we start the next loop.
+		if (deflate->inBytes)
+		{
+			memcpy((void *) deflate->inBuffer, (deflate->inBuffer +
+				deflate->inByte), deflate->inBytes);
+		}
+
+		// We must keep the last DEFLATE_MAX_DISTANCE (32K) bytes at the top
+		// of the output buffer.
+		memmove(deflate->outBuffer,
+			(deflate->outBuffer + (deflate->outByte - DEFLATE_MAX_DISTANCE)),
+			DEFLATE_MAX_DISTANCE);
+
+		if (!skipOutBytes)
+		{
+			skipOutBytes = DEFLATE_MAX_DISTANCE;
+			maxOutBytes -= skipOutBytes;
+		}
+
+		// Clear the rest of the output buffer
+		memset((deflate->outBuffer + skipOutBytes), 0,
+			(deflate->outByte - skipOutBytes));
+	}
+
+	// Seek backwards to the start of any un-processed input bytes
+	if (deflate->inBytes)
+	{
+		DEBUGMSG("Rewinding %u bytes\n", deflate->inBytes);
+		fseek(inStream, -((long) deflate->inBytes), SEEK_CUR);
+	}
+
+	if (deflate->outBuffer)
+		free(deflate->outBuffer);
+
+	if (deflate->inBuffer)
+		free((void *) deflate->inBuffer);
+
+	return (status);
+}
+
 
 void deflateMakeHuffmanTable(huffmanTable *table, int numCodes,
 	unsigned char *codeLens)

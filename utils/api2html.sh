@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  api2html.sh
 ##
@@ -16,3 +16,4 @@ if [ $# -ne 1 ] ; then
 fi
 
 sed -n -e 's/[ 	]*_X_ /<p><font face="Courier New">/p ; /<font/a</font></p>' -e 's/[ ]*\/\/[ ]*Desc[ ]*: /<blockquote>\n  <p>/p ; /<block/a</p></blockquote>' $1
+

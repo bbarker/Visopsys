@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -22,6 +22,12 @@
 #if !defined(_KERNELSYSTIMER_H)
 
 #include "kernelDevice.h"
+
+#define SYSTIMER_FREQ_HZ			1193180
+#define SYSTIMER_FULLCOUNT			0x10000 // 65536
+
+// 18.206481934 full counts per second
+#define SYSTIMER_FULLCOUNT_FREQ		(SYSTIMER_FREQ_HZ / SYSTIMER_FULLCOUNT)
 
 typedef struct {
 	void (*driverTick)(void);

@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
 #  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
 "Language-Team: Turkish/Türkçe\n"
@@ -39,16 +39,16 @@ msgstr "Çýk"
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: filebrowse.c:123
+#: filebrowse.c:125
 msgid "Error"
 msgstr "Hata"
 
-#: filebrowse.c:237
+#: filebrowse.c:275
 #, c-format
 msgid "Couldn't execute command \"%s\""
 msgstr ""
 
-#: filebrowse.c:437
+#: filebrowse.c:482
 #, c-format
 msgid ""
 "\n"
@@ -57,15 +57,15 @@ msgstr ""
 "\n"
 "\"%s\" komutu sadece grafik modda çalýþabilir\n"
 
-#: filebrowse.c:451
+#: filebrowse.c:496
 msgid "Memory allocation error"
 msgstr "Bellek ayýrma hatasý"
 
-#: filebrowse.c:466
+#: filebrowse.c:511
 #, c-format
 msgid "Can't change to directory \"%s\""
 msgstr "\"%s\" klasörü açýlamadý"
 
-#: filebrowse.c:473
+#: filebrowse.c:518
 msgid "Can't determine current directory"
 msgstr "Mevcut bulunulan klasör belirlenemiyor"

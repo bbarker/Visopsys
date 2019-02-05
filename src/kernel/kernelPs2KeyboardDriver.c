@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -232,7 +232,7 @@ static void setLight(int whichLight, int on)
 
 static void readData(void)
 {
-	// This routine reads the keyboard data and returns it to the keyboard
+	// This function reads the keyboard data and returns it to the keyboard
 	// console text input stream
 
 	int status = 0;
@@ -425,7 +425,7 @@ static void interrupt(void)
 
 static int driverDetect(void *parent, kernelDriver *driver)
 {
-	// This routine is used to detect a PS/2 keyboard and initialize it, as
+	// This function is used to detect a PS/2 keyboard and initialize it, as
 	// well as registering it with the higher-level device functions.
 
 	int status = 0;

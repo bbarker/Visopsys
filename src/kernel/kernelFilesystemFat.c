@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelFilesystemFat.c
 //
 
-// This file contains the routines designed to interpret the FAT filesystem
+// This file contains the functions designed to interpret the FAT filesystem
 // (commonly found on DOS(TM) and Windows(R) disks)
 
 #include "kernelFilesystemFat.h"
@@ -2130,9 +2130,8 @@ static int scanDirectory(fatInternalData *fatData, kernelDisk *theDisk,
 			(unsigned *) &newItem->blocks);
 		if (status < 0)
 		{
-			kernelDebugError("Couldn't determine the number of clusters for "
-				"entry %s", newItem->name);
-			return (status);
+			kernelError(kernel_warn, "Couldn't determine the number of "
+				"clusters for entry %s", newItem->name);
 		}
 
 		if (entryData->attributes & FAT_ATTRIB_SUBDIR)
@@ -2229,7 +2228,7 @@ static int readRootDir(fatInternalData *fatData, kernelDisk *theDisk)
 		// We need to read in the FAT32 root directory now.  This is just a
 		// regular directory -- we already know the size and starting cluster,
 		// so we need to fill out a dummy kernelFileEntry structure so that
-		// the read() routine can go get it for us.
+		// the read() function can go get it for us.
 
 		status = getNumClusters(fatData, fatData->bpb.fat32.rootClust,
 			&rootDirBlocks);
@@ -2239,7 +2238,7 @@ static int readRootDir(fatInternalData *fatData, kernelDisk *theDisk)
 			return (status);
 		}
 
-		// The only thing the read routine needs in this data structure
+		// The only thing the read function needs in this data structure
 		// is the starting cluster number.
 		dummyEntryData.startCluster = fatData->bpb.fat32.rootClust;
 		dummyEntry.driverData = (void *) &dummyEntryData;
@@ -2732,7 +2731,7 @@ static int readDir(kernelFileEntry *directory)
 		return (status);
 	}
 
-	// Call the routine to interpret the directory data
+	// Call the function to interpret the directory data
 	status = scanDirectory(fatData, theDisk, directory, dirBuffer,
 		dirBufferSize);
 

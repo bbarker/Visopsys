@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -180,14 +180,16 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 	{
 		// Found a 'cmap' table entry.  This is probably an "SFNT-housed"
 		// font of some kind.
-		sprintf(class->className, "%s %s", FILECLASS_NAME_TTF,
+		sprintf(class->name, "%s %s", FILECLASS_NAME_TTF,
 			FILECLASS_NAME_FONT);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_FONT);
-		class->subClass = LOADERFILESUBCLASS_TTF;
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_FONT);
+		class->subType = LOADERFILESUBCLASS_TTF;
 		return (1);
 	}
 	else
+	{
 		return (0);
+	}
 }
 
 

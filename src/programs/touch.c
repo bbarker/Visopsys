@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 		// Initialize the file structure
 		memset(&theFile, 0, sizeof(file));
 
-		// Call the "find file" routine to see if the file exists
+		// Call the "find file" function to see if the file exists
 		status = fileFind(argv[count], &theFile);
 
 		// Now, either the file exists or it doesn't...

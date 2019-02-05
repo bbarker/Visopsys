@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: defrag\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 01:45+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -110,11 +110,11 @@ msgstr "Ошибка получения информации о диске"
 msgid ""
 "\n"
 "Visopsys DEFRAG Utility\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 msgstr ""
 "\n"
 "Visopsys DEFRAG Utility\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 
 #: defrag.c:384
 msgid ""

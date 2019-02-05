@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,10 +19,11 @@
 //  kernelDisk.c
 //
 
-// This file functions for disk access, and routines for managing the array
-// of disks in the kernel's data structure for such things.
+// These are the generic functions for disk access.  These are below the level
+// of the filesystem, and will generally be called by the filesystem drivers.
 
 #include "kernelDisk.h"
+#include "kernelCpu.h"
 #include "kernelDebug.h"
 #include "kernelError.h"
 #include "kernelFilesystem.h"
@@ -40,6 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <sys/gpt.h>
 #include <sys/iso.h>
 #include <sys/msdos.h>
@@ -53,13 +55,13 @@ static volatile int logicalDiskCounter = 0;
 // The name of the disk we booted from
 static char bootDisk[DISK_MAX_NAMELENGTH];
 
-// Modes for the readWriteSectors routine
+// Modes for the readWriteSectors function
 #define IOMODE_READ		0x01
 #define IOMODE_WRITE	0x02
 #define IOMODE_NOCACHE	0x04
 
-// For the disk daemon
-static int diskdPID = 0;
+// For the disk thread
+static int threadPid = 0;
 
 // This is a table for keeping known MS-DOS partition type codes and
 // descriptions
@@ -242,7 +244,7 @@ static void debugLockCheck(kernelPhysicalDisk *physicalDisk,
 
 static int motorOff(kernelPhysicalDisk *physicalDisk)
 {
-	// Calls the target disk driver's 'motor off' routine.
+	// Calls the target disk driver's 'motor off' function.
 
 	int status = 0;
 	kernelDiskOps *ops = (kernelDiskOps *) physicalDisk->driver->ops;
@@ -257,7 +259,7 @@ static int motorOff(kernelPhysicalDisk *physicalDisk)
 	if (!(physicalDisk->flags & DISKFLAG_MOTORON))
 		return (status = 0);
 
-	// Make sure the device driver routine is available.
+	// Make sure the device driver function is available.
 	if (!ops->driverSetMotorState)
 		// Don't make this an error.  It's just not available in some drivers.
 		return (status = 0);
@@ -275,18 +277,18 @@ static int motorOff(kernelPhysicalDisk *physicalDisk)
 
 
 __attribute__((noreturn))
-static void diskd(void)
+static void diskThread(void)
 {
-	// This function will be a thread spawned at inititialization time
-	// to do any required ongoing operations on disks, such as shutting off
-	// floppy and cdrom motors
+	// This thread will be spawned at inititialization time to do any required
+	// ongoing operations on disks, such as shutting off floppy and CD/DVD
+	// motors
 
 	kernelPhysicalDisk *physicalDisk = NULL;
 	int count;
 
 	// Don't try to do anything until we have registered disks
 	while (!initialized || (physicalDiskCounter <= 0))
-		kernelMultitaskerWait(3000);
+		kernelMultitaskerWait(3 * MS_PER_SEC);
 
 	while (1)
 	{
@@ -312,31 +314,32 @@ static void diskd(void)
 		}
 
 		// Yield the rest of the timeslice and wait for 1 second
-		kernelMultitaskerWait(1000);
+		kernelMultitaskerWait(MS_PER_SEC);
 	}
 }
 
 
-static int spawnDiskd(void)
+static int spawnDiskThread(void)
 {
-	// Launches the disk daemon
+	// Launches the disk thread
 
-	diskdPID = kernelMultitaskerSpawnKernelThread(diskd, "disk thread", 0, NULL);
-	if (diskdPID < 0)
-		return (diskdPID);
+	threadPid = kernelMultitaskerSpawnKernelThread(diskThread, "disk thread",
+		0, NULL);
+	if (threadPid < 0)
+		return (threadPid);
 
-	// Re-nice the disk daemon
-	kernelMultitaskerSetProcessPriority(diskdPID, (PRIORITY_LEVELS - 2));
+	// Re-nice the disk thread
+	kernelMultitaskerSetProcessPriority(threadPid, (PRIORITY_LEVELS - 2));
 
 	// Success
-	return (diskdPID);
+	return (threadPid);
 }
 
 
 static int realReadWrite(kernelPhysicalDisk *physicalDisk, uquad_t startSector,
 	uquad_t numSectors, void *data, unsigned mode)
 {
-	// This routine does all real, physical disk reads or writes.
+	// This function does all real, physical disk reads or writes.
 
 	int status = 0;
 	kernelDiskOps *ops = (kernelDiskOps *) physicalDisk->driver->ops;
@@ -347,12 +350,12 @@ static int realReadWrite(kernelPhysicalDisk *physicalDisk, uquad_t startSector,
 	// Update the 'last access' value
 	physicalDisk->lastAccess = kernelSysTimerRead();
 
-	// Make sure the disk daemon is running
-	if (kernelMultitaskerGetProcessState(diskdPID, &tmpState) < 0)
-		// Re-spawn the disk daemon
-		spawnDiskd();
+	// Make sure the disk thread is running
+	if (kernelMultitaskerGetProcessState(threadPid, &tmpState) < 0)
+		// Re-spawn the disk thread
+		spawnDiskThread();
 
-	// Make sure the device driver routine is available.
+	// Make sure the device driver function is available.
 	if (((mode & IOMODE_READ) && !ops->driverReadSectors) ||
 		((mode & IOMODE_WRITE) && !ops->driverWriteSectors))
 	{
@@ -600,8 +603,10 @@ static unsigned cacheQueryRange(kernelPhysicalDisk *physicalDisk,
 			bufferEnd(buffer), *firstCached, numCached);
 	}
 	else
+	{
 		kernelDebug(debug_io, "Disk %s %llu->%llu not found",
 			physicalDisk->name, startSector, (startSector + numSectors - 1));
+	}
 
 	return (numCached);
 }
@@ -1247,11 +1252,11 @@ static int cacheWrite(kernelPhysicalDisk *physicalDisk, uquad_t startSector,
 static int readWrite(kernelPhysicalDisk *physicalDisk, uquad_t startSector,
 	uquad_t numSectors, void *data, int mode)
 {
-	// This is the combined "read sectors" and "write sectors" routine.  Uses
+	// This is the combined "read sectors" and "write sectors" function.  Uses
 	// the cache where available/permitted.
 
 	int status = 0;
-	unsigned startTime = kernelSysTimerRead();
+	uquad_t startTime = kernelCpuGetMs();
 
 	debugLockCheck(physicalDisk, __FUNCTION__);
 
@@ -1280,15 +1285,17 @@ static int readWrite(kernelPhysicalDisk *physicalDisk, uquad_t startSector,
 	// Throughput stats collection
 	if (mode & IOMODE_READ)
 	{
-		physicalDisk->stats.readTime += (kernelSysTimerRead() - startTime);
-		physicalDisk->stats.readKbytes +=
-			((numSectors * physicalDisk->sectorSize) / 1024);
+		physicalDisk->stats.readTimeMs += (unsigned)(kernelCpuGetMs() -
+			startTime);
+		physicalDisk->stats.readKbytes += ((numSectors *
+			physicalDisk->sectorSize) / 1024);
 	}
 	else
 	{
-		physicalDisk->stats.writeTime += (kernelSysTimerRead() - startTime);
-		physicalDisk->stats.writeKbytes +=
-			((numSectors * physicalDisk->sectorSize) / 1024);
+		physicalDisk->stats.writeTimeMs += (unsigned)(kernelCpuGetMs() -
+			startTime);
+		physicalDisk->stats.writeKbytes += ((numSectors *
+			physicalDisk->sectorSize) / 1024);
 	}
 
 	return (status);
@@ -1297,7 +1304,7 @@ static int readWrite(kernelPhysicalDisk *physicalDisk, uquad_t startSector,
 
 static kernelPhysicalDisk *getPhysicalByName(const char *name)
 {
-	// This routine takes the name of a physical disk and finds it in the
+	// This function takes the name of a physical disk and finds it in the
 	// array, returning a pointer to the disk.  If the disk doesn't exist,
 	// the function returns NULL
 
@@ -1739,9 +1746,10 @@ static int readDosPartitions(kernelPhysicalDisk *physicalDisk,
 			*newLogicalDiskCounter += 1;
 			physicalDisk->numLogical += 1;
 
-			// If the partition's ending geometry values (heads and sectors) are
-			// larger from what we've already recorded for the physical disk,
-			// change the values in the physical disk to patch the partitions.
+			// If the partition's ending geometry values (heads and sectors)
+			// are larger from what we've already recorded for the physical
+			// disk, change the values in the physical disk to match the
+			// partitions.
 			if ((partitionRecord[5] >= physicalDisk->heads) ||
 				((partitionRecord[6] & 0x3F) >
 					physicalDisk->sectorsPerCylinder))
@@ -1791,7 +1799,7 @@ static int readDosPartitions(kernelPhysicalDisk *physicalDisk,
 
 static int unmountAll(void)
 {
-	// This routine will unmount all mounted filesystems from the disks,
+	// This function will unmount all mounted filesystems from the disks,
 	// including the root filesystem.
 
 	int status = 0;
@@ -1814,14 +1822,13 @@ static int unmountAll(void)
 			continue;
 
 		// Unmount this filesystem
-		status =
-		kernelFilesystemUnmount((char *) theDisk->filesystem.mountPoint);
+		status = kernelFilesystemUnmount((char *)
+			theDisk->filesystem.mountPoint);
 		if (status < 0)
 		{
 			// Don't quit, just make an error message
 			kernelError(kernel_warn, "Unable to unmount filesystem %s from "
-				"disk %s", theDisk->filesystem.mountPoint,
-				theDisk->name);
+				"disk %s", theDisk->filesystem.mountPoint, theDisk->name);
 			errors++;
 			continue;
 		}
@@ -2089,7 +2096,7 @@ static int identifyBootDisk(void)
 
 int kernelDiskRegisterDevice(kernelDevice *dev)
 {
-	// This routine will receive a new device structure, add the
+	// This function will receive a new device structure, add the
 	// kernelPhysicalDisk to our array, and register all of its logical disks
 	// for use by the system.
 
@@ -2126,17 +2133,25 @@ int kernelDiskRegisterDevice(kernelDevice *dev)
 		return (status);
 
 	if (physicalDisk->type & DISKTYPE_FLOPPY)
+	{
 		sprintf((char *) physicalDisk->name, "%s%d", DISK_NAME_PREFIX_FLOPPY,
-		status);
+			status);
+	}
 	else if (physicalDisk->type & DISKTYPE_CDROM)
+	{
 		sprintf((char *) physicalDisk->name, "%s%d", DISK_NAME_PREFIX_CDROM,
-		status);
+			status);
+	}
 	else if (physicalDisk->type & DISKTYPE_SCSIDISK)
+	{
 		sprintf((char *) physicalDisk->name, "%s%d", DISK_NAME_PREFIX_SCSIDISK,
-		status);
+			status);
+	}
 	else if (physicalDisk->type & DISKTYPE_HARDDISK)
+	{
 		sprintf((char *) physicalDisk->name, "%s%d", DISK_NAME_PREFIX_HARDDISK,
-		status);
+			status);
+	}
 
 	// Disk cache initialization is deferred until cache use is attempted.
 	// Otherwise we waste memory allocating caches for disks that might
@@ -2240,9 +2255,9 @@ int kernelDiskRemoveDevice(kernelDevice *dev)
 
 int kernelDiskInitialize(void)
 {
-	// This is the "initialize" routine which invokes  the driver routine
-	// designed for that function.  Normally it returns zero, unless there
-	// is an error.  If there's an error it returns negative.
+	// This is the "initialize" function which scans all of the disks that
+	// have been previously detected/added by drivers.  It starts the disk
+	// thread and attempts to identify the boot disk.
 
 	int status = 0;
 
@@ -2255,8 +2270,8 @@ int kernelDiskInitialize(void)
 		return (status = ERR_NOTINITIALIZED);
 	}
 
-	// Spawn the disk daemon
-	status = spawnDiskd();
+	// Spawn the disk thread
+	status = spawnDiskThread();
 	if (status < 0)
 		kernelError(kernel_warn, "Unable to start disk thread");
 
@@ -2484,6 +2499,7 @@ int kernelDiskFromLogical(kernelDisk *logical, disk *userDisk)
 	userDisk->blockSize = logical->filesystem.blockSize;
 	userDisk->minSectors = logical->filesystem.minSectors;
 	userDisk->maxSectors = logical->filesystem.maxSectors;
+
 	userDisk->mounted = logical->filesystem.mounted;
 	if (userDisk->mounted)
 	{
@@ -2492,6 +2508,7 @@ int kernelDiskFromLogical(kernelDisk *logical, disk *userDisk)
 		strncpy(userDisk->mountPoint, (char *) logical->filesystem.mountPoint,
 			MAX_PATH_LENGTH);
 	}
+
 	userDisk->readOnly = logical->filesystem.readOnly;
 
 	return (status = 0);
@@ -2500,7 +2517,7 @@ int kernelDiskFromLogical(kernelDisk *logical, disk *userDisk)
 
 kernelDisk *kernelDiskGetByName(const char *name)
 {
-	// This routine takes the name of a logical disk and finds it in the
+	// This function takes the name of a logical disk and finds it in the
 	// array, returning a pointer to the disk.  If the disk doesn't exist,
 	// the function returns NULL
 
@@ -2575,14 +2592,17 @@ int kernelDiskReadPartitions(const char *diskName)
 
 	// Add all the logical disks that don't belong to this physical disk
 	for (count = 0; count < logicalDiskCounter; count ++)
+	{
 		if (logicalDisks[count]->physical != physicalDisk)
 			newLogicalDisks[newLogicalDiskCounter++] = logicalDisks[count];
+	}
 
 	// Assume UNKNOWN (code 0) partition type for now.
 	msdosType.tag = 0;
 	strcpy((char *) msdosType.description, physicalDisk->description);
 
-	// If this is a hard disk, get the logical disks from reading the partitions.
+	// If this is a hard disk, get the logical disks from reading the
+	// partitions.
 	if (physicalDisk->type & DISKTYPE_HARDDISK)
 	{
 		// It's a hard disk.  We need to read the partition table
@@ -2606,14 +2626,17 @@ int kernelDiskReadPartitions(const char *diskName)
 			// It has mounted partitions.  Add the existing logical disks to
 			// our array and continue to the next physical disk.
 			for (count = 0; count < physicalDisk->numLogical; count ++)
+			{
 				newLogicalDisks[newLogicalDiskCounter++] =
 					&physicalDisk->logical[count];
+			}
+
 			return (status = 1);
 		}
 
 		// Clear the logical disks
 		physicalDisk->numLogical = 0;
-		memset(&physicalDisk->logical, 0,
+		memset((void *) &physicalDisk->logical, 0,
 			 (sizeof(kernelDisk) * DISK_MAX_PARTITIONS));
 
 		// Check to see if it's a GPT disk first, since a GPT disk is also
@@ -2623,12 +2646,14 @@ int kernelDiskReadPartitions(const char *diskName)
 			status = readGptPartitions(physicalDisk, newLogicalDisks,
 				&newLogicalDiskCounter);
 		}
+
 		// Now check whether it's an MS-DOS disk.
 		else if (isDosDisk(physicalDisk) == 1)
 		{
 			status = readDosPartitions(physicalDisk, newLogicalDisks,
 				&newLogicalDiskCounter);
 		}
+
 		else
 		{
 			kernelDebug(debug_io, "Disk %s unknown disk label",
@@ -2647,13 +2672,18 @@ int kernelDiskReadPartitions(const char *diskName)
 		// disk be the same as the physical disk
 		physicalDisk->numLogical = 1;
 		logicalDisk = &physicalDisk->logical[0];
+
 		// Logical disk name same as physical
 		strcpy((char *) logicalDisk->name, (char *) physicalDisk->name);
 		strncpy((char *) logicalDisk->partType, msdosType.description,
 			FSTYPE_MAX_NAMELENGTH);
+
 		if (logicalDisk->fsType[0] == '\0')
+		{
 			strncpy((char *) logicalDisk->fsType, "unknown",
 				FSTYPE_MAX_NAMELENGTH);
+		}
+
 		logicalDisk->physical = physicalDisk;
 		logicalDisk->startSector = 0;
 		logicalDisk->numSectors = physicalDisk->numSectors;
@@ -3063,7 +3093,7 @@ gptPartType *kernelDiskGetGptPartTypes(void)
 
 int kernelDiskSetFlags(const char *diskName, unsigned flags, int set)
 {
-	// This routine is the user-accessible interface for setting or clearing
+	// This function is the user-accessible interface for setting or clearing
 	// (user-settable) disk flags.
 
 	int status = 0;
@@ -3128,7 +3158,7 @@ out:
 
 int kernelDiskSetLockState(const char *diskName, int state)
 {
-	// This routine is the user-accessible interface for locking or unlocking
+	// This function is the user-accessible interface for locking or unlocking
 	// a removable disk device.
 
 	int status = 0;
@@ -3159,7 +3189,7 @@ int kernelDiskSetLockState(const char *diskName, int state)
 	// Make sure the operation is supported
 	if (!ops->driverSetLockState)
 	{
-		kernelError(kernel_error, "Driver routine is NULL");
+		kernelError(kernel_error, "Driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -3180,7 +3210,7 @@ int kernelDiskSetLockState(const char *diskName, int state)
 
 int kernelDiskSetDoorState(const char *diskName, int state)
 {
-	// This routine is the user-accessible interface for opening or closing
+	// This function is the user-accessible interface for opening or closing
 	// a removable disk device.
 
 	int status = 0;
@@ -3218,7 +3248,7 @@ int kernelDiskSetDoorState(const char *diskName, int state)
 	// Make sure the operation is supported
 	if (!ops->driverSetDoorState)
 	{
-		kernelError(kernel_error, "Driver routine is NULL");
+		kernelError(kernel_error, "Driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -3244,7 +3274,7 @@ int kernelDiskSetDoorState(const char *diskName, int state)
 
 int kernelDiskMediaPresent(const char *diskName)
 {
-	// This routine returns 1 if the requested disk has media present,
+	// This function returns 1 if the requested disk has media present,
 	// 0 otherwise
 
 	int present = 0;
@@ -3373,8 +3403,8 @@ int kernelDiskMediaChanged(const char *diskName)
 int kernelDiskReadSectors(const char *diskName, uquad_t logicalSector,
 	uquad_t numSectors, void *dataPointer)
 {
-	// This routine is the user-accessible interface to reading data using
-	// the various disk routines in this file.  Basically, it is a gatekeeper
+	// This function is the user-accessible interface to reading data using
+	// the various disk functions in this file.  Basically, it is a gatekeeper
 	// that helps ensure correct use of the "read-write" method.
 
 	int status = 0;
@@ -3429,7 +3459,7 @@ int kernelDiskReadSectors(const char *diskName, uquad_t logicalSector,
 	if (status < 0)
 		return (status = ERR_NOLOCK);
 
-	// Call the read-write routine for a read operation
+	// Call the read-write function for a read operation
 	status = readWrite(physicalDisk, logicalSector, numSectors, dataPointer,
 		IOMODE_READ);
 
@@ -3443,8 +3473,8 @@ int kernelDiskReadSectors(const char *diskName, uquad_t logicalSector,
 int kernelDiskWriteSectors(const char *diskName, uquad_t logicalSector,
 	uquad_t numSectors, const void *data)
 {
-	// This routine is the user-accessible interface to writing data using
-	// the various disk routines in this file.  Basically, it is a gatekeeper
+	// This function is the user-accessible interface to writing data using
+	// the various disk functions in this file.  Basically, it is a gatekeeper
 	// that helps ensure correct use of the "read-write" method.
 
 	int status = 0;
@@ -3496,7 +3526,7 @@ int kernelDiskWriteSectors(const char *diskName, uquad_t logicalSector,
 	if (status < 0)
 		return (status = ERR_NOLOCK);
 
-	// Call the read-write routine for a write operation
+	// Call the read-write function for a write operation
 	status = readWrite(physicalDisk, logicalSector, numSectors, (void *) data,
 		IOMODE_WRITE);
 
@@ -3510,7 +3540,7 @@ int kernelDiskWriteSectors(const char *diskName, uquad_t logicalSector,
 int kernelDiskEraseSectors(const char *diskName, uquad_t logicalSector,
 	uquad_t numSectors, int passes)
 {
-	// This routine synchronously and securely erases disk sectors.  It writes
+	// This function synchronously and securely erases disk sectors.  It writes
 	// (passes - 1) successive passes of random data followed by a final pass
 	// of NULLs.
 
@@ -3585,7 +3615,7 @@ int kernelDiskEraseSectors(const char *diskName, uquad_t logicalSector,
 			memset(buffer, 0, bufferSize);
 		}
 
-		// Call the read-write routine for a write operation
+		// Call the read-write function for a write operation
 		status = readWrite(physicalDisk, logicalSector, numSectors, buffer,
 			IOMODE_WRITE);
 		if (status < 0)
@@ -3647,9 +3677,9 @@ int kernelDiskGetStats(const char *diskName, diskStats *stats)
 		for (count = 0; count < physicalDiskCounter; count ++)
 		{
 			physicalDisk = physicalDisks[count];
-			stats->readTime += physicalDisk->stats.readTime;
+			stats->readTimeMs += physicalDisk->stats.readTimeMs;
 			stats->readKbytes += physicalDisk->stats.readKbytes;
-			stats->writeTime += physicalDisk->stats.writeTime;
+			stats->writeTimeMs += physicalDisk->stats.writeTimeMs;
 			stats->writeKbytes += physicalDisk->stats.writeKbytes;
 		}
 	}

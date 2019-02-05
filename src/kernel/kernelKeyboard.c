@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -44,134 +44,150 @@ static keyMap defMap = {
 	KEYMAP_MAGIC, 0x0200,
 	"English (US)", { 'e', 'n' },
 	// Regular map
-	{ 0, 0, 0, ASCII_SPACE,										// 00-03
-	  0, 0, 0, 0,												// 04-07
-	  ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
-	  ASCII_DEL, ASCII_ENTER, 0, '\\',							// 0C-0F
-	  'z', 'x', 'c', 'v',										// 10-13
-	  'b', 'n', 'm', ',',										// 14-17
-	  '.', '/', 0, ASCII_CRSRUP,								// 18-1B
-	  0, ASCII_CRSRDOWN, ASCII_PAGEDOWN, 0,						// 1C-1F
-	  'a', 's', 'd', 'f',										// 20-23
-	  'g', 'h', 'j', 'k',										// 24-27
-	  'l', ';', '\'', '#',										// 28-2B
-	  ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',					// 2C-2F
-	  ASCII_TAB, 'q', 'w', 'e',									// 30-33
-	  'r', 't', 'y', 'u',										// 34-37
-	  'i', 'o', 'p', '[',										// 38-3B
-	  ']', '\\', ASCII_DEL, 0,									// 3C-3F
-	  ASCII_PAGEDOWN, ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,	// 40-43
-	  '`', '1', '2', '3',										// 44-47
-	  '4', '5', '6', '7', '8', '9', '0', '-',					// 48-4F
-	  '=', ASCII_BACKSPACE, 0, ASCII_HOME,						// 50-53
-	  ASCII_PAGEUP, 0, '/', '*',								// 54-57
-	  '-', ASCII_ESC, 0, 0, 0, 0, 0, 0,							// 58-5F
-	  0, 0, 0, 0,												// 60-63
-	  0, 0, 0, 0, 0												// 64-68
+	{
+		// 6th row
+		0, 0, 0, ASCII_SPACE, 0, 0, 0, 0,						// 00-07
+		ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
+		ASCII_DEL, ASCII_ENTER,									// 0C-0D
+
+		// 5th row
+		0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm',				// 0E-16
+		',', '.', '/', 0,										// 17-1A
+		ASCII_CRSRUP, 0, ASCII_CRSRDOWN, ASCII_PAGEDOWN,		// 1B-1E
+
+		// 4th row
+		0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',	// 1F-29
+		'\'', '#', ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',		// 2A-2F
+
+		// 3rd row
+		ASCII_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i',		// 30-38
+		'o', 'p', '[', ']', '\\', ASCII_DEL, 0, ASCII_PAGEDOWN,	// 39-40
+		ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,					// 41-43
+
+		// 2nd row
+		'`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',	// 44-4E
+		'-', '=', ASCII_BACKSPACE, 0, ASCII_HOME, ASCII_PAGEUP,	// 4F-54
+		0, '/', '*', '-',										// 55-58
+
+		// 1st row
+		ASCII_ESC, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0	// 59-68
 	},
 	// Shift map
-	{ 0, 0, 0, ASCII_SPACE,										// 00-03
-	  0, 0, 0, 0,												// 04-07
-	  ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
-	  ASCII_DEL, ASCII_ENTER, 0, '|',							// 0C-0F
-	  'Z', 'X', 'C', 'V',										// 10-13
-	  'B', 'N', 'M', '<',										// 14-17
-	  '>', '?', 0, ASCII_CRSRUP,								// 18-1B
-	  0, ASCII_CRSRDOWN, ASCII_PAGEDOWN, 0,						// 1C-1F
-	  'A', 'S', 'D', 'F',										// 20-23
-	  'G', 'H', 'J', 'K',										// 24-27
-	  'L', ':', '"', '~',										// 28-2B
-	  ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',					// 2C-2F
-	  ASCII_TAB, 'Q', 'W', 'E',									// 30-33
-	  'R', 'T', 'Y', 'U',										// 34-37
-	  'I', 'O', 'P', '{',										// 38-3B
-	  '}', '|', ASCII_DEL, 0,									// 3C-3F
-	  ASCII_PAGEDOWN, ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,	// 40-43
-	  '~', '!', '@', '#',										// 44-47
-	  '$', '%', '^', '&', '*', '(', ')', '_',					// 48-4F
-	  '+', ASCII_BACKSPACE, 0, ASCII_HOME,						// 50-53
-	  ASCII_PAGEUP, 0, '/', '*',								// 54-57
-	  '-', ASCII_ESC, 0, 0, 0, 0, 0, 0,							// 58-5F
-	  0, 0, 0, 0,												// 60-63
-	  0, 0, 0, 0, 0												// 64-68
+	{
+		0, 0, 0, ASCII_SPACE, 0, 0, 0, 0,						// 00-07
+		ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
+		ASCII_DEL, ASCII_ENTER,									// 0C-0D
+
+		// 5th row
+		0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M',				// 0E-16
+		'<', '>', '?', 0,										// 17-1A
+		ASCII_CRSRUP, 0, ASCII_CRSRDOWN, ASCII_PAGEDOWN,		// 1B-1E
+
+		// 4th row
+		0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':',	// 1F-29
+		'\"', '~', ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',		// 2A-2F
+
+		// 3rd row
+		ASCII_TAB, 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',		// 30-38
+		'O', 'P', '{', '}', '|', ASCII_DEL, 0, ASCII_PAGEDOWN,	// 39-40
+		ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,					// 41-43
+
+		// 2nd row
+		'~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',	// 44-4E
+		'_', '+', ASCII_BACKSPACE, 0, ASCII_HOME, ASCII_PAGEUP,	// 4F-54
+		0, '/', '*', '-',										// 55-58
+
+		// 1st row
+		ASCII_ESC, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0	// 59-68
 	},
 	// Control map.  Default is regular map value.
-	{ 0, 0, 0, ASCII_SPACE,										// 00-03
-	  0, 0, 0, 0,												// 04-07
-	  ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
-	  ASCII_DEL, ASCII_ENTER, 0, '\\',							// 0C-0F
-	  ASCII_SUB, ASCII_CAN, ASCII_ETX, ASCII_SYN,				// 10-13
-	  ASCII_STX, ASCII_SHIFTOUT, ASCII_ENTER, 0,				// 14-17
-	  '.', '/', 0, ASCII_CRSRUP,								// 18-1B
-	  0, ASCII_CRSRDOWN, ASCII_PAGEDOWN, 0,						// 1C-1F
-	  ASCII_SOH, ASCII_CRSRRIGHT, ASCII_ENDOFFILE, ASCII_ACK,	// 20-23
-	  ASCII_BEL, ASCII_BACKSPACE, ASCII_ENTER, ASCII_PAGEUP,	// 24-27
-	  ASCII_PAGEDOWN, ';', '\'', '#',							// 28-2B
-	  ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',					// 2C-2F
-	  ASCII_TAB, ASCII_CRSRUP, ASCII_ETB, ASCII_ENQ,			// 30-33
-	  ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_EOM, ASCII_NAK,		// 34-37
-	  ASCII_TAB, ASCII_SHIFTIN, ASCII_DLE, '[',					// 38-3B
-	  ']', '\\', ASCII_DEL, 0,									// 3C-3F
-	  ASCII_PAGEDOWN, ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,	// 40-43
-	  '`', '1', '2', '3',										// 44-47
-	  '4', '5', '6', '7', '8', '9', '0', '-',					// 48-4F
-	  '=', ASCII_BACKSPACE, 0, ASCII_HOME,						// 50-53
-	  ASCII_PAGEUP, 0, '/', '*',								// 54-57
-	  '-', ASCII_ESC, 0, 0, 0, 0, 0, 0,							// 58-5F
-	  0, 0, 0, 0,												// 60-63
-	  0, 0, 0, 0, 0												// 64-68
+	{
+		// 6th row
+		0, 0, 0, ASCII_SPACE, 0, 0, 0, 0,						// 00-07
+		ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
+		ASCII_DEL, ASCII_ENTER,									// 0C-0D
+
+		// 5th row
+		0, ASCII_FS, ASCII_SUB, ASCII_CAN, ASCII_ETX,			// 0E-12
+		ASCII_SYN, ASCII_STX, ASCII_SO, ASCII_CR, ',', '.',		// 13-18
+		'/', 0, ASCII_CRSRUP, 0, ASCII_CRSRDOWN,				// 19-1D
+		ASCII_PAGEDOWN,											// 1E
+
+		// 4th row
+		0, ASCII_SOH, ASCII_DC3, ASCII_EOT, ASCII_ACK,			// 1F-23
+		ASCII_BEL, ASCII_BS, ASCII_LF, ASCII_VT, ASCII_FF, ';',	// 24-29
+		'\'', '#', ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',		// 2A-2F
+
+		// 3rd row
+		ASCII_TAB, ASCII_DC1, ASCII_ETB, ASCII_ENQ, ASCII_DC2,	// 30-34
+		ASCII_DC4, ASCII_EM, ASCII_NAK, ASCII_HT, ASCII_SI,		// 35-39
+		ASCII_DLE, ASCII_ESC, ASCII_GS, ASCII_FS, ASCII_DEL, 0,	// 3A-3F
+		ASCII_PAGEDOWN,	ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,	// 40-43
+
+		// 2nd row
+		'`', '1', ASCII_NULL, '3', '4', '5', ASCII_RS, '7',		// 44-4B
+		'8', '9', '0', ASCII_US, '=', ASCII_BACKSPACE, 0,		// 4C-52
+		ASCII_HOME, ASCII_PAGEUP, 0, '/', '*', '-',				// 53-58
+
+		// 1st row
+		ASCII_ESC, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0	// 59-68
 	},
 	// AltGr map.  Same as the regular map for this keyboard.
-	{ 0, 0, 0, ASCII_SPACE,										// 00-03
-	  0, 0, 0, 0,												// 04-07
-	  ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
-	  ASCII_DEL, ASCII_ENTER, 0, '\\',							// 0C-0F
-	  'z', 'x', 'c', 'v',										// 10-13
-	  'b', 'n', 'm', ',',										// 14-17
-	  '.', '/', 0, ASCII_CRSRUP,								// 18-1B
-	  0, ASCII_CRSRDOWN, ASCII_PAGEDOWN, 0,						// 1C-1F
-	  'a', 's', 'd', 'f',										// 20-23
-	  'g', 'h', 'j', 'k',										// 24-27
-	  'l', ';', '\'', '#',										// 28-2B
-	  ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',					// 2C-2F
-	  ASCII_TAB, 'q', 'w', 'e',									// 30-33
-	  'r', 't', 'y', 'u',										// 34-37
-	  'i', 'o', 'p', '[',										// 38-3B
-	  ']', '\\', ASCII_DEL, 0,									// 3C-3F
-	  ASCII_PAGEDOWN, ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,	// 40-43
-	  '`', '1', '2', '3',										// 44-47
-	  '4', '5', '6', '7', '8', '9', '0', '-',					// 48-4F
-	  '=', ASCII_BACKSPACE, 0, ASCII_HOME,						// 50-53
-	  ASCII_PAGEUP, 0, '/', '*',								// 54-57
-	  '-', ASCII_ESC, 0, 0, 0, 0, 0, 0,							// 58-5F
-	  0, 0, 0, 0,												// 60-63
-	  0, 0, 0, 0, 0												// 64-68
+	{
+		// 6th row
+		0, 0, 0, ASCII_SPACE, 0, 0, 0, 0,						// 00-07
+		ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
+		ASCII_DEL, ASCII_ENTER,									// 0C-0D
+
+		// 5th row
+		0, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm',				// 0E-16
+		',', '.', '/', 0,										// 17-1A
+		ASCII_CRSRUP, 0, ASCII_CRSRDOWN, ASCII_PAGEDOWN,		// 1B-1E
+
+		// 4th row
+		0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',	// 1F-29
+		'\'', '#', ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',		// 2A-2F
+
+		// 3rd row
+		ASCII_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i',		// 30-38
+		'o', 'p', '[', ']', '\\', ASCII_DEL, 0, ASCII_PAGEDOWN,	// 39-40
+		ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,					// 41-43
+
+		// 2nd row
+		'`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',	// 44-4E
+		'-', '=', ASCII_BACKSPACE, 0, ASCII_HOME, ASCII_PAGEUP,	// 4F-54
+		0, '/', '*', '-',										// 55-58
+
+		// 1st row
+		ASCII_ESC, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0	// 59-68
 	},
 	// Shift-AltGr map.  Same as the shift map for this keyboard.
-	{ 0, 0, 0, ASCII_SPACE,										// 00-03
-	  0, 0, 0, 0,												// 04-07
-	  ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
-	  ASCII_DEL, ASCII_ENTER, 0, '|',							// 0C-0F
-	  'Z', 'X', 'C', 'V',										// 10-13
-	  'B', 'N', 'M', '<',										// 14-17
-	  '>', '?', 0, ASCII_CRSRUP,								// 18-1B
-	  0, ASCII_CRSRDOWN, ASCII_PAGEDOWN, 0,						// 1C-1F
-	  'A', 'S', 'D', 'F',										// 20-23
-	  'G', 'H', 'J', 'K',										// 24-27
-	  'L', ':', '"', '~',										// 28-2B
-	  ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',					// 2C-2F
-	  ASCII_TAB, 'Q', 'W', 'E',									// 30-33
-	  'R', 'T', 'Y', 'U',										// 34-37
-	  'I', 'O', 'P', '{',										// 38-3B
-	  '}', '|', ASCII_DEL, 0,									// 3C-3F
-	  ASCII_PAGEDOWN, ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,	// 40-43
-	  '~', '!', '@', '#',										// 44-47
-	  '$', '%', '^', '&', '*', '(', ')', '_',					// 48-4F
-	  '+', ASCII_BACKSPACE, 0, ASCII_HOME,						// 50-53
-	  ASCII_PAGEUP, 0, '/', '*',								// 54-57
-	  '-', ASCII_ESC, 0, 0, 0, 0, 0, 0,							// 58-5F
-	  0, 0, 0, 0,												// 60-63
-	  0, 0, 0, 0, 0												// 64-68
+	{
+		0, 0, 0, ASCII_SPACE, 0, 0, 0, 0,						// 00-07
+		ASCII_CRSRLEFT, ASCII_CRSRDOWN, ASCII_CRSRRIGHT, 0,		// 08-0B
+		ASCII_DEL, ASCII_ENTER,									// 0C-0D
+
+		// 5th row
+		0, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M',				// 0E-16
+		'<', '>', '?', 0,										// 17-1A
+		ASCII_CRSRUP, 0, ASCII_CRSRDOWN, ASCII_PAGEDOWN,		// 1B-1E
+
+		// 4th row
+		0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':',	// 1F-29
+		'\"', '~', ASCII_CRSRLEFT, 0, ASCII_CRSRRIGHT, '+',		// 2A-2F
+
+		// 3rd row
+		ASCII_TAB, 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',		// 30-38
+		'O', 'P', '{', '}', '|', ASCII_DEL, 0, ASCII_PAGEDOWN,	// 39-40
+		ASCII_HOME, ASCII_CRSRUP, ASCII_PAGEUP,					// 41-43
+
+		// 2nd row
+		'~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',	// 44-4E
+		'_', '+', ASCII_BACKSPACE, 0, ASCII_HOME, ASCII_PAGEUP,	// 4F-54
+		0, '/', '*', '-',										// 55-58
+
+		// 1st row
+		ASCII_ESC, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0	// 59-68
 	}
 };
 
@@ -345,7 +361,7 @@ static void keyboardThread(void)
 								(buffer[count].keyboard->state.shiftState &
 									KEYBOARD_ALT_PRESSED))
 							{
-								kernelShutdown(1, 1);
+								kernelSystemShutdown(1, 1);
 								while (1);
 							}
 							break;

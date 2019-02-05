@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -92,7 +92,7 @@ static kernelPhysicalDisk *findDiskByName(const char *name)
 static int readWriteSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, void *buffer, int read)
 {
-	// This routine reads or writes sectors to/from the drive.  Returns 0 on
+	// This function reads or writes sectors to/from the drive.  Returns 0 on
 	// success, negative otherwise.
 
 	int status = 0;
@@ -150,7 +150,7 @@ static int readWriteSectors(int diskNum, uquad_t logicalSector,
 static int driverReadSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 	return (readWriteSectors(diskNum, logicalSector, numSectors, buffer,
 		1));  // Read operation
 }
@@ -159,7 +159,7 @@ static int driverReadSectors(int diskNum, uquad_t logicalSector,
 static int driverWriteSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, const void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 	return (readWriteSectors(diskNum, logicalSector, numSectors,
 		(void *) buffer, 0));  // Write operation
 }
@@ -168,11 +168,11 @@ static int driverWriteSectors(int diskNum, uquad_t logicalSector,
 static int driverDetect(void *parent __attribute__((unused)),
 	kernelDriver *driver)
 {
-	// Normally this routine is used to detect and initialize devices, as well
-	// as registering each one with any higher-level interfaces.  Since RAM
-	// disks are not detected this way (rather, created by
-	// kernelRamDiskCreate()) we'll save the parameters we were passed for when
-	// we create disks later.
+	// Normally this function is used to detect and initialize devices, as
+	// well as registering each one with any higher-level interfaces.  Since
+	// RAM disks are not detected this way (rather, created by
+	// kernelRamDiskCreate()) we'll save the parameters we were passed for
+	// when we create disks later.
 
 	ramDiskDriver = driver;
 	return (0);

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -26,8 +26,23 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
+// Internal C library file descriptor types
+typedef enum {
+	filedesc_unknown = 0,
+	filedesc_textstream,
+	filedesc_filestream,
+	filedesc_socket
+
+} fileDescType;
+
+// Internal functions of the C library
 void _dbl2str(double, char *, int);
 int _digits(unsigned, int, int);
+int _fdalloc(fileDescType, void *, int);
+int _fdget(int, fileDescType *, void **);
+int _fdset_type(int, fileDescType);
+int _fdset_data(int, void *, int);
+void _fdfree(int);
 void _flt2str(float, char *, int);
 int _fmtinpt(const char *, const char *, va_list);
 int _ldigits(unsigned long long, int, int);

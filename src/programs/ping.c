@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -37,7 +37,7 @@ that host.  The most common usage of this command is to test network
 connectivity.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 
 </help>
 */
@@ -50,14 +50,19 @@ Options:
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/api.h>
 #include <sys/env.h>
 #include <sys/network.h>
 #include <sys/paths.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
 #define _(string) gettext(string)
 
 #define WINDOW_TITLE	_("Ping")
+#define SAVE_TIMES		60
 
 static int graphics = 0;
 static char pingWhom[80];
@@ -68,8 +73,13 @@ static objectKey connection = NULL;
 static int threadPid = 0;
 static int stop = 0;
 static unsigned char *pingData = NULL;
-static int pingPacketSize = 88;
+static uquad_t *sendTime = NULL;
+static int pingPacketSize = (sizeof(networkIp4Header) +
+	sizeof(networkPingPacket));
 static int packetsReceived = 0;
+static uquad_t minRtTime = -1;
+static uquad_t maxRtTime = 0;
+static uquad_t totalRtTime = 0;
 
 
 __attribute__((format(printf, 1, 2)))
@@ -114,6 +124,12 @@ static void quit(int status)
 			windowDestroy(window);
 	}
 
+	if (sendTime)
+		free(sendTime);
+
+	if (pingData)
+		free(pingData);
+
 	exit(status);
 }
 
@@ -122,7 +138,7 @@ static void interrupt(int sig)
 {
 	// This is our interrupt signal handler.
 	if (sig == SIGINT)
-		quit(0);
+		stop = 1;
 }
 
 
@@ -133,9 +149,10 @@ static void responseThread(void)
 
 	int bytes = 0;
 	unsigned char *buffer = NULL;
-	networkIpHeader *ipHeader = NULL;
+	networkIp4Header *ip4Header = NULL;
 	networkAddress *srcAddress = NULL;
 	networkPingPacket *pingPacket = NULL;
+	uquad_t rtTime = 0;
 
 	buffer = malloc(NETWORK_PACKET_MAX_LENGTH);
 	if (!buffer)
@@ -144,28 +161,39 @@ static void responseThread(void)
 		multitaskerTerminate(errno);
 	}
 
-	ipHeader = (networkIpHeader *) buffer;
-	srcAddress = (networkAddress *) &ipHeader->srcAddress;
-	pingPacket = ((void *) ipHeader + sizeof(networkIpHeader));
+	ip4Header = (networkIp4Header *) buffer;
+	srcAddress = (networkAddress *) &ip4Header->srcAddress;
+	pingPacket = ((void *) ip4Header + sizeof(networkIp4Header));
 
 	while (!stop)
 	{
 		if (networkCount(connection) >= pingPacketSize)
 		{
-			bytes = networkRead(connection, buffer, NETWORK_PACKET_MAX_LENGTH);
+			bytes = networkRead(connection, buffer,
+				NETWORK_PACKET_MAX_LENGTH);
 			if (bytes > 0)
 			{
 				// Byte-swap any things we need
-				swab(&ipHeader->totalLength, &ipHeader->totalLength,
-					sizeof(unsigned short));
-				swab(&pingPacket->sequenceNum, &pingPacket->sequenceNum,
-					sizeof(unsigned short));
+				ip4Header->totalLength = ntohs(ip4Header->totalLength);
+				pingPacket->sequenceNum = ntohs(pingPacket->sequenceNum);
+
+				rtTime = (cpuGetMs() - sendTime[pingPacket->sequenceNum %
+					SAVE_TIMES]);
 
 				printf(_("%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d "
-					"time=X ms\n"), ipHeader->totalLength,
-					srcAddress->bytes[0], srcAddress->bytes[1],
-					srcAddress->bytes[2], srcAddress->bytes[3],
-					pingPacket->sequenceNum, ipHeader->timeToLive);
+					"time=%llu ms\n"), (ip4Header->totalLength -
+						sizeof(networkIp4Header)),
+					srcAddress->byte[0], srcAddress->byte[1],
+					srcAddress->byte[2], srcAddress->byte[3],
+					pingPacket->sequenceNum, ip4Header->timeToLive, rtTime);
+
+				if (rtTime < minRtTime)
+					minRtTime = rtTime;
+
+				if (rtTime > maxRtTime)
+					maxRtTime = rtTime;
+
+				totalRtTime += rtTime;
 
 				packetsReceived += 1;
 			}
@@ -174,14 +202,16 @@ static void responseThread(void)
 		multitaskerYield();
 	}
 
+	free(buffer);
+
 	multitaskerTerminate(0);
 }
 
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -263,14 +293,33 @@ static void constructWindow(void)
 }
 
 
+static int getAddress(const char *string, networkAddress *address)
+{
+	int status = 0;
+
+	// Try IPv4
+	status = inet_pton(AF_INET, string, address);
+	if (status == 1)
+		return (status = 0);
+
+	// Try IPv6
+	status = inet_pton(AF_INET6, string, address);
+	if (status == 1)
+		return (status = 0);
+
+	// Seems like an invalid address or hostname
+	return (status = ERR_HOSTUNKNOWN);
+}
+
+
 int main(int argc, char *argv[])
 {
 	int status = 0;
 	char opt;
-	int length = 0;
 	char addressBuffer[18];
 	networkAddress address = { { 0, 0, 0, 0, 0, 0 } };
 	networkFilter filter;
+	uquad_t startMs = 0;
 	int packetsSent = 0;
 	unsigned currentTime = rtcUptimeSeconds();
 	unsigned tmpTime = 0;
@@ -300,7 +349,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Make sure networking is enabled
-	if (!networkInitialized())
+	if (!networkEnabled())
 	{
 		error("%s", _("Networking is not currently enabled"));
 		return (status = ERR_NOTINITIALIZED);
@@ -312,14 +361,15 @@ int main(int argc, char *argv[])
 		return (status = ERR_ARGUMENTCOUNT);
 	}
 
-	// If we are in graphics mode, we will create an interactive window
-	// which prompts for a destination to ping.
+	// If we are in graphics mode, and no destination has been specified, we
+	// will create an interactive window which prompts for it.
 	if (graphics)
 	{
 		if (argc < 2)
 		{
 			status = windowNewPromptDialog(window, _("Enter Address"),
-				_("Enter the network address to ping:"), 1, 18, addressBuffer);
+				_("Enter the network address to ping:"), 1,
+				sizeof(addressBuffer), addressBuffer);
 			if (status <= 0)
 				quit(status);
 
@@ -327,49 +377,23 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	// Parse the supplied network address into our networkAddress structure.
-
-	length = strlen(argv[argc - 1]);
-
-	// Replace dots ('.') with NULLS
-	for (count = 0; count < length; count ++)
-		if (argv[argc - 1][count] == '.')
-			argv[argc - 1][count] = '\0';
-
-	// Get the decimal value of up to 4 numbers
-	for (count = 0; count < 4; count ++)
+	// Parse the supplied arguments to get the destination address.
+	status = getAddress(argv[argc - 1], &address);
+	if (status < 0)
 	{
-		status = atoi(argv[argc - 1]);
-		if (status < 0)
-		{
-			usage(argv[0]);
-			quit(status = ERR_INVALID);
-		}
-
-		address.bytes[count] = status;
-		argv[argc - 1] += (strlen(argv[argc - 1]) + 1);
+		error("%s", _("Couldn't determine destination address"));
+		return (status = ERR_NOTINITIALIZED);
 	}
 
-	// Get memory for our ping data buffer
-	pingData = malloc(NETWORK_PING_DATASIZE);
-	if (!pingData)
-	{
-		error("%s", _("Memory allocation error"));
-		quit(errno = ERR_MEMORY);
-	}
-
-	// Fill out our ping data.  56 ASCII characters: 'A' through 'x'
-	for (count = 0; count < NETWORK_PING_DATASIZE; count ++)
-		pingData[count] = (char)(count + 65);
-
-	// Clear out our filter and ask for the network the headers we want
+	// Clear out our filter and ask for the network headers we want
 	memset(&filter, 0, sizeof(networkFilter));
+	filter.flags = (NETWORK_FILTERFLAG_HEADERS |
+		NETWORK_FILTERFLAG_TRANSPROTOCOL | NETWORK_FILTERFLAG_SUBPROTOCOL);
 	filter.headers = NETWORK_HEADERS_NET;
 	filter.transProtocol = NETWORK_TRANSPROTOCOL_ICMP;
 	filter.subProtocol = NETWORK_ICMP_ECHOREPLY;
 
-	// Open a raw network-level connection on the adapter in order to receive
-	// the ping replies
+	// Open a network connection
 	connection = networkOpen(NETWORK_MODE_READWRITE, &address, &filter);
 	if (!connection)
 	{
@@ -377,9 +401,9 @@ int main(int argc, char *argv[])
 		quit(errno = ERR_IO);
 	}
 
-	sprintf(pingWhom, _("Ping %d.%d.%d.%d %d bytes of data\n"),
-		address.bytes[0], address.bytes[1], address.bytes[2], address.bytes[3],
-		NETWORK_PING_DATASIZE);
+	sprintf(pingWhom, _("Ping %d.%d.%d.%d %d(%d) bytes of data"),
+		address.byte[0], address.byte[1], address.byte[2], address.byte[3],
+		NETWORK_PING_DATASIZE, pingPacketSize);
 
 	if (graphics)
 	{
@@ -400,16 +424,40 @@ int main(int argc, char *argv[])
 
 	// Launch our thread to read response packets from the connection we just
 	// opened
-	threadPid =
-	multitaskerSpawn(responseThread, "ping receive thread", 0, NULL);
+	threadPid = multitaskerSpawn(responseThread, "ping receive thread", 0,
+		NULL);
 	if (threadPid < 0)
 	{
 		error("%s", _("Error starting response thread"));
 		quit(errno = threadPid);
 	}
 
+	// Get memory for our ping data buffer
+	pingData = malloc(NETWORK_PING_DATASIZE);
+	if (!pingData)
+	{
+		error("%s", _("Memory allocation error"));
+		quit(errno = ERR_MEMORY);
+	}
+
+	// Fill out our ping data.  56 ASCII characters: 'A' through 'x'
+	for (count = 0; count < NETWORK_PING_DATASIZE; count ++)
+		pingData[count] = (char)(count + 65);
+
+	// Get memory to record send times
+	sendTime = calloc(SAVE_TIMES, sizeof(uquad_t));
+	if (!sendTime)
+	{
+		error("%s", _("Memory allocation error"));
+		quit(errno = ERR_MEMORY);
+	}
+
+	startMs = cpuGetMs();
+
 	for (count = 0; !stop ; count ++)
 	{
+		sendTime[count % SAVE_TIMES] = cpuGetMs();
+
 		status = networkPing(connection, count, pingData,
 			NETWORK_PING_DATASIZE);
 		if (status < 0)
@@ -432,14 +480,18 @@ int main(int argc, char *argv[])
 	// Wait for the receive thread to finish.
 	while (multitaskerProcessIsAlive(threadPid));
 
-	printf(_("\n--- %d.%d.%d.%d ping statistics ---\n"), address.bytes[0],
-		address.bytes[1], address.bytes[2], address.bytes[3]);
+	printf(_("\n--- %d.%d.%d.%d ping statistics ---\n"), address.byte[0],
+		address.byte[1], address.byte[2], address.byte[3]);
 	printf(_("%d packets transmitted, %d received, %d%% packet loss, "
-		"time Xms\n"), packetsSent, packetsReceived,
-		(packetsSent?
-			(((packetsSent - packetsReceived) * 100) / packetsSent) : 0));
+		"time %llums\n"), packetsSent, packetsReceived, (packetsSent?
+			(((packetsSent - packetsReceived) * 100) / packetsSent) : 0),
+			(cpuGetMs() - startMs));
+	printf(_("rtt min/avg/max = %llu/%llu/%llu ms\n"),
+		((minRtTime < -1ULL)? minRtTime : 0), (packetsReceived? (totalRtTime /
+		packetsReceived) : 0), maxRtTime);
 
 	quit(0);
+
 	// Compiler happy
 	return (0);
 }

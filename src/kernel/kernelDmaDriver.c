@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -106,8 +106,8 @@ static void writeWordPort(int port, int value)
 
 static int driverOpenChannel(int channel, void *address, int count, int mode)
 {
-	// This routine prepares the registers of the specified DMA channel for
-	// a data transfer.   This routine calls a series of other routines that
+	// This function prepares the registers of the specified DMA channel for
+	// a data transfer.   This function calls a series of other functions that
 	// set individual registers.
 
 	int status = 0;
@@ -181,7 +181,7 @@ static int driverOpenChannel(int channel, void *address, int count, int mode)
 
 static int driverCloseChannel(int channel)
 {
-	// This routine disables the selected DMA channel by setting the
+	// This function disables the selected DMA channel by setting the
 	// appropriate mask bit.
 
 	int status = 0;
@@ -215,9 +215,9 @@ static int driverCloseChannel(int channel)
 
 static int driverDetect(void *parent, kernelDriver *driver)
 {
-	// Normally, this routine is used to detect and initialize each device,
-	// as well as registering each one with any higher-level interfaces.  Since
-	// we can assume that there's a DMA controller, just initialize it.
+	// Normally, this function is used to detect and initialize each device,
+	// as well as registering each one with any higher-level interfaces.
+	// Since we can assume that there's a DMA controller, just initialize it.
 
 	int status = 0;
 	kernelDevice *dev = NULL;

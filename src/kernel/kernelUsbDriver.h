@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -219,7 +219,7 @@ int kernelUsbScheduleInterrupt(usbDevice *, int, unsigned char, int, unsigned,
 	void (*)(usbDevice *, int, void *, unsigned));
 int kernelUsbSetDeviceAttrs(usbDevice *, int, kernelDevice *);
 
-// Detection routines for different driver types
+// Detection functions for different driver types
 kernelDevice *kernelUsbUhciDetect(kernelBusTarget *, kernelDriver *);
 kernelDevice *kernelUsbOhciDetect(kernelBusTarget *, kernelDriver *);
 kernelDevice *kernelUsbEhciDetect(kernelBusTarget *, kernelDriver *);

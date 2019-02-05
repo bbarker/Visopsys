@@ -10,5 +10,5 @@ In graphics mode, the program is interactive and allows the user to change
 the month and year to display.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 

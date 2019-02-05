@@ -9,3 +9,6 @@ Usage:
 This program is the default 'first boot' program on Visopsys floppy or
 CD-ROM image files that asks if you want to 'install' or 'run now'.
 
+Options:
+-T  : Force text mode operation
+

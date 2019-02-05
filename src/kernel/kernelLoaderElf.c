@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -22,10 +22,10 @@
 // This file contains loader functions for dealing with ELF format executables
 // and object files.
 
-#include "kernelLoader.h"
 #include "kernelLoaderElf.h"
 #include "kernelDebug.h"
 #include "kernelError.h"
+#include "kernelLoader.h"
 #include "kernelMalloc.h"
 #include "kernelMemory.h"
 #include "kernelMultitasker.h"
@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/elf.h>
 
 
 static Elf32SectionHeader *getSectionHeader(void *data, const char *name)
@@ -71,7 +72,7 @@ static Elf32SectionHeader *getSectionHeader(void *data, const char *name)
 
 static Elf32SectionHeader *getSectionHeaderByNumber(void *data, int number)
 {
-	// Look up an ELF section header by number and return the pointer to it.
+	// Look up an ELF section header by number and return the pointer to it
 	Elf32Header *header = data;
 	Elf32SectionHeader *sectionHeaders = NULL;
 
@@ -107,29 +108,29 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 	// Look for the ELF magic number (0x7F + E + L + F)
 	if (*magic == 0x464C457F)
 	{
-		// This is an ELF file.
-		sprintf(class->className, "%s %s ", FILECLASS_NAME_ELF,
+		// This is an ELF file
+		sprintf(class->name, "%s %s ", FILECLASS_NAME_ELF,
 			FILECLASS_NAME_BIN);
-		class->class = LOADERFILECLASS_BIN;
+		class->type = LOADERFILECLASS_BIN;
 
 		// Is it an executable, object file, shared library, or core?
 		switch (header->e_type)
 		{
 			case ELFTYPE_RELOC:
 			{
-				strcat(class->className, FILECLASS_NAME_OBJ);
-				class->class |= LOADERFILECLASS_OBJ;
+				strcat(class->name, FILECLASS_NAME_OBJ);
+				class->type |= LOADERFILECLASS_OBJ;
 				break;
 			}
 			case ELFTYPE_EXEC:
 			{
-				sectionHeaders =
-					(Elf32SectionHeader *)((void *) dataPtr + header->e_shoff);
+				sectionHeaders = (Elf32SectionHeader *)((void *) dataPtr +
+					header->e_shoff);
 
 				for (count = 1; count < header->e_shnum; count ++)
 				{
-					// Don't scan the section headers if they're located beyond
-					// the limits of the buffer we've been given
+					// Don't scan the section headers if they're located
+					// beyond the limits of the buffer we've been given
 					if (((void *) &sectionHeaders[count] +
 						sizeof(Elf32SectionHeader)) > (dataPtr + size))
 					{
@@ -138,27 +139,28 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 
 					if (sectionHeaders[count].sh_type == ELFSHT_DYNAMIC)
 					{
-						strcat(class->className, FILECLASS_NAME_DYNAMIC " ");
-						class->subClass |= LOADERFILESUBCLASS_DYNAMIC;
+						strcat(class->name, FILECLASS_NAME_DYNAMIC " ");
+						class->subType |= LOADERFILESUBCLASS_DYNAMIC;
 						break;
 					}
 				}
-				strcat(class->className, FILECLASS_NAME_EXEC);
-				class->class |= LOADERFILECLASS_EXEC;
+
+				strcat(class->name, FILECLASS_NAME_EXEC);
+				class->type |= LOADERFILECLASS_EXEC;
 				break;
 			}
 			case ELFTYPE_SHARED:
 			{
-				strcat(class->className,
-					FILECLASS_NAME_DYNAMIC " " FILECLASS_NAME_LIB);
-				class->class |= LOADERFILECLASS_LIB;
-				class->subClass |= LOADERFILESUBCLASS_DYNAMIC;
+				strcat(class->name, FILECLASS_NAME_DYNAMIC " "
+					FILECLASS_NAME_LIB);
+				class->type |= LOADERFILECLASS_LIB;
+				class->subType |= LOADERFILESUBCLASS_DYNAMIC;
 				break;
 			}
 			case ELFTYPE_CORE:
 			{
-				strcat(class->className, FILECLASS_NAME_CORE);
-				class->class |= LOADERFILECLASS_DATA;
+				strcat(class->name, FILECLASS_NAME_CORE);
+				class->type |= LOADERFILECLASS_DATA;
 				break;
 			}
 		}
@@ -166,7 +168,10 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 		return (1);
 	}
 	else
+	{
+		// No
 		return (0);
+	}
 }
 
 
@@ -205,10 +210,8 @@ static loaderSymbolTable *getSymbols(void *data, int kernel)
 		stringTableHeader = getSectionHeader(data, ".dynstr");
 
 		if (!symbolTableHeader || !stringTableHeader)
-		{
 			// No symbols or no strings
 			return (symTable = NULL);
-		}
 	}
 
 	symbols = (data + symbolTableHeader->sh_offset);
@@ -240,7 +243,7 @@ static loaderSymbolTable *getSymbols(void *data, int kernel)
 		symTable->symbols[count - 1].name =
 			(char *)((int) symTableData + symbols[count].st_name);
 		symTable->symbols[count - 1].defined = symbols[count].st_shndx;
-		symTable->symbols[count - 1].value = symbols[count].st_value;
+		symTable->symbols[count - 1].value = (void *) symbols[count].st_value;
 		symTable->symbols[count - 1].size = (unsigned) symbols[count].st_size;
 
 		if (ELF32_ST_BIND(symbols[count].st_info) == ELFSTB_LOCAL)
@@ -284,7 +287,7 @@ static int layoutCodeAndData(void *loadAddress, processImage *execImage,
 
 	kernelDebug(debug_loader, "ELF program load address=%p", loadAddress);
 
-	execImage->entryPoint = header->e_entry;
+	execImage->entryPoint = (void *) header->e_entry;
 
 	kernelDebug(debug_loader, "ELF program entry point=%p",
 		execImage->entryPoint);
@@ -302,8 +305,8 @@ static int layoutCodeAndData(void *loadAddress, processImage *execImage,
 			// Code segment?
 			if (programHeader[count].p_flags == (ELFPF_R | ELFPF_X))
 			{
-				// Make sure that any code segment size in the file is the same
-				// as the size in memory
+				// Make sure that any code segment size in the file is the
+				// same as the size in memory
 				if (programHeader[count].p_filesz !=
 					programHeader[count].p_memsz)
 				{
@@ -314,7 +317,8 @@ static int layoutCodeAndData(void *loadAddress, processImage *execImage,
 					return (status = ERR_INVALID);
 				}
 
-				execImage->virtualAddress = programHeader[count].p_vaddr;
+				execImage->virtualAddress = (void *)
+					programHeader[count].p_vaddr;
 
 				if (execImage->virtualAddress >=
 					(void *) KERNEL_VIRTUAL_ADDRESS)
@@ -346,11 +350,14 @@ static int layoutCodeAndData(void *loadAddress, processImage *execImage,
 		}
 	}
 
-	// Make sure there are 2 program header entries; 1 for code and 1 for data,
-	// since this code is not sophisticated enough to handle other possibilities.
+	// Make sure there are 2 program header entries; 1 for code and 1 for
+	// data, since this code is not sophisticated enough to handle other
+	// possibilities.
 	if (loadSegments != 2)
+	{
 		kernelError(kernel_warn, "Unexpected number of loadable ELF program "
 			"header entries (%d)", loadSegments);
+	}
 
 	// Calculate our image's memory size (rounded up to MEMORY_PAGE_SIZE).
 	// It's OK for the code virtual address to be zero.
@@ -379,14 +386,16 @@ static int layoutCodeAndData(void *loadAddress, processImage *execImage,
 		if (programHeader[count].p_type == ELFPT_LOAD)
 		{
 			void *srcAddr = (loadAddress + programHeader[count].p_offset);
-			void *destAddr = (imageMemory + (programHeader[count].p_vaddr -
-				execImage->virtualAddress));
+			void *destAddr = (imageMemory +
+				((void *) programHeader[count].p_vaddr -
+					execImage->virtualAddress));
 
 			kernelDebug(debug_loader, "ELF srcAddr=%p+0x%08x", loadAddress,
 				programHeader[count].p_offset);
 			kernelDebug(debug_loader, "ELF destAddr=%p+(%p-%p=0x%08x)",
-				imageMemory, programHeader[count].p_vaddr,
-				execImage->virtualAddress, (programHeader[count].p_vaddr -
+				imageMemory, (void *) programHeader[count].p_vaddr,
+				execImage->virtualAddress,
+				((void *) programHeader[count].p_vaddr -
 					execImage->virtualAddress));
 			kernelDebug(debug_loader, "ELF copy segment from %p->%p size %u "
 				"(%x)", srcAddr, destAddr, programHeader[count].p_filesz,
@@ -407,8 +416,11 @@ static int layoutCodeAndData(void *loadAddress, processImage *execImage,
 				execImage->dataSize = programHeader[count].p_memsz;
 			}
 			else
+			{
 				kernelError(kernel_warn, "Loadable ELF program header entry "
-					"has unsupported flags 0x%x", programHeader[count].p_flags);
+					"has unsupported flags 0x%x",
+					programHeader[count].p_flags);
+			}
 		}
 	}
 
@@ -546,7 +558,7 @@ static int resolveLibrarySymbols(loaderSymbolTable **symTable,
 		// Skip undefined symbols, and local ones we're not exporting from
 		// this library
 		if (!symbol->name[0] || !symbol->defined ||
-			(symbol->binding != LOADERSYMBOLBIND_GLOBAL))
+			(symbol->binding == LOADERSYMBOLBIND_LOCAL))
 		{
 			continue;
 		}
@@ -696,8 +708,8 @@ static kernelRelocationTable *getRelocations(void *loadAddress,
 				Elf32Symbol *sym =
 					&symArray[ELF32_R_SYM(relArray[count2].r_info)];
 
-				char *symName =
-					(loadAddress + stringHeader->sh_offset + sym->st_name);
+				char *symName = (loadAddress + stringHeader->sh_offset +
+					sym->st_name);
 
 				// Find the symbol in our symbol table
 				for (count3 = 0; count3 < symbols->numSymbols; count3 ++)
@@ -705,15 +717,15 @@ static kernelRelocationTable *getRelocations(void *loadAddress,
 					if (!strcmp(symbols->symbols[count3].name, symName))
 					{
 						table->relocations[table->numRelocs].symbolName =
-						symbols->symbols[count3].name;
+							symbols->symbols[count3].name;
 						break;
 					}
 				}
 
 				if (!table->relocations[table->numRelocs].symbolName)
 				{
-					kernelError(kernel_error, "Unrecognized symbol name %s in "
-						"ELF image", symName);
+					kernelError(kernel_error, "Unrecognized symbol name %s "
+						"in ELF image", symName);
 					kernelFree(table);
 					return (table = NULL);
 				}
@@ -756,9 +768,8 @@ static int doRelocations(void *dataAddress, void *codeVirtualAddress,
 		type = (int) ELF32_R_TYPE(relocTable->relocations[count1].info);
 		if (relocTable->relocations[count1].symbolName)
 		{
-			symbol =
-				kernelLoaderFindSymbol(relocTable->relocations[count1]
-					.symbolName, globalSymTable);
+			symbol = kernelLoaderFindSymbol(
+				relocTable->relocations[count1].symbolName, globalSymTable);
 			if (!symbol)
 			{
 				kernelError(kernel_error, "Symbol %s not found",
@@ -949,7 +960,7 @@ static int pullInLibrary(int processId, kernelDynamicLibrary *library,
 	int status = 0;
 	unsigned dataOffset = 0;
 	void *dataMem = NULL;
-	unsigned libraryDataPhysical = NULL;
+	unsigned libraryDataPhysical = 0;
 
 	kernelDebug(debug_loader, "ELF pull in library %s", library->name);
 

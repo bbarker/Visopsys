@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,53 +22,170 @@ msgid "Archive Manager"
 msgstr ""
 
 #: archman.c:57
-msgid "Extract all"
+msgid "New"
 msgstr ""
 
 #: archman.c:58
+msgid "Open"
+msgstr ""
+
+#: archman.c:59
+msgid "Extract all"
+msgstr ""
+
+#: archman.c:60
 msgid "Extract"
 msgstr ""
 
-#: archman.c:95
+#: archman.c:61
+msgid "Add"
+msgstr ""
+
+#: archman.c:62
+msgid "Delete"
+msgstr ""
+
+#: archman.c:116
 msgid "Error"
 msgstr ""
 
-#: archman.c:136
-#, c-format
-msgid "Error %d creating new archive file."
+#: archman.c:131
+msgid "Couldn't create temporary file"
 msgstr ""
 
-#: archman.c:150
+#: archman.c:157
+msgid "Getting info"
+msgstr ""
+
+#: archman.c:158
+msgid "Reading archive info"
+msgstr ""
+
+#: archman.c:171
 msgid "Couldn't read archive contents"
 msgstr ""
 
-#: archman.c:221
+#: archman.c:286
+#, c-format
+msgid "Error %d creating new archive file"
+msgstr ""
+
+#: archman.c:296
+#, c-format
+msgid "%s is not an archive file"
+msgstr ""
+
+#: archman.c:380
 msgid "Couldn't create working directory"
 msgstr ""
 
-#: archman.c:346
+#: archman.c:558
+msgid "Save changes?"
+msgstr ""
+
+#: archman.c:559
+msgid "Archive has been modified.  Save changes?"
+msgstr ""
+
+#: archman.c:560
+msgid "Save"
+msgstr ""
+
+#: archman.c:560
+msgid "Discard"
+msgstr ""
+
+#: archman.c:565
+msgid "Choose archive type"
+msgstr ""
+
+#: archman.c:566
+msgid "What format should the archive be saved as?"
+msgstr ""
+
+#: archman.c:567
+msgid "TAR archive (.tar)"
+msgstr ""
+
+#: archman.c:568
+msgid "Gzip-compressed TAR archive (.tar.gz)"
+msgstr ""
+
+#: archman.c:580
+msgid "Save as"
+msgstr ""
+
+#: archman.c:581
+msgid "Please enter a destination file:"
+msgstr ""
+
+#: archman.c:647
+msgid "Compressing"
+msgstr ""
+
+#: archman.c:659
+#, c-format
+msgid "Error %d compressing archive"
+msgstr ""
+
+#: archman.c:825
+msgid "Choose file"
+msgstr ""
+
+#: archman.c:826
+msgid "Please enter a file to open:"
+msgstr ""
+
+#: archman.c:888
 msgid "Enter directory"
 msgstr ""
 
-#: archman.c:347
+#: archman.c:889
 msgid "Please enter a directory to extract to:"
 msgstr ""
 
-#: archman.c:385
+#: archman.c:936
 msgid "Extracting"
 msgstr ""
 
-#: archman.c:536
+#: archman.c:1018
+msgid "Choose item"
+msgstr ""
+
+#: archman.c:1019
+msgid "Please enter a file or directory to add:"
+msgstr ""
+
+#: archman.c:1030
+msgid "Adding"
+msgstr ""
+
+#: archman.c:1038
+#, c-format
+msgid "Error %d adding %s"
+msgstr ""
+
+#: archman.c:1051 archman.c:1114
+#, c-format
+msgid "Error %d adding to parent archive"
+msgstr ""
+
+#: archman.c:1091
+msgid "Deleting"
+msgstr ""
+
+#: archman.c:1099
+#, c-format
+msgid "Error %d deleting %s"
+msgstr ""
+
+#: archman.c:1254
+msgid "Up"
+msgstr ""
+
+#: archman.c:1389
 #, c-format
 msgid ""
 "\n"
 "The \"%s\" command only works in graphics mode\n"
-msgstr ""
-
-#: archman.c:544
-msgid "Enter filename"
-msgstr ""
-
-#: archman.c:545
-msgid "Please enter an archive file to manage:"
 msgstr ""

@@ -17,8 +17,8 @@ Usage:
     Print info about the members of the archive file.
 
 Options:
--a         : add files to an archive
--d         : delete members from an archive
--i         : print info about the archive members
--p         : show a progress indicator
+-a  : Add files to an archive
+-d  : Delete members from an archive
+-i  : Print info about the archive members
+-p  : Show a progress indicator
 

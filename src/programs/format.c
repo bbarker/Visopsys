@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -73,6 +73,7 @@ Options:
 </help>
 */
 
+#include <dlfcn.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
@@ -81,7 +82,6 @@ Options:
 #include <unistd.h>
 #include <sys/api.h>
 #include <sys/env.h>
-#include <sys/ntfs.h>
 #include <sys/paths.h>
 #include <sys/vsh.h>
 
@@ -89,6 +89,7 @@ Options:
 
 static int graphics = 0;
 static int processId = 0;
+static int (*ntfsFormat)(const char *, const char *, int, progress *) = NULL;
 static disk diskInfo[DISK_MAXDEVICES];
 static int numberDisks = 0;
 static int silentMode = 0;
@@ -395,6 +396,7 @@ static void usage(char *name)
 int main(int argc, char *argv[])
 {
 	int status = 0;
+	void *handle = NULL;
 	char opt;
 	int diskNumber = -1;
 	char rootDisk[DISK_MAX_NAMELENGTH];
@@ -414,6 +416,11 @@ int main(int argc, char *argv[])
 
 	// Are graphics enabled?
 	graphics = graphicsAreEnabled();
+
+	// See whether the NTFS formatting capability is available
+	handle = dlopen("libntfs.so", 0);
+	if (handle)
+		ntfsFormat = dlsym(handle, "ntfsFormat");
 
 	// By default, we do 'generic' (i.e. let the driver make decisions) FAT.
 	strcpy(type, "fat");
@@ -473,6 +480,12 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	if (!strcasecmp(type, "ntfs") && !ntfsFormat)
+	{
+		error("%s", _("NTFS formatting is not available"));
+		return (status = ERR_NOTIMPLEMENTED);
+	}
+
 	// Call the kernel to give us the number of available disks
 	numberDisks = diskGetCount();
 
@@ -482,9 +495,11 @@ int main(int argc, char *argv[])
 		return (status);
 
 	if (!graphics && !silentMode)
+	{
 		// Print a message
-		printf("%s", _("\nVisopsys FORMAT Utility\nCopyright (C) 1998-2016 J. "
+		printf("%s", _("\nVisopsys FORMAT Utility\nCopyright (C) 1998-2018 J. "
 			"Andrew McLaughlin\n"));
+	}
 
 	if (argc > 1)
 	{
@@ -578,6 +593,7 @@ int main(int argc, char *argv[])
 	}
 	else if (!strcasecmp(type, "ntfs"))
 	{
+		// NTFS formatting is done by our libntfs library
 		status = ntfsFormat(diskInfo[diskNumber].name, volName, longFormat,
 			&prog);
 		filesystemScan(diskInfo[diskNumber].name);

@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imgboot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: 2015-05-08 02:09+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -18,16 +18,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.7.6\n"
 
-#: imgboot.c:60
+#: imgboot.c:64
 #, c-format
 msgid "Welcome to %s"
 msgstr "Добро пожаловать в %s"
 
-#: imgboot.c:61
-msgid "Copyright (C) 1998-2016 J. Andrew McLaughlin"
-msgstr "Copyright (C) 1998-2016 J. Andrew McLaughlin"
+#: imgboot.c:65
+msgid "Copyright (C) 1998-2018 J. Andrew McLaughlin"
+msgstr "Copyright (C) 1998-2018 J. Andrew McLaughlin"
 
-#: imgboot.c:63
+#: imgboot.c:67
 #, fuzzy
 msgid ""
 "  This program is free software; you can redistribute it and/or modify it\n"
@@ -50,7 +50,7 @@ msgstr ""
 "  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
 "  the file /system/COPYING.txt for more details."
 
-#: imgboot.c:71
+#: imgboot.c:75
 msgid ""
 "Would you like to install Visopsys?\n"
 "(Choose continue to skip installing)"
@@ -58,27 +58,27 @@ msgstr ""
 "Установить Visopsys?\n"
 "(Продолжить чтобы пропустить установку)"
 
-#: imgboot.c:73
+#: imgboot.c:77
 msgid "Install"
 msgstr "Установка"
 
-#: imgboot.c:74 imgboot.c:204
+#: imgboot.c:78 imgboot.c:212
 msgid "Continue"
 msgstr "Продолжить"
 
-#: imgboot.c:75
+#: imgboot.c:79
 msgid "Language"
 msgstr ""
 
-#: imgboot.c:76
+#: imgboot.c:80
 msgid "Don't ask me this again"
 msgstr "Не спрашивать про это впредь"
 
-#: imgboot.c:84
+#: imgboot.c:88
 msgid "Would you like to reboot now?"
 msgstr "Перезагрузить сейчас?"
 
-#: imgboot.c:85
+#: imgboot.c:89
 msgid ""
 "Using the administrator account 'admin'.\n"
 "There is no password set."
@@ -86,11 +86,11 @@ msgstr ""
 "Используется уч. запись 'admin'.\n"
 "Пароль не назначен."
 
-#: imgboot.c:160
+#: imgboot.c:168
 msgid "Error"
 msgstr "Ошибка"
 
-#: imgboot.c:162
+#: imgboot.c:170
 #, c-format
 msgid ""
 "\n"
@@ -103,20 +103,20 @@ msgstr ""
 "ОШИБКА: %s\n"
 "\n"
 
-#: imgboot.c:185
+#: imgboot.c:193
 #, c-format
 msgid "%s  Quitting."
 msgstr "%s  Выходим."
 
-#: imgboot.c:203
+#: imgboot.c:211
 msgid "Reboot?"
 msgstr "Перезагрузить?"
 
-#: imgboot.c:204
+#: imgboot.c:212
 msgid "Reboot"
 msgstr "Перезагрузка"
 
-#: imgboot.c:213
+#: imgboot.c:221
 #, c-format
 msgid ""
 "\n"
@@ -125,31 +125,31 @@ msgstr ""
 "\n"
 "%s (y/n): "
 
-#: imgboot.c:222
+#: imgboot.c:230
 msgid "Yes\n"
 msgstr "Да\n"
 
-#: imgboot.c:228
+#: imgboot.c:236
 msgid "No\n"
 msgstr "Нет\n"
 
-#: imgboot.c:438
+#: imgboot.c:446
 msgid "Can't create window!"
 msgstr "Не могу создать окно!"
 
-#: imgboot.c:558
+#: imgboot.c:572
 msgid "o Install                    "
 msgstr "o Установка                    "
 
-#: imgboot.c:559
+#: imgboot.c:573
 msgid "o Continue                   "
 msgstr "o Продолжить                    "
 
-#: imgboot.c:560
+#: imgboot.c:574
 msgid "o Always continue (never ask)"
 msgstr "o Всегда продолжать (не спрашивать)"
 
-#: imgboot.c:574
+#: imgboot.c:588
 msgid ""
 "This program can only be run as a privileged user.\n"
 "(Try logging in as user \"admin\")."
@@ -157,16 +157,16 @@ msgstr ""
 "This program can only be run as a privileged user.\n"
 "(Try logging in as user \"admin\")."
 
-#: imgboot.c:588
+#: imgboot.c:602
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""
 
-#: imgboot.c:622
+#: imgboot.c:636
 msgid "Administrator account"
 msgstr "Уч. запись администратора"
 
-#: imgboot.c:654
+#: imgboot.c:668
 msgid ""
 "\n"
 "Please select from the following options"

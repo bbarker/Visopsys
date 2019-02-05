@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ _X_ int vshDumpFile(const char *fileName)
 
 	memset(&theFile, 0, sizeof(file));
 
-	// Call the "find file" routine to see if we can get the first file
+	// Call the "find file" function to see if we can get the first file
 	status = fileFind(fileName, &theFile);
 	if (status < 0)
 		return (errno = status);

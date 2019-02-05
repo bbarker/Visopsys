@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -32,6 +32,7 @@
 #include "kernelPic.h"
 #include <errno.h>
 #include <string.h>
+#include <time.h>
 #include <sys/processor.h>
 
 #define MOUSE_SHORT_TIMEOUT		50 // ms
@@ -300,7 +301,7 @@ static void mouseInterrupt(void)
 	kernelDebug(debug_io, "Ps2Mouse mouse interrupt");
 
 	if (enabled)
-		// Call the routine to read the data
+		// Call the function to read the data
 		readData();
 
 	kernelInterruptClearCurrent();
@@ -383,7 +384,7 @@ static int command(unsigned char cmd, int numParams, unsigned char *inParams,
 			// If this is a reset command, wait a little bit for the operation
 			// to complete
 			if ((cmd == 0xFF) && !count)
-				status = inPort60(&data, mouse_input, 1000 /* ms */);
+				status = inPort60(&data, mouse_input, MS_PER_SEC);
 			else
 				status = inPort60(&data, mouse_input, MOUSE_LONG_TIMEOUT);
 
@@ -562,7 +563,7 @@ static int initialize(void)
 
 static int driverDetect(void *parent, kernelDriver *driver)
 {
-	// This routine is used to detect and initialize each device, as well as
+	// This function is used to detect and initialize each device, as well as
 	// registering each one with any higher-level interfaces.  Also talks to
 	// the keyboard controller a little bit to initialize the mouse
 

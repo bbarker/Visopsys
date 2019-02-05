@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -45,9 +45,9 @@
 	void kernelDebugRemoveFile(const char *);
 	void kernelDebugOutput(const char *, const char *, int, debug_category,
 		const char *, ...) __attribute__((format(printf, 5, 6)));
-	void kernelDebugHex(void *, unsigned);
-	void kernelDebugHexDwords(void *, unsigned);
-	void kernelDebugBinary(void *, unsigned);
+	void kernelDebugHexOutput(const char *, void *, unsigned);
+	void kernelDebugHexDwordsOutput(const char *, void *, unsigned);
+	void kernelDebugBinaryOutput(const char *, void *, unsigned);
 	void kernelDebugStack(void *, unsigned, void *, long, unsigned);
 	void kernelDebugDoStop(const char *, const char *, int);
 
@@ -56,12 +56,22 @@
 	#define DEBUG_REMOVEFILE kernelDebugRemoveFile(__FILE__)
 
 	// These macros should be used for actual debug calls
+
 	#define kernelDebug(category, message, arg...) \
 		kernelDebugOutput(__FILE__, __FUNCTION__, __LINE__, category, \
 			message, ##arg)
 
 	#define kernelDebugError(message, arg...) \
 		kernelError(kernel_warn, message, ##arg)
+
+	#define kernelDebugHex(pointer, length) \
+		kernelDebugHexOutput(__FILE__, pointer, length);
+
+	#define kernelDebugHexDwords(pointer, length) \
+		kernelDebugHexDwordsOutput(__FILE__, pointer, length);
+
+	#define kernelDebugBinary(pointer, length) \
+		kernelDebugBinaryOutput(__FILE__, pointer, length);
 
 	#define kernelDebugStop() \
 		kernelDebugDoStop(__FILE__, __FUNCTION__, __LINE__)

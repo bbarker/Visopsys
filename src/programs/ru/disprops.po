@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: disprops\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: 2015-05-08 02:40+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -18,72 +18,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.7.6\n"
 
-#: disprops.c:56
+#: disprops.c:55
 msgid "Display Settings"
 msgstr "Параметры дисплея"
 
-#: disprops.c:57
+#: disprops.c:56
 msgid "Screen resolution:"
 msgstr "Разрешение экрана:"
 
-#: disprops.c:58
+#: disprops.c:57
 msgid "Colors:"
 msgstr "Цвета:"
 
-#: disprops.c:59
+#: disprops.c:58
 msgid "Foreground"
 msgstr "Передник"
 
-#: disprops.c:60
+#: disprops.c:59
 msgid "Background"
 msgstr "Фон"
 
-#: disprops.c:61
+#: disprops.c:60
 msgid "Desktop"
 msgstr "Рабочий стол"
 
-#: disprops.c:62
+#: disprops.c:61
 msgid "Change"
 msgstr "Изменить"
 
-#: disprops.c:63
+#: disprops.c:62
 msgid "Background wallpaper:"
 msgstr "Обои:"
 
-#: disprops.c:64
+#: disprops.c:63
 msgid "Choose"
 msgstr "Выбрать"
 
-#: disprops.c:65
+#: disprops.c:64
 msgid "Use background wallpaper"
 msgstr "Использовать обои"
 
-#: disprops.c:66
+#: disprops.c:65
 msgid "Miscellaneous:"
 msgstr "Разное:"
 
-#: disprops.c:67
+#: disprops.c:66
 msgid "Boot in graphics mode"
 msgstr "Загружать в графическом режиме"
 
-#: disprops.c:68
+#: disprops.c:67
 msgid "Show a clock on the desktop"
 msgstr "Показывать часы на рабочем столе"
 
-#: disprops.c:69
+#: disprops.c:68
 msgid "OK"
 msgstr "ОК"
 
-#: disprops.c:70
+#: disprops.c:69
 msgid "Cancel"
 msgstr "Отмена"
 
-#: disprops.c:218
+#: disprops.c:217
 #, c-format
 msgid " %d x %d, %d bit "
 msgstr " %d x %d, %d bit "
 
-#: disprops.c:686
+#: disprops.c:683
 #, c-format
 msgid ""
 "The resolution has been changed to %dx%d, %dbpp\n"
@@ -92,20 +92,20 @@ msgstr ""
 "Разрешение изменено на %dx%d, %dbpp\n"
 "Изменения вступят в силу после перезагрузки."
 
-#: disprops.c:690
+#: disprops.c:687
 msgid "Changed"
 msgstr "Изменено"
 
-#: disprops.c:694
+#: disprops.c:691
 #, c-format
 msgid "Error %d setting mode"
 msgstr "Ошибка %d назначения режима"
 
-#: disprops.c:695
+#: disprops.c:692
 msgid "Error"
 msgstr "Ошибка"
 
-#: disprops.c:971
+#: disprops.c:968
 #, c-format
 msgid ""
 "\n"

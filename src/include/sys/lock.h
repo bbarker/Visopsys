@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -23,11 +23,19 @@
 
 #if !defined(_LOCK_H)
 
+#ifdef __cplusplus
+	#define __VOLATILE
+#else
+	#define __VOLATILE volatile
+#endif
+
 // A lock structure
-typedef volatile struct {
+typedef __VOLATILE struct {
 	int processId;
 
 } lock;
+
+#undef __VOLATILE
 
 #define _LOCK_H
 #endif

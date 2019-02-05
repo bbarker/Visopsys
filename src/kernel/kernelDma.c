@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelDma.c
 //
 
-// This file contains functions for DMA access, and routines for managing
+// This file contains functions for DMA access, and functions for managing
 // the installed DMA driver.
 
 #include "kernelDma.h"
@@ -68,7 +68,7 @@ int kernelDmaInitialize(kernelDevice *dev)
 int kernelDmaOpenChannel(int channelNumber, void *address, int count, int mode)
 {
 	// This function is used to set up a DMA channel and prepare it to
-	// read or write data.  It is a generic routine which calls the
+	// read or write data.  It is a generic function which calls the
 	// specific associated device driver function.
 
 	int status = 0;
@@ -76,7 +76,7 @@ int kernelDmaOpenChannel(int channelNumber, void *address, int count, int mode)
 	if (!systemDma)
 		return (status = ERR_NOTINITIALIZED);
 
-	// Make sure the driver's "open channel" routine has been initialized
+	// Make sure the driver's "open channel" function has been initialized
 	if (!ops->driverOpenChannel)
 	{
 		// Ooops.  Driver function is NULL.
@@ -93,14 +93,14 @@ int kernelDmaCloseChannel(int channelNumber)
 {
 	// This function is used to close a DMA channel after the desired
 	// "read" or "write" operation has been completed.  It is a generic
-	// routine which calls the specific associated device driver function.
+	// function which calls the specific associated device driver function.
 
 	int status = 0;
 
 	if (!systemDma)
 		return (status = ERR_NOTINITIALIZED);
 
-	// Make sure the driver's "close channel" routine has been initialized
+	// Make sure the driver's "close channel" function has been initialized
 	if (!ops->driverCloseChannel)
 	{
 		// Ooops.  Driver function is NULL.

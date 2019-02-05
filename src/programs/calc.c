@@ -165,8 +165,8 @@ static void switch_number_base(int new_base)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -522,7 +522,7 @@ static void create_window(void)
 }
 
 
-int main(int argc __attribute__((unused)), char *argv[])
+int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, getenv(ENV_LANG));
 	textdomain("calc");
@@ -530,8 +530,8 @@ int main(int argc __attribute__((unused)), char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			argv[0]);
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (ERR_NOTINITIALIZED);
 	}
 

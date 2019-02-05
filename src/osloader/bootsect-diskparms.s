@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 ;;  bootsect-diskparms.s
 ;;
 
-;; This code is a common disk parameter gathering for bootsector code.  It's
+;; This code is a common disk parameter gathering for boot sector code.  It's
 ;; just meant to be %included, not compiled separately.
 
 
@@ -38,6 +38,6 @@
 	shr DX, 8				; Number of heads, 0-based
 	inc DX
 	mov word [NUMHEADS], DX
-	and CX, 003Fh				; Sectors per track/cylinder
+	and CX, 003Fh			; Sectors per track/cylinder
 	mov word [NUMSECTS], CX
 

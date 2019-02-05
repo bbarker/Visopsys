@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -21,14 +21,14 @@
 
 // This is the standard "stat" function, as found in standard C libraries
 
-#include <unistd.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
 #include <time.h>
 #include <sys/api.h>
 
 
-int stat(const char *fileName, struct stat *buf)
+int stat(const char *fileName, struct stat *st)
 {
 	// Returns information about the specified file
 
@@ -38,6 +38,13 @@ int stat(const char *fileName, struct stat *buf)
 
 	if (visopsys_in_kernel)
 		return (errno = ERR_BUG);
+
+	// Check params
+	if (!fileName || !st)
+	{
+		errno = ERR_NULLPARAMETER;
+		return (-1);
+	}
 
 	// Try to find the file
 	memset(&theFile, 0, sizeof(file));
@@ -57,28 +64,28 @@ int stat(const char *fileName, struct stat *buf)
 		return (-1);
 	}
 
-	buf->st_dev = theDisk.deviceNumber;
-	buf->st_ino = 1;      // bogus
+	st->st_dev = theDisk.deviceNumber;
+	st->st_ino = 1;      // bogus
 
 	// Set the file type, if known
-	buf->st_mode = 0;
+	st->st_mode = 0;
 	if (theFile.type == fileT)
-		buf->st_mode |= S_IFREG;
+		st->st_mode |= S_IFREG;
 	if (theFile.type == dirT)
-		buf->st_mode |= S_IFDIR;
+		st->st_mode |= S_IFDIR;
 	if (theFile.type == linkT)
-		buf->st_mode |= S_IFLNK;
+		st->st_mode |= S_IFLNK;
 
-	buf->st_nlink = 1;    // bogus
-	buf->st_uid = 1;      // bogus
-	buf->st_gid = 1;      // bogus
-	buf->st_rdev = 0;     // bogus
-	buf->st_size = theFile.size;
-	buf->st_blksize = theFile.blockSize;
-	buf->st_blocks = theFile.blocks;
-	buf->st_atime = mktime(&theFile.accessed);
-	buf->st_mtime = mktime(&theFile.modified);
-	buf->st_ctime = mktime(&theFile.created);
+	st->st_nlink = 1;    // bogus
+	st->st_uid = 1;      // bogus
+	st->st_gid = 1;      // bogus
+	st->st_rdev = 0;     // bogus
+	st->st_size = theFile.size;
+	st->st_blksize = theFile.blockSize;
+	st->st_blocks = theFile.blocks;
+	st->st_atime = mktime(&theFile.accessed);
+	st->st_mtime = mktime(&theFile.modified);
+	st->st_ctime = mktime(&theFile.created);
 
 	return (0);
 }

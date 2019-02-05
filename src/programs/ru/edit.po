@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: edit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 02:36+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -62,37 +62,37 @@ msgstr "(изменен)"
 msgid "Enter filename"
 msgstr "Введите имя файла"
 
-#: edit.c:967
+#: edit.c:966
 msgid "Discard changes?"
 msgstr "Отклонить изменения?"
 
-#: edit.c:968
+#: edit.c:967
 msgid "Discard"
 msgstr "Отклонить"
 
-#: edit.c:968
+#: edit.c:967
 msgid "Cancel"
 msgstr "Отмена"
 
-#: edit.c:1003 edit.c:1331
+#: edit.c:1002 edit.c:1330
 msgid "Couldn't create file in a read-only filesystem"
 msgstr "Не могу создать файл в ФС только для чтения"
 
-#: edit.c:1005 edit.c:1333
+#: edit.c:1004 edit.c:1332
 #, c-format
 msgid "Error %d loading file"
 msgstr "Ошибка %d загрузки  файла"
 
-#: edit.c:1133
+#: edit.c:1132
 msgid "Unable to launch file dialog"
 msgstr "Невозможно запустить файловый диалог"
 
-#: edit.c:1145
+#: edit.c:1144
 #, c-format
 msgid "Error %d saving file"
 msgstr "Ошибка %d сохранения файла"
 
-#: edit.c:1278
+#: edit.c:1277
 #, c-format
 msgid ""
 "\n"
@@ -101,7 +101,7 @@ msgstr ""
 "\n"
 "Команда  \"%s\" работает только в графическом режиме\n"
 
-#: edit.c:1294
+#: edit.c:1293
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -363,7 +363,7 @@ static int scsiReadWrite(kernelScsiDisk *scsiDisk, unsigned char lun,
 		// Set up the USB transaction, with the SCSI 'read' or 'write' command.
 		status = usbScsiCommand(scsiDisk, lun, (unsigned char *) &cmd10,
 			sizeof(scsiCmd10), buffer, dataLength, &bytes,
-			0 /* default timeout */, read);
+			(USB_STD_TIMEOUT_MS + (10 * numSectors)), read);
 		if ((status < 0) || (bytes < dataLength))
 		{
 			kernelError(kernel_error, "SCSI %s failed",
@@ -1000,7 +1000,7 @@ static int readWriteSectors(int driveNum, uquad_t logicalSector,
 static int driverReadSectors(int driveNum, uquad_t logicalSector,
 	uquad_t numSectors, void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 
 	kernelDebug(debug_scsi, "SCSI driveNum %d read %llu sectors at %llu",
 		driveNum, numSectors, logicalSector);
@@ -1013,7 +1013,7 @@ static int driverReadSectors(int driveNum, uquad_t logicalSector,
 static int driverWriteSectors(int driveNum, uquad_t logicalSector,
 	uquad_t numSectors, const void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 
 	kernelDebug(debug_scsi, "SCSI driveNum %d write %llu sectors at %llu",
 		driveNum, numSectors, logicalSector);
@@ -1077,7 +1077,7 @@ static int driverDetect(void *parent __attribute__((unused)),
 static int driverHotplug(void *parent, int busType, int target, int connected,
 	kernelDriver *driver)
 {
-	// This routine is used to detect whether a newly-connected, hotplugged
+	// This function is used to detect whether a newly-connected, hotplugged
 	// device is supported by this driver during runtime, and if so to do the
 	// appropriate device setup and registration.  Alternatively if the device
 	// is disconnected a call to this function lets us know to stop trying

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -37,6 +37,9 @@ The users (User Manager) program is interactive, and may only be used in
 graphics mode.  It can be used to add and delete user accounts, and set
 account passwords.  If '-p user_name' is specified on the command line,
 this command will prompt the user to set the password for the named user.
+
+Options:
+-p <user_name>  : Set the user's password
 
 </help>
 */
@@ -428,7 +431,6 @@ static void enableButtons(void)
 	int userNumber = -1;
 	int isAdmin = 1;
 	int isCurrentUser = 0;
-	file langDir;
 
 	windowComponentGetSelected(userList, &userNumber);
 	if (userNumber >= 0)
@@ -446,7 +448,7 @@ static void enableButtons(void)
 
 	windowComponentSetEnabled(setLanguageButton,
 		(!isAdmin && (!privilege || isCurrentUser) &&
-			(fileFind(PATH_SYSTEM_LOCALE, &langDir) >= 0)));
+			(fileFind(PATH_SYSTEM_LOCALE, NULL) >= 0)));
 }
 
 
@@ -456,7 +458,6 @@ static int addUser(const char *userName, const char *password)
 
 	int status = 0;
 	char userDir[MAX_PATH_NAME_LENGTH];
-	file f;
 
 	// Make sure the user doesn't already exist
 	if (userExists(userName))
@@ -475,7 +476,7 @@ static int addUser(const char *userName, const char *password)
 
 	// Try to create the user directory
 	snprintf(userDir, MAX_PATH_NAME_LENGTH, PATH_USERS "/%s", userName);
-	if (fileFind(userDir, &f) < 0)
+	if (fileFind(userDir, NULL) < 0)
 	{
 		status = fileMakeDir(userDir);
 		if (status < 0)
@@ -541,7 +542,6 @@ static int setLanguage(const char *userName, const char *language)
 
 	int status = 0;
 	char fileName[MAX_PATH_NAME_LENGTH];
-	file f;
 	char charsetName[CHARSET_NAME_LEN];
 	char keyMapName[KEYMAP_NAMELEN];
 	variableList envList;
@@ -554,7 +554,7 @@ static int setLanguage(const char *userName, const char *language)
 	{
 		// Does the user have a config dir?
 		sprintf(fileName, PATH_USERS_CONFIG, userName);
-		if (fileFind(fileName, &f) < 0)
+		if (fileFind(fileName, NULL) < 0)
 		{
 			// No, try to create it.
 			status = fileMakeDir(fileName);
@@ -565,7 +565,7 @@ static int setLanguage(const char *userName, const char *language)
 		// Does the user have an environment config file?
 		sprintf(fileName, PATH_USERS_CONFIG "/environment.conf", userName);
 
-		status = fileFind(fileName, &f);
+		status = fileFind(fileName, NULL);
 		if (status < 0)
 		{
 			// Doesn't exist.  Create an empty list.
@@ -621,8 +621,8 @@ static int setLanguage(const char *userName, const char *language)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -828,8 +828,8 @@ int main(int argc, char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			argv[0]);
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		errno = ERR_NOTINITIALIZED;
 		return (status = errno);
 	}

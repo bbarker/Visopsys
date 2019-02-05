@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@
 int fseek(FILE *theStream, long offset, int whence)
 {
 	// The fseek() function sets the file-position indicator for the
-	// stream pointed to by stream.  The new position, measured in bytes
+	// stream pointed to by theStream.  The new position, measured in bytes
 	// from the beginning of the file, is obtained by adding offset to the
 	// position specified by whence, whose values are defined in <stdio.h>
 	// as follows:
@@ -43,7 +43,8 @@ int fseek(FILE *theStream, long offset, int whence)
 	long new_pos = 0;
 
 	// This call is not applicable for stdin, stdout, and stderr
-	if ((theStream == stdin) || (theStream == stdout) || (theStream == stderr))
+	if ((theStream == stdin) || (theStream == stdout) ||
+		(theStream == stderr))
 	{
 		errno = ERR_NOTAFILE;
 		return (-1);
@@ -62,11 +63,11 @@ int fseek(FILE *theStream, long offset, int whence)
 		new_pos = offset;
 
 	else if (whence == SEEK_CUR)
-		new_pos = (theStream->offset + offset);
+		new_pos = ((long) theStream->offset + offset);
 
 	else if (whence == SEEK_END)
-		// What is the current EOF of the file?  Set position to EOF plus offset.
-		new_pos = (theStream->f.size + offset);
+		// Seek from the end of the file
+		new_pos = ((long) theStream->f.size + offset);
 
 	// Let the kernel do the rest of the work, baby.
 	status = fileStreamSeek(theStream, new_pos);

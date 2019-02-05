@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -39,18 +39,18 @@ extern color kernelDefaultBackground;
 static inline void bilinearInterpolation(double distanceX, double distanceY,
 	pixel **src, float **srcAlpha, pixel *dest, float *destAlpha)
 {
-	double row0red = (((1.0 - distanceX) * src[0]->red) +
-		(distanceX * src[1]->red));
-	double row0green = (((1.0 - distanceX) * src[0]->green) +
-		(distanceX * src[1]->green));
-	double row0blue = (((1.0 - distanceX) * src[0]->blue) +
-		(distanceX * src[1]->blue));
-	double row1red = (((1.0 - distanceX) * src[1]->red) +
-		(distanceX * src[2]->red));
-	double row1green = (((1.0 - distanceX) * src[1]->green) +
-		(distanceX * src[2]->green));
-	double row1blue = (((1.0 - distanceX) * src[1]->blue) +
-		(distanceX * src[2]->blue));
+	double row0red = (((1.0 - distanceX) * src[0]->red) + (distanceX *
+		src[1]->red));
+	double row0green = (((1.0 - distanceX) * src[0]->green) + (distanceX *
+		src[1]->green));
+	double row0blue = (((1.0 - distanceX) * src[0]->blue) + (distanceX *
+		src[1]->blue));
+	double row1red = (((1.0 - distanceX) * src[1]->red) + (distanceX *
+		src[2]->red));
+	double row1green = (((1.0 - distanceX) * src[1]->green) + (distanceX *
+		src[2]->green));
+	double row1blue = (((1.0 - distanceX) * src[1]->blue) + (distanceX *
+		src[2]->blue));
 
 	dest->red = (((1.0 - distanceY) * row0red) + (distanceY * row1red));
 	dest->green = (((1.0 - distanceY) * row0green) + (distanceY * row1green));
@@ -59,19 +59,20 @@ static inline void bilinearInterpolation(double distanceX, double distanceY,
 	// Are we also interpolating the alpha channel?
 	if (srcAlpha && destAlpha)
 	{
-		double row0alpha =
-			(((1.0 - distanceX) * *srcAlpha[0]) + (distanceX * *srcAlpha[1]));
-		double row1alpha =
-			(((1.0 - distanceX) * *srcAlpha[1]) + (distanceX * *srcAlpha[2]));
-		*destAlpha = (((1.0 - distanceY) * row0alpha) + (distanceY * row1alpha));
+		double row0alpha = (((1.0 - distanceX) * *srcAlpha[0]) + (distanceX *
+			*srcAlpha[1]));
+		double row1alpha = (((1.0 - distanceX) * *srcAlpha[1]) + (distanceX *
+			*srcAlpha[2]));
+		*destAlpha = (((1.0 - distanceY) * row0alpha) + (distanceY *
+			row1alpha));
 	}
 }
 
 
 static int imageCopy(image *srcImage, image *destImage, int kernel)
 {
-	// Given an image, make a copy of it.  If 'kernel' is non-zero, use
-	// kernel memory for the new image.
+	// Given an image, make a copy of it.  If 'kernel' is non-zero, use kernel
+	// memory for the new image.
 
 	int status = 0;
 
@@ -86,7 +87,8 @@ static int imageCopy(image *srcImage, image *destImage, int kernel)
 	}
 	else
 	{
-		destImage->data = kernelMemoryGet(destImage->dataLength, "image data");
+		destImage->data = kernelMemoryGet(destImage->dataLength,
+			"image data");
 	}
 
 	if (!destImage->data)
@@ -173,6 +175,7 @@ int kernelImageFree(image *freeImage)
 			kernelFree(freeImage->data);
 		else
 			kernelMemoryRelease(freeImage->data);
+
 		freeImage->data = NULL;
 	}
 
@@ -217,7 +220,7 @@ int kernelImageLoad(const char *fileName, unsigned reqWidth,
 	}
 
 	// Is it an image?
-	if (!(loaderClass.class & LOADERFILECLASS_IMAGE))
+	if (!(loaderClass.type & LOADERFILECLASS_IMAGE))
 	{
 		kernelError(kernel_error, "%s is not a recognized image format",
 			fileName);
@@ -232,8 +235,8 @@ int kernelImageLoad(const char *fileName, unsigned reqWidth,
 	}
 
 	// Call the appropriate 'load' function
-	status = fileClassDriver->image.load(imageFileData, theFile.size, reqWidth,
-		reqHeight, loadImage);
+	status = fileClassDriver->image.load(imageFileData, theFile.size,
+		reqWidth, reqHeight, loadImage);
 
 	if (status >= 0)
 	{
@@ -334,6 +337,9 @@ int kernelImageResize(image *resizeImage, unsigned width, unsigned height)
 	if (!resizeImage)
 		return (status = ERR_NULLPARAMETER);
 
+	kernelDebug(debug_misc, "Image resize %ux%u -> %ux%u", resizeImage->width,
+		resizeImage->height, width, height);
+
 	if ((resizeImage->width == width) && (resizeImage->height == height))
 		return (status = 0);
 
@@ -355,8 +361,9 @@ int kernelImageResize(image *resizeImage, unsigned width, unsigned height)
 	// Determine the width and height ratios of the new size.
 	ratioX = ((double) resizeImage->width / (double) width);
 	ratioY = ((double) resizeImage->height / (double) height);
-	kernelDebug(debug_misc, "Resize ratio %fx%f", ratioX, ratioY);
-	if ((ratioX < 0) || (ratioX > 10) || (ratioY < 0) || (ratioY > 10))
+
+	kernelDebug(debug_misc, "Image resize ratio %fx%f", ratioX, ratioY);
+	if ((ratioX < 0) || (ratioY < 0))
 		kernelDebugError("Ratio seems strange");
 
 	srcPixels = (pixel *) resizeImage->data;
@@ -408,7 +415,8 @@ int kernelImageResize(image *resizeImage, unsigned width, unsigned height)
 				else
 				{
 					newImage.alpha[destIndex] = 0;
-					PIXEL_COPY(&resizeImage->transColor, &destPixels[destIndex]);
+					PIXEL_COPY(&resizeImage->transColor,
+						&destPixels[destIndex]);
 				}
 			}
 			else
@@ -494,7 +502,8 @@ int kernelImageFill(image *fillImage, color *fillColor)
 }
 
 
-int kernelImagePaste(image *srcImage, image *destImage, int xCoord, int yCoord)
+int kernelImagePaste(image *srcImage, image *destImage, int xCoord,
+	int yCoord)
 {
 	// Given source and destination images, paste the source into the
 	// destination at the given X and Y coordinates.
@@ -524,9 +533,12 @@ int kernelImagePaste(image *srcImage, image *destImage, int xCoord, int yCoord)
 	srcAlpha = (void *) srcImage->alpha;
 	if (srcAlpha && !destImage->alpha)
 		kernelImageGetAlpha(destImage);
+
 	if (destImage->alpha)
+	{
 		destAlpha = ((void *) destImage->alpha + (((yCoord *
 			destImage->width) + xCoord) * sizeof(float)));
+	}
 
 	maxLines = min(srcImage->height, (destImage->height - yCoord));
 	lineWidth = min(srcImage->width, (destImage->width - xCoord));

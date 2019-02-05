@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -42,13 +42,14 @@ custom icons for each.
 */
 
 #include <errno.h>
+#include <libgen.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/api.h>
 #include <sys/ascii.h>
-#include <sys/desktop.h>
+#include <sys/deskconf.h>
 #include <sys/env.h>
 #include <sys/paths.h>
 #include <sys/vsh.h>
@@ -99,7 +100,6 @@ static void error(const char *format, ...)
 static int readConfig(const char *fileName, variableList *config)
 {
 	int status = 0;
-	file f;
 	char langFileName[MAX_PATH_NAME_LENGTH];
 	variableList langConfig;
 	const char *variable = NULL;
@@ -119,9 +119,9 @@ static int readConfig(const char *fileName, variableList *config)
 	if (getenv(ENV_LANG))
 	{
 		sprintf(langFileName, "%s/%s/%s", PATH_SYSTEM_CONFIG,
-			getenv(ENV_LANG), f.name);
+			getenv(ENV_LANG), basename((char *) fileName));
 
-		status = fileFind(langFileName, &f);
+		status = fileFind(langFileName, NULL);
 		if (status >= 0)
 		{
 			status = configRead(langFileName, &langConfig);
@@ -186,8 +186,8 @@ static int processConfig(variableList *config)
 	for (count = 0; count < config->numVariables; count ++)
 	{
 		variable = variableListGetVariable(config, count);
-		if (variable && !strncmp(variable, DESKTOP_ICON_NAME,
-			strlen(DESKTOP_ICON_NAME)))
+		if (variable && !strncmp(variable, DESKVAR_ICON_NAME,
+			strlen(DESKVAR_ICON_NAME)))
 		{
 			numIcons += 1;
 		}
@@ -223,8 +223,8 @@ static int processConfig(variableList *config)
 	for (count = 0; count < config->numVariables; count ++)
 	{
 		variable = variableListGetVariable(config, count);
-		if (variable && !strncmp(variable, DESKTOP_ICON_NAME,
-			strlen(DESKTOP_ICON_NAME)))
+		if (variable && !strncmp(variable, DESKVAR_ICON_NAME,
+			strlen(DESKVAR_ICON_NAME)))
 		{
 			name = (variable + 10);
 
@@ -235,7 +235,7 @@ static int processConfig(variableList *config)
 				WINDOW_MAX_LABEL_LENGTH);
 
 			// Get the image name
-			sprintf(tmp, DESKTOP_ICON_IMAGE, name);
+			sprintf(tmp, DESKVAR_ICON_IMAGE, name);
 			value = variableListGet(config, tmp);
 			if (value)
 			{
@@ -258,7 +258,7 @@ static int processConfig(variableList *config)
 			}
 
 			// Get the command string
-			sprintf(tmp, DESKTOP_ICON_COMMAND, name);
+			sprintf(tmp, DESKVAR_ICON_COMMAND, name);
 			value = variableListGet(config, tmp);
 			if (value)
 				strncpy(icons[numIcons].command, value, MAX_PATH_NAME_LENGTH);
@@ -298,8 +298,8 @@ static void execProgram(int argc, char *argv[])
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	variableList tmpConfig;
 	const char *variable = NULL;
@@ -331,8 +331,8 @@ static void refreshWindow(void)
 		for (count1 = 0; count1 < tmpConfig.numVariables; count1 ++)
 		{
 			variable = variableListGetVariable(&tmpConfig, count1);
-			if (variable && !strncmp(variable, DESKTOP_ICON_NAME,
-				strlen(DESKTOP_ICON_NAME)))
+			if (variable && !strncmp(variable, DESKVAR_ICON_NAME,
+				strlen(DESKVAR_ICON_NAME)))
 			{
 				name = (variable + 10);
 
@@ -460,8 +460,8 @@ int main(int argc, char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			(argc? argv[0] : ""));
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (errno = ERR_NOTINITIALIZED);
 	}
 

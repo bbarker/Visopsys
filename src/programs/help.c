@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -40,7 +40,7 @@ date              Show the date
 defrag            Defragment a filesystem
 deluser           Delete a user account from the system
 disks             Show the disk volumes in the system
-domainname        Prints or sets the system's network domain name.
+domainname        Print or set the system's network domain name
 fdisk             Manage hard disks (must be user "admin")
 file              Show the type of a file
 find              Traverse directory hierarchies
@@ -48,7 +48,7 @@ fontutil          Edit and convert Visopsys fonts
 format            Create new, empty filesystems
 help              Show this summary of help entries
 hexdump           View files as hexadecimal listings
-hostname          Prints or sets the system's network host name
+hostname          Print or set the system's network host name
 ifconfig          Network device information and control
 imgboot           The program launched at first system boot
 install           Install Visopsys (must be user "admin")
@@ -69,18 +69,19 @@ passwd            Set the password on a user account
 ping              'Ping' a host on the network
 ps                Show list of current processes
 pwd               Show the current directory
-ramdisk           Creates or destroys RAM disks
-reboot            Exits to real mode and reboots the computer
+ramdisk           Create or destroy RAM disks
+reboot            Reboot the computer
 renice            Change the priority of a running process
 rm (or del)       Delete a file
 rmdir             Remove a directory
-shutdown          Stops the computer
+shutdown          Stop the computer
 snake             A 'snake' game like the one found on mobile phones
 sync              Synchronize all filesystems on disk
-sysdiag           Performs system diagnostics
+sysdiag           Perform system diagnostics
+tar               Create or manage archives using the TAR format
 touch             Update a file or create a new (empty) file
 umount            Unmount a filesystem
-uname             Prints system information
+uname             Print system information
 unzip             Decompress and extract files from a compressed archive file
 uptime            Time since last boot
 vsh               Start a new command shell
@@ -90,7 +91,7 @@ zip               Compress and archive files
 
 archman           A graphical program for managing archive files
 calc              A calculator program
-clock             Show a simple clock in the corner of the screen
+clock             Show a simple clock in the taskbar menu
 cmdwin            Open a new command window
 computer          Navigate the resources of the computer
 confedit          Edit Visopsys configuration files

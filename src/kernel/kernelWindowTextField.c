@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -44,7 +44,7 @@ static int focus(kernelWindowComponent *component, int yesNo)
 
 	if (saveFocus)
 	{
-		// Call the 'focus' routine of the underlying text area
+		// Call the 'focus' function of the underlying text area
 		status = saveFocus(component, yesNo);
 		if (status < 0)
 			return (status);

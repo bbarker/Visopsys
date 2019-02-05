@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -38,9 +38,23 @@ static int draw(kernelWindowComponent *component)
 	int status = 0;
 	kernelWindowRadioButton *radio = component->data;
 	kernelFont *font = (kernelFont *) component->params.font;
+	int ovalOffset = 0, textOffset = 0;
 	int xCoord = 0, yCoord = 0;
 	color tmpColor;
 	int count1, count2;
+
+	// If the item height is greater than the oval height, its Y coordinate
+	// needs to be offset
+	if (radio->itemHeight > windowVariables->radioButton.size)
+	{
+		ovalOffset = ((radio->itemHeight - windowVariables->radioButton.size) /
+			2);
+	}
+
+	// If the item height is greater than the font glyph height, its Y
+	// coordinate needs to be offset
+	if (font && (radio->itemHeight > font->glyphHeight))
+		textOffset = ((radio->itemHeight - font->glyphHeight) / 2);
 
 	char *tmp = radio->text;
 	for (count1 = 0; count1 < radio->numItems; count1 ++)
@@ -48,23 +62,24 @@ static int draw(kernelWindowComponent *component)
 		xCoord = component->xCoord;
 		yCoord = component->yCoord;
 		if (font)
-			yCoord += (font->glyphHeight * count1);
+			yCoord += (radio->itemHeight * count1);
 
 		memcpy(&tmpColor, (color *) &component->window->background,
 			sizeof(color));
+
 		for (count2 = 0; count2 < 3; count2 ++)
 		{
 			tmpColor.red -= windowVariables->border.shadingIncrement;
 			tmpColor.green -= windowVariables->border.shadingIncrement;
 			tmpColor.blue -= windowVariables->border.shadingIncrement;
 			kernelGraphicDrawOval(component->buffer, &tmpColor, draw_normal,
-				(xCoord + count2), (yCoord + count2),
+				(xCoord + count2), (yCoord + ovalOffset + count2),
 				(windowVariables->radioButton.size - (count2 * 2)),
 				(windowVariables->radioButton.size - (count2 * 2)), 1, 0);
 		}
 
 		kernelGraphicDrawOval(component->buffer, &COLOR_WHITE, draw_normal,
-			(xCoord + 3), (yCoord + 3),
+			(xCoord + 3), (yCoord + ovalOffset + 3),
 			(windowVariables->radioButton.size - 6),
 			(windowVariables->radioButton.size - 6), 1, 1);
 
@@ -72,7 +87,7 @@ static int draw(kernelWindowComponent *component)
 		{
 			kernelGraphicDrawOval(component->buffer,
 				(color *) &component->params.foreground, draw_normal,
-				(xCoord + 3), (yCoord + 3),
+				(xCoord + 3), (yCoord + ovalOffset + 3),
 				(windowVariables->radioButton.size - 6),
 				(windowVariables->radioButton.size - 6), 1, 1);
 		}
@@ -83,8 +98,8 @@ static int draw(kernelWindowComponent *component)
 				(color *) &component->params.foreground,
 				(color *) &component->window->background, font,
 				(char *) component->charSet, tmp, draw_normal,
-				(component->xCoord + windowVariables->radioButton.size + 2),
-				(component->yCoord + (font->glyphHeight * count1)));
+				(xCoord + windowVariables->radioButton.size + 2),
+				(yCoord + textOffset));
 			if (status < 0)
 				break;
 		}
@@ -119,6 +134,8 @@ static int setData(kernelWindowComponent *component, void *data, int numItems)
 	kernelWindowRadioButton *radio = component->data;
 	const char **items = data;
 	int textMemorySize = 0;
+	kernelFont *font = (kernelFont *) component->params.font;
+	int itemWidth = 0;
 	char *tmp = NULL;
 	int count;
 
@@ -133,6 +150,7 @@ static int setData(kernelWindowComponent *component, void *data, int numItems)
 	// Free any old memory
 	if (radio->text)
 		kernelFree(radio->text);
+
 	radio->numItems = 0;
 
 	// Try to get memory
@@ -147,24 +165,28 @@ static int setData(kernelWindowComponent *component, void *data, int numItems)
 		strcpy(tmp, items[count]);
 		tmp += (strlen(items[count]) + 1);
 
-		if (component->params.font &&
-			((kernelFontGetPrintedWidth((kernelFont *) component->params.font,
-				(char *) component->charSet, items[count]) +
-				windowVariables->radioButton.size + 3) > component->width))
+		if (font)
 		{
-			component->width = (kernelFontGetPrintedWidth((kernelFont *)
-				component->params.font, (char *) component->charSet,
-				items[count]) + windowVariables->radioButton.size + 3);
+			itemWidth = (kernelFontGetPrintedWidth(font,
+				(char *) component->charSet, items[count]) +
+					windowVariables->radioButton.size + 3);
 		}
+
+		if (itemWidth > component->width)
+			component->width = itemWidth;
 
 		radio->numItems += 1;
 	}
 
-	// The height of the radio button is the height of the font times the number
-	// of items.
-	if (component->params.font)
-		component->height = (numItems *
-			((kernelFont *) component->params.font)->glyphHeight);
+	// The height of each item is the greater of the radio button size,
+	// or the glyph height of the font
+	radio->itemHeight = windowVariables->radioButton.size;
+	if (font && (font->glyphHeight > radio->itemHeight))
+		radio->itemHeight = font->glyphHeight;
+
+	// The height of the radio button is the item height, times the number of
+	// items.
+	component->height = (numItems * radio->itemHeight);
 
 	component->minWidth = component->width;
 	component->minHeight = component->height;
@@ -197,9 +219,8 @@ static int setSelected(kernelWindowComponent *component, int selected)
 
 	// Re-draw
 	draw(component);
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-			component->width, component->height);
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
 
 	return (status = 0);
 }
@@ -217,11 +238,10 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 	{
 		// Figure out which item was clicked based on the coordinates of the
 		// event
-		clickedItem =
-			(event->yPosition - (component->window->yCoord + component->yCoord));
-		if (component->params.font)
-			clickedItem /=
-				((kernelFont *) component->params.font)->glyphHeight;
+		clickedItem = (event->yPosition - (component->window->yCoord +
+			component->yCoord));
+
+		clickedItem /= radio->itemHeight;
 
 		// Is this item different from the currently selected item?
 		if (clickedItem != radio->selectedItem)
@@ -270,9 +290,8 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 		if (component->draw)
 			component->draw(component);
 
-		component->window
-			->update(component->window, component->xCoord, component->yCoord,
-				component->width, component->height);
+		component->window->update(component->window, component->xCoord,
+			component->yCoord, component->width, component->height);
 
 		// Make this also a 'selection' event
 		event->type |= EVENT_SELECTION;

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -270,7 +270,7 @@ exit:
 void kernelErrorOutput(const char *fileName, const char *function, int line,
 	kernelErrorKind kind, const char *message, ...)
 {
-	// This routine takes a bunch of parameters and outputs a kernel error
+	// This function takes a bunch of parameters and outputs a kernel error
 	// which is output to the text console and the kernel log.
 
 	int printErrors = !kernelLogGetToConsole();

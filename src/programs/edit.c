@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -34,7 +34,7 @@ Usage:
 (Only available in graphics mode)
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 
 </help>
 */
@@ -341,7 +341,7 @@ static int doLoadFile(const char *fileName)
 	if (!fileGetDisk(fileName, &theDisk))
 		readOnly = theDisk.readOnly;
 
-	// Call the "find file" routine to see if we can get the file.
+	// Call the "find file" function to see if we can get the file.
 	status = fileFind(fileName, &tmpFile);
 
 	if (status >= 0)
@@ -531,9 +531,8 @@ static int saveFile(void)
 		}
 
 		// Open the file (truncate if necessary)
-		status = fileStreamOpen(editFileName,
-			(OPENMODE_CREATE | OPENMODE_TRUNCATE | OPENMODE_READWRITE),
-			&tmpFileStream);
+		status = fileStreamOpen(editFileName, (OPENMODE_CREATE |
+			OPENMODE_TRUNCATE | OPENMODE_READWRITE), &tmpFileStream);
 		if (status < 0)
 			return (status);
 
@@ -854,7 +853,7 @@ static void deleteChars(unsigned length)
 
 static int edit(void)
 {
-	// This routine is the base from which we do all the editing.
+	// This function is the base from which we do all the editing.
 
 	int status = 0;
 	char character = '\0';
@@ -1069,8 +1068,8 @@ static void refreshMenuContents(void)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -1275,8 +1274,8 @@ int main(int argc, char *argv[])
 	// For the moment, only operate in graphics mode
 	if (!graphics)
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			(argc? argv[0] : ""));
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (status = ERR_NOTINITIALIZED);
 	}
 

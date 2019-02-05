@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -39,6 +39,9 @@ struct utsname {
 	char machine[UTSNAME_MAX_MACHINE_LENGTH];
 	char domainname[NETWORK_MAX_DOMAINNAMELENGTH];
 };
+
+// Functions
+int uname(struct utsname *);
 
 #define _UTSNAME_H
 #endif

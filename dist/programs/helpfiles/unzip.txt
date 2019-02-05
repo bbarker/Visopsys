@@ -10,5 +10,5 @@ Each archive file name listed after the command name will be extracted in
 sequence.
 
 Options:
--p         : show a progress indicator
+-p  : Show a progress indicator
 

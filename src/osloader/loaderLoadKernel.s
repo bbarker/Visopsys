@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -569,7 +569,6 @@ CORRUPTFS1	db 'The filesystem on the boot device may be corrupt:  you should use
 CORRUPTFS2	db 'utility to check the integrity of the filesystem and the Visopsys files.', 0
 NOTELF		db ' is not an ELF binary.', 0
 NOTEXEC		db ' is not executable.', 0
-NUMSEGS		db ' does not contain exactly 2 ELF segments.', 0
 SEGALIGN	db ' has incorrectly aligned ELF segments.', 0
 SEGLAYOUT	db ' has an incorrect ELF segment layout.', 0
 REINSTALL	db 'You will probably need to reinstall Visopsys on this boot media.', 0

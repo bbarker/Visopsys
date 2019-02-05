@@ -17,3 +17,6 @@ parameter is supplied, vsh will execute the command that follows.  If the
 command contains spaces or tab characters, it must be surrounded by
 double-quotes (").
 
+Options:
+-c <command>  : Execute a command inside the shell
+

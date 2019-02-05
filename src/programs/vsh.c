@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -40,6 +40,9 @@ parameter is supplied, vsh will execute the command that follows.  If the
 command contains spaces or tab characters, it must be surrounded by
 double-quotes (").
 
+Options:
+-c <command>  : Execute a command inside the shell
+
 </help>
 */
 
@@ -75,11 +78,11 @@ static void showPrompt(void)
 	char *dirName = NULL;
 
 	// If there are characters already in the input buffer, tell the reader
-	// routine to put them after the prompt
+	// function to put them after the prompt
 	if (textInputCount())
 		promptCatchup = 1;
 
-	// This routine puts a prompt on the screen
+	// This function puts a prompt on the screen
 	multitaskerGetCurrentDirectory(cwd, MAX_PATH_LENGTH);
 
 	dirName = basename(cwd);

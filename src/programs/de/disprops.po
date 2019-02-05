@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  This German translation provided by Proxma AG - www.proxma.com
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,72 +17,72 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: disprops.c:56
+#: disprops.c:55
 msgid "Display Settings"
 msgstr "Bildschirmeinstellungen"
 
-#: disprops.c:57
+#: disprops.c:56
 msgid "Screen resolution:"
 msgstr "Bildschirmauflösung:"
 
-#: disprops.c:58
+#: disprops.c:57
 msgid "Colors:"
 msgstr "Farben:"
 
-#: disprops.c:59
+#: disprops.c:58
 msgid "Foreground"
 msgstr "Vordergrund"
 
-#: disprops.c:60
+#: disprops.c:59
 msgid "Background"
 msgstr "Hintergrund"
 
-#: disprops.c:61
+#: disprops.c:60
 msgid "Desktop"
 msgstr "Desktop"
 
-#: disprops.c:62
+#: disprops.c:61
 msgid "Change"
 msgstr "Ändern"
 
-#: disprops.c:63
+#: disprops.c:62
 msgid "Background wallpaper:"
 msgstr "Hintergrundbild:"
 
-#: disprops.c:64
+#: disprops.c:63
 msgid "Choose"
 msgstr "Auswahl"
 
-#: disprops.c:65
+#: disprops.c:64
 msgid "Use background wallpaper"
 msgstr "Hintergrundbild verwenden"
 
-#: disprops.c:66
+#: disprops.c:65
 msgid "Miscellaneous:"
 msgstr "Verschiedenes:"
 
-#: disprops.c:67
+#: disprops.c:66
 msgid "Boot in graphics mode"
 msgstr "Im Grafik-Modus starten"
 
-#: disprops.c:68
+#: disprops.c:67
 msgid "Show a clock on the desktop"
 msgstr "Auf dem Desktop eine Uhr anzeigen"
 
-#: disprops.c:69
+#: disprops.c:68
 msgid "OK"
 msgstr "OK"
 
-#: disprops.c:70
+#: disprops.c:69
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: disprops.c:218
+#: disprops.c:217
 #, c-format
 msgid " %d x %d, %d bit "
 msgstr " %d x %d, %d Bit "
 
-#: disprops.c:686
+#: disprops.c:683
 #, c-format
 msgid ""
 "The resolution has been changed to %dx%d, %dbpp\n"
@@ -91,20 +91,20 @@ msgstr ""
 "Die Auflösung wurde geändert auf %dx%d, %dbpp\n"
 "Die Änderung wird nach dem Neustart wirksam."
 
-#: disprops.c:690
+#: disprops.c:687
 msgid "Changed"
 msgstr "Geändert"
 
-#: disprops.c:694
+#: disprops.c:691
 #, c-format
 msgid "Error %d setting mode"
 msgstr "Fehler %d beim einstellen des Modus"
 
-#: disprops.c:695
+#: disprops.c:692
 msgid "Error"
 msgstr "Fehler"
 
-#: disprops.c:971
+#: disprops.c:968
 #, c-format
 msgid ""
 "\n"

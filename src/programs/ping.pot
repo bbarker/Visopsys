@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,80 +17,89 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ping.c:60
+#: ping.c:64
 msgid "Ping"
 msgstr ""
 
-#: ping.c:88
+#: ping.c:98
 msgid "Error"
 msgstr ""
 
-#: ping.c:96
+#: ping.c:106
 #, c-format
 msgid ""
 "usage:\n"
 "%s [-T] <address | hostname>\n"
 msgstr ""
 
-#: ping.c:164
+#: ping.c:183
 #, c-format
-msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=%llu ms\n"
 msgstr ""
 
-#: ping.c:253
+#: ping.c:283
 msgid "Stop"
 msgstr ""
 
-#: ping.c:296
+#: ping.c:345
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""
 
-#: ping.c:305
+#: ping.c:354
 msgid "Networking is not currently enabled"
 msgstr ""
 
-#: ping.c:321
+#: ping.c:370
 msgid "Enter Address"
 msgstr ""
 
-#: ping.c:322
+#: ping.c:371
 msgid "Enter the network address to ping:"
 msgstr ""
 
-#: ping.c:357
-msgid "Memory allocation error"
+#: ping.c:384
+msgid "Couldn't determine destination address"
 msgstr ""
 
-#: ping.c:376
+#: ping.c:400
 msgid "Error opening network connection"
 msgstr ""
 
-#: ping.c:380
+#: ping.c:404
 #, c-format
-msgid "Ping %d.%d.%d.%d %d bytes of data\n"
+msgid "Ping %d.%d.%d.%d %d(%d) bytes of data"
 msgstr ""
 
-#: ping.c:394
+#: ping.c:418
 msgid "Error setting signal handler"
 msgstr ""
 
-#: ping.c:407
+#: ping.c:431
 msgid "Error starting response thread"
 msgstr ""
 
-#: ping.c:417
+#: ping.c:439 ping.c:451
+msgid "Memory allocation error"
+msgstr ""
+
+#: ping.c:465
 msgid "Error pinging host"
 msgstr ""
 
-#: ping.c:435
+#: ping.c:483
 #, c-format
 msgid ""
 "\n"
 "--- %d.%d.%d.%d ping statistics ---\n"
 msgstr ""
 
-#: ping.c:437
+#: ping.c:485
 #, c-format
-msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
+msgid "%d packets transmitted, %d received, %d%% packet loss, time %llums\n"
+msgstr ""
+
+#: ping.c:489
+#, c-format
+msgid "rtt min/avg/max = %llu/%llu/%llu ms\n"
 msgstr ""

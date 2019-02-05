@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
 #  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-26 02:14+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
 "Language-Team: Turkish/Türkçe\n"
@@ -19,125 +19,114 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: kernelFilesystemFat.c:3888
+#: kernelFilesystemFat.c:3068
 #, c-format
 msgid "Defragmenting %llu/%llu: %s"
 msgstr "%llu/%llu: %s birlestiriliyor"
 
-#: kernelFilesystemFat.c:4022 kernelFilesystemFat.c:4492
+#: kernelFilesystemFat.c:4289 kernelFilesystemFat.c:4563
 msgid "Reading filesystem info"
 msgstr "Dosya sistemi bilgisi okunuyor"
 
-#: kernelFilesystemFat.c:4061
+#: kernelFilesystemFat.c:4328
 msgid "Analyzing"
 msgstr "Analiz ediliyor"
 
-#: kernelFilesystemFat.c:4075
+#: kernelFilesystemFat.c:4342
 #, c-format
 msgid "%llu files need defragmentation"
 msgstr "%llu dosyalarinin birlestirilmesi gerekiyor"
 
-#: kernelFilesystemFat.c:4180
+#: kernelFilesystemFat.c:4452
 msgid "Checking constraints"
 msgstr "Kisitlamalar kontrol ediliyor"
 
-#: kernelFilesystemFat.c:4473
+#: kernelFilesystemFat.c:4544
 msgid "Error getting resizing constraints"
 msgstr "Kisitlamalar yeniden boyutlandirilirken hata"
 
-#: kernelFilesystemFat.c:4480
+#: kernelFilesystemFat.c:4551
 #, c-format
 msgid "Filesystem cannot resize to %llu blocks (minimum is %llu)"
 msgstr "Dosya sistemi %llu blok olarak yeniden boyutlandirilamadi (En az %llu)"
 
-#: kernelFilesystemFat.c:4483
+#: kernelFilesystemFat.c:4554
 #, c-format
 msgid "Filesystem cannot resize to %llu blocks (maximum is %llu)"
 msgstr ""
 "Dosya sistemi %llu blok olarak yeniden boyutlandirilamadi (En fazla %llu)"
 
-#: kernelFilesystemFat.c:4500 kernelFilesystemFat.c:4532
+#: kernelFilesystemFat.c:4571 kernelFilesystemFat.c:4627
 msgid "Error reading filesystem info"
 msgstr "Dosya sistemi bilgisi okunurken hata olustu"
 
-#: kernelFilesystemFat.c:4516
+#: kernelFilesystemFat.c:4579 kernelFilesystemFat.c:4636
+msgid "Unable to create the free cluster bitmap"
+msgstr ""
+
+#: kernelFilesystemFat.c:4611
 #, fuzzy
 msgid "Defragmenting"
-msgstr "%llu/%llu: %s birlestiriliyor"
+msgstr "birlestiriliyor"
 
-#: kernelFilesystemFat.c:4524
+#: kernelFilesystemFat.c:4619
 msgid "Error defragmenting filesystem"
 msgstr "Dosya sistemi birlestirilirken hata olustu"
 
-#: kernelFilesystemFat.c:4543
-#, c-format
-msgid "Data exists outside the new size (%u >= %llu)"
-msgstr "Veri yeni boyutun disinda bulunuyor (%u >= %llu)"
+#: kernelFilesystemFat.c:4649
+#, fuzzy, c-format
+msgid "Data exists outside the new size (%llu >= %llu)"
+msgstr "Veri yeni boyutun disinda bulunuyor (%llu >= %llu)"
 
-#: kernelFilesystemFat.c:4588
+#: kernelFilesystemFat.c:4677
 msgid "Error moving data"
 msgstr "Veri tasinirken hata olustu"
 
-#: kernelFilesystemFat.c:4599
+#: kernelFilesystemFat.c:4688
 msgid "Clearing new FAT sectors"
 msgstr "Yeni FAT sektörleri temizleniyor"
 
-#: kernelFilesystemFat.c:4606
+#: kernelFilesystemFat.c:4695
 msgid "Error getting memory"
 msgstr "Bellege alinirken hata olustu"
 
-#: kernelFilesystemFat.c:4625
+#: kernelFilesystemFat.c:4714
 msgid "Error clearing new FAT sectors"
 msgstr "Yeni FAT sektörleri temizlenirken hata olustu"
 
-#: kernelFilesystemFat.c:4638
+#: kernelFilesystemFat.c:4727
 msgid "Error synching FAT copies"
 msgstr "FAT kopyalari senkronize edilirken hata olustu"
 
-#: kernelFilesystemFat.c:4648
+#: kernelFilesystemFat.c:4737
 msgid "Updating filesystem info"
 msgstr "Dosya sistemi bilgisi güncelleniyor"
 
-#: kernelFilesystemFat.c:4663 kernelFilesystemFat.c:4672
+#: kernelFilesystemFat.c:4752 kernelFilesystemFat.c:4761
 msgid "Error updating filesystem info"
 msgstr "Dosya sistemi bilgisi güncellenirken hata olustu"
 
-#: kernelShutdown.c:44
+#: kernelShutdown.c:45
 msgid "Shutting down Visopsys, please wait..."
 msgstr "Visopsys kapatiliyor, lütfen bekleyiniz..."
 
-#: kernelShutdown.c:45
+#: kernelShutdown.c:46
 msgid "[ Wait for \"OK to power off\" message ]"
 msgstr "[ \"Simdi kapatabilirsiniz\" mesaji için bekleyiniz ]"
 
-#: kernelShutdown.c:46
+#: kernelShutdown.c:47
 msgid "Rebooting."
 msgstr "Yeniden baslatiliyor."
 
-#: kernelShutdown.c:47
+#: kernelShutdown.c:48
 msgid "OK to power off now."
 msgstr "Simdi kapatabilirsiniz"
 
-#: kernelShutdown.c:161
+#: kernelShutdown.c:162
 msgid "Shutting down"
 msgstr "Kapatiliyor"
 
-#: kernelShutdown.c:329
+#: kernelShutdown.c:330
 #, c-format
 msgid "SYSTEM HALTED: Panic at %s:%s(%d)"
 msgstr "SISTEM ÇÖKTÜ: Panigin olustugu yer %s:%s(%d)"
-
-#~ msgid ""
-#~ "\n"
-#~ " *** Your boot disk appears to be running in unsupported native-SATA "
-#~ "mode.\n"
-#~ " *** You may be able to temporarily enable ATA or 'legacy' IDE mode in\n"
-#~ " *** your BIOS setup.\n"
-#~ msgstr ""
-#~ "\n"
-#~ " *** Es scheint so, dass Ihre Boot-Disk im nativen SATA-Modus läuft. "
-#~ "Dieser\n"
-#~ " *** wird jedoch nicht unterstützt. Sie sollten vielleicht zeitweise den "
-#~ "ATA-\n"
-#~ " *** oder IDE-Modus (Legacy-Modus) in Ihren BIOS-Einstellungen "
-#~ "aktivieren.\n"

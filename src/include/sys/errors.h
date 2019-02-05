@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -79,14 +79,19 @@ typedef enum {
 #define ERR_NOTADIR			-37	// The item is not a directory
 #define ERR_NOWRITE			-38	// The item cannot be written
 
+// Network errors
+#define ERR_HOSTUNKNOWN		-39	// Host lookup failed
+#define ERR_NOROUTETOHOST	-40	// Don't know how to contact a host
+#define ERR_NOCONNECTION	-41 // Couldn't connect to a host
+
 // Other things that don't exist
-#define ERR_NOSUCHUSER		-39	// The used ID is unknown
-#define ERR_NOSUCHPROCESS	-40	// The process in question does not exist
-#define ERR_NOSUCHDRIVER	-41	// There is no driver to perform an action
-#define ERR_NOSUCHFUNCTION	-42	// The requested function does not exist
+#define ERR_NOSUCHUSER		-42	// The used ID is unknown
+#define ERR_NOSUCHPROCESS	-43	// The process in question does not exist
+#define ERR_NOSUCHDRIVER	-44	// There is no driver to perform an action
+#define ERR_NOSUCHFUNCTION	-45	// The requested function does not exist
 
 // Oops, it's the kernel's fault...
-#define ERR_BUG				-43	// An internal bug has been detected
+#define ERR_BUG				-46	// An internal bug has been detected
 
 #define _ERRORS_H
 #endif

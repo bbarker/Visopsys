@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -32,6 +32,7 @@
 #include "kernelVariableList.h"
 #include "kernelWindow.h"
 #include <string.h>
+#include <sys/kernconf.h>
 
 // The graphics environment
 static int screenWidth = 0;
@@ -48,8 +49,7 @@ static int initialized = 0;
 
 // Keeps mouse pointer size and location data
 static volatile struct {
-	int xChange;
-	int yChange;
+	int xyChange;
 	int zChange;
 	int xPosition;
 	int yPosition;
@@ -98,49 +98,21 @@ static void mouseThread(void)
 	// window manager
 
 	int eventType = 0;
-	int xChange = 0, yChange = 0, zChange = 0;
-	int changeButton = 0, changeButtonPressed = 0;
 	windowEvent event;
 
 	memset(&event, 0, sizeof(windowEvent));
 
 	while (!threadStop)
 	{
-		if (!mouseStatus.xChange && !mouseStatus.yChange &&
-			!mouseStatus.zChange && !mouseStatus.changeButton)
+		if (!mouseStatus.xyChange && !mouseStatus.zChange &&
+			!mouseStatus.changeButton)
 		{
 			kernelMultitaskerYield();
 			continue;
 		}
 
-		xChange = mouseStatus.xChange;
-		yChange = mouseStatus.yChange;
-		zChange = mouseStatus.zChange;
-		changeButton = mouseStatus.changeButton;
-		changeButtonPressed = mouseStatus.changeButtonPressed;
-		mouseStatus.xChange = mouseStatus.yChange = mouseStatus.zChange =
-			mouseStatus.changeButton = mouseStatus.changeButtonPressed = 0;
-
-		if (xChange || yChange)
+		if (mouseStatus.xyChange)
 		{
-			erase();
-
-			mouseStatus.xPosition += xChange;
-			mouseStatus.yPosition += yChange;
-
-			// Make sure the new position is valid
-			if (mouseStatus.xPosition < 0)
-				mouseStatus.xPosition = 0;
-			else if (mouseStatus.xPosition > (screenWidth - 3))
-				mouseStatus.xPosition = (screenWidth - 3);
-
-			if (mouseStatus.yPosition < 0)
-				mouseStatus.yPosition = 0;
-			else if (mouseStatus.yPosition > (screenHeight - 3))
-				mouseStatus.yPosition = (screenHeight - 3);
-
-			draw();
-
 			// Set up our event
 			if (mouseStatus.button1Pressed || mouseStatus.button2Pressed ||
 				mouseStatus.button3Pressed)
@@ -152,55 +124,64 @@ static void mouseThread(void)
 				eventType = EVENT_MOUSE_MOVE;
 			}
 
+			mouseStatus.xyChange = 0;
+
 			// Tell the window manager
 			status2event(eventType, &event);
 			kernelWindowProcessEvent(&event);
 		}
 
-		if (changeButton)
+		if (mouseStatus.changeButton)
 		{
 			// Set up our event
-			switch (changeButton)
+			switch (mouseStatus.changeButton)
 			{
 				case 1:
-					mouseStatus.button1Pressed = changeButtonPressed;
-					if (changeButtonPressed)
+					mouseStatus.button1Pressed =
+						mouseStatus.changeButtonPressed;
+					if (mouseStatus.changeButtonPressed)
 						eventType = EVENT_MOUSE_LEFTDOWN;
 					else
 						eventType = EVENT_MOUSE_LEFTUP;
 					break;
 
 				case 2:
-					mouseStatus.button2Pressed = changeButtonPressed;
-					if (changeButtonPressed)
+					mouseStatus.button2Pressed =
+						mouseStatus.changeButtonPressed;
+					if (mouseStatus.changeButtonPressed)
 						eventType = EVENT_MOUSE_MIDDLEDOWN;
 					else
 						eventType = EVENT_MOUSE_MIDDLEUP;
 					break;
 
 				case 3:
-					mouseStatus.button3Pressed = changeButtonPressed;
-					if (changeButtonPressed)
+					mouseStatus.button3Pressed =
+						mouseStatus.changeButtonPressed;
+					if (mouseStatus.changeButtonPressed)
 						eventType = EVENT_MOUSE_RIGHTDOWN;
 					else
 						eventType = EVENT_MOUSE_RIGHTUP;
 					break;
 			}
 
+			mouseStatus.changeButton = mouseStatus.changeButtonPressed = 0;
+
 			// Tell the window manager
 			status2event(eventType, &event);
 			kernelWindowProcessEvent(&event);
 		}
 
-		if (zChange)
+		if (mouseStatus.zChange)
 		{
 			// Set up our event
-			if (zChange < 0)
+			if (mouseStatus.zChange < 0)
 				eventType = EVENT_MOUSE_SCROLLUP;
-			else if (zChange > 0)
+			else if (mouseStatus.zChange > 0)
 				eventType = EVENT_MOUSE_SCROLLDOWN;
 			else
 				eventType = EVENT_MOUSE_SCROLL; // ??
+
+			mouseStatus.zChange = 0;
 
 			// Tell the window manager
 			status2event(eventType, &event);
@@ -221,8 +202,11 @@ static inline int findPointerSlot(const char *pointerName)
 	// Find the pointer with the name
 	for (count = 0; count < numberPointers; count ++)
 	{
-		if (!strncmp(pointerName, pointerList[count]->name, MOUSE_POINTER_NAMELEN))
+		if (!strncmp(pointerName, pointerList[count]->name,
+			MOUSE_POINTER_NAMELEN))
+		{
 			return (count);
+		}
 	}
 
 	return (ERR_NOSUCHENTRY);
@@ -359,17 +343,20 @@ int kernelMouseInitialize(void)
 	// Initialize the mouse functions
 
 	int status = 0;
-	char name[128];
 	const char *value = NULL;
 	int count;
 
 	// The list of default mouse pointers and their image files.
-	char *mousePointerTypes[][2] = {
-		{ MOUSE_POINTER_DEFAULT, MOUSE_DEFAULT_POINTER_DEFAULT },
-		{ MOUSE_POINTER_BUSY, MOUSE_DEFAULT_POINTER_BUSY },
-		{ MOUSE_POINTER_RESIZEH, MOUSE_DEFAULT_POINTER_RESIZEH },
-		{ MOUSE_POINTER_RESIZEV, MOUSE_DEFAULT_POINTER_RESIZEV },
-		{ NULL, NULL }
+	char *mousePointerTypes[][3] = {
+		{ MOUSE_POINTER_DEFAULT, KERNELVAR_MOUSEPTR_DEFAULT,
+			MOUSE_DEFAULT_POINTER_DEFAULT },
+		{ MOUSE_POINTER_BUSY, KERNELVAR_MOUSEPTR_BUSY,
+			MOUSE_DEFAULT_POINTER_BUSY },
+		{ MOUSE_POINTER_RESIZEH, KERNELVAR_MOUSEPTR_RESIZEH,
+			MOUSE_DEFAULT_POINTER_RESIZEH },
+		{ MOUSE_POINTER_RESIZEV, KERNELVAR_MOUSEPTR_RESIZEV,
+			MOUSE_DEFAULT_POINTER_RESIZEV },
+		{ NULL, NULL, NULL }
 	};
 
 	extern variableList *kernelVariables;
@@ -389,23 +376,24 @@ int kernelMouseInitialize(void)
 	// Load the mouse pointers
 	for (count = 0; mousePointerTypes[count][0]; count ++)
 	{
-		strcpy(name, "mouse.pointer.");
-		strcat(name, mousePointerTypes[count][0]);
-
-		value = kernelVariableListGet(kernelVariables, name);
+		value = kernelVariableListGet(kernelVariables,
+			mousePointerTypes[count][1]);
 		if (!value)
 		{
 			// Nothing specified.  Use the default.
-			value = mousePointerTypes[count][1];
+			value = mousePointerTypes[count][2];
 
 			// Save it
-			kernelVariableListSet(kernelVariables, name, value);
+			kernelVariableListSet(kernelVariables,
+				mousePointerTypes[count][1], value);
 		}
 
 		status = kernelMouseLoadPointer(mousePointerTypes[count][0], value);
 		if (status < 0)
+		{
 			kernelError(kernel_warn, "Unable to load mouse pointer %s=\"%s\"",
-				name, value);
+				mousePointerTypes[count][0], value);
+		}
 	}
 
 	// Make sure there's at least a default pointer
@@ -616,8 +604,25 @@ void kernelMouseMove(int xChange, int yChange)
 	if (!initialized)
 		return;
 
-	mouseStatus.xChange += xChange;
-	mouseStatus.yChange += yChange;
+	erase();
+
+	mouseStatus.xPosition += xChange;
+	mouseStatus.yPosition += yChange;
+
+	// Make sure the new position is valid
+	if (mouseStatus.xPosition < 0)
+		mouseStatus.xPosition = 0;
+	else if (mouseStatus.xPosition > (screenWidth - 3))
+		mouseStatus.xPosition = (screenWidth - 3);
+
+	if (mouseStatus.yPosition < 0)
+		mouseStatus.yPosition = 0;
+	else if (mouseStatus.yPosition > (screenHeight - 3))
+		mouseStatus.yPosition = (screenHeight - 3);
+
+	draw();
+
+	mouseStatus.xyChange += 1;
 
 	kernelMultitaskerSetProcessState(threadPid, proc_ioready);
 

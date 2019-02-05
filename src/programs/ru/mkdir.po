@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mkdir\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: 2014-08-13 22:47+0800\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -27,7 +27,7 @@ msgstr "использование:\n"
 msgid "%s <directory1> [directory2] [...]\n"
 msgstr "%s <каталог1> [каталог2] [...]\n"
 
-#: mkdir.c:117
+#: mkdir.c:93
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""

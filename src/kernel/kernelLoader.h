@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -29,6 +29,7 @@
 #include <sys/image.h>
 #include <sys/process.h>
 
+#define FILECLASS_NAME_DIR		"directory"
 #define FILECLASS_NAME_EMPTY	"empty"
 #define FILECLASS_NAME_TEXT		"text"
 #define FILECLASS_NAME_BIN		"binary"
@@ -39,10 +40,14 @@
 #define FILECLASS_NAME_LIB		"library"
 #define FILECLASS_NAME_CORE		"core"
 #define FILECLASS_NAME_IMAGE	"image"
+#define FILECLASS_NAME_AUDIO	"audio"
+#define FILECLASS_NAME_VIDEO	"video"
 #define FILECLASS_NAME_DATA		"data"
 #define FILECLASS_NAME_DOC		"document"
 #define FILECLASS_NAME_ARCHIVE	"archive"
 #define FILECLASS_NAME_FONT		"font"
+#define FILECLASS_NAME_BOOT		"boot"
+#define FILECLASS_NAME_KEYMAP	"keymap"
 
 #define FILECLASS_NAME_BMP		"bitmap"
 #define FILECLASS_NAME_ICO		"icon"
@@ -50,8 +55,12 @@
 #define FILECLASS_NAME_GIF		"GIF"
 #define FILECLASS_NAME_PNG		"PNG"
 #define FILECLASS_NAME_PPM		"PPM"
-#define FILECLASS_NAME_BOOT		"boot"
-#define FILECLASS_NAME_KEYMAP	"keymap"
+#define FILECLASS_NAME_MP3		"MP3"
+#define FILECLASS_NAME_WAV		"WAV"
+#define FILECLASS_NAME_FLV		"Flash"
+#define FILECLASS_NAME_AVI		"AVI"
+#define FILECLASS_NAME_MP4		"MP4"
+#define FILECLASS_NAME_MOV		"QuickTime"
 #define FILECLASS_NAME_PDF		"PDF"
 #define FILECLASS_NAME_ELF		"ELF"
 #define FILECLASS_NAME_ZIP		"zip"
@@ -64,7 +73,7 @@
 #define FILECLASS_NAME_MESSAGE	"message"
 #define FILECLASS_NAME_CONFIG	"configuration"
 #define FILECLASS_NAME_HTML		"HTML"
-#define LOADER_NUM_FILECLASSES	22
+#define LOADER_NUM_FILECLASSES	28
 
 // A generic structure to represent a relocation entry
 typedef struct {
@@ -89,11 +98,11 @@ struct _kernelDynamicLibrary;
 // This is a structure for a file class.  It contains a standard name for
 // the file class and function pointers for managing that class of file.
 typedef struct {
-	char *className;
+	char *name;
 	int (*detect)(const char *, void *, unsigned, loaderFileClass *);
 	union {
 		struct {
-			loaderSymbolTable * (*getSymbols)(void *, int);
+			loaderSymbolTable *(*getSymbols)(void *, int);
 			int (*layoutLibrary)(void *, struct _kernelDynamicLibrary *);
 			int (*layoutExecutable)(void *, processImage *);
 			int (*link)(int, void *, processImage *, loaderSymbolTable **);
@@ -153,6 +162,12 @@ kernelFileClass *kernelFileClassJpg(void);
 kernelFileClass *kernelFileClassGif(void);
 kernelFileClass *kernelFileClassPng(void);
 kernelFileClass *kernelFileClassPpm(void);
+kernelFileClass *kernelFileClassMp3(void);
+kernelFileClass *kernelFileClassWav(void);
+kernelFileClass *kernelFileClassFlv(void);
+kernelFileClass *kernelFileClassAvi(void);
+kernelFileClass *kernelFileClassMp4(void);
+kernelFileClass *kernelFileClassMov(void);
 kernelFileClass *kernelFileClassBoot(void);
 kernelFileClass *kernelFileClassKeymap(void);
 kernelFileClass *kernelFileClassPdf(void);

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -161,7 +161,7 @@ void kernelGetVersion(char *buffer, int bufferSize)
 }
 
 
-int kernelSystemInfo(struct utsname *uname)
+int kernelSystemInfo(struct utsname *uts)
 {
 	// This function gathers some info about the system and puts it into
 	// a 'utsname' structure, just like the one returned by 'uname' in Unix.
@@ -170,20 +170,20 @@ int kernelSystemInfo(struct utsname *uname)
 	kernelDevice *cpuDevice = NULL;
 
 	// Check params
-	if (!uname)
+	if (!uts)
 		return (status = ERR_NULLPARAMETER);
 
-	strncpy(uname->sysname, kernelVersion[0], UTSNAME_MAX_SYSNAME_LENGTH);
-	kernelNetworkGetHostName(uname->nodename, NETWORK_MAX_HOSTNAMELENGTH);
-	strncpy(uname->release, kernelVersion[1], UTSNAME_MAX_RELEASE_LENGTH);
-	strncpy(uname->version, __DATE__" "__TIME__, UTSNAME_MAX_VERSION_LENGTH);
+	strncpy(uts->sysname, kernelVersion[0], UTSNAME_MAX_SYSNAME_LENGTH);
+	kernelNetworkGetHostName(uts->nodename, NETWORK_MAX_HOSTNAMELENGTH);
+	strncpy(uts->release, kernelVersion[1], UTSNAME_MAX_RELEASE_LENGTH);
+	strncpy(uts->version, __DATE__" "__TIME__, UTSNAME_MAX_VERSION_LENGTH);
 	if ((kernelDeviceFindType(kernelDeviceGetClass(DEVICECLASS_CPU), NULL,
 		&cpuDevice, 1) > 0) && cpuDevice->device.subClass)
 	{
-		strncpy(uname->machine, cpuDevice->device.subClass->name,
+		strncpy(uts->machine, cpuDevice->device.subClass->name,
 			UTSNAME_MAX_MACHINE_LENGTH);
 	}
-	kernelNetworkGetDomainName(uname->domainname, NETWORK_MAX_DOMAINNAMELENGTH);
+	kernelNetworkGetDomainName(uts->domainname, NETWORK_MAX_DOMAINNAMELENGTH);
 
 	return (status = 0);
 }
@@ -230,7 +230,7 @@ int kernelStackTrace(kernelProcess *traceProcess, char *buffer, int len)
 	int status = 0;
 	void *instPointer = 0;
 	void *framePointer = NULL;
-	unsigned stackPhysical = NULL;
+	unsigned stackPhysical = 0;
 	void *stackVirtual = NULL;
 	long memoryOffset = 0;
 	const char *symbolName = NULL;
@@ -348,8 +348,8 @@ int kernelStackTrace(kernelProcess *traceProcess, char *buffer, int len)
 
 void kernelConsoleLogin(void)
 {
-	// This routine will launch a login process on the console.  This should
-	// normally be called by the kernel's kernelMain() routine, above, but
+	// This function will launch a login process on the console.  This should
+	// normally be called by the kernel's kernelMain() function, above, but
 	// also possibly by the keyboard driver when some hot-key is pressed.
 
 	static int loginPid = 0;
@@ -375,7 +375,7 @@ void kernelConsoleLogin(void)
 	}
 
 	// Attach the login process to the console text streams
-	kernelMultitaskerDuplicateIO(KERNELPROCID, loginPid, 1); // clear
+	kernelMultitaskerDuplicateIo(KERNELPROCID, loginPid, 1); // clear
 
 	// Execute the login process.  Don't block.
 	kernelLoaderExecProgram(loginPid, 0);
@@ -411,8 +411,8 @@ int kernelConfigRead(const char *fileName, variableList *list)
 	status = kernelFileStreamOpen(fileName, OPENMODE_READ, configFile);
 	if (status < 0)
 	{
-		kernelError(kernel_warn, "Unable to read the configuration file \"%s\"",
-			fileName);
+		kernelError(kernel_warn, "Unable to read the configuration file "
+			"\"%s\"", fileName);
 		kernelFree(configFile);
 		return (status);
 	}
@@ -441,7 +441,9 @@ int kernelConfigRead(const char *fileName, variableList *list)
 		for (count = 0; count < status; count ++)
 		{
 			if (isspace(lineBuffer[count]))
+			{
 				continue;
+			}
 			else
 			{
 				if (lineBuffer[count] != '#')
@@ -454,8 +456,11 @@ int kernelConfigRead(const char *fileName, variableList *list)
 			continue;
 
 		variable = lineBuffer;
-		for (count = 0; (lineBuffer[count] != '=') && (count < 255); count ++);
+		for (count = 0; (lineBuffer[count] != '=') && (count < 255);
+			count ++);
+		{
 			lineBuffer[count] = '\0';
+		}
 
 		if (strlen(variable) < 255)
 			// Everything after the '=' is the value
@@ -465,8 +470,8 @@ int kernelConfigRead(const char *fileName, variableList *list)
 		kernelVariableListSet(list, variable, value);
 	}
 
-	kernelFree(configFile);
 	kernelFileStreamClose(configFile);
+	kernelFree(configFile);
 
 	return (status = 0);
 }
@@ -498,8 +503,9 @@ int kernelConfigWrite(const char *fileName, variableList *list)
 	// Is there already an old version of the config file?
 	if (!kernelFileFind(fileName, NULL))
 	{
-		// Yup.  Open it for reading, and make our temporary filename different
-		// so that we don't overwrite anything until we've been successful.
+		// Yup.  Open it for reading, and make our temporary filename
+		// different so that we don't overwrite anything until we've been
+		// successful.
 
 		oldFileStream = kernelMalloc(sizeof(fileStream));
 		if (!oldFileStream)
@@ -515,7 +521,9 @@ int kernelConfigWrite(const char *fileName, variableList *list)
 		sprintf(tmpName, "%s.TMP", fileName);
 	}
 	else
+	{
 		strcpy(tmpName, fileName);
+	}
 
 	newFileStream = kernelMalloc(sizeof(fileStream));
 	if (!newFileStream)
@@ -553,8 +561,8 @@ int kernelConfigWrite(const char *fileName, variableList *list)
 			strcpy(lineBuffer, "#");
 			while (lineBuffer[0] == '#')
 			{
-				status =
-					kernelFileStreamReadLine(oldFileStream, 256, lineBuffer);
+				status = kernelFileStreamReadLine(oldFileStream, 256,
+					lineBuffer);
 				if (status < 0)
 					break;
 
@@ -563,7 +571,9 @@ int kernelConfigWrite(const char *fileName, variableList *list)
 				for (count2 = 0; count2 < status; count2 ++)
 				{
 					if (isspace(lineBuffer[count2]))
+					{
 						continue;
+					}
 					else
 					{
 						if (lineBuffer[count2] != '#')
@@ -575,8 +585,8 @@ int kernelConfigWrite(const char *fileName, variableList *list)
 				if (!hasContent)
 				{
 					// Just write it back out verbatim
-					status =
-						kernelFileStreamWriteLine(newFileStream, lineBuffer);
+					status = kernelFileStreamWriteLine(newFileStream,
+						lineBuffer);
 					if (status < 0)
 					{
 						kernelFileStreamClose(oldFileStream);

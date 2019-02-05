@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -459,7 +459,8 @@ static int allocEndpDescs(kernelLinkedList *freeList)
 
 	// Request an aligned page of I/O memory (we need to be sure of 16-byte
 	// alignment for each ED)
-	status = kernelMemoryGetIo(MEMORY_PAGE_SIZE, MEMORY_PAGE_SIZE, &ioMem);
+	status = kernelMemoryGetIo(MEMORY_PAGE_SIZE, MEMORY_PAGE_SIZE,
+		0 /* not low memory */, "ohci eds", &ioMem);
 	if (status < 0)
 		goto err_out;
 
@@ -657,7 +658,8 @@ static ohciTransDesc *allocTransDescs(int numDescs)
 
 	memSize = (numDescs * sizeof(ohciTransDesc));
 
-	if (kernelMemoryGetIo(memSize, 16 /* alignment */, &ioMem) < 0)
+	if (kernelMemoryGetIo(memSize, 16 /* alignment */, 0 /* not low memory */,
+		"ohci tds", &ioMem) < 0)
 	{
 		kernelError(kernel_error, "Unable to get TD memory");
 		return (transDescs = NULL);
@@ -689,7 +691,7 @@ static int setTransDescBuffer(ohciTransDesc *transDesc)
 	// of control transfers, or for interrupt registrations.
 
 	int status = 0;
-	unsigned buffPhysical = NULL;
+	unsigned buffPhysical = 0;
 
 	if (!transDesc->buffer)
 	{
@@ -1136,7 +1138,8 @@ static int setup(usbController *controller)
 	}
 
 	// Allocate memory for the Host Controller Communications Area (HCCA)
-	status = kernelMemoryGetIo(sizeof(ohciHcca), 256 /* alignment */, &ioMem);
+	status = kernelMemoryGetIo(sizeof(ohciHcca), 256 /* alignment */,
+		0 /* not low memory */, "ohci hcca", &ioMem);
 	if (status < 0)
 		return (status);
 
@@ -1631,7 +1634,7 @@ static int queue(usbController *controller, usbDevice *usbDev,
 				kernelDebug(debug_usb, "OHCI bytesToTransfer=%u, doBytes=%u",
 					bytesToTransfer, doBytes);
 
-				// Set the TD's buffer pointer to the relevent portion of
+				// Set the TD's buffer pointer to the relevant portion of
 				// the transaction buffer.
 				dataDescs[descCount].buffer = buffPtr;
 				dataDescs[descCount].buffSize = doBytes;
@@ -2021,7 +2024,7 @@ static void threadCall(usbHub *hub)
 kernelDevice *kernelUsbOhciDetect(kernelBusTarget *busTarget,
 	kernelDriver *driver)
 {
-	// This routine is used to detect OHCI USB controllers, as well as
+	// This function is used to detect OHCI USB controllers, as well as
 	// registering it with the higher-level interfaces.
 
 	int status = 0;

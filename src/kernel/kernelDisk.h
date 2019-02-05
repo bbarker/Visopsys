@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,9 +19,8 @@
 //  kernelDisk.h
 //
 
-// These are the generic functions for disk access.  These are above the
-// level of the filesystem, and will generally be called by the filesystem
-// drivers.
+// These are the generic functions for disk access.  These are below the level
+// of the filesystem, and will generally be called by the filesystem drivers.
 
 #if !defined(_KERNELDISK_H)
 

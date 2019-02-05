@@ -1,6 +1,6 @@
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  Makefile
 ##
@@ -25,7 +25,9 @@ endif
 NAMES = libcompress \
 	deflate \
 	deflate_compress \
-	deflate_decompress
+	deflate_decompress \
+	gzip \
+	tar
 
 OBJDIR = obj
 OBJS = $(addprefix ${OBJDIR}/, $(addsuffix .o, ${NAMES}))

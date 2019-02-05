@@ -4,10 +4,23 @@
 Network device control.
 
 Usage:
-  ifconfig [-T] [device_name]
+  ifconfig [-T] [-e] [-d] [device_name]
 
-This command will show information about the system's network devices.
+This command will show information about the system's network devices, and
+allow a privileged user to perform various network administration tasks.
+
+In text mode:
+
+  The -d option will will disable networking, de-configuring network devices.
+
+  The -e option will enable networking, causing network devices to be
+  configured.
+
+In graphics mode, the program is interactive and the user can view network
+device status and perform tasks visually.
 
 Options:
--T              : Force text mode operation
+-d  : Disable networking (text mode).
+-e  : Enable networking (text mode).
+-T  : Force text mode operation
 

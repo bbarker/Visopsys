@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -31,6 +31,7 @@
 #include <sys/image.h>
 #include <sys/keyboard.h>
 #include <sys/loader.h>
+#include <sys/lock.h>
 #include <sys/mouse.h>
 #include <sys/paths.h>
 #include <sys/progress.h>
@@ -39,32 +40,6 @@
 #ifndef _X_
 #define _X_
 #endif
-
-// The window system configuration file and variable names
-#define WINDOW_CONFIGFILE					"window.conf"
-#define WINDOW_MINWIDTH						"window.minwidth"
-#define WINDOW_MINHEIGHT					"window.minheight"
-#define WINDOW_MINREST_TRACERS				"window.minrest.tracers"
-#define WINDOW_TITLEBAR_HEIGHT				"titlebar.height"
-#define WINDOW_TITLEBAR_MINWIDTH			"titlebar.minwidth"
-#define WINDOW_BORDER_THICKNESS				"border.thickness"
-#define WINDOW_BORDER_SHADINGINCREMENT		"border.shadingincrement"
-#define WINDOW_RADIOBUTTON_SIZE				"radiobutton.size"
-#define WINDOW_CHECKBOX_SIZE				"checkbox.size"
-#define WINDOW_SLIDER_WIDTH					"slider.width"
-#define WINDOW_FONT_FIXWIDTH_SMALL_FAMILY	"font.fixwidth.small.family"
-#define WINDOW_FONT_FIXWIDTH_SMALL_FLAGS	"font.fixwidth.small.flags"
-#define WINDOW_FONT_FIXWIDTH_SMALL_POINTS	"font.fixwidth.small.points"
-#define WINDOW_FONT_FIXWIDTH_MEDIUM_FAMILY	"font.fixwidth.medium.family"
-#define WINDOW_FONT_FIXWIDTH_MEDIUM_FLAGS	"font.fixwidth.medium.flags"
-#define WINDOW_FONT_FIXWIDTH_MEDIUM_POINTS	"font.fixwidth.medium.points"
-#define WINDOW_FONT_VARWIDTH_SMALL_FAMILY	"font.varwidth.small.family"
-#define WINDOW_FONT_VARWIDTH_SMALL_FLAGS	"font.varwidth.small.flags"
-#define WINDOW_FONT_VARWIDTH_SMALL_POINTS	"font.varwidth.small.points"
-#define WINDOW_FONT_VARWIDTH_MEDIUM_FAMILY	"font.varwidth.medium.family"
-#define WINDOW_FONT_VARWIDTH_MEDIUM_FLAGS	"font.varwidth.medium.flags"
-#define WINDOW_FONT_VARWIDTH_MEDIUM_POINTS	"font.varwidth.medium.points"
-#define WINDOW_FONT_FLAG_BOLD				"bold"
 
 // Window events/masks.  This first batch are "tier 2" events, produced by
 // the system, windows, widgets, etc. to indicate that some more abstract
@@ -121,6 +96,7 @@
 #define WINDOW_MAX_LABEL_LINES				4
 
 // Flags for window components
+#define WINDOW_COMPFLAG_CANDRAG				0x0200
 #define WINDOW_COMPFLAG_NOSCROLLBARS		0x0100
 #define WINDOW_COMPFLAG_CLICKABLECURSOR		0x0080
 #define WINDOW_COMPFLAG_CUSTOMBACKGROUND	0x0040
@@ -297,7 +273,7 @@ typedef struct _windowArchiveList {
 	int numMembers;
 	void (*selectionCallback)(int);
 
-	// Externally-callable service routines
+	// Externally-callable service functions
 	int (*eventHandler)(struct _windowArchiveList *, windowEvent *);
 	int (*update)(struct _windowArchiveList *, archiveMemberInfo *, int);
 	int (*destroy)(struct _windowArchiveList *);
@@ -310,11 +286,16 @@ typedef struct _windowFileList {
 	void *fileEntries;
 	int numFileEntries;
 	int browseFlags;
-	void (*selectionCallback)(file *, char *, loaderFileClass *);
+	int iconThreadPid;
+	lock lock;
+	void *data;
 
-	// Externally-callable service routines
-	int (*eventHandler)(struct _windowFileList *, windowEvent *);
+	void (*selectionCallback)(struct _windowFileList *, file *, char *,
+		loaderFileClass *);
+
+	// Externally-callable service functions
 	int (*update)(struct _windowFileList *);
+	int (*eventHandler)(struct _windowFileList *, windowEvent *);
 	int (*destroy)(struct _windowFileList *);
 
 } windowFileList;
@@ -368,7 +349,7 @@ typedef struct _windowKeyboard {
 
 	} rows[WINDOWKEYBOARD_KEYROWS];
 
-	// Externally-callable service routines
+	// Externally-callable service functions
 	int (*eventHandler)(struct _windowKeyboard *, windowEvent *);
 	int (*setMap)(struct _windowKeyboard *, keyMap *);
 	int (*setCharset)(struct _windowKeyboard *, const char *);
@@ -404,7 +385,7 @@ typedef struct _windowPixelEditor {
 	color background;
 	int changed;
 
-	// Externally-callable service routines
+	// Externally-callable service functions
 	int (*resize)(struct _windowPixelEditor *);
 	int (*eventHandler)(struct _windowPixelEditor *, windowEvent *);
 	int (*zoom)(struct _windowPixelEditor *, int);
@@ -431,8 +412,8 @@ int windowNewErrorDialog(objectKey, const char *, const char *);
 int windowNewFileDialog(objectKey, const char *, const char *, const char *,
 	char *, unsigned, fileType, int);
 windowFileList *windowNewFileList(objectKey, windowListType, int, int,
-	const char *, int, void (*)(file *, char *, loaderFileClass *),
-	componentParameters *);
+	const char *, int, void (*)(windowFileList *, file *, char *,
+	loaderFileClass *), componentParameters *);
 int windowNewInfoDialog(objectKey, const char *, const char *);
 windowKeyboard *windowNewKeyboard(objectKey, int, int, void *,
 	componentParameters *);

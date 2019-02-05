@@ -4,16 +4,16 @@
 Prints system information.
 
 Usage:
-  uname
+  uname [-a] [-i] [-m] [-n] [-o] [-p] [-r] [-s] [-v]
 
 Options:
--a              : Show all information
--s              : Show the kernel name
--n              : Show the network host name
--r              : Show the kernel release
--v              : Show the kernel version
--m              : Show the machine hardware name
--p              : Show the processor type
--i              : Show the hardware platform
--o              : Show the operating system
+-a  : Show all information
+-i  : Show the hardware platform
+-m  : Show the machine hardware name
+-n  : Show the network host name
+-o  : Show the operating system
+-p  : Show the processor type
+-r  : Show the kernel release
+-s  : Show the kernel name
+-v  : Show the kernel version
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -31,7 +31,35 @@ _X_ void vshMakeAbsolutePath(const char *orig, char *new)
 {
 	// Desc: Turns a filename, specified by 'orig', into an absolute pathname 'new'.  This basically just amounts to prepending the name of the current directory (plus a '/') to the supplied name.  'new' must be a buffer large enough to hold the entire filename.
 
-	// Use shared code
-	#include "../shared/abspath.c"
+	int status = 0;
+
+	// Check params
+	if (!orig || !new)
+	{
+		errno = ERR_NULLPARAMETER;
+		return;
+	}
+
+	if ((orig[0] != '/') && (orig[0] != '\\'))
+	{
+		// Get the current directory
+		status = multitaskerGetCurrentDirectory(new, MAX_PATH_LENGTH);
+		if (status < 0)
+		{
+			errno = status;
+			return;
+		}
+
+		if ((new[strlen(new) - 1] != '/') && (new[strlen(new) - 1] != '\\'))
+			strcat(new, "/");
+
+		strcat(new, orig);
+	}
+	else
+	{
+		strcpy(new, orig);
+	}
+
+	return;
 }
 

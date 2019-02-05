@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -88,10 +88,10 @@ int main(int argc, char *argv[])
 
 		// Get the file class information
 		if (!loaderClassifyFile(argv[count], &class))
-			strcpy(class.className, _("unknown file class"));
+			strcpy(class.name, _("unknown file class"));
 
 		// Print this item
-		printf("%s: %s\n", argv[count], class.className);
+		printf("%s: %s\n", argv[count], class.name);
 	}
 
 	return (errno);

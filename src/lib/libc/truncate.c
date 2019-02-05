@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -25,16 +25,14 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include <stdio.h>
-#include <sys/file.h>
-
 
 int truncate(const char *path, off_t length)
 {
-	// This is a convenience wrapper for the ftruncate() function.  The truncate
-	// function causes the size of the named file to be set to the requested
-	// length.  If the file was previously larger than this size, the extra
-	// data is lost.  If the file was previously smaller, the file is expanded.
+	// This is a convenience wrapper for the ftruncate() function.  The
+	// truncate function causes the size of the named file to be set to the
+	// requested length.  If the file was previously larger than this size,
+	// the extra data is lost.  If the file was previously smaller, the file
+	// is expanded.
 
 	int status = 0;
 	int fd = 0;
@@ -43,26 +41,23 @@ int truncate(const char *path, off_t length)
 	if (!path)
 	{
 		errno = ERR_NULLPARAMETER;
-		return (-1);
+		return (status = -1);
 	}
 
 	// Open the file for writing
 	fd = open(path, O_RDWR);//O_WRONLY);
 	if (fd < 0)
-		return (-1);
-
-	fileStream *newStream = (fileStream *) fd;
-	printf("%s open mode %x\n", newStream->f.name, newStream->f.openMode);
+		return (status = -1);
 
 	// Hand it over to our ftruncate function
 	status = ftruncate(fd, length);
 	if (status < 0)
-		return (-1);
+		return (status);
 
 	// Close the file
 	close(fd);
 
 	// Return success
-	return (0);
+	return (status = 0);
 }
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -78,7 +78,7 @@ int kernelRtcInitialize(kernelDevice *dev)
 
 int kernelRtcReadSeconds(void)
 {
-	// This is a generic routine for invoking the corresponding routine
+	// This is a generic function for invoking the corresponding function
 	// in a Real-Time Clock driver.  It takes no arguments and returns the
 	// result from the device driver call
 
@@ -90,7 +90,7 @@ int kernelRtcReadSeconds(void)
 	// Make sure the device driver 'read seconds' function has been installed
 	if (!ops->driverReadSeconds)
 	{
-		kernelError(kernel_error, "The device driver routine is NULL");
+		kernelError(kernel_error, "The device driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -102,7 +102,7 @@ int kernelRtcReadSeconds(void)
 
 int kernelRtcReadMinutes(void)
 {
-	// This is a generic routine for invoking the corresponding routine
+	// This is a generic function for invoking the corresponding function
 	// in a Real-Time Clock driver.  It takes no arguments and returns the
 	// result from the device driver call
 
@@ -114,7 +114,7 @@ int kernelRtcReadMinutes(void)
 	// Make sure the device driver 'read minutes' function has been installed
 	if (!ops->driverReadMinutes)
 	{
-		kernelError(kernel_error, "The device driver routine is NULL");
+		kernelError(kernel_error, "The device driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -126,7 +126,7 @@ int kernelRtcReadMinutes(void)
 
 int kernelRtcReadHours(void)
 {
-	// This is a generic routine for invoking the corresponding routine
+	// This is a generic function for invoking the corresponding function
 	// in a Real-Time Clock driver.  It takes no arguments and returns the
 	// result from the device driver call
 
@@ -138,7 +138,7 @@ int kernelRtcReadHours(void)
 	// Make sure the device driver 'read hours' function has been installed
 	if (!ops->driverReadHours)
 	{
-		kernelError(kernel_error, "The device driver routine is NULL");
+		kernelError(kernel_error, "The device driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -150,7 +150,7 @@ int kernelRtcReadHours(void)
 
 int kernelRtcReadDayOfMonth(void)
 {
-	// This is a generic routine for invoking the corresponding routine
+	// This is a generic function for invoking the corresponding function
 	// in a Real-Time Clock driver.  It takes no arguments and returns the
 	// result from the device driver call
 
@@ -163,7 +163,7 @@ int kernelRtcReadDayOfMonth(void)
 	// installed
 	if (!ops->driverReadDayOfMonth)
 	{
-		kernelError(kernel_error, "The device driver routine is NULL");
+		kernelError(kernel_error, "The device driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -175,7 +175,7 @@ int kernelRtcReadDayOfMonth(void)
 
 int kernelRtcReadMonth(void)
 {
-	// This is a generic routine for invoking the corresponding routine
+	// This is a generic function for invoking the corresponding function
 	// in a Real-Time Clock driver.  It takes no arguments and returns the
 	// result from the device driver call
 
@@ -187,7 +187,7 @@ int kernelRtcReadMonth(void)
 	// Make sure the device driver 'read month' function has been installed
 	if (!ops->driverReadMonth)
 	{
-		kernelError(kernel_error, "The device driver routine is NULL");
+		kernelError(kernel_error, "The device driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 
@@ -199,7 +199,7 @@ int kernelRtcReadMonth(void)
 
 int kernelRtcReadYear(void)
 {
-	// This is a generic routine for invoking the corresponding routine
+	// This is a generic function for invoking the corresponding function
 	// in a Real-Time Clock driver.  It takes no arguments and returns the
 	// result from the device driver call
 
@@ -211,7 +211,7 @@ int kernelRtcReadYear(void)
 	// Make sure the device driver 'read year' function has been installed
 	if (!ops->driverReadYear)
 	{
-		kernelError(kernel_error, "The device driver routine is NULL");
+		kernelError(kernel_error, "The device driver function is NULL");
 		return (status = ERR_NOSUCHFUNCTION);
 	}
 

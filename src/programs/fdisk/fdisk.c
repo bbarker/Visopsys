@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -42,7 +42,7 @@ The disk can be automatically selected by specifying its name (as listed by
 the 'disks' command) as the last argument.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 
 </help>
 */
@@ -86,6 +86,7 @@ static textScreen screen;
 static char *tmpBackupName = NULL;
 static char sliceListHeader[SLICESTRING_LENGTH + 1];
 static listItemParameters *diskListParams = NULL;
+static int (*ntfsFormat)(const char *, const char *, int, progress *);
 static int (*ntfsGetResizeConstraints)(const char *, uquad_t *, uquad_t *,
 	progress *) = NULL;
 static int (*ntfsResize)(const char *, uquad_t, progress *) = NULL;
@@ -951,7 +952,7 @@ static int readPartitionTable(disk *theDisk, partitionTable *t)
 
 	sprintf(fileName, BACKUP_MBR, t->disk->name);
 
-	if (!fileFind(fileName, &backupFile))
+	if (!fileFind(fileName, NULL))
 		t->backupAvailable = 1;
 	else
 		t->backupAvailable = 0;
@@ -1382,7 +1383,7 @@ static int haveUsedSlices(void)
 static void printBanner(void)
 {
 	textScreenClear();
-	printf(_("%s\nCopyright (C) 1998-2016 J. Andrew McLaughlin\n"),
+	printf(_("%s\nCopyright (C) 1998-2018 J. Andrew McLaughlin\n"),
 		programName);
 }
 
@@ -2083,7 +2084,7 @@ static int doCreate(int sliceNumber, sliceType type, uquad_t startSector,
 
 static void create(int sliceNumber)
 {
-	// This is the interactive partition creation routine.
+	// This is the interactive partition creation function.
 
 	int status = 0;
 	unsigned minStartMb = 0;
@@ -2494,7 +2495,8 @@ static void format(int sliceNumber)
 
 	int status = 0;
 	slice *formatSlice = &table->slices[sliceNumber];
-	char *fsTypes[] = { "NTFS", "FAT", "EXT2", "Linux-swap", _("None") };
+	int numTypes = 0;
+	char *fsTypes[16] = { NULL };
 	char *fatTypes[] = { _("Default"), "FAT12", "FAT16", "FAT32" };
 	const char *chooseString = _("Choose the filesystem type:");
 	const char *fatString = _("Choose the FAT type:");
@@ -2514,16 +2516,24 @@ static void format(int sliceNumber)
 	if (status < 0)
 		return;
 
+	// Populate the list of available types
+	if (ntfsFormat)
+		fsTypes[numTypes++] = "NTFS";
+	fsTypes[numTypes++] = "FAT";
+	fsTypes[numTypes++] = "EXT2";
+	fsTypes[numTypes++] = "Linux-swap";
+	fsTypes[numTypes++] = _("None");
+
 	if (graphics)
 	{
 		sprintf(tmpChar, _("Format Partition %s"), formatSlice->showSliceName);
 		typeNum = windowNewRadioDialog(window, tmpChar, chooseString, fsTypes,
-			5, 0);
+			numTypes, 0);
 	}
 	else
 	{
-		typeNum = vshCursorMenu(chooseString, fsTypes, 5, 0 /* no max rows */,
-			0 /* selected */);
+		typeNum = vshCursorMenu(chooseString, fsTypes, numTypes,
+			0 /* no max rows */, 0 /* selected */);
 	}
 
 	if (typeNum < 0)
@@ -2588,7 +2598,9 @@ static void format(int sliceNumber)
 	{
 		sprintf(tmpChar, "%s", _("Format complete"));
 		if (graphics)
+		{
 			windowNewInfoDialog(window, _("Success"), tmpChar);
+		}
 		else
 		{
 			printf("%s\n", tmpChar);
@@ -3791,9 +3803,13 @@ static void copyIoThread(int argc, char *argv[])
 	}
 
 	if (!strcmp(argv[1], "reader"))
+	{
 		reader = 1;
+	}
 	else if (!strcmp(argv[1], "writer"))
+	{
 		reader = 0;
+	}
 	else
 	{
 		error("Invalid IO thread argument \"%s\"", argv[0]);
@@ -3960,7 +3976,7 @@ terminate:
 static int copyData(disk *srcDisk, unsigned srcSector, disk *destDisk,
 	unsigned destSector, unsigned numSectors)
 {
-	// Generic routine for raw disk I/O
+	// Generic function for raw disk I/O
 
 	int status = 0;
 	ioBuffer buffer;
@@ -5980,6 +5996,7 @@ static void constructWindow(void)
 	componentParameters params;
 	image iconImage;
 	objectKey container = NULL;
+	static char *iconName = PATH_SYSTEM_ICONS "/diskman.ico";
 	int widest = 0;
 	int count;
 
@@ -6028,8 +6045,8 @@ static void constructWindow(void)
 	if (container)
 	{
 		// Try to load an icon image to go at the top of the window
-		if (imageLoad(PATH_SYSTEM_ICONS "/diskman.ico", 64, 64,
-			&iconImage) >= 0)
+		if ((fileFind(iconName, NULL) >= 0) &&
+			(imageLoad(iconName, 64, 64, &iconImage) >= 0))
 		{
 			// Create an image component from it, and add it to the container
 			iconImage.transColor.green = 255;
@@ -6041,8 +6058,8 @@ static void constructWindow(void)
 
 		// Make a list for the disks
 		params.gridX++;
-		params.flags &=
-			~(WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
+		params.flags &= ~(WINDOW_COMPFLAG_FIXEDWIDTH |
+			WINDOW_COMPFLAG_FIXEDHEIGHT);
 		diskList = windowNewList(container, windowlist_textonly, numberDisks,
 			1, 0, diskListParams, numberDisks, &params);
 		windowRegisterEventHandler(diskList, &eventHandler);
@@ -6542,6 +6559,7 @@ int main(int argc, char *argv[])
 	handle = dlopen("libntfs.so", 0);
 	if (handle)
 	{
+		ntfsFormat = dlsym(handle, "ntfsFormat");
 		ntfsGetResizeConstraints = dlsym(handle, "ntfsGetResizeConstraints");
 		ntfsResize = dlsym(handle, "ntfsResize");
 	}

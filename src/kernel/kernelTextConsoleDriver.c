@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -404,7 +404,7 @@ static int screenClear(kernelTextArea *area)
 
 static int screenSave(kernelTextArea *area, textScreen *screen)
 {
-	// This routine saves the current contents of the screen
+	// This function saves the current contents of the screen
 
 	// Get memory for a new save area
 	screen->data = kernelMemoryGet((area->columns * area->rows * 2),
@@ -424,7 +424,7 @@ static int screenSave(kernelTextArea *area, textScreen *screen)
 
 static int screenRestore(kernelTextArea *area, textScreen *screen)
 {
-	// This routine restores the saved contents of the screen
+	// This function restores the saved contents of the screen
 
 	if (screen->data)
 	{

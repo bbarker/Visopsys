@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -43,7 +43,7 @@
 static kernelDevice *regDevice(void *parent, void *driver,
 	 kernelDeviceClass *class, kernelDeviceClass *subClass)
 {
-	// Just collects some of the common things from the other detect routines
+	// Just collects some of the common things from the other detect functions
 
 	int status = 0;
 	kernelDevice *dev = NULL;

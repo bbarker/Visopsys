@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -22,46 +22,56 @@
 #if !defined(_ASCII_H)
 
 // ASCII codes with special names
-#define ASCII_NULL			0
-#define ASCII_SOH			1
-#define ASCII_STX			2
-#define ASCII_ETX			3
-#define ASCII_ENDOFFILE		4
-#define ASCII_ENQ			5
-#define ASCII_ACK			6
-#define ASCII_BEL			7
-#define ASCII_BACKSPACE		8
-#define ASCII_TAB			9
-#define ASCII_ENTER			10
-#define ASCII_VERTTAB		11
-#define ASCII_FORMFEED		12
-#define ASCII_CRGRET		13
-#define ASCII_SHIFTOUT		14
-#define ASCII_SHIFTIN		15
-#define ASCII_DLE			16
-#define ASCII_DEVCONT1		17
-#define ASCII_DEVCONT2		18
-#define ASCII_DEVCONT3		19
-#define ASCII_DEVCONT4		20
-#define ASCII_NAK			21
-#define ASCII_SYN			22
-#define ASCII_ETB			23
-#define ASCII_CAN			24
-#define ASCII_EOM			25
-#define ASCII_SUB			26
-#define ASCII_ESC			27
+#define ASCII_NULL			0	// Ctrl-@
+#define ASCII_SOH			1	// Ctrl-A
+#define ASCII_STX			2	// Ctrl-B
+#define ASCII_ETX			3	// Ctrl-C
+#define ASCII_EOT			4	// Ctrl-D
+#define ASCII_ENQ			5	// Ctrl-E
+#define ASCII_ACK			6	// Ctrl-F
+#define ASCII_BEL			7	// Ctrl-G
+#define ASCII_BS			8	// Ctrl-H
+#define ASCII_HT			9	// Ctrl-I
+#define ASCII_LF			10	// Ctrl-J
+#define ASCII_VT			11	// Ctrl-K
+#define ASCII_FF			12	// Ctrl-L
+#define ASCII_CR			13	// Ctrl-M
+#define ASCII_SO			14	// Ctrl-N
+#define ASCII_SI			15	// Ctrl-O
+#define ASCII_DLE			16	// Ctrl-P
+#define ASCII_DC1			17	// Ctrl-Q
+#define ASCII_DC2			18	// Ctrl-R
+#define ASCII_DC3			19	// Ctrl-S
+#define ASCII_DC4			20	// Ctrl-T
+#define ASCII_NAK			21	// Ctrl-U
+#define ASCII_SYN			22	// Ctrl-V
+#define ASCII_ETB			23	// Ctrl-W
+#define ASCII_CAN			24	// Ctrl-X
+#define ASCII_EM			25	// Ctrl-Y
+#define ASCII_SUB			26	// Ctrl-Z
+#define ASCII_ESC			27	// Ctrl-[
+#define ASCII_FS			28	// Ctrl-backslash
+#define ASCII_GS			29	// Ctrl-]
+#define ASCII_RS			30	// Ctrl-^
+#define ASCII_US			31	// Ctrl-_
+
+// Aliases
+#define ASCII_ENDOFFILE		ASCII_EOT
+#define ASCII_BACKSPACE		ASCII_BS
+#define ASCII_TAB			ASCII_HT
+#define ASCII_ENTER			ASCII_LF
 #define ASCII_SPACE			32
 #define ASCII_DEL			127
 
 // These are unoffical overrides of certain codes that we use for things
 // that don't have ASCII codes
-#define ASCII_PAGEUP		ASCII_VERTTAB	// 11
-#define ASCII_PAGEDOWN		ASCII_FORMFEED	// 12
-#define ASCII_HOME			ASCII_CRGRET	// 13
-#define ASCII_CRSRUP		ASCII_DEVCONT1	// 17
-#define ASCII_CRSRLEFT		ASCII_DEVCONT2	// 18
-#define ASCII_CRSRRIGHT		ASCII_DEVCONT3	// 19
-#define ASCII_CRSRDOWN		ASCII_DEVCONT4	// 20
+#define ASCII_PAGEUP		ASCII_VT
+#define ASCII_PAGEDOWN		ASCII_FF
+#define ASCII_HOME			ASCII_CR
+#define ASCII_CRSRUP		ASCII_DC1
+#define ASCII_CRSRLEFT		ASCII_DC2
+#define ASCII_CRSRRIGHT		ASCII_DC3
+#define ASCII_CRSRDOWN		ASCII_DC4
 
 #define ASCII_CHARS			255
 #define ASCII_PRINTABLES	((ASCII_DEL - ASCII_SPACE) + 1)	// 96

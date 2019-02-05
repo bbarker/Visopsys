@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <sys/processor.h>
 
 // Some little macro shortcuts
@@ -218,7 +219,7 @@ static int select(int diskNum)
 
 static void lbaSetup(int diskNum, uquad_t logicalSector, uquad_t numSectors)
 {
-	// This routine is strictly internal, and is used to set up the disk
+	// This function is strictly internal, and is used to set up the disk
 	// controller registers with an LBA disk address in the drive/head, cylinder
 	// low, cylinder high, and start sector registers.  It doesn't return
 	// anything.
@@ -288,7 +289,7 @@ static void lbaSetup(int diskNum, uquad_t logicalSector, uquad_t numSectors)
 
 static int evaluateError(int diskNum)
 {
-	// This routine will check the error status on the disk controller
+	// This function will check the error status on the disk controller
 	// of the selected disk.  It evaluates the returned byte and matches
 	// conditions to error codes and error messages
 
@@ -323,7 +324,7 @@ static int evaluateError(int diskNum)
 static int waitOperationComplete(int diskNum, int yield, int dataWait,
 	int ack, unsigned timeout)
 {
-	// This routine reads the "interrupt received" byte, waiting for the last
+	// This function reads the "interrupt received" byte, waiting for the last
 	// command to complete.  Every time the command has not completed, the
 	// driver returns the remainder of the process' timeslice to the
 	// multitasker.  When the interrupt byte becomes 1, it resets the byte and
@@ -339,7 +340,7 @@ static int waitOperationComplete(int diskNum, int yield, int dataWait,
 		DISK_CHAN(diskNum).interrupt, dataWait, ack);
 
 	if (!timeout)
-		timeout = 1000;
+		timeout = MS_PER_SEC;
 
 	endTime = (kernelCpuGetMs() + timeout);
 
@@ -618,7 +619,7 @@ static int atapiStartStop(int diskNum, int start)
 	// Start or stop an ATAPI device
 
 	int status = 0;
-	uquad_t timeout = (kernelCpuGetMs() + 10000);
+	uquad_t timeout = (kernelCpuGetMs() + (10 * MS_PER_SEC));
 	unsigned short dataWord = 0;
 	atapiSenseData senseData;
 
@@ -627,7 +628,8 @@ static int atapiStartStop(int diskNum, int start)
 		// If we know the disk door is open, try to close it
 		if (DISK(diskNum).physical.flags & DISKFLAG_DOOROPEN)
 		{
-			kernelDebug(debug_io, "IDE disk %02x close ATAPI device", diskNum);
+			kernelDebug(debug_io, "IDE disk %02x close ATAPI device",
+				diskNum);
 			sendAtapiPacket(diskNum, 0, ATAPI_PACKET_CLOSE);
 		}
 
@@ -638,7 +640,8 @@ static int atapiStartStop(int diskNum, int start)
 		// or if the media has just been inserted, this command can return
 		// various error codes.
 		do {
-			kernelDebug(debug_io, "IDE disk %02x start ATAPI device", diskNum);
+			kernelDebug(debug_io, "IDE disk %02x start ATAPI device",
+				diskNum);
 			status = sendAtapiPacket(diskNum, 0, ATAPI_PACKET_START);
 			if (status < 0)
 			{
@@ -651,9 +654,7 @@ static int atapiStartStop(int diskNum, int start)
 
 				// Request sense data
 				if (atapiRequestSense(diskNum, &senseData) < 0)
-				{
 					break;
-				}
 
 				// Check sense responses
 
@@ -883,7 +884,7 @@ static int dmaSetup(int diskNum, void *address, unsigned bytes, int read,
 
 	int status = 0;
 	unsigned maxBytes = 0;
-	unsigned physicalAddress = NULL;
+	unsigned physicalAddress = 0;
 	unsigned doBytes = 0;
 	int numPrds = 0;
 	idePrd *prds = NULL;
@@ -906,8 +907,8 @@ static int dmaSetup(int diskNum, void *address, unsigned bytes, int read,
 	// Address must be dword-aligned
 	if (physicalAddress % 4)
 	{
-		kernelError(kernel_error, "Physical address 0x%08x of virtual address "
-			"%p not dword-aligned", physicalAddress, address);
+		kernelError(kernel_error, "Physical address 0x%08x of virtual "
+			"address %p not dword-aligned", physicalAddress, address);
 		return (status = ERR_ALIGN);
 	}
 
@@ -1246,7 +1247,8 @@ static int readWriteAtapi(int diskNum, uquad_t logicalSector,
 	else
 	{
 		// Just kickstart the device
-		kernelDebug(debug_io, "IDE disk %02x kickstart ATAPI device", diskNum);
+		kernelDebug(debug_io, "IDE disk %02x kickstart ATAPI device",
+			diskNum);
 		status = sendAtapiPacket(diskNum, 0, ATAPI_PACKET_START);
 		if (status < 0)
 		{
@@ -1328,8 +1330,8 @@ static int readWriteAtapi(int diskNum, uquad_t logicalSector,
 }
 
 
-static int readWriteDma(int diskNum, uquad_t logicalSector, uquad_t numSectors,
-	void *buffer, int read)
+static int readWriteDma(int diskNum, uquad_t logicalSector,
+	uquad_t numSectors, void *buffer, int read)
 {
 	int status = 0;
 	unsigned char command = 0;
@@ -1361,12 +1363,14 @@ static int readWriteDma(int diskNum, uquad_t logicalSector, uquad_t numSectors,
 			sectorsPerCommand = 65536;
 	}
 	else if (sectorsPerCommand > 256)
+	{
 		sectorsPerCommand = 256;
+	}
 
 	// This outer loop is done once for each *command* we send.	Actual
-	// data transfers, DMA transfers, etc. may occur more than once per command
-	// and are handled by the inner loop.	The number of times we send a
-	// command depends upon the maximum number of sectors we can specify per
+	// data transfers, DMA transfers, etc. may occur more than once per
+	// command and are handled by the inner loop.  The number of times we send
+	// a command depends upon the maximum number of sectors we can specify per
 	// command.
 
 	while (numSectors > 0)
@@ -1445,8 +1449,8 @@ static int readWriteDma(int diskNum, uquad_t logicalSector, uquad_t numSectors,
 }
 
 
-static int readWritePio(int diskNum, uquad_t logicalSector, uquad_t numSectors,
-	void *buffer, int read)
+static int readWritePio(int diskNum, uquad_t logicalSector,
+	uquad_t numSectors, void *buffer, int read)
 {
 	int status = 0;
 	unsigned char command = 0;
@@ -1499,12 +1503,14 @@ static int readWritePio(int diskNum, uquad_t logicalSector, uquad_t numSectors,
 			sectorsPerCommand = 65536;
 	}
 	else if (sectorsPerCommand > 256)
+	{
 		sectorsPerCommand = 256;
+	}
 
 	// This outer loop is done once for each *command* we send.  Actual
-	// data transfers, DMA transfers, etc. may occur more than once per command
-	// and are handled by the inner loop.  The number of times we send a
-	// command depends upon the maximum number of sectors we can specify per
+	// data transfers, DMA transfers, etc. may occur more than once per
+	// command and are handled by the inner loop.  The number of times we send
+	// a command depends upon the maximum number of sectors we can specify per
 	// command.
 
 	while (numSectors > 0)
@@ -1512,11 +1518,12 @@ static int readWritePio(int diskNum, uquad_t logicalSector, uquad_t numSectors,
 		sectorsPerCommand = min(sectorsPerCommand, numSectors);
 
 		// Calculate the number of data cycles (interrupts) for this command
+		sectorsPerInt = 1;
 		if (DISKISMULTI(diskNum))
+		{
 			sectorsPerInt = min(sectorsPerCommand,
 				(unsigned) DISK(diskNum).physical.multiSectors);
-		else
-			sectorsPerInt = 1;
+		}
 
 		ints = ((sectorsPerCommand + (sectorsPerInt - 1)) / sectorsPerInt);
 
@@ -1543,9 +1550,9 @@ static int readWritePio(int diskNum, uquad_t logicalSector, uquad_t numSectors,
 		processorOutPort8(DISK_CHAN(diskNum).ports.comStat, command);
 
 		// The inner loop is used to service each interrupt.  The disk will
-		// interrupt once for each sector (or multiple of sectors if read/write
-		// multiple is enabled) and we will read each word of data from the
-		// port.
+		// interrupt once for each sector (or multiple of sectors if
+		// read/write multiple is enabled) and we will read each word of data
+		// from the port.
 
 		for (count = 0; count < ints; count ++)
 		{
@@ -1609,7 +1616,7 @@ static int readWritePio(int diskNum, uquad_t logicalSector, uquad_t numSectors,
 static int readWriteSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, void *buffer, int read)
 {
-	// This routine reads or writes sectors to/from the disk.  Returns 0 on
+	// This function reads or writes sectors to/from the disk.  Returns 0 on
 	// success, negative otherwise.
 
 	int status = 0;
@@ -1765,7 +1772,9 @@ static int atapiSetDoorState(int diskNum, int open)
 		status = sendAtapiPacket(diskNum, 0, ATAPI_PACKET_EJECT);
 	}
 	else
+	{
 		status = sendAtapiPacket(diskNum, 0, ATAPI_PACKET_CLOSE);
+	}
 
 	if (status < 0)
 		return (status);
@@ -1783,8 +1792,8 @@ static void pciIdeInterrupt(void)
 {
 	// This is the PCI IDE interrupt handler.  It will be called whenever the
 	// disk controller issues its service interrupt, and will simply change a
-	// data value to indicate that one has been received.  It's up to the other
-	// routines to do something useful with the information.
+	// data value to indicate that one has been received.  It's up to the
+	// other functions to do something useful with the information.
 
 	void *address = NULL;
 	int interruptNum = 0;
@@ -1828,8 +1837,8 @@ static void pciIdeInterrupt(void)
 					}
 					else
 					{
-						kernelDebugError("Controller %d channel %d unexpected "
-							"PCI interrupt %d #%d", count1, count2,
+						kernelDebugError("Controller %d channel %d "
+							"unexpected PCI interrupt %d #%d", count1, count2,
 							interruptNum, CHANNEL(count1, count2).ints);
 						ackInterrupt((count1 << 4) | (count2 << 1));
 					}
@@ -1852,10 +1861,24 @@ static void pciIdeInterrupt(void)
 
 	kernelInterruptClearCurrent();
 
-	if (!serviced && oldIntHandlers[interruptNum])
-		// We didn't service this interrupt, and we're sharing this PCI
-		// interrupt with another device whose handler we saved.  Call it.
-		processorIsrCall(oldIntHandlers[interruptNum]);
+	if (!serviced)
+	{
+		if (oldIntHandlers[interruptNum])
+		{
+			// We didn't service this interrupt, and we're sharing this PCI
+			// interrupt with another device whose handler we saved.  Call it.
+			kernelDebug(debug_io, "IDE interrupt not serviced - chaining");
+			processorIsrCall(oldIntHandlers[interruptNum]);
+		}
+		else
+		{
+			// We'd better acknowledge the interrupt, or else it wouldn't be
+			// cleared, and our controllers using this vector wouldn't receive
+			// any more.
+			kernelDebugError("Interrupt not serviced and no saved ISR");
+			kernelPicEndOfInterrupt(interruptNum);
+		}
+	}
 
 out:
 	processorIsrExit(address);
@@ -1867,7 +1890,7 @@ static void primaryIdeInterrupt(void)
 	// This is the IDE interrupt handler for the primary channel.  It will
 	// be called whenever the disk controller issues its service interrupt,
 	// and will simply change a data value to indicate that one has been
-	// received.  It's up to the other routines to do something useful with
+	// received.  It's up to the other functions to do something useful with
 	// the information.
 
 	void *address = NULL;
@@ -1929,7 +1952,7 @@ static void secondaryIdeInterrupt(void)
 	// This is the IDE interrupt handler for the secondary channel.  It will
 	// be called whenever the disk controller issues its service interrupt,
 	// and will simply change a data value to indicate that one has been
-	// received.  It's up to the other routines to do something useful with
+	// received.  It's up to the other functions to do something useful with
 	// the information.
 
 	void *address = NULL;
@@ -2079,12 +2102,17 @@ out:
 	if (identData.field.multiSector & 0x0100)
 	{
 		if ((identData.field.multiSector & 0xFF) == multiSectors)
+		{
 			kernelDebug(debug_io, "IDE set multiple mode succeeded (%d) for "
 				"disk %02x", (identData.field.multiSector & 0xFF), diskNum);
+		}
 		else
-			kernelDebugError("Failed to set multiple mode for disk %02x to %d "
-				"(now %d)", diskNum, multiSectors,
+		{
+			kernelDebugError("Failed to set multiple mode for disk %02x to "
+				"%d (now %d)", diskNum, multiSectors,
 				(identData.field.multiSector & 0xFF));
+		}
+
 		DISK(diskNum).featureFlags |= ATA_FEATURE_MULTI;
 		DISK(diskNum).physical.multiSectors =
 			(identData.field.multiSector & 0xFF);
@@ -2092,7 +2120,8 @@ out:
 	}
 	else
 	{
-		kernelDebugError("Failed to set multiple mode for disk %02x", diskNum);
+		kernelDebugError("Failed to set multiple mode for disk %02x",
+			diskNum);
 		DISK(diskNum).featureFlags &= ~ATA_FEATURE_MULTI;
 		DISK(diskNum).physical.multiSectors = 1;
 		status = ERR_INVALID;
@@ -2300,7 +2329,8 @@ static int driverMediaPresent(int diskNum)
 		else
 		{
 			// Just kickstart the device
-			kernelDebug(debug_io, "IDE disk %02x kickstart ATAPI device", diskNum);
+			kernelDebug(debug_io, "IDE disk %02x kickstart ATAPI device",
+				diskNum);
 			if (sendAtapiPacket(diskNum, 0, ATAPI_PACKET_START) >= 0)
 			{
 				present = 1;
@@ -2325,7 +2355,7 @@ out:
 static int driverReadSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 	return (readWriteSectors(diskNum, logicalSector, numSectors, buffer,
 		1));	// Read operation
 }
@@ -2334,7 +2364,7 @@ static int driverReadSectors(int diskNum, uquad_t logicalSector,
 static int driverWriteSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, const void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 	return (readWriteSectors(diskNum, logicalSector, numSectors,
 		(void *) buffer, 0));	// Write operation
 }
@@ -2436,7 +2466,8 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 		}
 
 		// Get the PCI device header
-		status = kernelBusGetTargetInfo(&pciTargets[deviceCount], &pciDevInfo);
+		status = kernelBusGetTargetInfo(&pciTargets[deviceCount],
+			&pciDevInfo);
 		if (status < 0)
 			continue;
 
@@ -2581,8 +2612,8 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 				CHANNEL(numControllers, count).ports.device = portAddr++;
 				CHANNEL(numControllers, count).ports.comStat = portAddr++;
 				CHANNEL(numControllers, count).ports.altComStat =
-					((pciDevInfo.device.nonBridge.baseAddress[(count * 2) + 1] &
-					0xFFFFFFFE) + 2);
+					((pciDevInfo.device.nonBridge.
+						baseAddress[(count * 2) + 1] & 0xFFFFFFFE) + 2);
 				kernelDebug(debug_io, "IDE PCI I/O ports %04x-%04x & %04x",
 					CHANNEL(numControllers, count).ports.data,
 					(CHANNEL(numControllers, count).ports.data + 7),
@@ -2619,7 +2650,9 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 		// controller has a PCI interrupt, and the channel has I/O addresses
 		// already assigned, then we will change it to native mode.
 
-		kernelDebug(debug_io, "IDE PCI progIF=%02x", pciDevInfo.device.progIF);
+		kernelDebug(debug_io, "IDE PCI progIF=%02x",
+			pciDevInfo.device.progIF);
+
 		for (count = 0; count < 2; count ++)
 		{
 			if (!(pciDevInfo.device.progIF & (1 << (count * 2))))
@@ -2647,11 +2680,15 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 				}
 
 				if (pciDevInfo.device.progIF & (1 << (count * 2)))
+				{
 					kernelDebug(debug_io, "IDE PCI channel %d switched to "
 						"native PCI mode", count);
+				}
 				else
+				{
 					// This channel will stay in compatibility mode
 					CHANNEL(numControllers, count).compatibility = 1;
+				}
 			}
 		}
 
@@ -2668,6 +2705,7 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 				sizeof(idePrd));
 
 			status = kernelMemoryGetIo(prdMemorySize, DISK_CACHE_ALIGN,
+				0 /* not low memory */, "ide prds",
 				(kernelIoMemory *) &CHANNEL(numControllers, count).prds);
 		}
 
@@ -2681,7 +2719,8 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 
 		// Create a device for it in the kernel.
 
-		controllerDevices[numControllers] = kernelMalloc(sizeof(kernelDevice));
+		controllerDevices[numControllers] =
+			kernelMalloc(sizeof(kernelDevice));
 		if (controllerDevices[numControllers])
 		{
 			controllerDevices[numControllers]->device.class =
@@ -2712,7 +2751,7 @@ static int detectPciControllers(kernelDevice *controllerDevices[],
 static int driverDetect(void *parent __attribute__((unused)),
 	kernelDriver *driver)
 {
-	// This routine is used to detect and initialize each device, as well as
+	// This function is used to detect and initialize each device, as well as
 	// registering each one with any higher-level interfaces.  Also does
 	// general driver initialization.
 
@@ -2775,20 +2814,26 @@ static int driverDetect(void *parent __attribute__((unused)),
 					"legacy interrupt=%d", controllerCount, count,
 					CHANNEL(controllerCount, count).interrupt);
 
-				sprintf(value, "%d", CHANNEL(controllerCount, count).interrupt);
+				sprintf(value, "%d", CHANNEL(controllerCount,
+					count).interrupt);
 
 				if (!count)
+				{
 					kernelVariableListSet(
 						&controllerDevices[controllerCount]->device.attrs,
 						"controller.interrupt.primary", value);
+				}
 				else
+				{
 					kernelVariableListSet(
 						&controllerDevices[controllerCount]->device.attrs,
 						"controller.interrupt.secondary", value);
+				}
 			}
 			else
 			{
-				sprintf(value, "%d", controllers[controllerCount].pciInterrupt);
+				sprintf(value, "%d",
+					controllers[controllerCount].pciInterrupt);
 				kernelVariableListSet(
 					&controllerDevices[controllerCount]->device.attrs,
 					"controller.interrupt", value);
@@ -2854,9 +2899,9 @@ static int driverDetect(void *parent __attribute__((unused)),
 						.pciInterrupt);
 			}
 
-			status =
-				kernelInterruptHook(controllers[controllerCount].pciInterrupt,
-					&pciIdeInterrupt, NULL);
+			status = kernelInterruptHook(
+				controllers[controllerCount].pciInterrupt, &pciIdeInterrupt,
+				NULL);
 			if (status < 0)
 				continue;
 
@@ -2866,7 +2911,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 			// Just in case there's an outstanding interrupt
 			expectInterrupt(controllerCount << 4);
 
-			status = kernelPicMask(controllers[controllerCount].pciInterrupt, 1);
+			status = kernelPicMask(controllers[controllerCount].pciInterrupt,
+				1);
 			if (status < 0)
 				continue;
 
@@ -2911,13 +2957,17 @@ static int driverDetect(void *parent __attribute__((unused)),
 					(count && (oldHandler != &secondaryIdeInterrupt)))
 				{
 					if (!count)
+					{
 						status = kernelInterruptHook(
 							CHANNEL(controllerCount, count).interrupt,
 							&primaryIdeInterrupt, NULL);
+					}
 					else
+					{
 						status = kernelInterruptHook(
 							CHANNEL(controllerCount, count).interrupt,
 							&secondaryIdeInterrupt, NULL);
+					}
 
 					if (status < 0)
 						continue;
@@ -2960,10 +3010,12 @@ static int driverDetect(void *parent __attribute__((unused)),
 				continue;
 
 			if (!(diskNum & 1))
+			{
 				// Do a reset without checking the status.  Some controllers
 				// need a select before a reset, some the other way around.
 				// These should cause the code below to satisfy both.
 				reset(diskNum);
+			}
 
 			// Now do a select, reset, and identify.
 
@@ -2978,8 +3030,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 
 			if (DISK_CHAN(diskNum).gotInterrupt)
 			{
-				kernelDebug(debug_io, "IDE selection caused interrupt, status "
-					"%02x", DISK_CHAN(diskNum).intStatus);
+				kernelDebug(debug_io, "IDE selection caused interrupt, "
+					"status %02x", DISK_CHAN(diskNum).intStatus);
 				ackInterrupt(diskNum);
 			}
 
@@ -3050,8 +3102,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 				DISK(diskNum).physical.heads = identData.field.heads;
 				DISK(diskNum).physical.sectorsPerCylinder =
 					identData.field.sectsPerCyl;
-				// Default sector size is 512.  Don't know how to figure it out
-				// short of trusting the BIOS values.
+				// Default sector size is 512.  Don't know how to figure it
+				// out short of trusting the BIOS values.
 				DISK(diskNum).physical.sectorSize = 512;
 
 				// The values above don't have to be set.  If they're not,
@@ -3063,8 +3115,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 					DISK(diskNum).physical.sectorsPerCylinder = 63;
 				}
 
-				// Make sure C*H*S is the same as the number of sectors, and if
-				// not, adjust the cylinder number accordingly.
+				// Make sure C*H*S is the same as the number of sectors, and
+				// if not, adjust the cylinder number accordingly.
 				if ((DISK(diskNum).physical.cylinders *
 					DISK(diskNum).physical.heads *
 					DISK(diskNum).physical.sectorsPerCylinder) !=
@@ -3110,8 +3162,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 				else
 					DISK(diskNum).physical.type |= DISKTYPE_FIXED;
 
-				// Device type: Bits 12-8 of generalConfig should indicate 0x05
-				// for CDROM, but we will just warn if it isn't for now
+				// Device type: Bits 12-8 of generalConfig should indicate
+				// 0x05 for CDROM, but we will just warn if it isn't for now
 				DISK(diskNum).physical.type |= DISKTYPE_IDECDROM;
 				if (((identData.field.generalConfig & 0x1F00) >> 8) != 0x05)
 					kernelError(kernel_warn, "ATAPI device type may not be "
@@ -3122,7 +3174,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 
 				atapiReset(diskNum);
 
-				// Return some information we know from our device info command
+				// Return some information we know from our device info
+				// command
 				DISK(diskNum).physical.cylinders = identData.field.cylinders;
 				DISK(diskNum).physical.heads = identData.field.heads;
 				DISK(diskNum).physical.sectorsPerCylinder =
@@ -3137,9 +3190,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 				((unsigned short *) DISK(diskNum).physical.model)[count] =
 					processorSwap16(identData.field.modelNum[count]);
 			}
-			for (count = (DISK_MAX_MODELLENGTH - 1);
-				((count >= 0) && (DISK(diskNum).physical.model[count] == ' '));
-				count --)
+			for (count = (DISK_MAX_MODELLENGTH - 1); ((count >= 0) &&
+				(DISK(diskNum).physical.model[count] == ' ')); count --)
 			{
 				DISK(diskNum).physical.model[count] = '\0';
 			}
@@ -3240,13 +3292,13 @@ static int driverDetect(void *parent __attribute__((unused)),
 						((DISK(diskNum).featureFlags & ATA_FEATURE_MULTI)?
 							"" : " - invalid"));
 
-					// If the disk is not set to use its maximum multi-transfer
-					// setting, try to set it now.
+					// If the disk is not set to use its maximum multi-
+					// transfer setting, try to set it now.
 					if ((identData.field.maxMulti & 0xFF) >
 						DISK(diskNum).physical.multiSectors)
 					{
-						if (!((identData.field.multiSector & 0x01FF) > 0x100) ||
-							((identData.field.multiSector & 0xFF) <
+						if (!((identData.field.multiSector & 0x01FF) > 0x100)
+							|| ((identData.field.multiSector & 0xFF) <
 								(identData.field.maxMulti & 0xFF)))
 						{
 							setMultiMode(diskNum,
@@ -3292,7 +3344,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 							{
 								// Don't attempt to use modes UDMA3 and up if
 								// there's not an 80-pin connector
-								if (!(identData.field.hardResetResult & 0x2000) &&
+								if (!(identData.field.hardResetResult &
+										0x2000) &&
 									(dmaModes[count].identWord == 88) &&
 									(dmaModes[count].suppMask > 0x04))
 								{
@@ -3301,8 +3354,8 @@ static int driverDetect(void *parent __attribute__((unused)),
 									continue;
 								}
 
-								// If this is not a CD-ROM, and the mode is not
-								// enabled, try to enable it.
+								// If this is not a CD-ROM, and the mode is
+								// not enabled, try to enable it.
 								if (!(DISK(diskNum).physical.type &
 									DISKTYPE_IDECDROM))
 								{
@@ -3367,8 +3420,11 @@ static int driverDetect(void *parent __attribute__((unused)),
 							}
 						}
 						else
+						{
 							kernelDebug(debug_io, "IDE disk %d:%d feature "
-								"already enabled", controllerCount, diskCount);
+								"already enabled", controllerCount,
+								diskCount);
+						}
 
 						DISK(diskNum).featureFlags |=
 							features[count].featureFlag;

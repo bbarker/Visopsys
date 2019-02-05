@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -71,8 +71,8 @@ typedef enum {
 	image_body_horiz = 0, image_body_vert = 1, image_corner_ne = 2,
 	image_corner_nw = 3, image_corner_se = 4, image_corner_sw = 5,
 	image_head_e = 6, image_head_n = 7, image_head_s = 8, image_head_w = 9,
-	image_tail_e = 10, image_tail_n = 11, image_tail_s = 12, image_tail_w = 13,
-	image_food = 14, image_treat = 15
+	image_tail_e = 10, image_tail_n = 11, image_tail_s = 12,
+	image_tail_w = 13, image_food = 14, image_treat = 15
 
 } imageEnum;
 
@@ -90,6 +90,7 @@ static coord treatCoord;
 static int treatTimer = 0;
 
 // For graphics mode
+
 static char *imageNames[NUM_IMAGES] = {
 	SNAKE_DIR "body-horiz.bmp", SNAKE_DIR "body-vert.bmp",
 	SNAKE_DIR "corner-ne.bmp", SNAKE_DIR "corner-nw.bmp",
@@ -100,6 +101,7 @@ static char *imageNames[NUM_IMAGES] = {
 	SNAKE_DIR "tail-s.bmp", SNAKE_DIR "tail-w.bmp",
 	SNAKE_DIR "food.bmp", SNAKE_DIR "treat.bmp"
 };
+
 static image images[NUM_IMAGES];
 static unsigned imageWidth = 0;
 static unsigned imageHeight = 0;
@@ -185,7 +187,9 @@ static void makeFood(void)
 	setGrid(&c, food);
 
 	if (graphics)
+	{
 		putImage(&c, image_food);
+	}
 	else
 	{
 		textSetColumn(c.x + 1);
@@ -206,7 +210,9 @@ static void makeTreat(void)
 	setGrid(&treatCoord, treat);
 
 	if (graphics)
+	{
 		putImage(&treatCoord, image_treat);
+	}
 	else
 	{
 		textSetColumn(treatCoord.x + 1);
@@ -269,7 +275,9 @@ static void updateTreat(void)
 				1 /* redraw */);
 		}
 		else
+		{
 			printf("    ");
+		}
 	}
 }
 
@@ -284,7 +292,7 @@ static void setup(void)
 
 	// Empty the grid
 	for (count = 0; count < (screenWidth * screenHeight); count ++)
-	grid[count] = empty;
+		grid[count] = empty;
 
 	// Fill in the initial screen and snake coordinate arrays
 	for (count = 0; count < snakeLength; count ++)
@@ -372,6 +380,7 @@ static int moveSnake(void)
 			}
 		}
 	}
+
 	snakeArray[0].dir = snakeDirection;
 
 	// In what direction is the snake moving?
@@ -409,10 +418,12 @@ static int moveSnake(void)
 
 	// What was in the grid space the snake is moving to?...
 	object = getGrid(&snakeArray[0]);
+
 	switch (object)
 	{
 		case empty:
 		case treat:
+		{
 			// The snake just moves.  Fill in the grid for the snake head
 			setGrid(&snakeArray[0], snake);
 			// Remove the last part of the snake from the grid.
@@ -440,6 +451,7 @@ static int moveSnake(void)
 						putImage(&snakeArray[snakeLength - 1], image_tail_w);
 						break;
 				}
+
 				clearImage(&snakeArray[0]);
 			}
 			else
@@ -448,15 +460,19 @@ static int moveSnake(void)
 				textSetRow(snakeArray[snakeLength].y + 2);
 				textPutc(' ');
 			}
+
 			if (object == treat)
 			{
 				score += (TREAT_BASESCORE + treatTimer);
 				treatTimer = 0;
 				updateTreat();
 			}
+
 			break;
+		}
 
 		case food:
+		{
 			// The snake ate some food.  Grow the length and make more food.
 			setGrid(&snakeArray[0], snake);
 			if (graphics)
@@ -472,10 +488,13 @@ static int moveSnake(void)
 				makeTreat();
 			score += 4;
 			break;
+		}
 
 		default:
+		{
 			// Dead
 			return (-1);
+		}
 	}
 
 	// Draw the new head of the snake
@@ -520,7 +539,9 @@ static int moveSnake(void)
 	if (snakeArray[0].dir != snakeArray[1].dir)
 	{
 		if (graphics)
+		{
 			clearImage(&snakeArray[1]);
+		}
 		else
 		{
 			textSetColumn(snakeArray[1].x + 1);
@@ -630,12 +651,15 @@ static void drawScreen(void)
 	// Draw a border
 
 	// Top row
+
 	textPutc(218);
+
 	for (count = 0; count < screenWidth; count ++)
 	{
 		textSetColumn(count + 1);
 		textPutc(196);
 	}
+
 	textSetColumn(screenWidth + 1);
 	textPutc(191);
 
@@ -650,14 +674,17 @@ static void drawScreen(void)
 	}
 
 	// Bottom row
+
 	textSetColumn(0);
 	textSetRow(screenHeight + 2);
 	textPutc(192);
+
 	for (count = 0; count < screenWidth; count ++)
 	{
 		textSetColumn(count + 1);
 		textPutc(196);
 	}
+
 	textSetColumn(screenWidth + 1);
 	textPutc(217);
 }
@@ -665,8 +692,8 @@ static void drawScreen(void)
 
 static void refreshWindow(void)
 {
-	// We got a 'window refresh' event (probably because of a language switch),
-	// so we need to update things
+	// We got a 'window refresh' event (probably because of a language
+	// switch), so we need to update things
 
 	// Re-get the language setting
 	setlocale(LC_ALL, getenv(ENV_LANG));
@@ -779,8 +806,8 @@ static int constructWindow(void)
 	params.gridX += 1;
 	params.orientationX = orient_right;
 	params.flags &= ~WINDOW_COMPFLAG_FIXEDWIDTH;
-	treatImage =
-	windowNewImage(window, &images[image_treat], draw_translucent, &params);
+	treatImage = windowNewImage(window, &images[image_treat],
+		draw_translucent, &params);
 	windowComponentSetVisible(treatImage, 0);
 
 	params.gridX += 1;
@@ -860,7 +887,9 @@ static int play(void)
 				// The player didn't get the treat in time.
 				setGrid(&treatCoord, empty);
 				if (graphics)
+				{
 					clearImage(&treatCoord);
+				}
 				else
 				{
 					textSetColumn(treatCoord.x + 1);

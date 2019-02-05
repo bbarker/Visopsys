@@ -12,5 +12,5 @@ that host.  The most common usage of this command is to test network
 connectivity.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 

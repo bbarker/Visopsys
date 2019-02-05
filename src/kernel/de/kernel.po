@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  This German translation provided by Proxma AG - www.proxma.com
 #
@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-26 02:14+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,129 +18,117 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: kernelFilesystemFat.c:3888
+#: kernelFilesystemFat.c:3068
 #, c-format
 msgid "Defragmenting %llu/%llu: %s"
 msgstr "Defragmentieren von %llu/%llu: %s"
 
-#: kernelFilesystemFat.c:4022 kernelFilesystemFat.c:4492
+#: kernelFilesystemFat.c:4289 kernelFilesystemFat.c:4563
 msgid "Reading filesystem info"
 msgstr "Informationen zum Dateisystem werden ausgelesen"
 
-#: kernelFilesystemFat.c:4061
+#: kernelFilesystemFat.c:4328
 msgid "Analyzing"
 msgstr "Analyse läuft"
 
-#: kernelFilesystemFat.c:4075
+#: kernelFilesystemFat.c:4342
 #, c-format
 msgid "%llu files need defragmentation"
 msgstr "%llu Dateien benötigen eine Defragmentierung"
 
-#: kernelFilesystemFat.c:4180
+#: kernelFilesystemFat.c:4452
 msgid "Checking constraints"
 msgstr "Die Bedingungen werden überprüft"
 
-#: kernelFilesystemFat.c:4473
+#: kernelFilesystemFat.c:4544
 msgid "Error getting resizing constraints"
 msgstr "Fehler beim beziehen der Bedingungen für die Größenanpassung"
 
-#: kernelFilesystemFat.c:4480
+#: kernelFilesystemFat.c:4551
 #, c-format
 msgid "Filesystem cannot resize to %llu blocks (minimum is %llu)"
 msgstr ""
 "Das Dateisystem kann nicht auf die Größe von %llu Blöcken angepasst werden "
 "(Minimum ist %llu)"
 
-#: kernelFilesystemFat.c:4483
+#: kernelFilesystemFat.c:4554
 #, c-format
 msgid "Filesystem cannot resize to %llu blocks (maximum is %llu)"
 msgstr ""
 "Das Dateisystem kann nicht auf die Größe von %llu Blöcken angepasst werden "
 "(Maximum ist %llu)"
 
-#: kernelFilesystemFat.c:4500 kernelFilesystemFat.c:4532
+#: kernelFilesystemFat.c:4571 kernelFilesystemFat.c:4627
 msgid "Error reading filesystem info"
 msgstr "Fehler beim auslesen der Informationen zum Dateisystem"
 
-#: kernelFilesystemFat.c:4516
+#: kernelFilesystemFat.c:4579 kernelFilesystemFat.c:4636
+msgid "Unable to create the free cluster bitmap"
+msgstr ""
+
+#: kernelFilesystemFat.c:4611
 #, fuzzy
 msgid "Defragmenting"
-msgstr "Defragmentieren von %llu/%llu: %s"
+msgstr "Defragmentieren"
 
-#: kernelFilesystemFat.c:4524
+#: kernelFilesystemFat.c:4619
 msgid "Error defragmenting filesystem"
 msgstr "Fehler beim Defragmentieren des Dateisystems"
 
-#: kernelFilesystemFat.c:4543
-#, c-format
-msgid "Data exists outside the new size (%u >= %llu)"
-msgstr "Die Daten existieren außerhalb der neuen Größe (%u >= %llu)"
+#: kernelFilesystemFat.c:4649
+#, fuzzy, c-format
+msgid "Data exists outside the new size (%llu >= %llu)"
+msgstr "Die Daten existieren außerhalb der neuen Größe (%llu >= %llu)"
 
-#: kernelFilesystemFat.c:4588
+#: kernelFilesystemFat.c:4677
 msgid "Error moving data"
 msgstr "Fehler beim verschieben der Daten"
 
-#: kernelFilesystemFat.c:4599
+#: kernelFilesystemFat.c:4688
 msgid "Clearing new FAT sectors"
 msgstr "Die neuen FAT-Sektoren werden bereinigt"
 
-#: kernelFilesystemFat.c:4606
+#: kernelFilesystemFat.c:4695
 msgid "Error getting memory"
 msgstr "Fehler beim beziehen von Speicher"
 
-#: kernelFilesystemFat.c:4625
+#: kernelFilesystemFat.c:4714
 msgid "Error clearing new FAT sectors"
 msgstr "Fehler beim bereinigen der neuen FAT-Sektoren"
 
-#: kernelFilesystemFat.c:4638
+#: kernelFilesystemFat.c:4727
 msgid "Error synching FAT copies"
 msgstr "Fehler beim synchronisieren der FAT-Kopien"
 
-#: kernelFilesystemFat.c:4648
+#: kernelFilesystemFat.c:4737
 msgid "Updating filesystem info"
 msgstr "Aktualisieren der Informationen zum Dateisystem"
 
-#: kernelFilesystemFat.c:4663 kernelFilesystemFat.c:4672
+#: kernelFilesystemFat.c:4752 kernelFilesystemFat.c:4761
 msgid "Error updating filesystem info"
 msgstr "Fehler beim aktualisieren der Informationen zum Dateisystem"
 
-#: kernelShutdown.c:44
+#: kernelShutdown.c:45
 msgid "Shutting down Visopsys, please wait..."
 msgstr "Visopsys wird heruntergefahren, bitte warten Sie..."
 
-#: kernelShutdown.c:45
+#: kernelShutdown.c:46
 msgid "[ Wait for \"OK to power off\" message ]"
 msgstr "[ Es wird auf die Nachricht \"OK zum herunterfahren\" gewartet ]"
 
-#: kernelShutdown.c:46
+#: kernelShutdown.c:47
 msgid "Rebooting."
 msgstr "Es wird neu gestartet."
 
-#: kernelShutdown.c:47
+#: kernelShutdown.c:48
 msgid "OK to power off now."
 msgstr "OK jetzt herunterzufahren"
 
-#: kernelShutdown.c:161
+#: kernelShutdown.c:162
 msgid "Shutting down"
 msgstr "Herunterfahren"
 
-#: kernelShutdown.c:329
+#: kernelShutdown.c:330
 #, c-format
 msgid "SYSTEM HALTED: Panic at %s:%s(%d)"
 msgstr "SYSTEM WURDE ANGEHALTEN: Fehler bei %s:%s(%d)"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ " *** Unable to initialize interrupt handling for your USB controller.\n"
-#~ " *** You may be able to temporarily disable the 'plug and play OS' "
-#~ "setting\n"
-#~ " *** in your BIOS setup.\n"
-#~ msgstr ""
-#~ "\n"
-#~ " *** Es scheint so, dass Ihre Boot-Disk im nativen SATA-Modus läuft. "
-#~ "Dieser\n"
-#~ " *** wird jedoch nicht unterstützt. Sie sollten vielleicht zeitweise den "
-#~ "ATA-\n"
-#~ " *** oder IDE-Modus (Legacy-Modus) in Ihren BIOS-Einstellungen "
-#~ "aktivieren.\n"

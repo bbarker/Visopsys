@@ -1,12 +1,12 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2014-01-22 18:04-0400\n"
 "Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,37 +60,37 @@ msgstr " (modificado)"
 msgid "Enter filename"
 msgstr "Ingresar nombre de archivo"
 
-#: edit.c:967
+#: edit.c:966
 msgid "Discard changes?"
 msgstr "Descartar cambios?"
 
-#: edit.c:968
+#: edit.c:967
 msgid "Discard"
 msgstr "Descartar"
 
-#: edit.c:968
+#: edit.c:967
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: edit.c:1003 edit.c:1331
+#: edit.c:1002 edit.c:1330
 msgid "Couldn't create file in a read-only filesystem"
 msgstr "No se puede crear un archivo en un sistema de archivos de sólo lectura"
 
-#: edit.c:1005 edit.c:1333
+#: edit.c:1004 edit.c:1332
 #, c-format
 msgid "Error %d loading file"
 msgstr "Error %d al cargar archivo"
 
-#: edit.c:1133
+#: edit.c:1132
 msgid "Unable to launch file dialog"
 msgstr "No se pudo abrir el diálogo de archivos"
 
-#: edit.c:1145
+#: edit.c:1144
 #, c-format
 msgid "Error %d saving file"
 msgstr "Error %d al guardar archivo"
 
-#: edit.c:1278
+#: edit.c:1277
 #, c-format
 msgid ""
 "\n"
@@ -99,7 +99,7 @@ msgstr ""
 "\n"
 "El comando \"%s\" funciona solamente en modo gráfico\n"
 
-#: edit.c:1294
+#: edit.c:1293
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""

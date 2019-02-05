@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -29,9 +29,10 @@
 // File open modes
 #define OPENMODE_READ			0x01
 #define OPENMODE_WRITE			0x02
+#define OPENMODE_READWRITE		(OPENMODE_READ | OPENMODE_WRITE)
 #define OPENMODE_CREATE			0x04
 #define OPENMODE_TRUNCATE		0x08
-#define OPENMODE_READWRITE		(OPENMODE_READ | OPENMODE_WRITE)
+#define OPENMODE_DELONCLOSE		0x10
 
 // Pathname limits
 #define MAX_NAME_LENGTH			512
@@ -47,7 +48,7 @@
 typedef void* fileHandle;
 
 typedef enum {
-  fileT, dirT, linkT, volT, unknownT
+	unknownT, fileT, dirT, linkT, volT
 
 } fileType;
 
@@ -77,6 +78,14 @@ typedef struct {
 	unsigned char *buffer;
 
 } fileStream;
+
+// A directory 'stream', for iterating through directory entries
+typedef struct {
+	char *name;
+	file f;
+	void *entry;
+
+} dirStream;
 
 #define _FILE_H
 #endif

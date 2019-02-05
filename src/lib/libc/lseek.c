@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -19,15 +19,35 @@
 //  lseek.c
 //
 
-// This is just a wrapper for the "fseek" function, as found in standard
-// C libraries, since our file descriptors are just file streams anyway.
+// This is a wrapper for the "fseek" function, as found in standard C
+// libraries, but converts a POSIX-style file descriptor into a FILE *.
 
 #include <unistd.h>
+#include <errno.h>
 #include <stdio.h>
+#include <sys/api.h>
+#include <sys/cdefs.h>
 
 
 off_t lseek(int fd, off_t offset, int whence)
 {
-	return (fseek((FILE *) fd, offset, whence));
+	int status = 0;
+	void *data = NULL;
+
+	if (visopsys_in_kernel)
+	{
+		errno = ERR_BUG;
+		return (status = -1);
+	}
+
+	// Look up the file descriptor
+	status = _fdget(fd, NULL /* type */, &data);
+	if (status < 0)
+	{
+		errno = status;
+		return (status = -1);
+	}
+
+	return (status = fseek((FILE *) data, offset, whence));
 }
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -41,14 +41,16 @@ static void setText(kernelWindowComponent *component, const char *label,
 	kernelFont *labelFont = (kernelFont *) component->params.font;
 	int borderThickness = windowVariables->border.thickness;
 
-	strncpy((char *) button->label, label,
-		min(length, WINDOW_MAX_LABEL_LENGTH));
+	strncpy((char *) button->label, label, min(length,
+		WINDOW_MAX_LABEL_LENGTH));
 	button->label[length] = '\0';
 
 	int tmp = ((borderThickness * 2) + 6);
 	if (labelFont)
-		tmp += kernelFontGetPrintedWidth(labelFont,
-			(char *) component->charSet, (char *) button->label);
+	{
+		tmp += kernelFontGetPrintedWidth(labelFont, (char *)
+			component->charSet, (char *) button->label);
+	}
 
 	if (tmp > component->width)
 		component->width = tmp;
@@ -101,13 +103,10 @@ static void drawFocus(kernelWindowComponent *component, int focus)
 			drawColor = (color *) &component->params.background;
 
 		kernelGraphicDrawRect(component->buffer, drawColor, draw_normal,
-			(component->xCoord + borderThickness),
-			(component->yCoord + borderThickness),
-			(component->width - (borderThickness * 2)),
+			(component->xCoord + borderThickness), (component->yCoord +
+			borderThickness), (component->width - (borderThickness * 2)),
 			(component->height - (borderThickness * 2)), 1, 0);
 	}
-
-	return;
 }
 
 
@@ -120,27 +119,30 @@ static int draw(kernelWindowComponent *component)
 
 	// Draw the background of the button
 	if (button->state)
-		kernelGraphicConvexShade(component->buffer,
-			(color *) &component->params.background, component->xCoord,
+	{
+		kernelGraphicConvexShade(component->buffer, (color *)
+			&component->params.background, component->xCoord,
 			component->yCoord, component->width, component->height,
 			shade_frombottom);
+	}
 	else
-		kernelGraphicConvexShade(component->buffer,
-			(color *) &component->params.background, component->xCoord,
+	{
+		kernelGraphicConvexShade(component->buffer, (color *)
+			&component->params.background, component->xCoord,
 			component->yCoord, component->width, component->height,
 			shade_fromtop);
+	}
 
 	// If there is a label on the button, draw it
 	if (button->label[0])
 	{
-		kernelGraphicDrawText(component->buffer,
-			(color *) &component->params.foreground,
-			(color *) &component->params.background,
-			labelFont, (char *) component->charSet, (char *) button->label,
-			draw_translucent, (component->xCoord + ((component->width -
-				kernelFontGetPrintedWidth(labelFont,
-					(char *) component->charSet,
-					(char *) button->label)) / 2)),
+		kernelGraphicDrawText(component->buffer, (color *)
+			&component->params.foreground, (color *)
+			&component->params.background, labelFont, (char *)
+			component->charSet, (char *) button->label, draw_translucent,
+			(component->xCoord + ((component->width -
+				kernelFontGetPrintedWidth(labelFont, (char *)
+					component->charSet, (char *) button->label)) / 2)),
 			(component->yCoord + ((component->height -
 				labelFont->glyphHeight) / 2)));
 	}
@@ -149,19 +151,19 @@ static int draw(kernelWindowComponent *component)
 	if (button->buttonImage.data)
 	{
 		unsigned tmpX, tmpY, tmpXoff = 0, tmpYoff = 0;
-		tmpX = component->xCoord +
-			((component->width - button->buttonImage.width) / 2);
-		tmpY = component->yCoord +
-			((component->height - button->buttonImage.height) / 2);
+		tmpX = component->xCoord + ((component->width -
+			button->buttonImage.width) / 2);
+		tmpY = component->yCoord + ((component->height -
+			button->buttonImage.height) / 2);
 
 		if (button->buttonImage.width > (unsigned) component->width)
 			tmpXoff = -((button->buttonImage.width - component->width) / 2);
 		if (button->buttonImage.height > (unsigned) component->height)
 			tmpYoff = -((button->buttonImage.height - component->height) / 2);
 
-		kernelGraphicDrawImage(component->buffer,
-			(image *) &button->buttonImage, draw_alphablend, tmpX, tmpY,
-			tmpXoff, tmpYoff, component->width, component->height);
+		kernelGraphicDrawImage(component->buffer, (image *)
+			&button->buttonImage, draw_alphablend, tmpX, tmpY, tmpXoff,
+			tmpYoff, component->width, component->height);
 	}
 
 	drawFocus(component, (component->flags & WINFLAG_HASFOCUS));
@@ -173,9 +175,10 @@ static int draw(kernelWindowComponent *component)
 static int focus(kernelWindowComponent *component, int yesNo)
 {
 	drawFocus(component, yesNo);
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-			component->width, component->height);
+
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
+
 	return (0);
 }
 
@@ -194,9 +197,8 @@ static int setData(kernelWindowComponent *component, void *data, int length)
 	if (component->draw)
 		component->draw(component);
 
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-			component->width, component->height);
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
 
 	return (0);
 }
@@ -206,8 +208,7 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 {
 	kernelWindowButton *button = (kernelWindowButton *) component->data;
 
-	if ((event->type & EVENT_MOUSE_DOWN) ||
-		(event->type & EVENT_MOUSE_UP) ||
+	if ((event->type & EVENT_MOUSE_DOWN) || (event->type & EVENT_MOUSE_UP) ||
 		(event->type & EVENT_MOUSE_DRAG))
 	{
 		if ((event->type == EVENT_MOUSE_LEFTUP) ||
@@ -223,9 +224,8 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 		if (component->draw)
 			draw(component);
 
-		component->window
-			->update(component->window, component->xCoord, component->yCoord,
-				component->width, component->height);
+		component->window->update(component->window, component->xCoord,
+			component->yCoord, component->width, component->height);
 	}
 
 	return (0);
@@ -242,7 +242,7 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 	if ((event->type & EVENT_MASK_KEY) && (event->key == keyEnter))
 	{
 		// If the button is not pushed, ignore this
-		if ((event->type == EVENT_KEY_UP) && !(button->state))
+		if ((event->type == EVENT_KEY_UP) && !button->state)
 			return (status = 0);
 
 		if (event->type == EVENT_KEY_DOWN)
@@ -266,10 +266,7 @@ static int destroy(kernelWindowComponent *component)
 	{
 		// If we have an image, release the image data
 		if (button->buttonImage.data)
-		{
-			kernelFree(button->buttonImage.data);
-			button->buttonImage.data = NULL;
-		}
+			kernelImageFree((image *) &button->buttonImage);
 
 		// The button itself.
 		kernelFree(component->data);

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -45,15 +45,15 @@ Example:
 </help>
 */
 
-#ifdef VISOPSYS
+#ifdef PORTABLE
+	#define _GNU_SOURCE
+	#define _(string)	string
+	#define OSLOADER	"../build/vloader"
+#else
 	#include <sys/api.h>
 	#include <sys/env.h>
 	#define _(string)	gettext(string)
 	#define OSLOADER	"/vloader"
-#else
-	#define _GNU_SOURCE
-	#define _(string)	string
-	#define OSLOADER	"../build/vloader"
 #endif
 
 #include <errno.h>
@@ -138,7 +138,7 @@ static int readSector(const char *inputName, unsigned sector,
 	int status = 0;
 	int fd = 0;
 
-#ifdef VISOPSYS
+#ifndef PORTABLE
 	// Is the destination a Visopsys disk name?
 	if (inputName[0] != '/')
 	{
@@ -189,7 +189,7 @@ static int writeSector(const char *outputName, unsigned sector,
 	int status = 0;
 	int fd = 0;
 
-#ifdef VISOPSYS
+#ifndef PORTABLE
 	// Is the destination a Visopsys disk name?
 	if (outputName[0] != '/')
 	{
@@ -326,7 +326,7 @@ static unsigned findUnusedCluster(const char *outputName, char *signature,
 	// and return the first unused cluster number
 
 	int status = 0;
-	unsigned char *buffer;
+	unsigned char *buffer = NULL;
 	// Guess, we guess.  The standard is 2 but it's often not correct, and
 	// *will not* be correct for FAT32 (the root directory uses clusters)
 	unsigned firstUnused = 2;
@@ -400,12 +400,16 @@ static unsigned findUnusedCluster(const char *outputName, char *signature,
 		}
 	}
 	else
+	{
 		printf(_("Unknown FAT type %s\n"), signature);
+	}
 
-	 out:
+ out:
 	if (buffer)
 		free(buffer);
+
 	DEBUGMSG(_("First unused cluster %u\n"), firstUnused);
+
 	return (firstUnused);
 }
 
@@ -427,9 +431,8 @@ static int setOsLoaderParams(const char *outputName,
 	struct stat statBuff;
 	fatBSHeader *fatHeader = (fatBSHeader *) newBootsect;
 	fat32BSHeader *fat32Header = (fat32BSHeader *) newBootsect;
-	unsigned firstUnusedCluster = 0;
-	unsigned fatSectors = 0;
-	unsigned *firstUserSector = (unsigned *)(newBootsect + 502);
+	unsigned *firstUnusedCluster = (unsigned *)(newBootsect + 502);
+	unsigned fatSectors __attribute__((unused)) = 0;
 	unsigned *osLoaderSectors = (unsigned *)(newBootsect + 506);
 
 	DEBUGMSG("%s", _("Set OS loader parameters\n"));
@@ -452,22 +455,13 @@ static int setOsLoaderParams(const char *outputName,
 		DEBUGMSG(_("Sectors per cluster %u\n"),
 			(unsigned) fatHeader->common1.sectorsPerCluster);
 
-		firstUnusedCluster = findUnusedCluster(outputName,
+		*firstUnusedCluster = findUnusedCluster(outputName,
 			fatHeader->common2.fsSignature, &fatHeader->common1);
 
-#ifndef VISOPSYS
+#ifdef PORTABLE
 		// For some reason the Linux driver gives us the second unused cluster
-		firstUnusedCluster += 1;
+		*firstUnusedCluster += 1;
 #endif
-
-		*firstUserSector =
-			((unsigned) fatHeader->common1.reservedSectors +
-			((unsigned) fatHeader->common1.numberOfFats *
-				(unsigned) fatHeader->common1.fatSectors) +
-			(((unsigned) fatHeader->common1.rootDirEntries * 32) /
-				fatHeader->common1.bytesPerSector) +
-			((firstUnusedCluster - 2) *
-				(unsigned) fatHeader->common1.sectorsPerCluster));
 	}
 	else if (!strncmp(fat32Header->common2.fsSignature, FAT32_SIG, 8))
 	{
@@ -485,19 +479,12 @@ static int setOsLoaderParams(const char *outputName,
 		DEBUGMSG(_("Sectors per cluster %u\n"),
 			(unsigned) fat32Header->common1.sectorsPerCluster);
 
-		// Read the FAT32 FSInfo sector
-
-		firstUnusedCluster = findUnusedCluster(outputName,
+		*firstUnusedCluster = findUnusedCluster(outputName,
 			fat32Header->common2.fsSignature, &fat32Header->common1);
-
-		*firstUserSector =
-			((unsigned) fat32Header->common1.reservedSectors +
-			((unsigned) fat32Header->common1.numberOfFats * fatSectors) +
-			((firstUnusedCluster - 2) *
-				(unsigned) fat32Header->common1.sectorsPerCluster));
 	}
 
-	DEBUGMSG(_("First user sector for OS loader is %u\n"), *firstUserSector);
+	DEBUGMSG(_("First unused cluster for OS loader is %u\n"),
+		*firstUnusedCluster);
 
 	memset(&statBuff, 0, sizeof(struct stat));
 	status = stat(osLoader, &statBuff);
@@ -506,7 +493,7 @@ static int setOsLoaderParams(const char *outputName,
 
 	*osLoaderSectors = (((unsigned) statBuff.st_size +
 		(fatHeader->common1.bytesPerSector - 1)) /
-		fatHeader->common1.bytesPerSector);
+			fatHeader->common1.bytesPerSector);
 
 	DEBUGMSG(_("OS loader sectors are %u\n"), *osLoaderSectors);
 
@@ -536,7 +523,7 @@ int main(int argc, char *argv[])
 	unsigned char oldBootsect[512];
 	unsigned char newBootsect[512];
 
-#ifdef VISOPSYS
+#ifndef PORTABLE
 	setlocale(LC_ALL, getenv(ENV_LANG));
 	textdomain("copy-boot");
 #endif

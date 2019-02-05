@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,361 +19,262 @@
 //  kernelNetworkDevice.c
 //
 
-// This file contains routines for abstracting and managing network adapter
-// devices, as well as for any network activity below the IP/ICMP/etc network
-// protocol layer -- for example, ARP Address Resolution Protocol.  In other
-// words, this is the portion of the link layer that is not a hardware driver,
-// but which does all the interfacing with the hardware drivers.
+// This file contains functions for abstracting and managing network devices.
+// This is the portion of the link layer that is not a hardware driver, but
+// which does all the interfacing with the hardware drivers.
 
 #include "kernelNetworkDevice.h"
-#include "kernelNetworkStream.h"
+#include "kernelDebug.h"
+#include "kernelError.h"
 #include "kernelInterrupt.h"
-#include "kernelPic.h"
+#include "kernelLog.h"
 #include "kernelMalloc.h"
 #include "kernelMultitasker.h"
-#include "kernelError.h"
-#include "kernelLog.h"
+#include "kernelNetwork.h"
+#include "kernelNetworkArp.h"
+#include "kernelNetworkDhcp.h"
+#include "kernelNetworkStream.h"
+#include "kernelPic.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <arpa/inet.h>
 #include <sys/processor.h>
 
 // An array of pointers to all network devices.
-static kernelDevice *devices[NETWORK_MAX_ADAPTERS];
+static kernelDevice *devices[NETWORK_MAX_DEVICES];
 static int numDevices = 0;
 
 // Saved old interrupt handlers
 static void **oldIntHandlers = NULL;
 static int numOldHandlers = 0;
 
-static networkAddress ethernetBroadcastAddress = {
-	{ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0 }
-};
 
-
-/*
-static void printAddress(networkAddress *address, int addressSize, int hex)
+static void poolPacketRelease(kernelNetworkPacket *packet)
 {
-	int count;
-	for (count = 0; count < addressSize; count ++)
+	// This is called by kernelNetworkPacketRelease to release packets
+	// allocated from the device's packet pool.
+
+	kernelNetworkDevice *netDev = NULL;
+
+	// Check params
+	if (!packet)
 	{
-		if (hex)
-			kernelTextPrint("%02x%c", address->bytes[count],
-				((count < (addressSize - 1))? ':' : '\0'));
-		else
-			kernelTextPrint("%d%c", address->bytes[count],
-				((count < (addressSize - 1))? ':' : '\0'));
-	}
-}
-
-
-static void debugArp(kernelArpPacket *arpPacket)
-{
-	kernelTextPrintLine("ARP: hardAddrSpc=%x protAddrSpc=%x "
-		"hardAddrLen=%d, protAddrLen=%d opCode=%d",
-		processorSwap16(arpPacket->hardwareAddressSpace),
-		processorSwap16(arpPacket->protocolAddressSpace),
-		arpPacket->hardwareAddrLen,
-		arpPacket->protocolAddrLen,
-		processorSwap16(arpPacket->opCode));
-	kernelTextPrint("ARP: srcHardAddr=");
-	printAddress((networkAddress *) &arpPacket->srcHardwareAddress,
-		NETWORK_ADDRLENGTH_ETHERNET, 1);
-	kernelTextPrint(" srcLogAddr=");
-	printAddress((networkAddress *) &arpPacket->srcLogicalAddress,
-		NETWORK_ADDRLENGTH_IP, 0);
-	kernelTextPrint("\nARP: dstHardAddr=");
-	printAddress((networkAddress *) &arpPacket->destHardwareAddress,
-		NETWORK_ADDRLENGTH_ETHERNET, 1);
-	kernelTextPrint(" dstLogAddr=");
-	printAddress((networkAddress *) &arpPacket->destLogicalAddress,
-		NETWORK_ADDRLENGTH_IP, 0);
-	kernelTextPrintLine("");
-}
-*/
-
-
-static int searchArpCache(kernelNetworkDevice *adapter,
-	networkAddress *logicalAddress)
-{
-	// Search the adapter's ARP cache for an entry corresponding to the
-	// supplied logical address, and if found, copy the physical address into
-	// the supplied pointer.
-
-	int status = 0;
-	int count;
-
-	for (count = 0; count < adapter->numArpCaches; count ++)
-	{
-		if (networkAddressesEqual(logicalAddress,
-			&adapter->arpCache[count].logicalAddress, NETWORK_ADDRLENGTH_IP))
-		{
-			return (count);
-		}
-	}
-
-	// If we fall through, not found
-	return (status = ERR_NOSUCHENTRY);
-}
-
-
-static int sendArp(kernelNetworkDevice *adapter,
-	networkAddress *destLogicalAddress, networkAddress *destPhysicalAddress,
-	int opCode, int immediate)
-{
-	// Yes, send an ARP request.
-
-	int status = 0;
-	kernelNetworkPacket packet;
-	kernelArpPacket *arpPacket = NULL;
-
-	// Get memory for our ARP packet
-	arpPacket = kernelMalloc(sizeof(kernelArpPacket));
-	if (!arpPacket)
-		return (status = ERR_MEMORY);
-
-	if ((opCode == NETWORK_ARPOP_REPLY) && destPhysicalAddress)
-		// Destination is the supplied physical address
-		memcpy(&arpPacket->header.dest, destPhysicalAddress,
-			NETWORK_ADDRLENGTH_ETHERNET);
-	else
-		// Destination is the ethernet broadcast address FF:FF:FF:FF:FF:FF
-		memcpy(&arpPacket->header.dest, &ethernetBroadcastAddress,
-			NETWORK_ADDRLENGTH_ETHERNET);
-
-	// Source is the adapter hardware address
-	memcpy(&arpPacket->header.source,
-		(void *) &adapter->device.hardwareAddress,
-		NETWORK_ADDRLENGTH_ETHERNET);
-
-	// Ethernet type is ARP
-	arpPacket->header.type = processorSwap16(NETWORK_ETHERTYPE_ARP);
-	// Hardware address space is ethernet=1
-	arpPacket->hardwareAddressSpace =
-		processorSwap16(NETWORK_ARPHARDWARE_ETHERNET);
-	// Protocol address space is IP=0x0800
-	arpPacket->protocolAddressSpace =
-		processorSwap16(NETWORK_ETHERTYPE_IP);
-	// Hardware address length is 6
-	arpPacket->hardwareAddrLen = NETWORK_ADDRLENGTH_ETHERNET;
-	// Protocol address length is 4 for IP
-	arpPacket->protocolAddrLen = NETWORK_ADDRLENGTH_IP;
-	// Operation code.  Request or reply.
-	arpPacket->opCode = processorSwap16(opCode);
-
-	// Our source hardware address
-	memcpy(&arpPacket->srcHardwareAddress,
-		(void *) &adapter->device.hardwareAddress,
-		NETWORK_ADDRLENGTH_ETHERNET);
-	// Our source logical address
-	memcpy(&arpPacket->srcLogicalAddress,
-		(void *) &adapter->device.hostAddress, NETWORK_ADDRLENGTH_IP);
-	// Our desired logical address
-	memcpy(&arpPacket->destLogicalAddress, destLogicalAddress,
-		NETWORK_ADDRLENGTH_IP);
-
-	if ((opCode == NETWORK_ARPOP_REPLY) && destPhysicalAddress)
-		// The target's hardware address
-		memcpy(&arpPacket->destHardwareAddress, destPhysicalAddress,
-			NETWORK_ADDRLENGTH_ETHERNET);
-
-	//debugArp(arpPacket);
-
-	// Try to lock the adapter's input stream and queue the reply, rather than
-	// tying up the adapter inside an interrupt handler.
-	if (immediate || kernelLockGet(&adapter->outputStreamLock) < 0)
-	{
-		// Can't lock.  Send it now.
-		status = kernelNetworkDeviceSend((char *) adapter->device.name,
-			(unsigned char *) arpPacket, sizeof(kernelArpPacket));
-		kernelFree(arpPacket);
-	}
-	else
-	{
-		// Set up the simplified packet structure for it.  The network thread
-		// only uses the packet memory and length
-		memset(&packet, 0, sizeof(kernelNetworkPacket));
-		packet.memory = arpPacket;
-		packet.length = sizeof(kernelArpPacket);
-		status = kernelNetworkPacketStreamWrite(&adapter->outputStream,
-			&packet);
-
-		// ARP packet memory will be released by the network thread
-
-		kernelLockRelease(&adapter->outputStreamLock);
-	}
-
-	return (status);
-}
-
-
-static void addArpCache(kernelNetworkDevice *adapter,
-	networkAddress *logicalAddress, networkAddress *physicalAddress)
-{
-	// Add the supplied entry to our ARP cache
-
-	// We always put the most recent entry at the start of the list.  If the
-	// list grows to its maximum size, the oldest entries fall off the bottom.
-
-	// Shift all down
-	memcpy((void *) &adapter->arpCache[1], (void *) &adapter->arpCache[0],
-		((NETWORK_ARPCACHE_SIZE - 1) * sizeof(kernelArpCacheItem)));
-
-	adapter->arpCache[0].logicalAddress.quad = logicalAddress->quad;
-	adapter->arpCache[0].physicalAddress.quad = physicalAddress->quad;
-
-	//kernelTextPrint("Added ARP address ");
-	//printAddress((networkAddress *) &adapter->arpCache[0].logicalAddress,
-	//	NETWORK_ADDRLENGTH_IP, 0);
-	//kernelTextPrint(" = ");
-	//printAddress((networkAddress *) &adapter->arpCache[0].physicalAddress,
-	//	NETWORK_ADDRLENGTH_ETHERNET, 1);
-	//kernelTextPrintLine("");
-
-	if (adapter->numArpCaches < NETWORK_ARPCACHE_SIZE)
-		adapter->numArpCaches += 1;
-}
-
-
-static void receiveArp(kernelNetworkDevice *adapter,
-	kernelArpPacket *arpPacket)
-{
-	// This gets called anytime we receive an ARP packet (request or reply)
-
-	int arpPosition = 0;
-
-	// Make sure it's ethernet ARP
-	if (processorSwap16(arpPacket->hardwareAddressSpace) !=
-		NETWORK_ARPHARDWARE_ETHERNET)
-	{
+		kernelError(kernel_error, "NULL parameter");
 		return;
 	}
 
-	// See if we have the source feller in our table
-	arpPosition = searchArpCache(adapter, (networkAddress *)
-		&arpPacket->srcLogicalAddress);
-	if (arpPosition >= 0)
+	netDev = packet->context;
+	if (!netDev)
 	{
-		// Update him in our cache
-		memcpy((void *) &adapter->arpCache[arpPosition].physicalAddress,
-			&arpPacket->srcHardwareAddress, NETWORK_ADDRLENGTH_ETHERNET);
-	}
-	else
-	{
-		// Add him to our cache.  Perhaps we shouldn't do this unless the ARP
-		// packet is for us, but we suppose for the moment it can't hurt too
-		// badly to have a few extras in our table.
-		addArpCache(adapter, (networkAddress *) &arpPacket->srcLogicalAddress,
-			(networkAddress *) &arpPacket->srcHardwareAddress);
-	}
-
-	//debugArp(arpPacket);
-
-	// If this isn't for me, ignore it.
-	if (!networkAddressesEqual(&adapter->device.hostAddress,
-		(networkAddress *) &arpPacket->destLogicalAddress,
-			NETWORK_ADDRLENGTH_IP))
-	{
+		kernelError(kernel_error, "No packet device context");
 		return;
 	}
 
-	if (processorSwap16(arpPacket->opCode) == NETWORK_ARPOP_REQUEST)
+	if (netDev->packetPool.freePackets >= NETWORK_PACKETS_PER_STREAM)
 	{
-		// Someone is asking for us.  Send a reply, but it should be queued
-		// instead of immediate.
-		sendArp(adapter, (networkAddress *) &arpPacket->srcLogicalAddress,
-			(networkAddress *) &arpPacket->srcHardwareAddress,
-			NETWORK_ARPOP_REPLY, 0);
+		kernelError(kernel_error, "Too many free packets");
+		return;
 	}
+
+	netDev->packetPool.packet[netDev->packetPool.freePackets] = packet;
+	netDev->packetPool.freePackets += 1;
+}
+
+
+static kernelNetworkPacket *poolPacketGet(kernelNetworkDevice *netDev)
+{
+	// Get a packet from the device's packet pool, and add an initial
+	// reference count
+
+	kernelNetworkPacket *packet = NULL;
+
+	if (netDev->packetPool.freePackets <= 0)
+	{
+		kernelError(kernel_error, "No free packets");
+		return (packet = NULL);
+	}
+
+	netDev->packetPool.freePackets -= 1;
+	packet = netDev->packetPool.packet[netDev->packetPool.freePackets];
+
+	if (!packet)
+	{
+		kernelError(kernel_error, "Free packet is NULL");
+		return (packet);
+	}
+
+	memset(packet, 0, sizeof(kernelNetworkPacket));
+	packet->release = &poolPacketRelease;
+	packet->context = (void *) netDev;
+	packet->refCount = 1;
+
+	return (packet);
+}
+
+
+static void processHooks(kernelNetworkDevice *netDev,
+	kernelNetworkPacket *packet, int input)
+{
+	kernelLinkedList *list = NULL;
+	kernelNetworkPacketStream *theStream = NULL;
+	kernelLinkedListItem *iter = NULL;
+
+	// If there are hooks on this device, emit the raw packet data
+
+	if (input)
+		list = (kernelLinkedList *) &netDev->inputHooks;
+	else
+		list = (kernelLinkedList *) &netDev->outputHooks;
+
+	theStream = kernelLinkedListIterStart(list, &iter);
+	if (!theStream)
+		return;
+
+	while (theStream)
+	{
+		kernelNetworkPacketStreamWrite(theStream, packet);
+		theStream = kernelLinkedListIterNext(list, &iter);
+	}
+}
+
+
+static int processLoop(kernelNetworkDevice *netDev __attribute__((unused)),
+	kernelNetworkPacket *packet)
+{
+	// Interpret the link protocol header for loopback (but the loopback
+	// protocol has no link header)
+
+	kernelDebug(debug_net, "NETDEV receive %d: loopback msgsz %u",
+		netDev->device.recvPackets, packet->length);
+
+	// Assume IP v4 for the time being
+	packet->netProtocol = NETWORK_NETPROTOCOL_IP4;
+
+	return (0);
+}
+
+
+static int processEthernet(kernelNetworkDevice *netDev
+	 __attribute__((unused)), kernelNetworkPacket *packet)
+{
+	// Interpret the link protocol header for ethernet
+
+	networkEthernetHeader *header = NULL;
+	unsigned short type = 0;
+
+	header = (networkEthernetHeader *) packet->memory;
+	type = ntohs(header->type);
+
+	// If the packet is not ethernet IP v4 or ARP, we are finished
+	if ((type != NETWORK_ETHERTYPE_IP4) && (type != NETWORK_ETHERTYPE_ARP))
+		return (ERR_NOTIMPLEMENTED);
+
+	kernelDebug(debug_net, "NETDEV receive %d: ethernet type=%x "
+		"%02x:%02x:%02x:%02x:%02x:%02x -> %02x:%02x:%02x:%02x:%02x:%02x "
+		"msgsz %u", netDev->device.recvPackets, ntohs(header->type),
+		header->source[0], header->source[1], header->source[2],
+		header->source[3], header->source[4], header->source[5],
+		header->dest[0], header->dest[1], header->dest[2], header->dest[3],
+		header->dest[4], header->dest[5], packet->length);
+
+	if (type == NETWORK_ETHERTYPE_IP4)
+		packet->netProtocol = NETWORK_NETPROTOCOL_IP4;
+	else if (type == NETWORK_ETHERTYPE_ARP)
+		packet->netProtocol = NETWORK_NETPROTOCOL_ARP;
+
+	packet->netHeaderOffset = (packet->linkHeaderOffset +
+		sizeof(networkEthernetHeader));
+
+	return (0);
 }
 
 
 static int readData(kernelDevice *dev)
 {
 	int status = 0;
-	networkEthernetHeader *header = NULL;
+	kernelNetworkDevice *netDev = NULL;
 	kernelNetworkDeviceOps *ops = dev->driver->ops;
-	unsigned bufferLength = 0;
-	kernelNetworkDevice *adapter = NULL;
-	kernelNetworkPacket packet;
-	unsigned ipHeaderLen = 0;
+	unsigned char buffer[NETWORK_PACKET_MAX_LENGTH];
+	kernelNetworkPacket *packet = NULL;
 
-	adapter = dev->data;
-	adapter->device.recvPackets += 1;
+	netDev = dev->data;
 
-	header = (networkEthernetHeader *) adapter->buffer;
+	kernelDebug(debug_net, "NETDEV read data from %s", netDev->device.name);
 
-	if (ops->driverReadData)
-		bufferLength = ops->driverReadData(adapter,
-			(unsigned char *) adapter->buffer);
-
-	// If there's no data, or the adapter is not initialized, or
-	// the packet is not IP or ARP, we are finished
-	if (!bufferLength ||
-		!(adapter->device.flags & NETWORK_ADAPTERFLAG_INITIALIZED) ||
-		((processorSwap16(header->type) != NETWORK_ETHERTYPE_IP) &&
-		(processorSwap16(header->type) != NETWORK_ETHERTYPE_ARP)))
+	if (!(netDev->device.flags & NETWORK_DEVICEFLAG_INITIALIZED))
 	{
+		// We can't process this data, but we can service the device
+		if (ops->driverReadData)
+			ops->driverReadData(netDev, buffer);
+
 		return (status = 0);
 	}
 
-	/*
-	kernelTextPrint("Receive %d: type=%x %02x:%02x:%02x:%02x:%02x:%02x "
-		"-> %02x:%02x:%02x:%02x:%02x:%02x ",
-		adapter->recvPackets,
-		processorSwap16(header->type),
-		header->source[0], header->source[1],
-		header->source[2], header->source[3],
-		header->source[4], header->source[5],
-		header->dest[0], header->dest[1], header->dest[2],
-		header->dest[3], header->dest[4], header->dest[5]);
-	kernelTextPrintLine("Messagesize %d: ", bufferLength);
-	*/
+	netDev->device.recvPackets += 1;
 
-	if (processorSwap16(header->type) == NETWORK_ETHERTYPE_ARP)
+	packet = poolPacketGet(netDev);
+	if (!packet)
+		return (status = ERR_MEMORY);
+
+	if (ops->driverReadData)
+		packet->length = ops->driverReadData(netDev, packet->memory);
+
+	// If there's no data, we are finished
+	if (!packet->length)
 	{
-		receiveArp(adapter, (kernelArpPacket *) adapter->buffer);
+		kernelError(kernel_error, "Packet has no data");
+		poolPacketRelease(packet);
+		return (status = 0);
 	}
 
-	else
+	// If there are input hooks on this device, emit the raw packet data
+	processHooks(netDev, packet, 1 /* input */);
+
+	// Set up the the packet structure's link and network protocol fields
+
+	packet->linkProtocol = netDev->device.linkProtocol;
+	packet->linkHeaderOffset = 0;
+
+	switch (netDev->device.linkProtocol)
 	{
-		// Put the packet into the adapter's packet input stream
+		case NETWORK_LINKPROTOCOL_LOOP:
+			status = processLoop(netDev, packet);
+			break;
 
-		// Clear the packet structure
-		memset(&packet, 0, sizeof(kernelNetworkPacket));
+		case NETWORK_LINKPROTOCOL_ETHERNET:
+			status = processEthernet(netDev, packet);
+			break;
 
-		// Set the packet headers and the data pointer into the the buffer,
-		// plus the data length
-		packet.linkProtocol = NETWORK_LINKPROTOCOL_ETHERNET;
-		packet.netProtocol = NETWORK_NETPROTOCOL_IP;
-		packet.memory = (void *) adapter->buffer;
-		packet.length = bufferLength;
-		packet.linkHeader = packet.memory;
-		packet.netHeader =
-			((void *) packet.linkHeader + sizeof(networkEthernetHeader));
-		ipHeaderLen = ((((networkIpHeader *) packet.netHeader)
-			->versionHeaderLen & 0x0F) << 2);
-		packet.transHeader = (packet.netHeader + ipHeaderLen);
-		packet.data = packet.transHeader;
-		packet.dataLength =
-			(packet.length - (sizeof(networkEthernetHeader) + ipHeaderLen));
+		default:
+			status = ERR_NOTIMPLEMENTED;
+			break;
+	}
 
-		// Try to get a lock on the input stream.
-		status = kernelLockGet(&adapter->inputStreamLock);
-		if (status < 0)
-		{
-			// It would be good if we had a collection of 'deferred packets'
-			// for cases like this, so we can try to insert them next time,
-			// since by doing this we actually drop the packet
-			kernelError(kernel_error, "Couldn't lock input stream; packet "
-				"dropped");
-			adapter->device.recvDropped += 1;
-			return (status);
-		}
+	if (status < 0)
+	{
+		kernelNetworkPacketRelease(packet);
+		return (status);
+	}
 
-		// Insert it into the input packet stream
-		kernelNetworkPacketStreamWrite(&adapter->inputStream, &packet);
+	// Set the data section to start at the network header
+	packet->dataOffset = packet->netHeaderOffset;
+	packet->dataLength = (packet->length - packet->dataOffset);
 
-		kernelLockRelease(&adapter->inputStreamLock);
+	// Insert it into the input packet stream
+	status = kernelNetworkPacketStreamWrite(&netDev->inputStream, packet);
+
+	kernelNetworkPacketRelease(packet);
+
+	if (status < 0)
+	{
+		// It would be good if we had a collection of 'deferred packets' for
+		// cases like this, so we can try to insert them next time, since by
+		// doing this we actually drop the packet
+		kernelError(kernel_error, "Couldn't write input stream; packet "
+			"dropped");
+		netDev->device.recvDropped += 1;
+		return (status);
 	}
 
 	return (status = 0);
@@ -388,7 +289,7 @@ static void networkInterrupt(void)
 	void *address = NULL;
 	int interruptNum = 0;
 	kernelDevice *dev = NULL;
-	kernelNetworkDevice *adapter = NULL;
+	kernelNetworkDevice *netDev = NULL;
 	kernelNetworkDeviceOps *ops = NULL;
 	int serviced = 0;
 	int count;
@@ -402,34 +303,31 @@ static void networkInterrupt(void)
 
 	kernelInterruptSetCurrent(interruptNum);
 
-	// Find the device that uses this interrupt
+	// Find the devices that use this interrupt
 	for (count = 0; (count < numDevices) && !serviced; count ++)
 	{
 		if (((kernelNetworkDevice *)
 			devices[count]->data)->device.interruptNum == interruptNum)
 		{
 			dev = devices[count];
-			adapter = dev->data;
+			netDev = dev->data;
 			ops = dev->driver->ops;
 
-			// Try to get a lock, though it might fail since we are are inside
-			// an interrupt
-			kernelLockGet(&adapter->adapterLock);
-
 			if (ops->driverInterruptHandler)
-				// Call the driver routine.
-				ops->driverInterruptHandler(adapter);
-
-			if (adapter->device.recvQueued)
 			{
-				// Read the data from all queued packets
-				while (adapter->device.recvQueued)
-					readData(dev);
+				// Call the driver function.
+				if (ops->driverInterruptHandler(netDev) >= 0)
+				{
+					// Read the data from all queued packets
+					while (netDev->device.recvQueued)
+					{
+						if (readData(dev) < 0)
+							break;
+					}
 
-				serviced = 1;
+					serviced = 1;
+				}
 			}
-
-			kernelLockRelease(&adapter->adapterLock);
 		}
 	}
 
@@ -438,27 +336,42 @@ static void networkInterrupt(void)
 
 	kernelInterruptClearCurrent();
 
-	if (!serviced && oldIntHandlers[interruptNum])
-		// We didn't service this interrupt, and we're sharing this PCI
-		// interrupt with another device whose handler we saved.  Call it.
-		processorIsrCall(oldIntHandlers[interruptNum]);
+	if (!serviced)
+	{
+		if (oldIntHandlers[interruptNum])
+		{
+			// We didn't service this interrupt, and we're sharing this PCI
+			// interrupt with another device whose handler we saved.  Call it.
+			kernelDebug(debug_net, "NETDEV interrupt not serviced - "
+				"chaining");
+			processorIsrCall(oldIntHandlers[interruptNum]);
+		}
+		else
+		{
+			// We'd better acknowledge the interrupt, or else it wouldn't be
+			// cleared, and our controllers using this vector wouldn't receive
+			// any more.
+			kernelDebugError("Interrupt not serviced and no saved ISR");
+			kernelPicEndOfInterrupt(interruptNum);
+		}
+	}
 
 out:
 	processorIsrExit(address);
 }
 
 
-static kernelDevice *findDeviceByName(const char *adapterName)
+static kernelDevice *findDeviceByName(const char *deviceName)
 {
-	// Find the named adapter
+	// Find the named device
 
-	kernelNetworkDevice *adapter = NULL;
+	kernelNetworkDevice *netDev = NULL;
 	int count;
 
 	for (count = 0; count < numDevices; count ++)
 	{
-		adapter = devices[count]->data;
-		if (!strcmp((char *) adapter->device.name, adapterName))
+		netDev = devices[count]->data;
+		if (!strcmp((char *) netDev->device.name, deviceName))
 			return (devices[count]);
 	}
 
@@ -477,180 +390,397 @@ static kernelDevice *findDeviceByName(const char *adapterName)
 
 int kernelNetworkDeviceRegister(kernelDevice *dev)
 {
-	// This function is called by the network drivers' detection routines
-	// to tell us about a new adapter device.
+	// This function is called by the network drivers' detection functions
+	// to tell us about a new device.
 
 	int status = 0;
-	kernelNetworkDevice *adapter = NULL;
+	kernelNetworkDevice *netDev = NULL;
 
 	// Check params
-	if (!dev)
+	if (!dev || !dev->data || !dev->driver || !dev->driver->ops)
 	{
 		kernelError(kernel_error, "NULL parameter");
 		return (status = ERR_NULLPARAMETER);
 	}
 
-	if (!dev->data || !dev->driver || !dev->driver->ops)
+	netDev = dev->data;
+
+	if (netDev->device.linkProtocol == NETWORK_LINKPROTOCOL_LOOP)
+		strcpy((char *) netDev->device.name, "loop");
+	else
+		sprintf((char *) netDev->device.name, "net%d", numDevices);
+
+	if (netDev->device.interruptNum >= 0)
 	{
-		kernelError(kernel_error, "The network device, driver or ops are "
-			"NULL");
-		return (status = ERR_NULLPARAMETER);
+		// Save any existing handler for the interrupt we're hooking
+
+		if (numOldHandlers <= netDev->device.interruptNum)
+		{
+			numOldHandlers = (netDev->device.interruptNum + 1);
+
+			oldIntHandlers = kernelRealloc(oldIntHandlers,
+				(numOldHandlers * sizeof(void *)));
+			if (!oldIntHandlers)
+				return (status = ERR_MEMORY);
+		}
+
+		if (!oldIntHandlers[netDev->device.interruptNum] &&
+			(kernelInterruptGetHandler(netDev->device.interruptNum) !=
+				networkInterrupt))
+		{
+			oldIntHandlers[netDev->device.interruptNum] =
+				kernelInterruptGetHandler(netDev->device.interruptNum);
+		}
+
+		// Register our interrupt handler for this device
+		status = kernelInterruptHook(netDev->device.interruptNum,
+			&networkInterrupt, NULL);
+		if (status < 0)
+			return (status);
 	}
-
-	adapter = dev->data;
-	sprintf((char *) adapter->device.name, "net%d", numDevices);
-
-	// Save any existing handler for the interrupt we're hooking
-
-	if (numOldHandlers <= adapter->device.interruptNum)
-	{
-		numOldHandlers = (adapter->device.interruptNum + 1);
-
-		oldIntHandlers = kernelRealloc(oldIntHandlers,
-			(numOldHandlers * sizeof(void *)));
-		if (!oldIntHandlers)
-			return (status = ERR_MEMORY);
-	}
-
-	if (!oldIntHandlers[adapter->device.interruptNum] &&
-		(kernelInterruptGetHandler(adapter->device.interruptNum) !=
-			networkInterrupt))
-	{
-		oldIntHandlers[adapter->device.interruptNum] =
-			kernelInterruptGetHandler(adapter->device.interruptNum);
-	}
-
-	// Register our interrupt handler for this device
-	status = kernelInterruptHook(adapter->device.interruptNum,
-		&networkInterrupt, NULL);
-	if (status < 0)
-		return (status);
 
 	devices[numDevices++] = dev;
 
-	// Turn on the interrupt
-	status = kernelPicMask(adapter->device.interruptNum, 1);
+	if (netDev->device.interruptNum >= 0)
+	{
+		// Turn on the interrupt
+		status = kernelPicMask(netDev->device.interruptNum, 1);
+		if (status < 0)
+			return (status);
+	}
+
+	// Register the device with the upper-level kernelNetwork functions
+	status = kernelNetworkRegister(netDev);
 	if (status < 0)
 		return (status);
 
-	// Register the adapter with the upper-level kernelNetwork functions
-	status = kernelNetworkRegister(adapter);
-	if (status < 0)
-		return (status);
-
-	kernelLog("Added network adapter %s (%02x:%02x:%02x:%02x:%02x:%02x) "
-		"link=%s", adapter->device.name,
-		adapter->device.hardwareAddress.bytes[0],
-		adapter->device.hardwareAddress.bytes[1],
-		adapter->device.hardwareAddress.bytes[2],
-		adapter->device.hardwareAddress.bytes[3],
-		adapter->device.hardwareAddress.bytes[4],
-		adapter->device.hardwareAddress.bytes[5],
-		((adapter->device.flags & NETWORK_ADAPTERFLAG_LINK)? "UP" : "DOWN"));
+	kernelLog("Added network device %s, link=%s", netDev->device.name,
+		((netDev->device.flags & NETWORK_DEVICEFLAG_LINK)? "UP" : "DOWN"));
 
 	return (status = 0);
 }
 
 
-int kernelNetworkDeviceSetFlags(const char *adapterName, unsigned flags,
-	int onOff)
+int kernelNetworkDeviceStart(const char *name, int reconfigure)
 {
-	// Changes any user-settable flags associated with a network device
-
 	int status = 0;
 	kernelDevice *dev = NULL;
-	kernelNetworkDevice *adapter = NULL;
-	kernelNetworkDeviceOps *ops = NULL;
+	kernelNetworkDevice *netDev = NULL;
+	char hostName[NETWORK_MAX_HOSTNAMELENGTH];
+	char domainName[NETWORK_MAX_DOMAINNAMELENGTH];
 
 	// Check params
-	if (!adapterName)
+	if (!name)
 	{
 		kernelError(kernel_error, "NULL parameter");
 		return (status = ERR_NULLPARAMETER);
 	}
 
-	// Find the adapter by name
-	dev = findDeviceByName(adapterName);
+	// Find the device by name
+	dev = findDeviceByName(name);
 	if (!dev)
 	{
-		kernelError(kernel_error, "No such network adapter \"%s\"",
-			adapterName);
+		kernelError(kernel_error, "No such network device \"%s\"", name);
 		return (status = ERR_NOSUCHENTRY);
 	}
 
-	adapter = dev->data;
-	ops = dev->driver->ops;
+	netDev = dev->data;
 
-	// Lock the adapter
-	status = kernelLockGet(&adapter->adapterLock);
-	if (status < 0)
-		return (status);
+	kernelDebug(debug_net, "NETDEV start device %s", netDev->device.name);
 
-	if (ops->driverSetFlags)
-		// Call the driver flag-setting routine.
-		status = ops->driverSetFlags(adapter, flags, onOff);
+	if ((netDev->device.flags & NETWORK_DEVICEFLAG_RUNNING) && !reconfigure)
+		// Nothing to do
+		return (status = 0);
 
-	// Release the lock
-	kernelLockRelease(&adapter->adapterLock);
+	if (!(netDev->device.flags & NETWORK_DEVICEFLAG_LINK))
+		// No network link
+		return (status = ERR_IO);
+
+	// If the device is disabled, don't start it
+	if (netDev->device.flags & NETWORK_DEVICEFLAG_DISABLED)
+	{
+		kernelError(kernel_error, "Network device %s is disabled",
+			netDev->device.name);
+		return (status = ERR_INVALID);
+	}
+
+	// Do we need to (re-)obtain a network address?
+	if (networkAddressEmpty(&netDev->device.hostAddress,
+		sizeof(networkAddress)) || reconfigure)
+	{
+		kernelDebug(debug_net, "NETDEV configure %s using DHCP",
+			netDev->device.name);
+
+		kernelNetworkGetHostName(hostName, NETWORK_MAX_HOSTNAMELENGTH);
+		kernelNetworkGetDomainName(domainName, NETWORK_MAX_DOMAINNAMELENGTH);
+
+		status = kernelNetworkDhcpConfigure(netDev, hostName, domainName,
+			NETWORK_DHCP_DEFAULT_TIMEOUT);
+		if (status < 0)
+		{
+			kernelError(kernel_error, "DHCP configuration of network device "
+				"%s failed.", netDev->device.name);
+			return (status);
+		}
+	}
+
+	netDev->device.flags |= NETWORK_DEVICEFLAG_RUNNING;
+
+	kernelLog("Network device %s started with IP=%d.%d.%d.%d "
+		"netmask=%d.%d.%d.%d", netDev->device.name,
+		netDev->device.hostAddress.byte[0],
+		netDev->device.hostAddress.byte[1],
+		netDev->device.hostAddress.byte[2],
+		netDev->device.hostAddress.byte[3],
+		netDev->device.netMask.byte[0], netDev->device.netMask.byte[1],
+		netDev->device.netMask.byte[2], netDev->device.netMask.byte[3]);
+
+	kernelDebug(debug_net, "NETDEV device %s started", netDev->device.name);
+
+	return (status = 0);
+}
+
+
+int kernelNetworkDeviceStop(const char *name)
+{
+	int status = 0;
+	kernelDevice *dev = NULL;
+	kernelNetworkDevice *netDev = NULL;
+
+	// Check params
+	if (!name)
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
+
+	// Find the device by name
+	dev = findDeviceByName(name);
+	if (!dev)
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
+
+	netDev = dev->data;
+
+	kernelDebug(debug_net, "NETDEV stop device %s", netDev->device.name);
+
+	if ((netDev->device.flags & NETWORK_DEVICEFLAG_LINK) &&
+		(netDev->device.flags & NETWORK_DEVICEFLAG_RUNNING))
+	{
+		// If the device was configured with DHCP, tell the server we're
+		// relinquishing the address.
+		if (netDev->device.flags & NETWORK_DEVICEFLAG_AUTOCONF)
+		{
+			kernelNetworkDhcpRelease(netDev);
+
+			// Clear out the things we got from DHCP
+			memset((unsigned char *) &netDev->device.hostAddress, 0,
+				sizeof(networkAddress));
+			memset((unsigned char *) &netDev->device.netMask, 0,
+				sizeof(networkAddress));
+			memset((unsigned char *) &netDev->device.broadcastAddress, 0,
+				sizeof(networkAddress));
+			memset((unsigned char *) &netDev->device.gatewayAddress, 0,
+				sizeof(networkAddress));
+			memset((unsigned char *) &netDev->device.dnsAddress, 0,
+				sizeof(networkAddress));
+		}
+	}
+
+	netDev->device.flags &= ~NETWORK_DEVICEFLAG_RUNNING;
+
+	kernelDebug(debug_net, "NETDEV device %s stopped", netDev->device.name);
+
+	return (status = 0);
+}
+
+
+int kernelNetworkDeviceEnable(const char *name)
+{
+	int status = 0;
+	kernelDevice *dev = NULL;
+	kernelNetworkDevice *netDev = NULL;
+
+	// Check params
+	if (!name)
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
+
+	// Find the device by name
+	dev = findDeviceByName(name);
+	if (!dev)
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
+
+	netDev = dev->data;
+
+	kernelDebug(debug_net, "NETDEV enable device %s", netDev->device.name);
+
+	// If the device was disabled, remove that
+	netDev->device.flags &= ~NETWORK_DEVICEFLAG_DISABLED;
+
+	// Try to start it
+	status = kernelNetworkDeviceStart(name, 0 /* not reconfiguring */);
 
 	return (status);
 }
 
 
-int kernelNetworkDeviceGetAddress(const char *adapterName,
-	networkAddress *logicalAddress, networkAddress *physicalAddress)
+int kernelNetworkDeviceDisable(const char *name)
 {
-	// This function attempts to use the named network adapter to determine
-	// the physical address of the host with the supplied logical address.
-	// The Address Resolution Protocol (ARP) is used for this.
-
 	int status = 0;
 	kernelDevice *dev = NULL;
-	kernelNetworkDevice *adapter = NULL;
-	int arpPosition = 0;
-	int count;
-
-	// TODO (important): Cache ARP requests with the adapter structure, so we
-	// don't have to do this for every bloody packet, right?  Right.
+	kernelNetworkDevice *netDev = NULL;
 
 	// Check params
-	if (!adapterName || !logicalAddress || !physicalAddress)
+	if (!name)
 	{
 		kernelError(kernel_error, "NULL parameter");
 		return (status = ERR_NULLPARAMETER);
 	}
 
-	// Find the adapter by name
-	dev = findDeviceByName(adapterName);
+	// Find the device by name
+	dev = findDeviceByName(name);
 	if (!dev)
 	{
-		kernelError(kernel_error, "No such network adapter \"%s\"",
-			adapterName);
+		kernelError(kernel_error, "No such network device \"%s\"", name);
 		return (status = ERR_NOSUCHENTRY);
 	}
 
-	adapter = dev->data;
+	netDev = dev->data;
 
-	// Try up to 5 attempts to get an address.  This is arbitrary.  Is it
-	// right?  From network activity, it looks like Linux tries approx 6 times,
-	// when we don't reply to it; once per second.
-	for (count = 0; count < 5; count ++)
+	kernelDebug(debug_net, "NETDEV disable device %s", netDev->device.name);
+
+	// Try to stop it
+	status = kernelNetworkDeviceStop(name);
+
+	// Mark the device as disabled
+	netDev->device.flags |= NETWORK_DEVICEFLAG_DISABLED;
+
+	return (status);
+}
+
+
+int kernelNetworkDeviceSetFlags(const char *name, unsigned flags, int onOff)
+{
+	// Changes any user-settable flags associated with a network device
+
+	int status = 0;
+	kernelDevice *dev = NULL;
+	kernelNetworkDevice *netDev = NULL;
+	kernelNetworkDeviceOps *ops = NULL;
+
+	// Check params
+	if (!name)
 	{
-		// Is the address in the adapter's ARP cache?
-		arpPosition = searchArpCache(adapter, logicalAddress);
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
+
+	// Find the device by name
+	dev = findDeviceByName(name);
+	if (!dev)
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
+
+	netDev = dev->data;
+	ops = dev->driver->ops;
+
+	// Lock the device
+	status = kernelLockGet(&netDev->lock);
+	if (status < 0)
+		return (status);
+
+	if (ops->driverSetFlags)
+		// Call the driver flag-setting function.
+		status = ops->driverSetFlags(netDev, flags, onOff);
+
+	// Release the lock
+	kernelLockRelease(&netDev->lock);
+
+	return (status);
+}
+
+
+int kernelNetworkDeviceGetAddress(const char *name,
+	networkAddress *logicalAddress, networkAddress *physicalAddress)
+{
+	// This function attempts to use the named network device to determine
+	// the physical address of the host with the supplied logical address.
+	// The Address Resolution Protocol (ARP) is used for this.
+
+	int status = 0;
+	kernelDevice *dev = NULL;
+	kernelNetworkDevice *netDev = NULL;
+	int arpPosition = 0;
+	int count;
+
+	// Check params
+	if (!name || !logicalAddress || !physicalAddress)
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
+
+	// Find the device by name
+	dev = findDeviceByName(name);
+	if (!dev)
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
+
+	netDev = dev->data;
+
+	// Shortcut (necessary for loopback) if the address is the address of the
+	// device itself
+	if (networkAddressesEqual(logicalAddress, &netDev->device.hostAddress,
+		sizeof(networkAddress)))
+	{
+		networkAddressCopy(physicalAddress, &netDev->device.hardwareAddress,
+			sizeof(networkAddress));
+		return (status = 0);
+	}
+
+	// Test whether the logical address is in this device's network, using
+	// the netmask.  If it's a different network, substitute the address of
+	// the default gateway.
+	if (!networksEqualIp4(logicalAddress, &netDev->device.netMask,
+		&netDev->device.hostAddress))
+	{
+		kernelDebug(debug_net, "NETDEV routing via default gateway");
+		logicalAddress = (networkAddress *) &netDev->device.gatewayAddress;
+	}
+
+	// Try up to 6 attempts to get an address.  This is arbitrary.  Is it
+	// right?  From network activity, it looks like Linux tries approx 6
+	// times, when we don't reply to it; once per second.
+	for (count = 0; count < 6; count ++)
+	{
+		// Is the address in the device's ARP cache?
+		arpPosition = kernelNetworkArpSearchCache(netDev, logicalAddress);
 		if (arpPosition >= 0)
 		{
 			// Found it.
-			physicalAddress->quad =
-				adapter->arpCache[arpPosition].physicalAddress.quad;
-			//kernelTextPrintLine("Found ARP cache request");
+			kernelDebug(debug_net, "NETDEV found ARP cache request");
+			networkAddressCopy(physicalAddress,
+				&netDev->arpCache[arpPosition].physicalAddress,
+				sizeof(networkAddress));
 			return (status = 0);
 		}
 
 		// Construct and send our ethernet packet with the ARP request
 		// (not queued; immediately)
-		status = sendArp(adapter, logicalAddress, NULL,
-			NETWORK_ARPOP_REQUEST, 1);
+		status = kernelNetworkArpSend(netDev, logicalAddress, NULL,
+			NETWORK_ARPOP_REQUEST, 1 /* immediate */);
 		if (status < 0)
 			return (status);
 
@@ -667,74 +797,99 @@ int kernelNetworkDeviceGetAddress(const char *adapterName,
 }
 
 
-int kernelNetworkDeviceSend(const char *adapterName, unsigned char *buffer,
-	unsigned bufferLength)
+int kernelNetworkDeviceSend(const char *name, kernelNetworkPacket *packet)
 {
-	// Send a prepared packet using the named network adapter
+	// Send a prepared packet using the named network device
 
 	int status = 0;
 	kernelDevice *dev = NULL;
-	kernelNetworkDevice *adapter = NULL;
+	kernelNetworkDevice *netDev = NULL;
 	kernelNetworkDeviceOps *ops = NULL;
-	//networkEthernetHeader *header = NULL;
 
 	// Check params
-	if (!adapterName || !buffer)
+	if (!name || !packet)
 	{
 		kernelError(kernel_error, "NULL parameter");
 		return (status = ERR_NULLPARAMETER);
 	}
 
-	// Find the adapter by name
-	dev = findDeviceByName(adapterName);
+	kernelDebug(debug_net, "NETDEV send %u on %s", packet->length, name);
+
+	// Find the device by name
+	dev = findDeviceByName(name);
 	if (!dev)
 	{
-		kernelError(kernel_error, "No such network adapter \"%s\"",
-			adapterName);
+		kernelError(kernel_error, "No such network device \"%s\"", name);
 		return (status = ERR_NOSUCHENTRY);
 	}
 
-	if (!bufferLength)
+	if (!packet->length)
 		// Nothing to do?  Hum.
 		return (status = 0);
 
-	adapter = dev->data;
+	netDev = dev->data;
 	ops = dev->driver->ops;
 
-	// Lock the adapter
-	status = kernelLockGet(&adapter->adapterLock);
+	// If there are output hooks on this device, emit the raw packet data
+	processHooks(netDev, packet, 0 /* output */);
+
+	// Lock the device
+	status = kernelLockGet(&netDev->lock);
 	if (status < 0)
 		return (status);
 
 	if (ops->driverWriteData)
-		// Call the driver transmit routine.
-		status = ops->driverWriteData(adapter, buffer, bufferLength);
-
-	// Wait until all packets are transmitted before returning, since the
-	// memory is needed by the adapter
-	while (adapter->device.transQueued && !kernelProcessingInterrupt())
-		kernelMultitaskerYield();
+	{
+		// Call the driver transmit function.
+		status = ops->driverWriteData(netDev, packet->memory,
+			packet->length);
+	}
 
 	// Release the lock
-	kernelLockRelease(&adapter->adapterLock);
+	kernelLockRelease(&netDev->lock);
+
+	// Wait until all packets are transmitted before returning, since the
+	// memory is needed by the device
+	while (netDev->device.transQueued)
+		kernelMultitaskerYield();
 
 	if (status >= 0)
 	{
-		adapter->device.transPackets += 1;
+		netDev->device.transPackets += 1;
 
-		/*
-		header = (networkEthernetHeader *) buffer;
-		kernelTextPrint("SEND %d: %02x:%02x:%02x:%02x:%02x:%02x -> "
-			"%02x:%02x:%02x:%02x:%02x:%02x ",
-			adapter->transPackets, header->source[0],
-			header->source[1], header->source[2],
-			header->source[3], header->source[4],
-			header->source[5], header->dest[0],
-			header->dest[1], header->dest[2],
-			header->dest[3], header->dest[4], header->dest[5]);
-		kernelTextPrintLine("Messagesize %d: ", bufferLength);
-		*/
+		switch (netDev->device.linkProtocol)
+		{
+			case NETWORK_LINKPROTOCOL_LOOP:
+			{
+				kernelDebug(debug_net, "NETDEV send %d: loopback msgsz %d",
+					netDev->device.transPackets, packet->length);
+				break;
+			}
+
+			case NETWORK_LINKPROTOCOL_ETHERNET:
+			{
+			#if defined(DEBUG)
+				networkEthernetHeader *header = (networkEthernetHeader *)
+					packet->memory;
+
+				kernelDebug(debug_net, "NETDEV send %d: ethernet type=%x "
+					"%02x:%02x:%02x:%02x:%02x:%02x -> "
+					"%02x:%02x:%02x:%02x:%02x:%02x msgsz %d",
+					netDev->device.transPackets, ntohs(header->type),
+					header->source[0], header->source[1], header->source[2],
+					header->source[3], header->source[4], header->source[5],
+					header->dest[0], header->dest[1], header->dest[2],
+					header->dest[3], header->dest[4], header->dest[5],
+					packet->length);
+			#endif
+				break;
+			}
+		}
 	}
+
+	// If the device is a loop device, attempt to process the input now
+	if (netDev->device.linkProtocol == NETWORK_LINKPROTOCOL_LOOP)
+		readData(dev);
 
 	return (status);
 }
@@ -742,8 +897,21 @@ int kernelNetworkDeviceSend(const char *adapterName, unsigned char *buffer,
 
 int kernelNetworkDeviceGetCount(void)
 {
-	// Returns the count of network devices
-	return (numDevices);
+	// Returns the count of real network devices (not including loopback)
+
+	int devCount = 0;
+	kernelNetworkDevice *netDev = NULL;
+	int count;
+
+	for (count = 0; count < numDevices; count ++)
+	{
+		netDev = devices[count]->data;
+
+		if (netDev->device.linkProtocol != NETWORK_LINKPROTOCOL_LOOP)
+			devCount += 1;
+	}
+
+	return (devCount);
 }
 
 
@@ -752,22 +920,178 @@ int kernelNetworkDeviceGet(const char *name, networkDevice *dev)
 	// Returns the user-space portion of the requested (by name) network
 	// device.
 
+	int status = 0;
 	kernelDevice *kernelDev = NULL;
-	kernelNetworkDevice *adapter = NULL;
+	kernelNetworkDevice *netDev = NULL;
 
 	// Check params
 	if (!name || !dev)
-		return (ERR_NULLPARAMETER);
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
 
-	// Find the adapter by name
+	// Find the device by name
 	kernelDev = findDeviceByName(name);
 	if (!kernelDev)
-		return (ERR_NOSUCHENTRY);
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
 
-	adapter = kernelDev->data;
+	netDev = kernelDev->data;
 
-	memcpy(dev, (networkDevice *) &adapter->device, sizeof(networkDevice));
+	memcpy(dev, (networkDevice *) &netDev->device, sizeof(networkDevice));
 
-	return (0);
+	return (status = 0);
+}
+
+
+int kernelNetworkDeviceHook(const char *name, void **streamPtr, int input)
+{
+	// Allocates a new network packet stream and associates it with the
+	// named device, 'hooking' either the input or output, and returning a
+	// pointer to the stream.
+
+	int status = 0;
+	kernelDevice *kernelDev = NULL;
+	kernelNetworkDevice *netDev = NULL;
+	kernelNetworkPacketStream *theStream = NULL;
+	kernelLinkedList *list = NULL;
+
+	// Check params
+	if (!name || !streamPtr)
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
+
+	// Find the device by name
+	kernelDev = findDeviceByName(name);
+	if (!kernelDev)
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
+
+	netDev = kernelDev->data;
+
+	*streamPtr = kernelMalloc(sizeof(kernelNetworkPacketStream));
+	if (!*streamPtr)
+	{
+		kernelError(kernel_error, "Couldn't allocate network packet stream");
+		return (status = ERR_MEMORY);
+	}
+
+	theStream = *streamPtr;
+
+	// Try to get a new network packet stream
+	status = kernelNetworkPacketStreamNew(theStream);
+	if (status < 0)
+	{
+		kernelError(kernel_error, "Couldn't allocate network packet stream");
+		kernelFree(*streamPtr);
+		return (status);
+	}
+
+	// Which list are we adding to?
+	if (input)
+		list = (kernelLinkedList *) &netDev->inputHooks;
+	else
+		list = (kernelLinkedList *) &netDev->outputHooks;
+
+	// Add it to the list
+	status = kernelLinkedListAdd(list, *streamPtr);
+	if (status < 0)
+	{
+		kernelError(kernel_error, "Couldn't link network packet stream");
+		kernelNetworkPacketStreamDestroy(theStream);
+		kernelFree(*streamPtr);
+		return (status);
+	}
+
+	return (status = 0);
+}
+
+
+int kernelNetworkDeviceUnhook(const char *name, void *streamPtr, int input)
+{
+	// 'Unhooks' the supplied network packet stream from the input or output
+	// of the named device and deallocates the stream.
+
+	int status = 0;
+	kernelDevice *kernelDev = NULL;
+	kernelNetworkDevice *netDev = NULL;
+	kernelNetworkPacketStream *theStream = streamPtr;
+	kernelLinkedList *list = NULL;
+
+	// Check params
+	if (!name || !streamPtr)
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (status = ERR_NULLPARAMETER);
+	}
+
+	// Find the device by name
+	kernelDev = findDeviceByName(name);
+	if (!kernelDev)
+	{
+		kernelError(kernel_error, "No such network device \"%s\"", name);
+		return (status = ERR_NOSUCHENTRY);
+	}
+
+	netDev = kernelDev->data;
+
+	// Which list are we removing from?
+	if (input)
+		list = (kernelLinkedList *) &netDev->inputHooks;
+	else
+		list = (kernelLinkedList *) &netDev->outputHooks;
+
+	// Remove it from the list
+	status = kernelLinkedListRemove(list, streamPtr);
+	if (status < 0)
+	{
+		kernelError(kernel_error, "Couldn't unlink network packet stream");
+		return (status);
+	}
+
+	kernelNetworkPacketStreamDestroy(theStream);
+	kernelFree(streamPtr);
+
+	return (status = 0);
+}
+
+
+unsigned kernelNetworkDeviceSniff(void *streamPtr, unsigned char *buffer,
+	unsigned len)
+{
+	// Given a pointer to a network packet stream 'hooked' to the input or
+	// output of a device, attempt to retrieve a packet, and copy at most the
+	// requested number of bytes to the buffer.
+
+	unsigned bytes = 0;
+	kernelNetworkPacketStream *theStream = streamPtr;
+	kernelNetworkPacket *packet = NULL;
+
+	// Check params
+	if (!streamPtr || !buffer)
+	{
+		kernelError(kernel_error, "NULL parameter");
+		return (bytes = 0);
+	}
+
+	// Try to read a packet
+	if (kernelNetworkPacketStreamRead(theStream, &packet) < 0)
+		return (bytes = 0);
+
+	bytes = min(len, packet->length);
+
+	// Copy data
+	memcpy(buffer, packet->memory, bytes);
+
+	kernelNetworkPacketRelease(packet);
+
+	return (bytes);
 }
 

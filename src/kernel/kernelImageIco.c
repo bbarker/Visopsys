@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -126,10 +126,10 @@ static int detect(const char *fileName, void *dataPtr, unsigned dataSize,
 					(entry->bitCount == BMP_BPP_32BIT)))
 			{
 				// We will say this is an ICO file.
-				sprintf(class->className, "%s %s", FILECLASS_NAME_ICO,
+				sprintf(class->name, "%s %s", FILECLASS_NAME_ICO,
 					FILECLASS_NAME_IMAGE);
-				class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
-				class->subClass = LOADERFILESUBCLASS_ICO;
+				class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
+				class->subType = LOADERFILESUBCLASS_ICO;
 				return (1);
 			}
 		}

@@ -1,6 +1,6 @@
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  Makefile
 ##
@@ -30,7 +30,6 @@ clean:
 	${MAKE} -C libtimer clean
 	${MAKE} -C libvsh clean
 	${MAKE} -C libwindow clean
-	${MAKE} -C shared clean
 	rm -f *~ *.o core
 	rm -Rf ${BUILDDIR}
 

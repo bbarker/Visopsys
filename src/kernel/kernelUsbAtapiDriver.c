@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -34,6 +34,7 @@
 #include "kernelVariableList.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <sys/processor.h>
 
 static kernelPhysicalDisk *disks[USBATAPI_MAX_DISKS];
@@ -569,7 +570,7 @@ static int atapiStartup(kernelPhysicalDisk *physical)
 	atapiSenseData senseData;
 	scsiCapacityData capacityData;
 	atapiTocData tocData;
-	uquad_t timeout = (kernelCpuGetMs() + 10000);	// Timout after 10 seconds
+	uquad_t timeout = (kernelCpuGetMs() + (10 * MS_PER_SEC)); // timout 10 secs
 
 	dsk = (kernelUsbAtapiDisk *) physical->driverData;
 
@@ -852,7 +853,7 @@ static int driverMediaPresent(int diskNum)
 static int driverReadSectors(int diskNum, uquad_t logicalSector,
 	uquad_t numSectors, void *buffer)
 {
-	// This routine is a wrapper for the readWriteSectors routine.
+	// This function is a wrapper for the readWriteSectors function.
 	return (readWriteSectors(diskNum, logicalSector, numSectors, buffer,
 		1));  // Read operation
 }
@@ -1140,7 +1141,7 @@ static int driverDetect(void *parent __attribute__((unused)),
 static int driverHotplug(void *parent, int busType __attribute__((unused)),
 	int target, int connected, kernelDriver *driver)
 {
-	// This routine is used to detect whether a newly-connected, hotplugged
+	// This function is used to detect whether a newly-connected, hotplugged
 	// device is supported by this driver during runtime, and if so to do the
 	// appropriate device setup and registration.  Alternatively if the device
 	// is disconnected a call to this function lets us know to stop trying

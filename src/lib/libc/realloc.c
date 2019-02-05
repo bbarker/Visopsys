@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -43,8 +43,9 @@ void *_realloc(void *oldMemory, size_t size, const char *function)
 	void *memoryPointer = NULL;
 
 	if (!oldMemory)
+	{
 		return (memoryPointer = _malloc(size, function));
-
+	}
 	else if (!size)
 	{
 		_free(oldMemory, function);
@@ -63,7 +64,8 @@ void *_realloc(void *oldMemory, size_t size, const char *function)
 
 	if (memoryPointer)
 	{
-		size = min(size, ((oldBlock.endLocation - oldBlock.startLocation) + 1));
+		size = min(size, ((oldBlock.endLocation - oldBlock.startLocation) +
+			1));
 		memcpy(memoryPointer, oldMemory, size);
 		_free(oldMemory, function);
 	}

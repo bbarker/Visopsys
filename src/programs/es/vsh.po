@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2014-01-22 04:36-0400\n"
 "Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,40 +17,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: vsh.c:196 vsh.c:215
+#: vsh.c:199 vsh.c:218
 #, c-format
 msgid "Usage: %s <file1> [file2] [...]\n"
 msgstr "Uso: %s <Archivo1> [Archivo2] [...]\n"
 
-#: vsh.c:231 vsh.c:248
+#: vsh.c:234 vsh.c:251
 #, c-format
 msgid "Usage: %s <source file> <destination file>\n"
 msgstr "Uso: %s <Archivo_fuente> <Archivo_destino>\n"
 
-#: vsh.c:283 vsh.c:324
+#: vsh.c:286 vsh.c:327
 #, c-format
 msgid "Usage: %s <variable_name>\n"
 msgstr "Uso: %s <nombre_de_variable>\n"
 
-#: vsh.c:292
+#: vsh.c:295
 msgid "Shouldn't set an env variable that long\n"
 msgstr "Una variable de sistema no debería ser tan larga\n"
 
-#: vsh.c:305
+#: vsh.c:308
 #, c-format
 msgid "Usage: %s <variable_name> <variable_value>\n"
 msgstr "Uso: %s <nombre_de_variable> <valor_de_variable>\n"
 
-#: vsh.c:360
+#: vsh.c:363
 #, c-format
 msgid "Unknown command \"%s\".\n"
 msgstr "Comando desconocido \"%s\".\n"
 
-#: vsh.c:664
+#: vsh.c:667
 msgid "logout\n"
 msgstr "logout\n"
 
-#: vsh.c:789
+#: vsh.c:792
 msgid ""
 "\n"
 "Visopsys Shell.\n"
@@ -58,14 +58,14 @@ msgstr ""
 "\n"
 "Visopsys Shell.\n"
 
-#: vsh.c:790
+#: vsh.c:793
 msgid "Type \"help\" for commands.\n"
 msgstr "Escribe \"help\" para comandos.\n"
 
-#: vsh.c:805
+#: vsh.c:808
 msgid "Can't determine current directory\n"
 msgstr "No se puede determinar el fichero actual\n"
 
-#: vsh.c:818
+#: vsh.c:821
 msgid "exiting.\n"
 msgstr "saliendo.\n"

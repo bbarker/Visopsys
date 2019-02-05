@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -67,7 +67,10 @@ static void setVisibleItems(kernelWindowComponent *component)
 					listItemComponent->yCoord, xCoord, yCoord);
 
 				if (listItemComponent->move)
-					listItemComponent->move(listItemComponent, xCoord, yCoord);
+				{
+					listItemComponent->move(listItemComponent, xCoord,
+						yCoord);
+				}
 
 				listItemComponent->xCoord = xCoord;
 				listItemComponent->yCoord = yCoord;
@@ -77,7 +80,9 @@ static void setVisibleItems(kernelWindowComponent *component)
 				kernelWindowComponentSetVisible(listItemComponent, 1);
 		}
 		else if (listItemComponent->flags & WINFLAG_VISIBLE)
+		{
 			kernelWindowComponentSetVisible(listItemComponent, 0);
+		}
 	}
 }
 
@@ -101,8 +106,8 @@ static void drawVisibleItems(kernelWindowComponent *component)
 		if ((container->components[count]->flags & WINFLAG_VISIBLE) &&
 			(container->components[count]->draw))
 		{
-			//kernelDebug(debug_gui, "WindowList item %d xCoord %d, yCoord %d",
-			//	count, container->components[count]->xCoord,
+			//kernelDebug(debug_gui, "WindowList item %d xCoord %d, yCoord "
+			//	"%d", count, container->components[count]->xCoord,
 			//	container->components[count]->yCoord);
 			container->components[count]->draw(container->components[count]);
 		}
@@ -142,8 +147,8 @@ static inline int isMouseInScrollBar(windowEvent *event,
 
 	kernelWindowScrollBar *scrollBar = component->data;
 
-	if (scrollBar->dragging ||
-		(event->xPosition >= (component->window->xCoord + component->xCoord)))
+	if (scrollBar->dragging || (event->xPosition >=
+		(component->window->xCoord + component->xCoord)))
 	{
 		return (1);
 	}
@@ -173,8 +178,10 @@ static void setScrollBar(kernelWindowList *list)
 	}
 
 	if (list->scrollBar && list->scrollBar->setData)
+	{
 		list->scrollBar->setData(list->scrollBar, &state,
 			sizeof(scrollBarState));
+	}
 }
 
 
@@ -195,14 +202,16 @@ static void setItemSizes(kernelWindowList *list)
 		if ((listItemComponent->width != list->itemWidth) ||
 			(listItemComponent->height != list->itemHeight))
 		{
-			kernelDebug(debug_gui, "WindowList item %d oldWidth %d, oldHeight "
-				"%d, newWidth %d, newHeight %d", count,
+			kernelDebug(debug_gui, "WindowList item %d oldWidth %d, "
+				"oldHeight %d, newWidth %d, newHeight %d", count,
 				listItemComponent->width, listItemComponent->height,
 				list->itemWidth, list->itemHeight);
 
 			if (listItemComponent->resize)
+			{
 				listItemComponent->resize(listItemComponent, list->itemWidth,
 					list->itemHeight);
+			}
 
 			listItemComponent->width = list->itemWidth;
 			listItemComponent->height = list->itemHeight;
@@ -260,11 +269,14 @@ static void selectionScroll(kernelWindowComponent *component)
 	 		(list->firstVisibleRow + list->rows)))
 	{
 		if (listItemComponent->params.gridY < list->firstVisibleRow)
+		{
 			list->firstVisibleRow = listItemComponent->params.gridY;
-
+		}
 		else
-			list->firstVisibleRow =
-			((listItemComponent->params.gridY - list->rows) + 1);
+		{
+			list->firstVisibleRow = ((listItemComponent->params.gridY -
+				list->rows) + 1);
+		}
 
 		if (list->scrollBar)
 			// Set the scroll bar display percent
@@ -273,9 +285,8 @@ static void selectionScroll(kernelWindowComponent *component)
 		setVisibleItems(component);
 		drawVisibleItems(component);
 
-		component->window
-			->update(component->window, component->xCoord, component->yCoord,
-				 component->width, component->height);
+		component->window->update(component->window, component->xCoord,
+			component->yCoord, component->width, component->height);
 	}
 }
 
@@ -346,10 +357,12 @@ static int flatten(kernelWindowComponent *component,
 	int status = 0;
 	kernelWindowList *list = component->data;
 
+	// Flatten our container
 	if (list->container->flatten)
-		// Flatten our container
+	{
 		status = list->container->flatten(list->container, array, numItems,
 			flags);
+	}
 
 	if (list->scrollBar && ((list->scrollBar->flags & flags) == flags))
 	{
@@ -388,8 +401,8 @@ static int layout(kernelWindowComponent *component)
 			component->width, component->height);
 	}
 
-	// Calculate the number of total rows needed to accommodate *all* the items
-	// (not just visible ones)
+	// Calculate the number of total rows needed to accommodate *all* the
+	// items (not just visible ones)
 	if (list->columns)
 	{
 		list->itemRows = (container->numComponents / list->columns);
@@ -411,8 +424,11 @@ static int layout(kernelWindowComponent *component)
 			(list->scrollBar->yCoord != component->yCoord))
 		{
 			if (list->scrollBar->move)
+			{
 				list->scrollBar->move(list->scrollBar, scrollBarX,
 					component->yCoord);
+			}
+
 			list->scrollBar->xCoord = scrollBarX;
 			list->scrollBar->yCoord = component->yCoord;
 		}
@@ -420,8 +436,11 @@ static int layout(kernelWindowComponent *component)
 		if (list->scrollBar->height != list->container->height)
 		{
 			if (list->scrollBar->resize)
+			{
 				list->scrollBar->resize(list->scrollBar,
 					list->scrollBar->width, list->container->height);
+			}
+
 			list->scrollBar->height = list->container->height;
 		}
 	}
@@ -488,7 +507,8 @@ static kernelWindowComponent *eventComp(kernelWindowComponent *component,
 		if (isPointInside(event->xPosition, event->yPosition,
 			makeComponentScreenArea(listItemComponent)))
 		{
-			kernelDebug(debug_gui, "WindowList found right-clicked list item");
+			kernelDebug(debug_gui, "WindowList found right-clicked list "
+				"item");
 
 			// If the list item doesn't have its own context menu, return the
 			// windowList component.
@@ -509,10 +529,10 @@ static kernelWindowComponent *eventComp(kernelWindowComponent *component,
 			tmpEvent.type |= EVENT_SELECTION;
 
 			// Adjust to the coordinates of the windowList component
-			tmpEvent.xPosition -=
-				(component->window->xCoord + component->xCoord);
-			tmpEvent.yPosition -=
-				(component->window->yCoord + component->yCoord);
+			tmpEvent.xPosition -= (component->window->xCoord +
+				component->xCoord);
+			tmpEvent.yPosition -= (component->window->yCoord +
+				component->yCoord);
 
 			// Put this mouse event into windowList component's
 			// windowEventStream
@@ -551,6 +571,7 @@ static int setBuffer(kernelWindowComponent *component, graphicBuffer *buffer)
 		status = list->scrollBar->setBuffer(list->scrollBar, buffer);
 		if (status < 0)
 			return (status);
+
 		list->scrollBar->buffer = buffer;
 	}
 
@@ -623,11 +644,13 @@ static void populateList(kernelWindowComponent *listComponent,
 
 	// If the list already has components, get rid of them
 	while (container->numComponents)
-		kernelWindowComponentDestroy(container
-			->components[container->numComponents - 1]);
+	{
+		kernelWindowComponentDestroy(
+			container->components[container->numComponents - 1]);
+	}
 
-	// If the selected item is greater than the new number we have, make it the
-	// last one
+	// If the selected item is greater than the new number we have, make it
+	// the last one
 	if (list->selectedItem >= numItems)
 		list->selectedItem = (numItems - 1);
 
@@ -644,13 +667,14 @@ static void populateList(kernelWindowComponent *listComponent,
 	params.padRight = 0;
 	params.orientationX = orient_top;
 	params.orientationY = orient_left;
-	params.flags |= (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
+	params.flags |= (WINDOW_COMPFLAG_FIXEDWIDTH |
+		WINDOW_COMPFLAG_FIXEDHEIGHT);
 
 	list->itemWidth = 0;
 	list->itemHeight = 0;
 
-	// Loop through the list item parameter list, creating kernelWindowListItem
-	// components and adding them to this component
+	// Loop through the list item parameter list, creating
+	// kernelWindowListItem components and adding them to this component
 	for (count = 0; count < numItems; count ++)
 	{
 		kernelDebug(debug_gui, "WindowList create %s", items[count].text);
@@ -672,17 +696,21 @@ static void populateList(kernelWindowComponent *listComponent,
 			list->itemHeight = listItemComponent->height;
 
 		if (listItemComponent->setSelected)
+		{
 			listItemComponent->setSelected(listItemComponent,
 				(count == list->selectedItem));
+		}
 	}
 
 	// Set the sizes of all the items
 	setItemSizes(list);
 
 	if (listComponent->doneLayout)
+	{
 		// We're re-populating the list, so re-calculate the number of rows
 		// and columns
 		setRowsAndColumns(listComponent);
+	}
 
 	// Do layout
 	layout(listComponent);
@@ -726,9 +754,8 @@ static int setData(kernelWindowComponent *component, void *buffer, int size)
 	if (component->draw)
 		component->draw(component);
 
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-			component->width, component->height);
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
 
 	return (0);
 }
@@ -778,8 +805,8 @@ static int resize(kernelWindowComponent *component, int width, int height)
 	kernelWindowList *list = component->data;
 
 	kernelDebug(debug_gui, "WindowList resize oldWidth %d, oldHeight %d, "
-		"width %d, height %d", component->width, component->height,
-		width, height);
+		"width %d, height %d", component->width, component->height, width,
+		height);
 
 	list->container->width = width;
 	list->container->height = height;
@@ -819,8 +846,9 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 
 	kernelDebug(debug_gui, "WindowList mouse event");
 
-	// Is the event in one of our scroll bars?
-	if (list->scrollBar && isMouseInScrollBar(event, list->scrollBar))
+	// Is the event in one of our scroll bars, or a mouse scroll?
+	if (list->scrollBar && (isMouseInScrollBar(event, list->scrollBar) ||
+		(event->type & EVENT_MOUSE_SCROLL)))
 	{
 		if (list->scrollBar->mouseEvent)
 		{
@@ -846,8 +874,9 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 				setVisibleItems(component);
 				drawVisibleItems(component);
 
-				component->window->update(component->window, component->xCoord,
-					component->yCoord, component->width, component->height);
+				component->window->update(component->window,
+					component->xCoord, component->yCoord, component->width,
+					component->height);
 			}
 		}
 	}
@@ -921,7 +950,9 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 				case keyLeftArrow:
 					// Cursor left
 					if (gridX > 0)
+					{
 						gridX -= 1;
+					}
 					else if (gridY > 0)
 					{
 						gridX = (list->columns - 1);
@@ -932,7 +963,9 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 				case keyRightArrow:
 					// Cursor right
 					if (gridX < (list->columns - 1))
+					{
 						gridX += 1;
+					}
 					else if (gridY < (list->itemRows - 1))
 					{
 						gridX = 0;
@@ -955,11 +988,13 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 				// Find an item with these coordinates
 				for (count = 0; count < container->numComponents; count ++)
 				{
-					if ((container->components[count]->params.gridX == gridX) &&
+					if ((container->components[count]->params.gridX ==
+							gridX) &&
 						(container->components[count]->params.gridY == gridY))
 					{
 						// Don't bother passing the key event to the list item
 						setSelected(component, count);
+
 						// Make this also a 'selection' event
 						event->type |= EVENT_SELECTION;
 						break;
@@ -971,6 +1006,7 @@ static int keyEvent(kernelWindowComponent *component, windowEvent *event)
 		{
 			// No item was selected, so we just select the first item.
 			setSelected(component, 0);
+
 			// Make this also a 'selection' event
 			event->type |= EVENT_SELECTION;
 		}
@@ -1128,16 +1164,18 @@ kernelWindowComponent *kernelWindowNewList(objectKey parent,
 	// Fill up
 	populateList(component, items, numItems);
 
-	if (!numItems)
+	// Set some minimum sizes
+	if (numItems)
 	{
-		// Set some minimum sizes
-		component->resize(component, 100, 50);
-		component->width = 100;
-		component->height = 50;
+		component->minWidth = list->itemWidth;
+		component->minHeight = list->itemHeight;
 	}
-
-	component->minWidth = component->width;
-	component->minHeight = component->height;
+	else
+	{
+		component->resize(component, 64, 64);
+		component->width = component->minWidth = 64;
+		component->height = component->minHeight = 64;
+	}
 
 	// Take care of any default selection
 	if (selectMultiple)

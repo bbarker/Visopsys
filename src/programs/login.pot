@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,66 +36,66 @@ msgid ""
 "change anything."
 msgstr ""
 
-#: login.c:144
+#: login.c:148
 msgid "login: "
 msgstr ""
 
-#: login.c:153
+#: login.c:157
 msgid "That login name is too long."
 msgstr ""
 
-#: login.c:154
+#: login.c:158
 msgid "That password is too long."
 msgstr ""
 
-#: login.c:171 login.c:486
+#: login.c:175 login.c:494
 msgid "Error"
 msgstr ""
 
-#: login.c:267
+#: login.c:272
 msgid "Login"
 msgstr ""
 
-#: login.c:320
+#: login.c:328
 msgid "Reboot"
 msgstr ""
 
-#: login.c:326
+#: login.c:334
 msgid "Shut down"
 msgstr ""
 
-#: login.c:385
+#: login.c:393
 msgid "password: "
 msgstr ""
 
-#: login.c:440
+#: login.c:448
 #, c-format
 msgid "Missing parameter for %s option\n"
 msgstr ""
 
-#: login.c:445
+#: login.c:453
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""
 
-#: login.c:509
+#: login.c:517
 msgid "Login Failed"
 msgstr ""
 
-#: login.c:510
+#: login.c:518
 msgid "Unable to log in to the Window Manager!"
 msgstr ""
 
-#: login.c:518
+#: login.c:526
 msgid "Read Only"
 msgstr ""
 
-#: login.c:533
+#: login.c:541
 #, c-format
 msgid "Couldn't load login shell %s!"
 msgstr ""
 
-#: login.c:540
+#: login.c:548
 #, c-format
 msgid ""
 "\n"

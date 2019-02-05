@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  This German translation provided by Proxma AG - www.proxma.com
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: shutdown.c:70
+#: shutdown.c:79
 msgid "Reboot"
 msgstr "Neu starten"
 
-#: shutdown.c:71
+#: shutdown.c:80
 msgid "Shut down"
 msgstr "Herunterfahren"
 
-#: shutdown.c:72
+#: shutdown.c:81
 msgid "Eject CD-ROM"
 msgstr "CD-ROM auswerfen"
 
-#: shutdown.c:74
+#: shutdown.c:83
 msgid "Ejecting, please wait..."
 msgstr "Wird ausgeworfen, bitte warten..."
 
-#: shutdown.c:75
+#: shutdown.c:84
 msgid "Unable to unlock the media door"
 msgstr "Das Laufwerk kann nicht geschlossen werden"
 
-#: shutdown.c:76
+#: shutdown.c:85
 msgid ""
 "Can't seem to eject.  Try pushing\n"
 "the 'eject' button now."
@@ -45,20 +45,20 @@ msgstr ""
 "Kann wohl nicht ausgegeben werden. Versuchen Sie nochmal\n"
 "jetzt auf die 'Auswerfen' zu drücken."
 
-#: shutdown.c:96
+#: shutdown.c:104
 msgid "Ejecting"
 msgstr "Wird ausgeworfen"
 
-#: shutdown.c:111
+#: shutdown.c:119
 msgid "Error"
 msgstr "Fehler"
 
-#: shutdown.c:335
+#: shutdown.c:349
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""
 
-#: shutdown.c:363
+#: shutdown.c:377
 #, c-format
 msgid "Use \"%s -f\" to force.\n"
 msgstr "Benutzen Sie \"%s -f\" um es zu erzwingen.\n"

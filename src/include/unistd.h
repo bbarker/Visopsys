@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -27,29 +27,31 @@ extern char *optarg;
 extern int optind, opterr, optopt;
 
 // For seeking using lseek()
-#define SEEK_SET 0x01
-#define SEEK_CUR 0x02
-#define SEEK_END 0x03
+#ifndef SEEK_SET
+	#define SEEK_SET	1
+	#define SEEK_CUR	2
+	#define SEEK_END	3
+#endif
 
-// This contains the size_t definition
+// Contains the size_t and ssize_t definitions
 #include <stddef.h>
 
-// This contains the off_t definition
+// Contains the off_t definition
 #include <sys/types.h>
 
-// This contains the 'struct stat' definition
-#include <sys/stat.h>
-
+int chdir(const char *);
 int close(int);
 int ftruncate(int, off_t);
+char *getcwd(char *, size_t);
 int getopt(int, char *const[], const char *);
 off_t lseek(int, off_t, int);
-size_t read(int, void *, size_t);
+ssize_t read(int, void *, size_t);
+int rmdir(const char *);
 unsigned sleep(unsigned);
-int stat(const char *, struct stat *);
 void swab(const void *, void *, ssize_t);
 int truncate(const char *, off_t);
-size_t write(int, const void *, size_t);
+int unlink(const char *);
+ssize_t write(int, const void *, size_t);
 
 #define _UNISTD_H
 #endif

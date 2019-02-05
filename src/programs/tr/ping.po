@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
 #  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
 "Language-Team: Turkish/Türkçe\n"
@@ -19,15 +19,15 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ping.c:60
+#: ping.c:64
 msgid "Ping"
 msgstr "Ping"
 
-#: ping.c:88
+#: ping.c:98
 msgid "Error"
 msgstr "Hata"
 
-#: ping.c:96
+#: ping.c:106
 #, c-format
 msgid ""
 "usage:\n"
@@ -36,58 +36,62 @@ msgstr ""
 "Kullanimi:\n"
 "%s [-T] <address | hostname>\n"
 
-#: ping.c:164
+#: ping.c:183
 #, c-format
-msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=X ms\n"
-msgstr "%d Byte, %d.%d.%d.%d tarafindan : icmp_seq=%d ttl=%d süre=X ms\n"
+msgid "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d time=%llu ms\n"
+msgstr "%d Byte, %d.%d.%d.%d tarafindan : icmp_seq=%d ttl=%d süre=%llu ms\n"
 
-#: ping.c:253
+#: ping.c:283
 msgid "Stop"
 msgstr "Dur"
 
-#: ping.c:296
+#: ping.c:345
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""
 
-#: ping.c:305
+#: ping.c:354
 msgid "Networking is not currently enabled"
 msgstr "Ag su anda etkin degil"
 
-#: ping.c:321
+#: ping.c:370
 msgid "Enter Address"
 msgstr "Adresi girin"
 
-#: ping.c:322
+#: ping.c:371
 msgid "Enter the network address to ping:"
 msgstr "Pinglenecek ag adresini girin:"
 
-#: ping.c:357
-msgid "Memory allocation error"
-msgstr "Bellek ayirma hatasi"
+#: ping.c:384
+msgid "Couldn't determine destination address"
+msgstr ""
 
-#: ping.c:376
+#: ping.c:400
 msgid "Error opening network connection"
 msgstr "Ag baglantisi açilirken hata olustu"
 
-#: ping.c:380
+#: ping.c:404
 #, c-format
-msgid "Ping %d.%d.%d.%d %d bytes of data\n"
-msgstr "Ping %d.%d.%d.%d %d Bayt kadar veri\n"
+msgid "Ping %d.%d.%d.%d %d(%d) bytes of data"
+msgstr "Ping %d.%d.%d.%d %d(%d) Bayt kadar veri"
 
-#: ping.c:394
+#: ping.c:418
 msgid "Error setting signal handler"
 msgstr "Sinyal isleyicisi ayarlanirken hata olustu"
 
-#: ping.c:407
+#: ping.c:431
 msgid "Error starting response thread"
 msgstr "Yanit islemi olusturulurken hata olustu"
 
-#: ping.c:417
+#: ping.c:439 ping.c:451
+msgid "Memory allocation error"
+msgstr "Bellek ayirma hatasi"
+
+#: ping.c:465
 msgid "Error pinging host"
 msgstr "saglayici pinglenirken hata olustu"
 
-#: ping.c:435
+#: ping.c:483
 #, c-format
 msgid ""
 "\n"
@@ -96,7 +100,12 @@ msgstr ""
 "\n"
 "--- %d.%d.%d.%d Ping-istatistigi ---\n"
 
-#: ping.c:437
+#: ping.c:485
 #, c-format
-msgid "%d packets transmitted, %d received, %d%% packet loss, time Xms\n"
-msgstr "%d paket aktarildi, %d alindi, %d%% paket kaybi, süre Xms\n"
+msgid "%d packets transmitted, %d received, %d%% packet loss, time %llums\n"
+msgstr "%d paket aktarildi, %d alindi, %d%% paket kaybi, süre %llums\n"
+
+#: ping.c:489
+#, c-format
+msgid "rtt min/avg/max = %llu/%llu/%llu ms\n"
+msgstr ""

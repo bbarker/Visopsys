@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libwindow.po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 01:08+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: 2014-07-25 16:48+0800\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.4\n"
 
-#: windowArchiveList.c:55 windowFileList.c:182 windowProgressDialog.c:128
+#: windowArchiveList.c:55 windowFileList.c:198 windowProgressDialog.c:127
 msgid "Error"
 msgstr "Ошибка"
 
-#: windowArchiveList.c:78 windowFileList.c:534
+#: windowArchiveList.c:78 windowFileList.c:501
 msgid "Memory allocation error creating icon parameters"
 msgstr "Ошибка распределения памяти при создании параметров значка"
 
@@ -42,55 +42,55 @@ msgstr "Зеленый"
 msgid "Blue"
 msgstr "Синий"
 
-#: windowColorDialog.c:268 windowFileDialog.c:219 windowLanguageDialog.c:199
-#: windowNumberDialog.c:167 windowOkDialog.c:125 windowPromptDialog.c:135
-#: windowQueryDialog.c:57 windowRadioDialog.c:157
+#: windowColorDialog.c:268 windowFileDialog.c:248 windowLanguageDialog.c:199
+#: windowNumberDialog.c:167 windowOkDialog.c:126 windowPromptDialog.c:134
+#: windowQueryDialog.c:57 windowRadioDialog.c:153
 msgid "OK"
 msgstr "ОК"
 
-#: windowColorDialog.c:278 windowFileDialog.c:229 windowLanguageDialog.c:209
-#: windowNumberDialog.c:172 windowProgressDialog.c:260
-#: windowPromptDialog.c:145 windowQueryDialog.c:57 windowRadioDialog.c:169
+#: windowColorDialog.c:278 windowFileDialog.c:258 windowLanguageDialog.c:209
+#: windowNumberDialog.c:172 windowProgressDialog.c:258 windowPromptDialog.c:144
+#: windowQueryDialog.c:57 windowRadioDialog.c:165
 msgid "Cancel"
 msgstr "Отмена"
 
-#: windowFileList.c:393 windowFileList.c:418
+#: windowFileList.c:217
+#, c-format
+msgid "Can't locate configuration file %s"
+msgstr "Не могу найти файл конфигурации %s"
+
+#: windowFileList.c:342 windowFileList.c:375
 msgid "(up)"
 msgstr "(вверх)"
 
-#: windowFileList.c:468
+#: windowFileList.c:432
 #, c-format
 msgid "Can't get directory \"%s\" file count"
 msgstr "Не могу получить количество файлов в каталоге \"%s\""
 
-#: windowFileList.c:479
+#: windowFileList.c:443
 msgid "Memory allocation error"
 msgstr "Ошибка распределения памяти"
 
-#: windowFileList.c:492
+#: windowFileList.c:456
 #, c-format
 msgid "Error reading files in \"%s\""
 msgstr "Ошибка чтения файлов в \"%s\""
 
-#: windowFileList.c:668
+#: windowFileList.c:834
 #, c-format
 msgid "Can't change to directory %s"
 msgstr "Не могу перейти в каталог %s"
 
-#: windowFileList.c:692
+#: windowFileList.c:861
 #, c-format
 msgid "Error deleting file %s"
 msgstr "Ошибка при удалении файла %s"
-
-#: windowFileList.c:746
-#, c-format
-msgid "Can't locate configuration file %s"
-msgstr "Не могу найти файл конфигурации %s"
 
 #: windowLanguageDialog.c:36
 msgid "Language Chooser"
 msgstr ""
 
-#: windowProgressDialog.c:117
+#: windowProgressDialog.c:116
 msgid "Confirmation"
 msgstr "Подтверждение"

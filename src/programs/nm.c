@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -118,11 +118,13 @@ int main(int argc, char *argv[])
 			printf(_("File type of \"%s\" is unknown\n"), argv[count1]);
 			continue;
 		}
-		if (!(class.class & (LOADERFILECLASS_EXEC | LOADERFILECLASS_LIB)) ||
-			!(class.subClass & LOADERFILESUBCLASS_DYNAMIC))
+
+		if (!(class.type & LOADERFILECLASS_EXEC) &&
+			!((class.type & LOADERFILECLASS_LIB) &&
+				(class.subType & LOADERFILESUBCLASS_DYNAMIC)))
 		{
 			errno = ERR_INVALID;
-			printf(_("\"%s\" is not a dynamic library or executable\n"),
+			printf(_("\"%s\" is not an executable or dynamic library\n"),
 				argv[count1]);
 			continue;
 		}
@@ -143,10 +145,13 @@ int main(int argc, char *argv[])
 		for (count2 = 0; count2 < symTable->numSymbols; count2 ++)
 		{
 			if (symTable->symbols[count2].name[0])
-			printf("%08x  %s  %s,%s\n", (unsigned)
-				symTable->symbols[count2].value, symTable->symbols[count2].name,
-				_(bindings[symTable->symbols[count2].binding]),
-				_(types[symTable->symbols[count2].type]));
+			{
+				printf("%08x  %s  %s,%s\n", (unsigned)
+					symTable->symbols[count2].value,
+					symTable->symbols[count2].name,
+					_(bindings[symTable->symbols[count2].binding]),
+					_(types[symTable->symbols[count2].type]));
+			}
 		}
 	}
 

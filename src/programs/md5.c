@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -27,8 +27,7 @@
  -- md5 --
 
 Calculate and print one or more MD5 digests.  MD5 is a one-way hashing
-(encryption) algorithm which can be used to calculate checksums or encrypt
-passwords.
+algorithm which can be used to calculate checksums or hash passwords.
 
 Usage:
   md5 [string1] [string2] [...]
@@ -40,10 +39,10 @@ but for an empty string (which is "d41d8cd98f00b204e9800998ecf8427e").
 </help>
 */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <sys/api.h>
 
 
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
 {
 	int status = 0;
 	unsigned outputSize = 0;
-	char *output;
+	unsigned char *output;
 	int count1, count2;
 
 	// If no parameter is supplied, use an empty string.
@@ -63,7 +62,7 @@ int main(int argc, char *argv[])
 
 	for (count1 = 1; count1 < argc; count1 ++)
 	{
-		// Get a buffer to hold the digest result.  This may  be bigger than it
+		// Get a buffer to hold the digest result.  This may be bigger than it
 		// needs to be but that's okay
 		outputSize = (((strlen(argv[count1]) / 56) + 1) * 4);
 
@@ -76,7 +75,8 @@ int main(int argc, char *argv[])
 			return (status = errno);
 		}
 
-		status = encryptMD5(argv[count1], output);
+		status = cryptHashMd5((unsigned char *) argv[count1],
+			strlen(argv[count1]), output);
 		if (status < 0)
 		{
 			errno = status;

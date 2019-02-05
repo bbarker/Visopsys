@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -43,11 +43,13 @@ static inline int menuTitleWidth(kernelWindowComponent *component, int num)
 	kernelFont *font = (kernelFont *) component->params.font;
 	kernelWindow *menu = menuBar->menu[num];
 
-	int width = (windowVariables->border.thickness * 2);
+	int width = (windowVariables->border.thickness * 4);
 
 	if (font)
+	{
 		width += kernelFontGetPrintedWidth(font, (char *) component->charSet,
 			(char *) menu->title);
+	}
 
 	return (width);
 }
@@ -57,7 +59,7 @@ static inline int menuTitleHeight(kernelWindowComponent *component)
 {
 	kernelFont *font = (kernelFont *) component->params.font;
 
-	int height = (windowVariables->border.thickness * 2);
+	int height = (windowVariables->border.thickness * 4);
 
 	if (font)
 		height += font->glyphHeight;
@@ -73,9 +75,80 @@ static void changedVisible(kernelWindowComponent *component)
 	if (component->draw)
 		component->draw(component);
 
-	component->window
-		->update(component->window, component->xCoord, component->yCoord,
-			component->width, component->height);
+	component->window->update(component->window, component->xCoord,
+		component->yCoord, component->width, component->height);
+}
+
+
+static void layoutSized(kernelWindowComponent *component, int width)
+{
+	// Do layout for the menu bar.
+
+	kernelWindowMenuBar *menuBar = component->data;
+	int titlesWidth = 0;
+	kernelWindowContainer *container = menuBar->container->data;
+	int xCoord = 0;
+	int count;
+
+	kernelDebug(debug_gui, "WindowMenuBar layoutSized width=%d", width);
+
+	// First do the menu titles
+	for (count = 0; count < menuBar->numMenus; count ++)
+	{
+		if (count)
+		{
+			menuBar->menuXCoord[count] = (menuBar->menuXCoord[count - 1] +
+				menuBar->menuTitleWidth[count - 1]);
+		}
+
+		menuBar->menuTitleWidth[count] = menuTitleWidth(component, count);
+
+		titlesWidth += menuBar->menuTitleWidth[count];
+	}
+
+	// Now lay out our container
+	for (count = 0; count < container->numComponents; count ++)
+	{
+		container->components[count]->params.gridX =
+			(container->numComponents - (count + 1));
+		container->components[count]->params.gridY = 0;
+		container->components[count]->params.gridWidth = 1;
+		container->components[count]->params.gridHeight = 1;
+		container->components[count]->params.padLeft = 0;
+		container->components[count]->params.padRight = 5;
+		container->components[count]->params.padTop = 0;
+		container->components[count]->params.padBottom = 0;
+		container->components[count]->params.orientationX = orient_center;
+		container->components[count]->params.orientationY = orient_top;
+	}
+
+	if (menuBar->container->layout)
+		menuBar->container->layout(menuBar->container);
+
+	xCoord = titlesWidth;
+	if (width)
+		xCoord = ((width - menuBar->container->width) - 1);
+
+	kernelDebug(debug_gui, "WindowMenuBar container xCoord=%d", xCoord);
+
+	if (menuBar->container->xCoord != xCoord)
+	{
+		if (menuBar->container->move)
+		{
+			menuBar->container->move(menuBar->container, xCoord,
+				component->yCoord);
+		}
+
+		menuBar->container->xCoord = xCoord;
+		menuBar->container->yCoord = component->yCoord;
+	}
+
+	component->minWidth = (titlesWidth + menuBar->container->width);
+
+	if (component->width < component->minWidth)
+		component->width = component->minWidth;
+
+	component->doneLayout = 1;
 }
 
 
@@ -280,9 +353,11 @@ static int flatten(kernelWindowComponent *component,
 	kernelWindowMenuBar *menuBar = component->data;
 
 	if (menuBar->container->flatten)
+	{
 		// Flatten our container
 		status = menuBar->container->flatten(menuBar->container, array,
 			numItems, flags);
+	}
 
 	return (status);
 }
@@ -293,61 +368,10 @@ static int layout(kernelWindowComponent *component)
 	// Do layout for the menu bar.
 
 	int status = 0;
-	kernelWindowMenuBar *menuBar = component->data;
-	int width = 0;
-	kernelWindowContainer *container = menuBar->container->data;
-	int xCoord = 0;
-	int count;
 
 	kernelDebug(debug_gui, "WindowMenuBar layout");
 
-	// First do the menu titles
-	for (count = 0; count < menuBar->numMenus; count ++)
-	{
-		if (count)
-			menuBar->menuXCoord[count] = (menuBar->menuXCoord[count - 1] +
-				menuBar->menuTitleWidth[count - 1]);
-
-		menuBar->menuTitleWidth[count] = menuTitleWidth(component, count);
-
-		width += menuBar->menuTitleWidth[count];
-	}
-
-	// Now lay out our container
-	for (count = 0; count < container->numComponents; count ++)
-	{
-		container->components[count]->params.gridX =
-			(container->numComponents - (count + 1));
-		container->components[count]->params.gridY = 0;
-		container->components[count]->params.gridWidth = 1;
-		container->components[count]->params.gridHeight = 1;
-		container->components[count]->params.padLeft = 0;
-		container->components[count]->params.padRight = 5;
-		container->components[count]->params.padTop = 0;
-		container->components[count]->params.padBottom = 0;
-		container->components[count]->params.orientationX = orient_center;
-		container->components[count]->params.orientationY = orient_top;
-	}
-
-	if (menuBar->container->layout)
-		menuBar->container->layout(menuBar->container);
-
-	width += menuBar->container->width;
-	xCoord = (component->window->buffer.width - menuBar->container->width);
-
-	if (menuBar->container->xCoord != xCoord)
-	{
-		if (menuBar->container->move)
-			menuBar->container->move(menuBar->container, xCoord, 0);
-	}
-
-	menuBar->container->xCoord = xCoord;
-	menuBar->container->yCoord = 0;
-
-	component->width = component->window->buffer.width;
-	component->minWidth = width;
-
-	component->doneLayout = 1;
+	layoutSized(component, component->width);
 
 	return (status = 0);
 }
@@ -407,6 +431,7 @@ static int draw(kernelWindowComponent *component)
 	int status = 0;
 	kernelWindowMenuBar *menuBar = component->data;
 	kernelWindowContainer *container = menuBar->container->data;
+	kernelFont *font = (kernelFont *) component->params.font;
 	kernelWindow *menu = NULL;
 	int xCoord = 0, titleWidth = 0, titleHeight = 0;
 	int count;
@@ -414,7 +439,10 @@ static int draw(kernelWindowComponent *component)
 	kernelDebug(debug_gui, "WindowMenuBar draw '%s' menu bar",
 		component->window->title);
 
-	layout(component);
+	// Menu titles can change without our knowledge, and we don't re-layout
+	// every time a new element gets added (maybe we should, but we'd still
+	// have the titles problem) so we do layout every time we draw.
+	layoutSized(component, component->width);
 
 	// Draw the background of the menu bar
 	kernelGraphicDrawRect(component->buffer,
@@ -442,16 +470,15 @@ static int draw(kernelWindowComponent *component)
 				border_all);
 		}
 
-		if (component->params.font)
+		if (font)
 		{
 			kernelGraphicDrawText(component->buffer,
 				(color *) &component->params.foreground,
 				(color *) &component->params.background,
-				(kernelFont *) component->params.font,
-				(char *) component->charSet, (char *) menu->title, draw_normal,
-				(component->xCoord + xCoord +
-					windowVariables->border.thickness),
-				(component->yCoord + windowVariables->border.thickness));
+				font, (char *) component->charSet, (char *) menu->title,
+				draw_normal, (component->xCoord + xCoord +
+					(windowVariables->border.thickness * 2)),
+				(component->yCoord + (windowVariables->border.thickness * 2)));
 		}
 	}
 
@@ -475,27 +502,30 @@ static int move(kernelWindowComponent *component, int xCoord, int yCoord)
 
 	kernelDebug(debug_gui, "WindowMenuBar move oldX %d, oldY %d, newX %d, "
 		"newY %d (%s%d, %s%d)", component->xCoord, component->yCoord, xCoord,
-		yCoord, ((xCoord >= component->xCoord)? "+" : ""),
+		yCoord, ((xCoord >= component->xCoord)? "+" : "-"),
 		(xCoord - component->xCoord),
-		((yCoord >= component->yCoord)? "+" : ""),
+		((yCoord >= component->yCoord)? "+" : "-"),
 		(yCoord - component->yCoord));
 
-	xCoord += (menuBar->container->xCoord - component->xCoord);
-	yCoord += (menuBar->container->yCoord - component->yCoord);
+	xCoord += ((component->width - menuBar->container->width) - 1);
 
 	// Move our container
-	if (menuBar->container->move)
-		menuBar->container->move(menuBar->container, xCoord, yCoord);
+	if ((menuBar->container->xCoord != xCoord) ||
+		(menuBar->container->yCoord != yCoord))
+	{
+		if (menuBar->container->move)
+			menuBar->container->move(menuBar->container, xCoord, yCoord);
 
-	menuBar->container->xCoord = xCoord;
-	menuBar->container->yCoord = yCoord;
+		menuBar->container->xCoord = xCoord;
+		menuBar->container->yCoord = yCoord;
+	}
 
 	return (0);
 }
 
 
-static int resize(kernelWindowComponent *component,
-	int width __attribute__((unused)), int height __attribute__((unused)))
+static int resize(kernelWindowComponent *component, int width,
+	int height __attribute__((unused)))
 {
 	kernelWindowMenuBar *menuBar = component->data;
 	int xCoord = 0;
@@ -504,13 +534,18 @@ static int resize(kernelWindowComponent *component,
 		"width %d, height %d", component->width, component->height,
 		width, height);
 
-	xCoord = (component->window->buffer.width - menuBar->container->width);
+	xCoord = (component->xCoord + ((width - menuBar->container->width) - 1));
 
-	if (menuBar->container->move)
-		menuBar->container->move(menuBar->container, xCoord, 0);
+	if (menuBar->container->xCoord != xCoord)
+	{
+		if (menuBar->container->move)
+		{
+			menuBar->container->move(menuBar->container, xCoord,
+				component->yCoord);
+		}
 
-	menuBar->container->xCoord = xCoord;
-	menuBar->container->yCoord = 0;
+		menuBar->container->xCoord = xCoord;
+	}
 
 	return (0);
 }
@@ -702,13 +737,7 @@ kernelWindowComponent *kernelWindowNewMenuBar(kernelWindow *window,
 
 	component->data = (void *) menuBar;
 
-	component->width = window->buffer.width;
-	component->height = (windowVariables->border.thickness * 2);
-	if (component->params.font)
-		component->height += ((kernelFont *)
-			component->params.font)->glyphHeight;
-	component->minWidth = component->width;
-	component->minHeight = component->height;
+	component->height = component->minHeight = menuTitleHeight(component);
 
 	window->menuBar = component;
 

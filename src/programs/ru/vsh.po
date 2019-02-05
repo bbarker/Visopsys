@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vsh.po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 02:43+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -18,40 +18,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.7.6\n"
 
-#: vsh.c:196 vsh.c:215
+#: vsh.c:199 vsh.c:218
 #, c-format
 msgid "Usage: %s <file1> [file2] [...]\n"
 msgstr "Использование: %s <файл1> [файл2] [...]\n"
 
-#: vsh.c:231 vsh.c:248
+#: vsh.c:234 vsh.c:251
 #, c-format
 msgid "Usage: %s <source file> <destination file>\n"
 msgstr "Использование: %s <исходный файл> <конечный файл>\n"
 
-#: vsh.c:283 vsh.c:324
+#: vsh.c:286 vsh.c:327
 #, c-format
 msgid "Usage: %s <variable_name>\n"
 msgstr "Использование: %s <имя_переменной>\n"
 
-#: vsh.c:292
+#: vsh.c:295
 msgid "Shouldn't set an env variable that long\n"
 msgstr "Не стоит назначать переменную jокружения являющуюся long\n"
 
-#: vsh.c:305
+#: vsh.c:308
 #, c-format
 msgid "Usage: %s <variable_name> <variable_value>\n"
 msgstr "Использование: %s <имя_переменной> <значение_переменной>\n"
 
-#: vsh.c:360
+#: vsh.c:363
 #, c-format
 msgid "Unknown command \"%s\".\n"
 msgstr "Неизвестная команда \"%s\".\n"
 
-#: vsh.c:664
+#: vsh.c:667
 msgid "logout\n"
 msgstr "выход\n"
 
-#: vsh.c:789
+#: vsh.c:792
 msgid ""
 "\n"
 "Visopsys Shell.\n"
@@ -59,14 +59,14 @@ msgstr ""
 "\n"
 "Visopsys Shell.\n"
 
-#: vsh.c:790
+#: vsh.c:793
 msgid "Type \"help\" for commands.\n"
 msgstr "Наберите  \"help\" для списка команд.\n"
 
-#: vsh.c:805
+#: vsh.c:808
 msgid "Can't determine current directory\n"
 msgstr "Невозможно определить текущий каталог\n"
 
-#: vsh.c:818
+#: vsh.c:821
 msgid "exiting.\n"
 msgstr "выход.\n"

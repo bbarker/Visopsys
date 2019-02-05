@@ -1,6 +1,6 @@
 //
 //	Visopsys
-//	Copyright (C) 1998-2016 J. Andrew McLaughlin
+//	Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //	This library is free software; you can redistribute it and/or modify it
 //	under the terms of the GNU Lesser General Public License as published by
@@ -203,7 +203,6 @@ extern int visopsys_in_kernel;
 #define _fnum_memoryReleaseAllByProcId			0x5002
 #define _fnum_memoryGetStats					0x5003
 #define _fnum_memoryGetBlocks					0x5004
-#define _fnum_memoryBlockInfo					0x5005
 
 // Multitasker functions.  All are in the 0x6000-0x6FFF range.
 #define _fnum_multitaskerCreateProcess			0x6000
@@ -222,7 +221,7 @@ extern int visopsys_in_kernel;
 #define _fnum_multitaskerSetTextInput			0x600D
 #define _fnum_multitaskerGetTextOutput			0x600E
 #define _fnum_multitaskerSetTextOutput			0x600F
-#define _fnum_multitaskerDuplicateIO			0x6010
+#define _fnum_multitaskerDuplicateIo			0x6010
 #define _fnum_multitaskerGetProcessorTime		0x6011
 #define _fnum_multitaskerYield					0x6012
 #define _fnum_multitaskerWait					0x6013
@@ -234,8 +233,8 @@ extern int visopsys_in_kernel;
 #define _fnum_multitaskerSignalSet				0x6019
 #define _fnum_multitaskerSignal					0x601A
 #define _fnum_multitaskerSignalRead				0x601B
-#define _fnum_multitaskerGetIOPerm				0x601C
-#define _fnum_multitaskerSetIOPerm				0x601D
+#define _fnum_multitaskerGetIoPerm				0x601C
+#define _fnum_multitaskerSetIoPerm				0x601D
 #define _fnum_multitaskerStackTrace				0x601E
 
 // Loader functions.  All are in the 0x7000-0x7FFF range.
@@ -394,16 +393,17 @@ extern int visopsys_in_kernel;
 #define _fnum_windowNewListItem					0xF046
 #define _fnum_windowNewMenu						0xF047
 #define _fnum_windowNewMenuBar					0xF048
-#define _fnum_windowNewMenuItem					0xF049
-#define _fnum_windowNewPasswordField			0xF04A
-#define _fnum_windowNewProgressBar				0xF04B
-#define _fnum_windowNewRadioButton				0xF04C
-#define _fnum_windowNewScrollBar				0xF04D
-#define _fnum_windowNewSlider					0xF04E
-#define _fnum_windowNewTextArea					0xF04F
-#define _fnum_windowNewTextField				0xF050
-#define _fnum_windowNewTextLabel				0xF051
-#define _fnum_windowNewTree						0xF052
+#define _fnum_windowNewMenuBarIcon				0xF049
+#define _fnum_windowNewMenuItem					0xF04A
+#define _fnum_windowNewPasswordField			0xF04B
+#define _fnum_windowNewProgressBar				0xF04C
+#define _fnum_windowNewRadioButton				0xF04D
+#define _fnum_windowNewScrollBar				0xF04E
+#define _fnum_windowNewSlider					0xF04F
+#define _fnum_windowNewTextArea					0xF050
+#define _fnum_windowNewTextField				0xF051
+#define _fnum_windowNewTextLabel				0xF052
+#define _fnum_windowNewTree						0xF053
 
 // User functions.  All are in the 0x10000-0x10FFF range.
 #define _fnum_userAuthenticate					0x10000
@@ -423,27 +423,32 @@ extern int visopsys_in_kernel;
 #define _fnum_userFileSetPassword				0x1000E
 
 // Network functions.  All are in the 0x11000-0x11FFF range.
-#define _fnum_networkDeviceGetCount				0x11000
-#define _fnum_networkDeviceGet					0x11001
-#define _fnum_networkInitialized				0x11002
-#define _fnum_networkInitialize					0x11003
-#define _fnum_networkShutdown					0x11004
-#define _fnum_networkOpen						0x11005
-#define _fnum_networkClose						0x11006
-#define _fnum_networkCount						0x11007
-#define _fnum_networkRead						0x11008
-#define _fnum_networkWrite						0x11009
-#define _fnum_networkPing						0x1100A
-#define _fnum_networkGetHostName				0x1100B
-#define _fnum_networkSetHostName				0x1100C
-#define _fnum_networkGetDomainName				0x1100D
-#define _fnum_networkSetDomainName				0x1100E
+#define _fnum_networkEnabled					0x11000
+#define _fnum_networkEnable						0x11001
+#define _fnum_networkDisable					0x11002
+#define _fnum_networkOpen						0x11003
+#define _fnum_networkClose						0x11004
+#define _fnum_networkCount						0x11005
+#define _fnum_networkRead						0x11006
+#define _fnum_networkWrite						0x11007
+#define _fnum_networkPing						0x11008
+#define _fnum_networkGetHostName				0x11009
+#define _fnum_networkSetHostName				0x1100A
+#define _fnum_networkGetDomainName				0x1100B
+#define _fnum_networkSetDomainName				0x1100C
+#define _fnum_networkDeviceEnable				0x1100D
+#define _fnum_networkDeviceDisable				0x1100E
+#define _fnum_networkDeviceGetCount				0x1100F
+#define _fnum_networkDeviceGet					0x11010
+#define _fnum_networkDeviceHook					0x11011
+#define _fnum_networkDeviceUnhook				0x11012
+#define _fnum_networkDeviceSniff				0x11013
 
 // Miscellaneous functions.  All are in the 0xFF000-0xFFFFF range.
-#define _fnum_shutdown							0xFF000
+#define _fnum_systemShutdown					0xFF000
 #define _fnum_getVersion						0xFF001
 #define _fnum_systemInfo						0xFF002
-#define _fnum_encryptMD5						0xFF003
+#define _fnum_cryptHashMd5						0xFF003
 #define _fnum_lockGet							0xFF004
 #define _fnum_lockRelease						0xFF005
 #define _fnum_lockVerify						0xFF006
@@ -464,6 +469,8 @@ extern int visopsys_in_kernel;
 #define _fnum_pageGetPhysical					0xFF015
 #define _fnum_charsetToUnicode					0xFF016
 #define _fnum_charsetFromUnicode				0xFF017
+#define _fnum_cpuGetMs							0xFF018
+#define _fnum_cpuSpinMs							0xFF019
 
 
 //
@@ -564,7 +571,7 @@ int filesystemClobber(const char *);
 int filesystemCheck(const char *, int, int, progress *);
 int filesystemDefragment(const char *, progress *);
 int filesystemResizeConstraints(const char *, uquad_t *, uquad_t *,
-				progress *);
+	progress *);
 int filesystemResize(const char *, uquad_t, progress *);
 int filesystemMount(const char *, const char *);
 int filesystemUnmount(const char *);
@@ -616,7 +623,6 @@ int memoryRelease(void *);
 int memoryReleaseAllByProcId(int);
 int memoryGetStats(memoryStats *, int);
 int memoryGetBlocks(memoryBlock *, unsigned, int);
-int memoryBlockInfo(void *, memoryBlock *);
 
 //
 // Multitasker functions
@@ -637,7 +643,7 @@ objectKey multitaskerGetTextInput(void);
 int multitaskerSetTextInput(int, objectKey);
 objectKey multitaskerGetTextOutput(void);
 int multitaskerSetTextOutput(int, objectKey);
-int multitaskerDuplicateIO(int, int, int);
+int multitaskerDuplicateIo(int, int, int);
 int multitaskerGetProcessorTime(clock_t *);
 void multitaskerYield(void);
 void multitaskerWait(unsigned);
@@ -649,8 +655,8 @@ int multitaskerTerminate(int);
 int multitaskerSignalSet(int, int, int);
 int multitaskerSignal(int, int);
 int multitaskerSignalRead(int);
-int multitaskerGetIOPerm(int, int);
-int multitaskerSetIOPerm(int, int, int);
+int multitaskerGetIoPerm(int, int);
+int multitaskerSetIoPerm(int, int, int);
 int multitaskerStackTrace(int);
 
 //
@@ -729,8 +735,8 @@ int graphicDrawOval(graphicBuffer *, color *, drawMode, int, int, int, int,
 int graphicGetImage(graphicBuffer *, image *, int, int, int, int);
 int graphicDrawImage(graphicBuffer *, image *, drawMode, int, int, int, int,
 	int, int);
-int graphicDrawText(graphicBuffer *, color *, color *, objectKey, const char *,
-	const char *, drawMode, int, int);
+int graphicDrawText(graphicBuffer *, color *, color *, objectKey,
+	const char *, const char *, drawMode, int, int);
 int graphicCopyArea(graphicBuffer *, int, int, int, int, int, int);
 int graphicClearArea(graphicBuffer *, color *, int, int, int, int);
 int graphicRenderBuffer(graphicBuffer *, int, int, int, int, int, int);
@@ -836,6 +842,7 @@ objectKey windowNewListItem(objectKey, windowListType, listItemParameters *,
 objectKey windowNewMenu(objectKey, objectKey,
 	const char *, windowMenuContents *, componentParameters *);
 objectKey windowNewMenuBar(objectKey, componentParameters *);
+objectKey windowNewMenuBarIcon(objectKey, image *, componentParameters *);
 objectKey windowNewMenuItem(objectKey, const char *, componentParameters *);
 objectKey windowNewPasswordField(objectKey, int, componentParameters *);
 objectKey windowNewProgressBar(objectKey, componentParameters *);
@@ -873,11 +880,9 @@ int userFileSetPassword(const char *, const char *, const char *, const char *);
 //
 // Network functions
 //
-int networkDeviceGetCount(void);
-int networkDeviceGet(const char *, networkDevice *);
-int networkInitialized(void);
-int networkInitialize(void);
-int networkShutdown(void);
+int networkEnabled(void);
+int networkEnable(void);
+int networkDisable(void);
 objectKey networkOpen(int, networkAddress *, networkFilter *);
 int networkClose(objectKey);
 int networkCount(objectKey);
@@ -888,14 +893,21 @@ int networkGetHostName(char *, int);
 int networkSetHostName(const char *, int);
 int networkGetDomainName(char *, int);
 int networkSetDomainName(const char *, int);
+int networkDeviceEnable(const char *);
+int networkDeviceDisable(const char *);
+int networkDeviceGetCount(void);
+int networkDeviceGet(const char *, networkDevice *);
+int networkDeviceHook(const char *, objectKey *, int);
+int networkDeviceUnhook(const char *, objectKey, int);
+unsigned networkDeviceSniff(objectKey, unsigned char *, unsigned);
 
 //
 // Miscellaneous functions
 //
-int shutdown(int, int);
+int systemShutdown(int, int);
 void getVersion(char *, int);
 int systemInfo(struct utsname *);
-int encryptMD5(const char *, char *);
+int cryptHashMd5(const unsigned char *, unsigned, unsigned char *);
 int lockGet(lock *);
 int lockRelease(lock *);
 int lockVerify(lock *);
@@ -916,6 +928,8 @@ int mouseLoadPointer(const char *, const char *);
 void *pageGetPhysical(int, void *);
 unsigned charsetToUnicode(const char *, unsigned);
 unsigned charsetFromUnicode(const char *, unsigned);
+uquad_t cpuGetMs(void);
+void cpuSpinMs(unsigned);
 
 #define _API_H
 #endif

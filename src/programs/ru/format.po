@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: format\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 02:27+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "X-Generator: Poedit 1.7.6\n"
 "X-Poedit-SourceCharset: iso-8859-5\n"
 
-#: format.c:102
+#: format.c:103
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: format.c:106
+#: format.c:107
 #, c-format
 msgid ""
 "\n"
@@ -32,15 +32,15 @@ msgstr ""
 "\n"
 "%s (y/n): "
 
-#: format.c:115
+#: format.c:116
 msgid "Yes\n"
 msgstr "Да\n"
 
-#: format.c:121
+#: format.c:122
 msgid "No\n"
 msgstr "Нет\n"
 
-#: format.c:132
+#: format.c:133
 msgid ""
 "\n"
 "Press any key to continue. "
@@ -48,27 +48,27 @@ msgstr ""
 "\n"
 "Нажмите любую клавишу. "
 
-#: format.c:155
+#: format.c:156
 msgid "Error"
 msgstr "Ошибка"
 
-#: format.c:181
+#: format.c:182
 msgid "Please choose the disk to format:"
 msgstr ""
 
-#: format.c:201
+#: format.c:202
 msgid "Choose Disk"
 msgstr "Выберите диск"
 
-#: format.c:216
+#: format.c:217
 msgid "OK"
 msgstr "ОК"
 
-#: format.c:220 format.c:288
+#: format.c:221 format.c:289
 msgid "Cancel"
 msgstr "Отмена"
 
-#: format.c:280
+#: format.c:281
 #, c-format
 msgid ""
 "The disk is mounted as %s.  It is STRONGLY recommended\n"
@@ -77,19 +77,19 @@ msgstr ""
 "Диск подключен как %s.  НАСТОЯТЕЛЬНО рекомендуем\n"
 "отключить его перед тем как продолжить"
 
-#: format.c:287
+#: format.c:288
 msgid "Disk is mounted"
 msgstr "Диск подключен"
 
-#: format.c:288
+#: format.c:289
 msgid "Ignore"
 msgstr "Игнорировать"
 
-#: format.c:288
+#: format.c:289
 msgid "Unmount"
 msgstr "Отключить"
 
-#: format.c:292
+#: format.c:293
 #, c-format
 msgid ""
 "\n"
@@ -98,72 +98,76 @@ msgstr ""
 "\n"
 "%s (I)игнорировать/(U)отключить/(C)отмена?: "
 
-#: format.c:301
+#: format.c:302
 msgid "Ignore\n"
 msgstr "Игнорировать\n"
 
-#: format.c:307
+#: format.c:308
 msgid "Unmount\n"
 msgstr "Отключить\n"
 
-#: format.c:313
+#: format.c:314
 msgid "Cancel\n"
 msgstr "Отмена\n"
 
-#: format.c:332
+#: format.c:333
 #, c-format
 msgid "Unable to unmount %s"
 msgstr "Невозможно отключить %s"
 
-#: format.c:365
+#: format.c:366
 #, c-format
 msgid "No boot sector available for filesystem type %s\n"
 msgstr "Нет загрузочного сектора для ФС %s\n"
 
-#: format.c:378
+#: format.c:379
 #, c-format
 msgid "Error %d copying boot sector \"%s\" to disk %s"
 msgstr "Ошибка  %d копирования загрузочного сектора \"%s\" to disk %s"
 
-#: format.c:389
+#: format.c:390
 msgid "usage:\n"
 msgstr "использование:\n"
 
-#: format.c:390
+#: format.c:391
 #, c-format
 msgid "%s [-l] [-s] [-t type] [-T] [disk_name]\n"
 msgstr "%s [-l] [-s] [-t тип] [-T] [имя_диска]\n"
 
-#: format.c:435
+#: format.c:442
 msgid "Missing volume name argument for '-n' option"
 msgstr "Пропущен аргумент 'Метка тома' для опции -n"
 
-#: format.c:452
+#: format.c:459
 msgid "Missing type argument for '-t' option"
 msgstr "Пропущен аргумент 'Тип' для опции -t"
 
-#: format.c:465
+#: format.c:472
 #, c-format
 msgid "Missing parameter for %s option"
 msgstr "Пропущен параметр для опции %s"
 
-#: format.c:470
+#: format.c:477
 #, c-format
 msgid "Unknown option '%c'"
 msgstr "Неизвестная опция '%c'"
 
-#: format.c:486
+#: format.c:485
+msgid "NTFS formatting is not available"
+msgstr ""
+
+#: format.c:500
 #, fuzzy
 msgid ""
 "\n"
 "Visopsys FORMAT Utility\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 msgstr ""
 "\n"
 "Visopsys FORMAT Utility\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 
-#: format.c:508
+#: format.c:523
 msgid ""
 "You must be a privileged user to use this command.\n"
 "(Try logging in as user \"admin\")"
@@ -171,7 +175,7 @@ msgstr ""
 "You must be a privileged user to use this command.\n"
 "(Try logging in as user \"admin\")"
 
-#: format.c:526
+#: format.c:541
 #, c-format
 msgid ""
 "Formatting disk %s as %s.  All data currenly on the disk will be lost.\n"
@@ -180,7 +184,7 @@ msgstr ""
 "Форматирование диска %s как %s.  Все данные на диске будут утеряны.\n"
 "Уверены?"
 
-#: format.c:531 format.c:555
+#: format.c:546 format.c:570
 msgid ""
 "\n"
 "Quitting.\n"
@@ -188,7 +192,7 @@ msgstr ""
 "\n"
 "Выходим.\n"
 
-#: format.c:549
+#: format.c:564
 msgid ""
 "\n"
 "YOU HAVE REQUESTED TO FORMAT YOUR ROOT DISK.  I probably shouldn't let you\n"
@@ -200,11 +204,11 @@ msgstr ""
 "После форматировани нужно выключить компьютер.\n"
 "Вы уверены?"
 
-#: format.c:565
+#: format.c:580
 msgid "Formatting..."
 msgstr "Форматирование..."
 
-#: format.c:605
+#: format.c:621
 msgid "Success"
 msgstr "Успех"
 

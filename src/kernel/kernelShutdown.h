@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -22,7 +22,7 @@
 #if !defined(_KERNELSHUTDOWN_H)
 
 // Functions exported by kernelShutdown.c
-int kernelShutdown(int, int);
+int kernelSystemShutdown(int, int);
 void kernelPanicOutput(const char *, const char *, int, const char *, ...)
   __attribute__((format(printf, 4, 5)));
 

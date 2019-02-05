@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -52,9 +52,9 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 	if (!strncmp(dataPtr, BMP_MAGIC, 2))
 	{
 		// We will say this is a BMP file.
-		sprintf(class->className, "%s %s", FILECLASS_NAME_BMP,
+		sprintf(class->name, "%s %s", FILECLASS_NAME_BMP,
 			FILECLASS_NAME_IMAGE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
 
 		return (1);
 	}

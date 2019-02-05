@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2013-11-08 20:54-0400\n"
 "Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,82 +106,82 @@ msgstr "Kann nicht %u bytes zum Finden eines unbenutzten Clusters zuteilen\n"
 msgid "Can't read FAT sector\n"
 msgstr "FAT-sektor kann nicht gelesen werden\n"
 
-#: copy-boot.c:403
+#: copy-boot.c:404
 #, c-format
 msgid "Unknown FAT type %s\n"
 msgstr "Unbekannter FAT Typ %s\n"
 
-#: copy-boot.c:408
+#: copy-boot.c:411
 #, c-format
 msgid "First unused cluster %u\n"
 msgstr "Erster unbenutzter Cluster %u\n"
 
-#: copy-boot.c:435
+#: copy-boot.c:438
 msgid "Set OS loader parameters\n"
 msgstr "OS Ladeparameter einstellen\n"
 
-#: copy-boot.c:441
+#: copy-boot.c:444
 msgid "Target filesystem is FAT12\n"
 msgstr "Zieldateisystem ist FAT12\n"
 
-#: copy-boot.c:443
+#: copy-boot.c:446
 msgid "Target filesystem is FAT16\n"
 msgstr "Zieldateisystem ist FAT16\n"
 
-#: copy-boot.c:444 copy-boot.c:479
+#: copy-boot.c:447 copy-boot.c:473
 #, c-format
 msgid "%u reserved\n"
 msgstr "%u reserviert\n"
 
-#: copy-boot.c:446 copy-boot.c:481
+#: copy-boot.c:449 copy-boot.c:475
 #, c-format
 msgid "%u FATs of %u\n"
 msgstr "%u FATs von %u\n"
 
-#: copy-boot.c:449
+#: copy-boot.c:452
 #, c-format
 msgid "%u root dir sectors\n"
 msgstr "%u Rootverzeichnis-Sektoren\n"
 
-#: copy-boot.c:452 copy-boot.c:485
+#: copy-boot.c:455 copy-boot.c:479
 #, c-format
 msgid "Sectors per cluster %u\n"
 msgstr "Sektoren pro Cluster %u\n"
 
-#: copy-boot.c:478
+#: copy-boot.c:472
 msgid "Target filesystem is FAT32\n"
 msgstr "Zieldateisystem ist FAT32\n"
 
-#: copy-boot.c:483
+#: copy-boot.c:477
 #, c-format
 msgid "Root dir cluster %u\n"
 msgstr "Root Verzeichniscluster %u\n"
 
-#: copy-boot.c:500
-#, c-format
-msgid "First user sector for OS loader is %u\n"
+#: copy-boot.c:486
+#, fuzzy, c-format
+msgid "First unused cluster for OS loader is %u\n"
 msgstr "Erster Benutzersektor für OS Loader ist %u\n"
 
-#: copy-boot.c:511
+#: copy-boot.c:498
 #, c-format
 msgid "OS loader sectors are %u\n"
 msgstr "OS Ladesektoren sind %u\n"
 
-#: copy-boot.c:525
+#: copy-boot.c:512
 msgid "Add boot sector signature\n"
 msgstr "Bootsektor-Signatur hinzufügen\n"
 
-#: copy-boot.c:547
+#: copy-boot.c:534
 #, c-format
 msgid "fatBSHeader size is 0x%02x instead of 0x3E\n"
 msgstr "fatBSHeader Grösse ist 0x%02x statt 0x3E\n"
 
-#: copy-boot.c:554
+#: copy-boot.c:541
 #, c-format
 msgid "fat32BSHeader size is 0x%02x instead of 0x5A\n"
 msgstr "fat32BSHeader Grösse ist 0x%02x statt 0x5A\n"
 
-#: copy-boot.c:561
+#: copy-boot.c:548
 #, c-format
 msgid "fat32FsInfo size is %d instead of 512\n"
 msgstr "fat32FsInfo Grösse ist %d statt of 512\n"

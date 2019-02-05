@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -25,6 +25,7 @@
 
 #include "kernelCharset.h"
 #include "kernelGraphic.h"
+#include "kernelLinkedList.h"
 #include "kernelMouse.h"
 #include "kernelText.h"
 #include "kernelVariableList.h"
@@ -201,14 +202,14 @@ typedef volatile struct _kernelWindowComponent {
 	kernelMousePointer *pointer;
 	void *data;
 
-	// Routines for managing this component.  These are set by the
-	// kernelWindowComponentNew routine, for things that are common to all
+	// Functions for managing this component.  These are set by the
+	// kernelWindowComponentNew function, for things that are common to all
 	// components.
 	int (*drawBorder)(volatile struct _kernelWindowComponent *, int);
 	int (*erase)(volatile struct _kernelWindowComponent *);
 	int (*grey)(volatile struct _kernelWindowComponent *);
 
-	// Routines that should be implemented by components that 'contain'
+	// Functions that should be implemented by components that 'contain'
 	// or instantiate other components
 	int (*add)(volatile struct _kernelWindowComponent *, objectKey);
 	int (*delete)(volatile struct _kernelWindowComponent *,
@@ -224,7 +225,7 @@ typedef volatile struct _kernelWindowComponent {
 	int (*setBuffer)(volatile struct _kernelWindowComponent *,
 		graphicBuffer *);
 
-	// More routines for managing this component.  These are set by the
+	// More functions for managing this component.  These are set by the
 	// code which builds the instance of the particular component type
 	int (*draw)(volatile struct _kernelWindowComponent *);
 	int (*update)(volatile struct _kernelWindowComponent *);
@@ -235,7 +236,8 @@ typedef volatile struct _kernelWindowComponent {
 	int (*setData)(volatile struct _kernelWindowComponent *, void *, int);
 	int (*getSelected)(volatile struct _kernelWindowComponent *, int *);
 	int (*setSelected)(volatile struct _kernelWindowComponent *, int);
-	int (*mouseEvent)(volatile struct _kernelWindowComponent *, windowEvent *);
+	int (*mouseEvent)(volatile struct _kernelWindowComponent *,
+		windowEvent *);
 	int (*keyEvent)(volatile struct _kernelWindowComponent *, windowEvent *);
 	int (*destroy)(volatile struct _kernelWindowComponent *);
 
@@ -264,8 +266,6 @@ typedef volatile struct {
 	kernelWindowComponent **components;
 	int maxComponents;
 	int numComponents;
-	int numColumns;
-	int numRows;
 
 	// Functions
 	void (*drawGrid)(kernelWindowComponent *);
@@ -277,7 +277,7 @@ typedef volatile struct {
 	int selected;
 	image iconImage;
 	image selectedImage;
-	char labelData[WINDOW_MAX_LABEL_LENGTH];
+	char labelData[WINDOW_MAX_LABEL_LENGTH + 1];
 	char *labelLine[WINDOW_MAX_LABEL_LINES];
 	int labelLines;
 	int labelWidth;
@@ -345,6 +345,7 @@ typedef volatile struct {
 typedef volatile struct {
 	char *text;
 	int numItems;
+	int itemHeight;
 	int selectedItem;
 
 } kernelWindowRadioButton;
@@ -432,15 +433,15 @@ typedef volatile struct _kernelWindow {
 	int numChildren;
 	volatile struct _kernelWindow *dialogWindow;
 
-	// Routines for managing this window
+	// Functions for managing this window
 	int (*draw)(volatile struct _kernelWindow *);
 	int (*drawClip)(volatile struct _kernelWindow *, int, int, int, int);
 	int (*update)(volatile struct _kernelWindow *, int, int, int, int);
 	int (*changeComponentFocus)(volatile struct _kernelWindow *,
 		kernelWindowComponent *);
 	void (*focus)(volatile struct _kernelWindow *, int);
-	int (*mouseEvent)(volatile struct _kernelWindow *, kernelWindowComponent *,
-		windowEvent *);
+	int (*mouseEvent)(volatile struct _kernelWindow *,
+		kernelWindowComponent *, windowEvent *);
 	int (*keyEvent)(volatile struct _kernelWindow *, kernelWindowComponent *,
 		windowEvent *);
 
@@ -646,7 +647,7 @@ int kernelWindowRefresh(void);
 
 // Window shell functions
 int kernelWindowShell(const char *);
-void kernelWindowShellUpdateList(kernelWindow *[], int);
+void kernelWindowShellUpdateList(kernelLinkedList *);
 void kernelWindowShellRefresh(void);
 int kernelWindowShellTileBackground(const char *);
 int kernelWindowShellCenterBackground(const char *);

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -47,13 +47,21 @@ typedef enum {
 
 } shadeType;
 
+#ifdef __cplusplus
+	#define __VOLATILE
+#else
+	#define __VOLATILE volatile
+#endif
+
 // Structure to represent a drawing area
-typedef volatile struct {
+typedef __VOLATILE struct {
 	int width;
 	int height;
 	void *data;
 
 } graphicBuffer;
+
+#undef __VOLATILE
 
 // A data structure to describe a graphics mode
 typedef struct {

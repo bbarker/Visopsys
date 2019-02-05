@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -37,6 +37,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ENDPOINT_INDEX(endpoint) (((endpoint) & (USB_MAX_ENDPOINTS - 1)) << 1)
+#define TRANSRING_INDEX(endpoint) \
+	(ENDPOINT_INDEX(endpoint) + ((endpoint) >> 7))
+#define CONTEXT_INDEX(endpoint) \
+	((ENDPOINT_INDEX(endpoint) - 1) + ((endpoint) >> 7))
+#define DOORBELL_INDEX(endpoint) ((endpoint)? TRANSRING_INDEX(endpoint) : 1)
 
 #ifdef DEBUG
 static inline void debugCapRegs(xhciData *xhci)
@@ -294,9 +300,42 @@ static inline void debugPortStatus(xhciData *xhci, int portNum)
 		(portsc & XHCI_PORTSC_CONNECTED));
 }
 
-static inline void debugSlotCtxt(xhciSlotCtxt *ctxt)
+static inline void debugSlotCtxt64(xhciSlotCtxt64 *ctxt)
 {
-	kernelDebug(debug_usb, "XHCI slot context:\n"
+	kernelDebug(debug_usb, "XHCI 64-bit slot context:\n"
+		"  contextEntries=%d\n"
+		"  hub=%d\n"
+		"  MTT=%d\n"
+		"  speed=%d\n"
+		"  routeString=0x%05x\n"
+		"  numPorts=%d\n"
+		"  portNum=%d\n"
+		"  maxExitLatency=%d\n"
+		"  interrupterTarget=%d\n"
+		"  TTT=%d\n"
+		"  ttPortNum=%d\n"
+		"  ttHubSlotId=%d\n"
+		"  slotState=%d\n"
+		"  devAddr=%d",
+		((ctxt->entFlagsSpeedRoute & XHCI_SLTCTXT_CTXTENTS) >> 27),
+		((ctxt->entFlagsSpeedRoute & XHCI_SLTCTXT_HUB) >> 26),
+		((ctxt->entFlagsSpeedRoute & XHCI_SLTCTXT_MTT) >> 25),
+		((ctxt->entFlagsSpeedRoute & XHCI_SLTCTXT_SPEED) >> 20),
+		(ctxt->entFlagsSpeedRoute & XHCI_SLTCTXT_ROUTESTRNG),
+		((ctxt->numPortsPortLat & XHCI_SLTCTXT_NUMPORTS) >> 24),
+		((ctxt->numPortsPortLat & XHCI_SLTCTXT_ROOTPRTNUM) >> 16),
+		(ctxt->numPortsPortLat & XHCI_SLTCTXT_MAXEXITLAT),
+		((ctxt->targetTT & XHCI_SLTCTXT_INTRTARGET) >> 22),
+		((ctxt->targetTT & XHCI_SLTCTXT_TTT) >> 16),
+		((ctxt->targetTT & XHCI_SLTCTXT_TTPORTNUM) >> 8),
+		(ctxt->targetTT & XHCI_SLTCTXT_TTHUBSLOT),
+		((ctxt->slotStateDevAddr & XHCI_SLTCTXT_SLOTSTATE) >> 27),
+		(ctxt->slotStateDevAddr & XHCI_SLTCTXT_USBDEVADDR));
+}
+
+static inline void debugSlotCtxt32(xhciSlotCtxt32 *ctxt)
+{
+	kernelDebug(debug_usb, "XHCI 32-bit slot context:\n"
 		"  contextEntries=%d\n"
 		"  hub=%d\n"
 		"  MTT=%d\n"
@@ -339,9 +378,40 @@ static inline void debugTrb(xhciTrb *trb)
 		(trb->typeFlags & ~XHCI_TRBTYPE_MASK), trb->control);
 }
 
-static inline void debugEndpointCtxt(xhciEndpointCtxt *ctxt)
+static inline void debugEndpointCtxt64(xhciEndpointCtxt64 *ctxt)
 {
-	kernelDebug(debug_usb, "XHCI endpoint context:\n"
+	kernelDebug(debug_usb, "XHCI 64-bit endpoint context:\n"
+		"  interval=%d\n"
+		"  linearStreamArray=%d\n"
+		"  maxPrimaryStreams=%d\n"
+		"  multiplier=%d\n"
+		"  endpointState=%d\n"
+		"  maxPacketSize=%d\n"
+		"  maxBurstSize=%d\n"
+		"  hostInitiateDisable=%d\n"
+		"  endpointType=%d\n"
+		"  errorCount=%d\n"
+		"  trDequeuePtr=%p\n"
+		"  maxEsitPayload=%d\n"
+		"  avgTrbLen=%d",
+		((ctxt->intvlLsaMaxPstrMultEpState & XHCI_EPCTXT_INTERVAL) >> 16),
+		((ctxt->intvlLsaMaxPstrMultEpState & XHCI_EPCTXT_LINSTRARRAY) >> 15),
+		((ctxt->intvlLsaMaxPstrMultEpState & XHCI_EPCTXT_MAXPRIMSTR) >> 10),
+		((ctxt->intvlLsaMaxPstrMultEpState & XHCI_EPCTXT_MULT) >> 8),
+		(ctxt->intvlLsaMaxPstrMultEpState & XHCI_EPCTXT_EPSTATE),
+		((ctxt->maxPSizeMaxBSizeEpTypeCerr & XHCI_EPCTXT_MAXPKTSIZE) >> 16),
+		((ctxt->maxPSizeMaxBSizeEpTypeCerr & XHCI_EPCTXT_MAXBRSTSIZE) >> 8),
+		((ctxt->maxPSizeMaxBSizeEpTypeCerr & XHCI_EPCTXT_HSTINITDSBL) >> 7),
+		((ctxt->maxPSizeMaxBSizeEpTypeCerr & XHCI_EPCTXT_ENDPNTTYPE) >> 3),
+		((ctxt->maxPSizeMaxBSizeEpTypeCerr & XHCI_EPCTXT_CERR) >> 1),
+		(void *) ctxt->trDeqPtrLo,
+		((ctxt->maxEpEsitAvTrbLen & XHCI_EPCTXT_MAXESITPAYL) >> 16),
+		(ctxt->maxEpEsitAvTrbLen & XHCI_EPCTXT_AVGTRBLEN));
+}
+
+static inline void debugEndpointCtxt32(xhciEndpointCtxt32 *ctxt)
+{
+	kernelDebug(debug_usb, "XHCI 32-bit endpoint context:\n"
 		"  interval=%d\n"
 		"  linearStreamArray=%d\n"
 		"  maxPrimaryStreams=%d\n"
@@ -460,9 +530,11 @@ static const char *debugTrbCompletion2String(xhciTrb *trb)
 	#define debugTrbType2String(trb) ""
 	#define debugXhciSpeed2String(speed) ""
 	#define debugPortStatus(xhci, portNum) do { } while (0)
-	#define debugSlotCtxt(ctxt) do { } while (0)
+	#define debugSlotCtxt64(ctxt) do { } while (0)
+	#define debugSlotCtxt32(ctxt) do { } while (0)
 	#define debugTrb(trb) do { } while (0)
-	#define debugEndpointCtxt(ctxt) do { } while (0)
+	#define debugEndpointCtxt64(ctxt) do { } while (0)
+	#define debugEndpointCtxt32(ctxt) do { } while (0)
 	#define debugTrbCompletion2String(trb) ""
 #endif // DEBUG
 
@@ -841,7 +913,8 @@ static xhciTrbRing *allocTrbRing(int numTrbs, int circular)
 	memSize = (numTrbs * sizeof(xhciTrb));
 
 	// Request the memory
-	if (kernelMemoryGetIo(memSize, 64 /* alignment */, &ioMem) < 0)
+	if (kernelMemoryGetIo(memSize, 64 /* alignment */, 0 /* not low memory */,
+		"xhci trbs", &ioMem) < 0)
 	{
 		kernelError(kernel_error, "Couldn't get memory for TRBs");
 		goto err_out;
@@ -870,42 +943,76 @@ err_out:
 
 
 static int allocEndpoint(xhciSlot *slot, int endpoint, int endpointType,
-	int interval, int maxPacketSize, int maxBurst)
+	int interval, int maxPacketSize, int maxBurst, int bits64)
 {
 	// Allocate a transfer ring and initialize the endpoint context.
 
 	int status = 0;
-	xhciEndpointCtxt *inputEndpointCtxt = NULL;
+	xhciEndpointCtxt64 *inputEndpointCtxt64 = NULL;
+	xhciEndpointCtxt32 *inputEndpointCtxt32 = NULL;
 	unsigned avgTrbLen = 0;
 
 	kernelDebug(debug_usb, "XHCI initialize endpoint 0x%02x", endpoint);
 
 	// Allocate the transfer ring for the endpoint
-	slot->transRings[endpoint & 0xF] =
+	slot->transRings[TRANSRING_INDEX(endpoint)] =
 		allocTrbRing(XHCI_TRANSRING_SIZE, 1 /* circular */);
-	if (!slot->transRings[endpoint & 0xF])
+	if (!slot->transRings[TRANSRING_INDEX(endpoint)])
 		return (status = ERR_MEMORY);
 
 	// Get a pointer to the endpoint input context
 	if (endpoint)
-		inputEndpointCtxt = &slot->inputCtxt->devCtxt
-			.endpointCtxt[(((endpoint & 0xF) * 2) - 1) + (endpoint >> 7)];
+	{
+		if (bits64)
+		{
+			inputEndpointCtxt64 = &slot->inputCtxt64->devCtxt
+				.endpointCtxt[CONTEXT_INDEX(endpoint)];
+		}
+		else
+		{
+			inputEndpointCtxt32 = &slot->inputCtxt32->devCtxt
+				.endpointCtxt[CONTEXT_INDEX(endpoint)];
+		}
+	}
 	else
-		inputEndpointCtxt = &slot->inputCtxt->devCtxt.endpointCtxt[0];
+	{
+		if (bits64)
+			inputEndpointCtxt64 = &slot->inputCtxt64->devCtxt.endpointCtxt[0];
+		else
+			inputEndpointCtxt32 = &slot->inputCtxt32->devCtxt.endpointCtxt[0];
+	}
 
 	// Initialize the input endpoint context
+	if (bits64)
+	{
+		inputEndpointCtxt64->intvlLsaMaxPstrMultEpState =
+			((interval << 16) & XHCI_EPCTXT_INTERVAL);
 
-	inputEndpointCtxt->intvlLsaMaxPstrMultEpState =
-		((interval << 16) & XHCI_EPCTXT_INTERVAL);
+		inputEndpointCtxt64->maxPSizeMaxBSizeEpTypeCerr =
+			(((maxPacketSize << 16) & XHCI_EPCTXT_MAXPKTSIZE) |
+				((maxBurst << 8) & XHCI_EPCTXT_MAXBRSTSIZE) |
+				((endpointType << 3) & XHCI_EPCTXT_ENDPNTTYPE) |
+				((3 << 1) & XHCI_EPCTXT_CERR) /* cerr */);
 
-	inputEndpointCtxt->maxPSizeMaxBSizeEpTypeCerr =
-		(((maxPacketSize << 16) & XHCI_EPCTXT_MAXPKTSIZE) |
-			((maxBurst << 8) & XHCI_EPCTXT_MAXBRSTSIZE) |
-			((endpointType << 3) & XHCI_EPCTXT_ENDPNTTYPE) |
-			((3 << 1) & XHCI_EPCTXT_CERR) /* cerr */);
+		inputEndpointCtxt64->trDeqPtrLo =
+			(slot->transRings[TRANSRING_INDEX(endpoint)]->trbsPhysical |
+				 XHCI_TRBFLAG_CYCLE);
+	}
+	else
+	{
+		inputEndpointCtxt32->intvlLsaMaxPstrMultEpState =
+			((interval << 16) & XHCI_EPCTXT_INTERVAL);
 
-	inputEndpointCtxt->trDeqPtrLo =
-		(slot->transRings[endpoint & 0xF]->trbsPhysical | XHCI_TRBFLAG_CYCLE);
+		inputEndpointCtxt32->maxPSizeMaxBSizeEpTypeCerr =
+			(((maxPacketSize << 16) & XHCI_EPCTXT_MAXPKTSIZE) |
+				((maxBurst << 8) & XHCI_EPCTXT_MAXBRSTSIZE) |
+				((endpointType << 3) & XHCI_EPCTXT_ENDPNTTYPE) |
+				((3 << 1) & XHCI_EPCTXT_CERR) /* cerr */);
+
+		inputEndpointCtxt32->trDeqPtrLo =
+			(slot->transRings[TRANSRING_INDEX(endpoint)]->trbsPhysical |
+				 XHCI_TRBFLAG_CYCLE);
+	}
 
 	switch (endpointType)
 	{
@@ -924,7 +1031,16 @@ static int allocEndpoint(xhciSlot *slot, int endpoint, int endpointType,
 			break;
 	}
 
-	inputEndpointCtxt->maxEpEsitAvTrbLen = (avgTrbLen & XHCI_EPCTXT_AVGTRBLEN);
+	if (bits64)
+	{
+		inputEndpointCtxt64->maxEpEsitAvTrbLen =
+			(avgTrbLen & XHCI_EPCTXT_AVGTRBLEN);
+	}
+	else
+	{
+		inputEndpointCtxt32->maxEpEsitAvTrbLen =
+			(avgTrbLen & XHCI_EPCTXT_AVGTRBLEN);
+	}
 
 	return (status = 0);
 }
@@ -967,23 +1083,39 @@ static int deallocSlot(xhciData *xhci, xhciSlot *slot)
 
 	// Free memory
 
-	if (slot->devCtxt)
+	if (slot->devCtxt64)
 	{
-		ioMem.size = sizeof(xhciDevCtxt);
+		ioMem.size = sizeof(xhciDevCtxt64);
 		ioMem.physical = slot->devCtxtPhysical;
-		ioMem.virtual = (void *) slot->devCtxt;
+		ioMem.virtual = (void *) slot->devCtxt64;
+		kernelMemoryReleaseIo(&ioMem);
+	}
+	else if (slot->devCtxt32)
+	{
+		ioMem.size = sizeof(xhciDevCtxt32);
+		ioMem.physical = slot->devCtxtPhysical;
+		ioMem.virtual = (void *) slot->devCtxt32;
 		kernelMemoryReleaseIo(&ioMem);
 	}
 
 	for (count = 0; count < USB_MAX_ENDPOINTS; count ++)
+	{
 		if (slot->transRings[count])
 			deallocTrbRing(slot->transRings[count]);
+	}
 
-	if (slot->inputCtxt)
+	if (slot->inputCtxt64)
 	{
-		ioMem.size = sizeof(xhciInputCtxt);
+		ioMem.size = sizeof(xhciInputCtxt64);
 		ioMem.physical = slot->inputCtxtPhysical;
-		ioMem.virtual = (void *) slot->inputCtxt;
+		ioMem.virtual = (void *) slot->inputCtxt64;
+		kernelMemoryReleaseIo(&ioMem);
+	}
+	else if (slot->inputCtxt32)
+	{
+		ioMem.size = sizeof(xhciInputCtxt32);
+		ioMem.physical = slot->inputCtxtPhysical;
+		ioMem.virtual = (void *) slot->inputCtxt32;
 		kernelMemoryReleaseIo(&ioMem);
 	}
 
@@ -1003,6 +1135,7 @@ static xhciSlot *allocSlot(xhciData *xhci, usbDevice *usbDev)
 	xhciSlot *slot = NULL;
 	xhciTrb cmdTrb;
 	kernelIoMemory ioMem;
+	int bits64 = 0;
 	int maxPacketSize0 = 0;
 	int hubSlotNum = 0, hubPortNum = -1;
 
@@ -1033,27 +1166,59 @@ static xhciSlot *allocSlot(xhciData *xhci, usbDevice *usbDev)
 	kernelDebug(debug_usb, "XHCI got device slot %d from controller",
 		slot->num);
 
-	// Allocate I/O memory for the input context
-	if (kernelMemoryGetIo(sizeof(xhciInputCtxt),
-		xhci->pageSize /* alignment on page boundary */, &ioMem) < 0)
+	if (xhci->capRegs->hccparams & XHCI_HCCP_CONTEXTSIZE)
+		bits64 = 1;
+
+	if (bits64)
 	{
-		goto err_out;
+		// Allocate I/O memory for the input context
+		if (kernelMemoryGetIo(sizeof(xhciInputCtxt64),
+			xhci->pageSize /* alignment on page boundary */,
+			0 /* not low memory */, "xhci inputctxt", &ioMem) < 0)
+		{
+			goto err_out;
+		}
+
+		slot->inputCtxt64 = ioMem.virtual;
+		slot->inputCtxtPhysical = ioMem.physical;
+
+		// Set the A0 and A1 bits of the input control context
+		slot->inputCtxt64->inputCtrlCtxt.add = (BIT(0) | BIT(1));
+
+		// Initialize the input slot context data structure
+		slot->inputCtxt64->devCtxt.slotCtxt.entFlagsSpeedRoute =
+			(((1 << 27) & XHCI_SLTCTXT_CTXTENTS) /* context entries = 1 */ |
+			((usbSpeed2XhciSpeed(usbDev->speed) << 20) & XHCI_SLTCTXT_SPEED) |
+			(usbDev->routeString & XHCI_SLTCTXT_ROUTESTRNG));
+
+		slot->inputCtxt64->devCtxt.slotCtxt.numPortsPortLat =
+			(((slot->usbDev->rootPort + 1) << 16) & XHCI_SLTCTXT_ROOTPRTNUM);
 	}
+	else
+	{
+		// Allocate I/O memory for the input context
+		if (kernelMemoryGetIo(sizeof(xhciInputCtxt32),
+			xhci->pageSize /* alignment on page boundary */,
+			0 /* not low memory */, "xhci inputctxt", &ioMem) < 0)
+		{
+			goto err_out;
+		}
 
-	slot->inputCtxt = ioMem.virtual;
-	slot->inputCtxtPhysical = ioMem.physical;
+		slot->inputCtxt32 = ioMem.virtual;
+		slot->inputCtxtPhysical = ioMem.physical;
 
-	// Set the A0 and A1 bits of the input control context
-	slot->inputCtxt->inputCtrlCtxt.add = (BIT(0) | BIT(1));
+		// Set the A0 and A1 bits of the input control context
+		slot->inputCtxt32->inputCtrlCtxt.add = (BIT(0) | BIT(1));
 
-	// Initialize the input slot context data structure
-	slot->inputCtxt->devCtxt.slotCtxt.entFlagsSpeedRoute =
-		(((1 << 27) & XHCI_SLTCTXT_CTXTENTS) /* context entries = 1 */ |
-		((usbSpeed2XhciSpeed(usbDev->speed) << 20) & XHCI_SLTCTXT_SPEED) |
-		(usbDev->routeString & XHCI_SLTCTXT_ROUTESTRNG));
+		// Initialize the input slot context data structure
+		slot->inputCtxt32->devCtxt.slotCtxt.entFlagsSpeedRoute =
+			(((1 << 27) & XHCI_SLTCTXT_CTXTENTS) /* context entries = 1 */ |
+			((usbSpeed2XhciSpeed(usbDev->speed) << 20) & XHCI_SLTCTXT_SPEED) |
+			(usbDev->routeString & XHCI_SLTCTXT_ROUTESTRNG));
 
-	slot->inputCtxt->devCtxt.slotCtxt.numPortsPortLat =
-		(((slot->usbDev->rootPort + 1) << 16) & XHCI_SLTCTXT_ROOTPRTNUM);
+		slot->inputCtxt32->devCtxt.slotCtxt.numPortsPortLat =
+			(((slot->usbDev->rootPort + 1) << 16) & XHCI_SLTCTXT_ROOTPRTNUM);
+	}
 
 	if (usbDev->hub->usbDev && ((usbDev->speed == usbspeed_low) ||
 		(usbDev->speed == usbspeed_full)))
@@ -1062,9 +1227,18 @@ static xhciSlot *allocSlot(xhciData *xhci, usbDevice *usbDev)
 		// between here and the host controller
 		getHighSpeedHubSlotPort(xhci, usbDev, &hubSlotNum, &hubPortNum);
 
-		slot->inputCtxt->devCtxt.slotCtxt.targetTT =
-			((((hubPortNum + 1) << 8) & XHCI_SLTCTXT_TTPORTNUM) |
-			(hubSlotNum & XHCI_SLTCTXT_TTHUBSLOT));
+		if (bits64)
+		{
+			slot->inputCtxt64->devCtxt.slotCtxt.targetTT =
+				((((hubPortNum + 1) << 8) & XHCI_SLTCTXT_TTPORTNUM) |
+				(hubSlotNum & XHCI_SLTCTXT_TTHUBSLOT));
+		}
+		else
+		{
+			slot->inputCtxt32->devCtxt.slotCtxt.targetTT =
+				((((hubPortNum + 1) << 8) & XHCI_SLTCTXT_TTPORTNUM) |
+				(hubSlotNum & XHCI_SLTCTXT_TTHUBSLOT));
+		}
 	}
 
 	// Super-speed, high-speed, and low-speed devices have fixed maximum
@@ -1085,17 +1259,37 @@ static xhciSlot *allocSlot(xhciData *xhci, usbDevice *usbDev)
 	}
 
 	// Allocate the control endpoint
-	if (allocEndpoint(slot, 0, XHCI_EPTYPE_CONTROL, 0, maxPacketSize0, 0) < 0)
-		goto err_out;
-
-	// Allocate I/O memory for the device context
-	if (kernelMemoryGetIo(sizeof(xhciDevCtxt),
-		xhci->pageSize /* alignment on page boundary */, &ioMem) < 0)
+	if (allocEndpoint(slot, 0, XHCI_EPTYPE_CONTROL, 0, maxPacketSize0, 0,
+		bits64) < 0)
 	{
 		goto err_out;
 	}
 
-	slot->devCtxt = ioMem.virtual;
+	if (bits64)
+	{
+		// Allocate I/O memory for the device context
+		if (kernelMemoryGetIo(sizeof(xhciDevCtxt64),
+			xhci->pageSize /* alignment on page boundary */,
+			0 /* not low memory */, "xhci devctxt", &ioMem) < 0)
+		{
+			goto err_out;
+		}
+
+		slot->devCtxt64 = ioMem.virtual;
+	}
+	else
+	{
+		// Allocate I/O memory for the device context
+		if (kernelMemoryGetIo(sizeof(xhciDevCtxt32),
+			xhci->pageSize /* alignment on page boundary */,
+			0 /* not low memory */, "xhci devctxt", &ioMem) < 0)
+		{
+			goto err_out;
+		}
+
+		slot->devCtxt32 = ioMem.virtual;
+	}
+
 	slot->devCtxtPhysical = ioMem.physical;
 
 	// Record the physical address in the device context base address array
@@ -1119,7 +1313,8 @@ static int setDevAddress(xhciData *xhci, xhciSlot *slot, usbDevice *usbDev)
 {
 	int status = 0;
 	xhciTrb cmdTrb;
-	xhciEndpointCtxt *inputEndpointCtxt = NULL;
+	xhciEndpointCtxt64 *inputEndpointCtxt64 = NULL;
+	xhciEndpointCtxt32 *inputEndpointCtxt32 = NULL;
 
 	// If usbDev is NULL, that tells us we're only doing this to enable the
 	// control endpoint on the controller, but that we don't want to send
@@ -1139,39 +1334,69 @@ static int setDevAddress(xhciData *xhci, xhciSlot *slot, usbDevice *usbDev)
 
 	if ((cmdTrb.status & XHCI_TRBCOMP_MASK) != XHCI_TRBCOMP_SUCCESS)
 	{
-		debugSlotCtxt(&slot->inputCtxt->devCtxt.slotCtxt);
+		if (slot->inputCtxt64)
+			debugSlotCtxt64(&slot->inputCtxt64->devCtxt.slotCtxt);
+		else
+			debugSlotCtxt32(&slot->inputCtxt32->devCtxt.slotCtxt);
 		kernelError(kernel_error, "Command error %d addressing device",
 			((cmdTrb.status & XHCI_TRBCOMP_MASK) >> 24));
 		return (status = ERR_IO);
 	}
 
-	//debugSlotCtxt(&slot->devCtxt->slotCtxt);
-	//debugEndpointCtxt(&slot->devCtxt->endpointCtxt[0]);
+	//debugSlotCtxt32(&slot->devCtxt->slotCtxt);
+	//debugEndpointCtxt32(&slot->devCtxt->endpointCtxt[0]);
 
 	if (usbDev)
 	{
 		// Set the address in the USB device
-		usbDev->address = (slot->devCtxt->slotCtxt.slotStateDevAddr &
-			XHCI_SLTCTXT_USBDEVADDR);
+		if (slot->devCtxt64)
+		{
+			usbDev->address = (slot->devCtxt64->slotCtxt.slotStateDevAddr &
+				XHCI_SLTCTXT_USBDEVADDR);
+		}
+		else
+		{
+			usbDev->address = (slot->devCtxt32->slotCtxt.slotStateDevAddr &
+				XHCI_SLTCTXT_USBDEVADDR);
+		}
 
 		kernelDebug(debug_usb, "XHCI device address is now %d",
 			usbDev->address);
 
-		// If it's a full-speed device, now is the right time to set the control
-		// endpoint packet size
+		// If it's a full-speed device, now is the right time to set the
+		// control endpoint packet size
 		if (usbDev->speed == usbspeed_full)
 		{
-			inputEndpointCtxt = &slot->inputCtxt->devCtxt.endpointCtxt[0];
+			if (slot->inputCtxt64)
+			{
+				inputEndpointCtxt64 =
+					&slot->inputCtxt64->devCtxt.endpointCtxt[0];
 
-			inputEndpointCtxt->maxPSizeMaxBSizeEpTypeCerr &=
-				~XHCI_EPCTXT_MAXPKTSIZE;
-			inputEndpointCtxt->maxPSizeMaxBSizeEpTypeCerr |=
-				((usbDev->deviceDesc.maxPacketSize0 << 16) &
-					XHCI_EPCTXT_MAXPKTSIZE);
+				inputEndpointCtxt64->maxPSizeMaxBSizeEpTypeCerr &=
+					~XHCI_EPCTXT_MAXPKTSIZE;
+				inputEndpointCtxt64->maxPSizeMaxBSizeEpTypeCerr |=
+					((usbDev->deviceDesc.maxPacketSize0 << 16) &
+						XHCI_EPCTXT_MAXPKTSIZE);
 
-			// Set the 'add' bit of the input control context
-			slot->inputCtxt->inputCtrlCtxt.add = BIT(1);
-			slot->inputCtxt->inputCtrlCtxt.drop = 0;
+				// Set the 'add' bit of the input control context
+				slot->inputCtxt64->inputCtrlCtxt.add = BIT(1);
+				slot->inputCtxt64->inputCtrlCtxt.drop = 0;
+			}
+			else
+			{
+				inputEndpointCtxt32 =
+					&slot->inputCtxt32->devCtxt.endpointCtxt[0];
+
+				inputEndpointCtxt32->maxPSizeMaxBSizeEpTypeCerr &=
+					~XHCI_EPCTXT_MAXPKTSIZE;
+				inputEndpointCtxt32->maxPSizeMaxBSizeEpTypeCerr |=
+					((usbDev->deviceDesc.maxPacketSize0 << 16) &
+						XHCI_EPCTXT_MAXPKTSIZE);
+
+				// Set the 'add' bit of the input control context
+				slot->inputCtxt32->inputCtrlCtxt.add = BIT(1);
+				slot->inputCtxt32->inputCtrlCtxt.drop = 0;
+			}
 
 			// Send the 'evaluate context' command
 			memset((void *) &cmdTrb, 0, sizeof(xhciTrb));
@@ -1243,7 +1468,7 @@ static xhciTrb *queueIntrDesc(xhciData *xhci, xhciSlot *slot, int endpoint,
 	xhciTrbRing *transRing = NULL;
 	xhciTrb *destTrb = NULL;
 
-	transRing = slot->transRings[endpoint & 0xF];
+	transRing = slot->transRings[TRANSRING_INDEX(endpoint)];
 	if (!transRing)
 	{
 		kernelError(kernel_error, "Endpoint 0x%02x has no transfer ring",
@@ -1285,11 +1510,7 @@ static xhciTrb *queueIntrDesc(xhciData *xhci, xhciSlot *slot, int endpoint,
 
 	// Ring the slot doorbell with the endpoint number
 	kernelDebug(debug_usb, "XHCI ring endpoint 0x%02x doorbell", endpoint);
-	if (endpoint)
-		xhci->dbRegs->doorbell[slot->num] =
-			(((endpoint & 0xF) * 2) + (endpoint >> 7));
-	else
-		xhci->dbRegs->doorbell[slot->num] = 1;
+	xhci->dbRegs->doorbell[slot->num] = DOORBELL_INDEX(endpoint);
 
 	return (destTrb);
 }
@@ -1324,8 +1545,8 @@ static int transferEventInterrupt(xhciData *xhci, xhciTrb *eventTrb)
 			slot = getDevSlot(xhci, intrReg->usbDev);
 			if (slot)
 			{
-				if ((eventTrb->paramLo & ~0xFU) ==
-					trbPhysical(slot->transRings[intrReg->endpoint & 0xF],
+				if ((eventTrb->paramLo & ~0xFU) == trbPhysical(
+					slot->transRings[TRANSRING_INDEX(intrReg->endpoint)],
 						intrReg->queuedTrb))
 				{
 					bytes = (intrReg->dataLen - (eventTrb->status & 0xFFFFFF));
@@ -1462,6 +1683,7 @@ static int configDevSlot(xhciData *xhci, xhciSlot *slot, usbDevice *usbDev)
 	// 'configure' the supplied device slot
 
 	int status = 0;
+	int bits64 = 0;
 	usbEndpoint *endpoint = NULL;
 	int ctxtIndex = 0;
 	int endpointType = 0;
@@ -1472,8 +1694,17 @@ static int configDevSlot(xhciData *xhci, xhciSlot *slot, usbDevice *usbDev)
 
 	kernelDebug(debug_usb, "XHCI configure device slot %d", slot->num);
 
-	slot->inputCtxt->inputCtrlCtxt.add = BIT(0);
-	slot->inputCtxt->inputCtrlCtxt.drop = 0;
+	if (slot->inputCtxt64)
+	{
+		slot->inputCtxt64->inputCtrlCtxt.add = BIT(0);
+		slot->inputCtxt64->inputCtrlCtxt.drop = 0;
+		bits64 = 1;
+	}
+	else
+	{
+		slot->inputCtxt32->inputCtrlCtxt.add = BIT(0);
+		slot->inputCtxt32->inputCtrlCtxt.drop = 0;
+	}
 
 	// Loop through the endpoints (not including default endpoint 0) and set
 	// up their endpoint contexts
@@ -1485,8 +1716,7 @@ static int configDevSlot(xhciData *xhci, xhciSlot *slot, usbDevice *usbDev)
 		if (!endpoint->number)
 			continue;
 
-		ctxtIndex = ((((endpoint->number & 0xF) * 2) - 1) +
-			(endpoint->number >> 7));
+		ctxtIndex = CONTEXT_INDEX(endpoint->number);
 
 		kernelDebug(debug_usb, "XHCI configure endpoint 0x%02x, ctxtIndex=%d",
 			endpoint->number, ctxtIndex);
@@ -1547,26 +1777,51 @@ static int configDevSlot(xhciData *xhci, xhciSlot *slot, usbDevice *usbDev)
 
 		// Allocate things needed for the endpoint.
 		status = allocEndpoint(slot, endpoint->number, endpointType, interval,
-			endpoint->maxPacketSize, endpoint->maxBurst);
+			endpoint->maxPacketSize, endpoint->maxBurst, bits64);
 		if (status < 0)
 			return (status);
 
-		// Set the 'add' bit of the input control context
-		slot->inputCtxt->inputCtrlCtxt.add |= BIT(ctxtIndex + 1);
+		if (bits64)
+		{
+			// Set the 'add' bit of the input control context
+			slot->inputCtxt64->inputCtrlCtxt.add |= BIT(ctxtIndex + 1);
 
-		kernelDebug(debug_usb, "XHCI BIT(%d) now 0x%08x", (ctxtIndex + 1),
-			slot->inputCtxt->inputCtrlCtxt.add);
+			kernelDebug(debug_usb, "XHCI BIT(%d) now 0x%08x", (ctxtIndex + 1),
+				slot->inputCtxt64->inputCtrlCtxt.add);
+		}
+		else
+		{
+			// Set the 'add' bit of the input control context
+			slot->inputCtxt32->inputCtrlCtxt.add |= BIT(ctxtIndex + 1);
+
+			kernelDebug(debug_usb, "XHCI BIT(%d) now 0x%08x", (ctxtIndex + 1),
+				slot->inputCtxt32->inputCtrlCtxt.add);
+		}
 
 		contextEntries = (ctxtIndex + 1);
 	}
 
 	// Update the input slot context data structure
-	slot->inputCtxt->devCtxt.slotCtxt.entFlagsSpeedRoute &= 0x07FFFFFF;
-	slot->inputCtxt->devCtxt.slotCtxt.entFlagsSpeedRoute |=
-		((contextEntries << 27) & XHCI_SLTCTXT_CTXTENTS);
+	if (bits64)
+	{
+		slot->inputCtxt64->devCtxt.slotCtxt.entFlagsSpeedRoute &= 0x07FFFFFF;
+		slot->inputCtxt64->devCtxt.slotCtxt.entFlagsSpeedRoute |=
+			((contextEntries << 27) & XHCI_SLTCTXT_CTXTENTS);
 
-	kernelDebug(debug_usb, "XHCI contextEntries=%d now 0x%08x", contextEntries,
-		slot->inputCtxt->devCtxt.slotCtxt.entFlagsSpeedRoute);
+		kernelDebug(debug_usb, "XHCI contextEntries=%d now 0x%08x",
+			contextEntries,
+			slot->inputCtxt64->devCtxt.slotCtxt.entFlagsSpeedRoute);
+	}
+	else
+	{
+		slot->inputCtxt32->devCtxt.slotCtxt.entFlagsSpeedRoute &= 0x07FFFFFF;
+		slot->inputCtxt32->devCtxt.slotCtxt.entFlagsSpeedRoute |=
+			((contextEntries << 27) & XHCI_SLTCTXT_CTXTENTS);
+
+		kernelDebug(debug_usb, "XHCI contextEntries=%d now 0x%08x",
+			contextEntries,
+			slot->inputCtxt32->devCtxt.slotCtxt.entFlagsSpeedRoute);
+	}
 
 	// Send the 'configure endpoint' command
 	memset((void *) &cmdTrb, 0, sizeof(xhciTrb));
@@ -1605,7 +1860,7 @@ static int transfer(usbController *controller, xhciSlot *slot, int endpoint,
 	uquad_t endTime = 0;
 	int trbCount;
 
-	transRing = slot->transRings[endpoint & 0xF];
+	transRing = slot->transRings[TRANSRING_INDEX(endpoint)];
 	if (!transRing)
 	{
 		kernelError(kernel_error, "Endpoint 0x%02x has no transfer ring",
@@ -1658,11 +1913,7 @@ static int transfer(usbController *controller, xhciSlot *slot, int endpoint,
 
 	// Ring the slot doorbell with the endpoint number
 	kernelDebug(debug_usb, "XHCI ring endpoint 0x%02x doorbell", endpoint);
-	if (endpoint)
-		xhci->dbRegs->doorbell[slot->num] =
-			(((endpoint & 0xF) * 2) + (endpoint >> 7));
-	else
-		xhci->dbRegs->doorbell[slot->num] = 1;
+	xhci->dbRegs->doorbell[slot->num] = DOORBELL_INDEX(endpoint);
 
 	// Unlock the controller while we wait
 	kernelLockRelease(&controller->lock);
@@ -1917,19 +2168,42 @@ static int recordHubAttrs(xhciData *xhci, xhciSlot *slot, usbHubDesc *hubDesc)
 
 	kernelDebug(debug_usb, "XHCI record hub attributes");
 
-	slot->inputCtxt->inputCtrlCtxt.add = BIT(0);
-	slot->inputCtxt->inputCtrlCtxt.drop = 0;
+	if (slot->inputCtxt64)
+	{
+		slot->inputCtxt64->inputCtrlCtxt.add = BIT(0);
+		slot->inputCtxt64->inputCtrlCtxt.drop = 0;
 
-	// Set the 'hub' flag
-	slot->inputCtxt->devCtxt.slotCtxt.entFlagsSpeedRoute |= XHCI_SLTCTXT_HUB;
+		// Set the 'hub' flag
+		slot->inputCtxt64->devCtxt.slotCtxt.entFlagsSpeedRoute |=
+			XHCI_SLTCTXT_HUB;
 
-	// Set the number of ports
-	slot->inputCtxt->devCtxt.slotCtxt.numPortsPortLat |=
-		((hubDesc->numPorts << 24) & XHCI_SLTCTXT_NUMPORTS);
+		// Set the number of ports
+		slot->inputCtxt64->devCtxt.slotCtxt.numPortsPortLat |=
+			((hubDesc->numPorts << 24) & XHCI_SLTCTXT_NUMPORTS);
 
-	// Set the TT Think Time
-	slot->inputCtxt->devCtxt.slotCtxt.targetTT |=
-		(((hubDesc->hubChars & USB_HUBCHARS_TTT_V2) << 11) & XHCI_SLTCTXT_TTT);
+		// Set the TT Think Time
+		slot->inputCtxt64->devCtxt.slotCtxt.targetTT |=
+			(((hubDesc->hubChars & USB_HUBCHARS_TTT_V2) << 11) &
+				XHCI_SLTCTXT_TTT);
+	}
+	else
+	{
+		slot->inputCtxt32->inputCtrlCtxt.add = BIT(0);
+		slot->inputCtxt32->inputCtrlCtxt.drop = 0;
+
+		// Set the 'hub' flag
+		slot->inputCtxt32->devCtxt.slotCtxt.entFlagsSpeedRoute |=
+			XHCI_SLTCTXT_HUB;
+
+		// Set the number of ports
+		slot->inputCtxt32->devCtxt.slotCtxt.numPortsPortLat |=
+			((hubDesc->numPorts << 24) & XHCI_SLTCTXT_NUMPORTS);
+
+		// Set the TT Think Time
+		slot->inputCtxt32->devCtxt.slotCtxt.targetTT |=
+			(((hubDesc->hubChars & USB_HUBCHARS_TTT_V2) << 11) &
+				XHCI_SLTCTXT_TTT);
+	}
 
 	kernelDebug(debug_usb, "XHCI numPorts=%d", hubDesc->numPorts);
 
@@ -2105,7 +2379,8 @@ static int interruptTransfer(xhciData *xhci, usbDevice *usbDev, int interface,
 	}
 
 	// Get buffer memory
-	status = kernelMemoryGetIo(dataLen, 0, &ioMem);
+	status = kernelMemoryGetIo(dataLen, 0 /* not aligned */,
+		0 /* not low memory */, "xhci intdata", &ioMem);
 	if (status < 0)
 		goto out;
 
@@ -2414,7 +2689,8 @@ static void detectPortChanges(usbController *controller, int portNum,
 			// Do port connection setup
 			portConnected(controller, portNum, hotplug);
 		}
-		else
+		else if (xhci->opRegs->portRegSet[portNum].portsc &
+			XHCI_PORTSC_CONNECT_CH)
 		{
 			// Do port connection tear-down
 			portDisconnected(controller, portNum);
@@ -2582,7 +2858,7 @@ static int allocScratchPadBuffers(xhciData *xhci, unsigned *scratchPadPhysical)
 		((xhci->capRegs->hcsparams2 & XHCI_HCSP2_MAXSCRPBUFFSLO) >> 27));
 	kernelIoMemory ioMem;
 	unsigned long long *scratchPadBufferArray = NULL;
-	unsigned buffer = NULL;
+	unsigned buffer = 0;
 	int count;
 
 	*scratchPadPhysical = NULL;
@@ -2598,7 +2874,7 @@ static int allocScratchPadBuffers(xhciData *xhci, unsigned *scratchPadPhysical)
 
 	// Allocate the array for pointers
 	status = kernelMemoryGetIo((numScratchPads * sizeof(unsigned long long)),
-		64 /* alignment */, &ioMem);
+		64 /* alignment */, 0 /* not low memory */, "xhci scratch", &ioMem);
 	if (status < 0)
 		return (status);
 
@@ -2609,7 +2885,8 @@ static int allocScratchPadBuffers(xhciData *xhci, unsigned *scratchPadPhysical)
 	for (count = 0; count < numScratchPads; count ++)
 	{
 		buffer = kernelMemoryGetPhysical(xhci->pageSize,
-			xhci->pageSize /* alignment */, "xhci scratchpad");
+			xhci->pageSize /* alignment */, 0 /* not low memory */,
+			"xhci scratchpad");
 		if (!buffer)
 		{
 			status = ERR_MEMORY;
@@ -2677,7 +2954,7 @@ static int initInterrupter(xhciData *xhci)
 
 	// Get some aligned memory for the segment table
 	status = kernelMemoryGetIo(sizeof(xhciEventRingSegTable),
-		 64 /* alignment */, &ioMem);
+		 64 /* alignment */, 0 /* not low memory */, "xhci segtable", &ioMem);
 	if (status < 0)
 		goto err_out;
 
@@ -2731,44 +3008,73 @@ static int setup(xhciData *xhci)
 
 #if defined(DEBUG)
 	// Check the sizes of some structures
-	if (sizeof(xhciCtxt) != 32)
+	if (sizeof(xhciSlotCtxt64) != 64)
 	{
-		kernelDebugError("sizeof(xhciCtxt) is %u, not 32", sizeof(xhciCtxt));
+		kernelDebugError("sizeof(xhciSlotCtxt64) is %u, not 64",
+			sizeof(xhciSlotCtxt64));
 		status = ERR_ALIGN;
 		goto err_out;
 	}
-	if (sizeof(xhciSlotCtxt) != 32)
+	if (sizeof(xhciSlotCtxt32) != 32)
 	{
-		kernelDebugError("sizeof(xhciSlotCtxt) is %u, not 32",
-			sizeof(xhciSlotCtxt));
+		kernelDebugError("sizeof(xhciSlotCtxt32) is %u, not 32",
+			sizeof(xhciSlotCtxt32));
 		status = ERR_ALIGN;
 		goto err_out;
 	}
-	if (sizeof(xhciEndpointCtxt) != 32)
+	if (sizeof(xhciEndpointCtxt64) != 64)
 	{
-		kernelDebugError("sizeof(xhciEndpointCtxt) is %u, not 32",
-			sizeof(xhciEndpointCtxt));
+		kernelDebugError("sizeof(xhciEndpointCtxt64) is %u, not 64",
+			sizeof(xhciEndpointCtxt64));
 		status = ERR_ALIGN;
 		goto err_out;
 	}
-	if (sizeof(xhciInputCtrlCtxt) != 32)
+	if (sizeof(xhciEndpointCtxt32) != 32)
 	{
-		kernelDebugError("sizeof(xhciInputCtrlCtxt) is %u, not 32",
-			sizeof(xhciInputCtrlCtxt));
+		kernelDebugError("sizeof(xhciEndpointCtxt32) is %u, not 32",
+			sizeof(xhciEndpointCtxt32));
 		status = ERR_ALIGN;
 		goto err_out;
 	}
-	if (sizeof(xhciInputCtxt) != 1056)
+	if (sizeof(xhciInputCtrlCtxt64) != 64)
 	{
-		kernelDebugError("sizeof(xhciInputCtxt) is %u, not 1056",
-			sizeof(xhciDevCtxt));
+		kernelDebugError("sizeof(xhciInputCtrlCtxt64) is %u, not 64",
+			sizeof(xhciInputCtrlCtxt64));
 		status = ERR_ALIGN;
 		goto err_out;
 	}
-	if (sizeof(xhciDevCtxt) != 1024)
+	if (sizeof(xhciInputCtrlCtxt32) != 32)
 	{
-		kernelDebugError("sizeof(xhciDevCtxt) is %u, not 1024",
-			sizeof(xhciDevCtxt));
+		kernelDebugError("sizeof(xhciInputCtrlCtxt32) is %u, not 32",
+			sizeof(xhciInputCtrlCtxt32));
+		status = ERR_ALIGN;
+		goto err_out;
+	}
+	if (sizeof(xhciInputCtxt64) != 2112)
+	{
+		kernelDebugError("sizeof(xhciInputCtxt64) is %u, not 2112",
+			sizeof(xhciDevCtxt64));
+		status = ERR_ALIGN;
+		goto err_out;
+	}
+	if (sizeof(xhciInputCtxt32) != 1056)
+	{
+		kernelDebugError("sizeof(xhciInputCtxt32) is %u, not 1056",
+			sizeof(xhciDevCtxt32));
+		status = ERR_ALIGN;
+		goto err_out;
+	}
+	if (sizeof(xhciDevCtxt64) != 2048)
+	{
+		kernelDebugError("sizeof(xhciDevCtxt64) is %u, not 2048",
+			sizeof(xhciDevCtxt64));
+		status = ERR_ALIGN;
+		goto err_out;
+	}
+	if (sizeof(xhciDevCtxt32) != 1024)
+	{
+		kernelDebugError("sizeof(xhciDevCtxt32) is %u, not 1024",
+			sizeof(xhciDevCtxt32));
 		status = ERR_ALIGN;
 		goto err_out;
 	}
@@ -2807,7 +3113,6 @@ static int setup(xhciData *xhci)
 		goto err_out;
 	}
 	if (sizeof(xhciRuntimeRegs) != 32)
-
 	{
 		kernelDebugError("sizeof(xhciRuntimeRegs) is %u, not 32",
 			sizeof(xhciRuntimeRegs));
@@ -2848,7 +3153,7 @@ static int setup(xhciData *xhci)
 
 	// Request memory for an aligned array of pointers to device contexts
 	status = kernelMemoryGetIo(devCtxtPhysPtrsMemSize, 64 /* alignment */,
-		&ioMem);
+		0 /* not low memory */, "xhci devctxts", &ioMem);
 	if (status < 0)
 		goto err_out;
 
@@ -2886,8 +3191,8 @@ static int setup(xhciData *xhci)
 	// Define the command ring dequeue pointer by programming the command ring
 	// control register with the 64-bit address of the first TRB in the command
 	// ring
-	xhci->opRegs->cmdrctrlLo =
-		(xhci->commandRing->trbsPhysical | XHCI_CRCR_RINGCYCSTATE);
+	xhci->opRegs->cmdrctrlLo = (xhci->commandRing->trbsPhysical |
+		XHCI_CRCR_RINGCYCSTATE);
 	xhci->opRegs->cmdrctrlHi = 0;
 
 	// Initialize interrupts
@@ -3496,8 +3801,10 @@ kernelDevice *kernelUsbXhciDetect(kernelBusTarget *busTarget,
 	// Warn if the controller is pre-release
 	hciver = (xhci->capRegs->capslenHciver >> 16);
 	if (hciver < 0x0100)
+	{
 		kernelLog("USB: XHCI warning, version is older than 1.0 (%d.%d%d)",
 			((hciver >> 8) & 0xFF), ((hciver >> 4) & 0xF), (hciver & 0xF));
+	}
 
 	//debugCapRegs(xhci);
 	//debugHcsParams1(xhci);
@@ -3532,13 +3839,9 @@ kernelDevice *kernelUsbXhciDetect(kernelBusTarget *busTarget,
 	// Calculate and record the controller's notion of a 'page size'
 	xhci->pageSize = (xhci->opRegs->pagesz << 12);
 
-	// Look out for 64-bit contexts - not yet supported
+	// Warn if we're 64-bit contexts - not common or well-tested
 	if (xhci->capRegs->hccparams & XHCI_HCCP_CONTEXTSIZE)
-	{
-		kernelError(kernel_error, "Controller is using 64-bit contexts");
-		status = ERR_NOTIMPLEMENTED;
-		goto err_out;
-	}
+		kernelError(kernel_warn, "Controller is using 64-bit contexts");
 
 	// Does the controller have any extended capabilities?
 	if (xhci->capRegs->hccparams & XHCI_HCCP_EXTCAPPTR)

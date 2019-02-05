@@ -4,5 +4,7 @@
 Display a virtual keyboard
 
 Usage:
-  keyboard
+  keyboard [-i]
+
+The -i flag means run in an 'iconified' mode.
 

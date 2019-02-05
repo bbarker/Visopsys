@@ -1,6 +1,6 @@
 
 	Visopsys
-	Copyright (C) 1998-2016 J. Andrew McLaughlin
+	Copyright (C) 1998-2018 J. Andrew McLaughlin
 
 Unless otherwise stated, all aspects of Visopsys are created/authored by
 Andy McLaughlin.  Other contributions are as follows (please notify me
@@ -101,8 +101,7 @@ http://javarng.googlecode.com/svn/trunk/com/modp/random/LinearSunJDK.java
 here: http://www.azillionmonkeys.com/qed/sqroot.html
 
 - cos.c, cosf.c, sin.c, and sinf.c use algorithms adapted from the web page
-at http://www.dontletgo.com/planets/math.html by Asaph Engel
-<ace@dontletgo.com>.
+at http://www.dontletgo.com/planets/math.html
 
 - JPEG inverse discrete cosine transform (IDCT) algorithm is Copyright (C)
 1996, MPEG Software Simulation Group.  See the function inverseDctBlock()

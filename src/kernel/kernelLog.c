@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelLog.c
 //
 
-// This file contains the routines designed to facilitate a variety
+// This file contains the functions designed to facilitate a variety
 // of kernel logging features.
 
 #include "kernelLog.h"
@@ -32,6 +32,7 @@
 #include "kernelRtc.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 static volatile int logToConsole = 0;
 static volatile int logToFile = 0;
@@ -45,11 +46,12 @@ static lock logLock;
 
 static int flushLogStream(void)
 {
-	// This routine is internal, and will take whatever is currently in the
+	// This function is internal, and will take whatever is currently in the
 	// log stream and output it to the log file, if applicable.  Returns
 	// 0 on success, negative otherwise
 
 	int status = 0;
+	int bytes = 0;
 	char buffer[512];
 
 	kernelDebug(debug_misc, "Log flushing log stream");
@@ -64,27 +66,32 @@ static int flushLogStream(void)
 		goto out;
 	}
 
-	// Take the contents of the log stream...
-	while (logStream.popN(&logStream, 512, buffer) > 0)
-	{
-		// ...and write them to the log file
-		status = kernelFileStreamWriteStr(logFileStream, buffer);
-		if (status < 0)
+	do {
+		// Take the contents of the log stream...
+		bytes = logStream.popN(&logStream, sizeof(buffer), buffer);
+
+		if (bytes > 0)
 		{
-			// Oops, couldn't write to the log file.
-			logToFile = 0;
-			goto out;
+			// ...and write them to the log file
+			status = kernelFileStreamWrite(logFileStream, bytes, buffer);
+			if (status < 0)
+			{
+				// Oops, couldn't write to the log file.
+				logToFile = 0;
+				goto out;
+			}
+
+			// Flush the file stream
+			status = kernelFileStreamFlush(logFileStream);
+			if (status < 0)
+			{
+				// Oops, couldn't write to the log file.
+				logToFile = 0;
+				goto out;
+			}
 		}
 
-		// Flush the file stream
-		status = kernelFileStreamFlush(logFileStream);
-		if (status < 0)
-		{
-			// Oops, couldn't write to the log file.
-			logToFile = 0;
-			goto out;
-		}
-	}
+	} while (bytes > 0);
 
 	// Return success
 	status = 0;
@@ -114,8 +121,8 @@ static void logUpdater(void)
 			break;
 		}
 
-		// Yield the rest of the timeslice and wait
-		kernelMultitaskerWait(2000);
+		// Yield the rest of the timeslice and wait for a couple of seconds
+		kernelMultitaskerWait(2 * MS_PER_SEC);
 	}
 
 	kernelMultitaskerTerminate(status);
@@ -183,8 +190,8 @@ int kernelLogSetFile(const char *logFileName)
 	kernelDebug(debug_misc, "Log opening filestream %s", logFileName);
 
 	// Initialize the fileStream structure that we'll be using for a log file
-	status = kernelFileStreamOpen(logFileName,
-		(OPENMODE_WRITE | OPENMODE_CREATE), logFileStream);
+	status = kernelFileStreamOpen(logFileName, (OPENMODE_WRITE |
+		OPENMODE_CREATE), logFileStream);
 	if (status < 0)
 	{
 		// We couldn't open or create a log file, for whatever reason.
@@ -202,7 +209,7 @@ int kernelLogSetFile(const char *logFileName)
 	flushLogStream();
 
 	// Make a logging thread
-	kernelDebug(debug_misc, "Log spawning thread");
+	kernelDebug(debug_misc, "Log spawn logging thread");
 	updaterPID = kernelMultitaskerSpawn(logUpdater, "logging thread", 0, NULL);
 	// Make sure we were successful
 	if (updaterPID < 0)
@@ -276,12 +283,16 @@ int kernelLog(const char *format, ...)
 	// Get the current date/time so we can prepend it to the logging output
 	status = kernelRtcDateTime(&theTime);
 	if (status < 0)
+	{
 		// Before RTC initialization (at boot time) the above will fail.
 		sprintf(streamOutput, "%s\n", output);
+	}
 	else
+	{
 		// Turn the date/time into a string representation (but skip the
 		// first 4 'weekday' characters)
 		sprintf(streamOutput, "%s %s\n", (asctime(&theTime) + 4), output);
+	}
 
 	status = kernelLockGet(&logLock);
 	if (status < 0)

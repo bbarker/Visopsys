@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -46,6 +46,12 @@ static kernelFileClass *(*classRegFns[LOADER_NUM_FILECLASSES])(void) = {
 	kernelFileClassGif,
 	kernelFileClassPng,
 	kernelFileClassPpm,
+	kernelFileClassMp3,
+	kernelFileClassWav,
+	kernelFileClassFlv,
+	kernelFileClassAvi,
+	kernelFileClassMp4,
+	kernelFileClassMov,
 	kernelFileClassBoot,
 	kernelFileClassKeymap,
 	kernelFileClassPdf,
@@ -66,6 +72,7 @@ static kernelFileClass *(*classRegFns[LOADER_NUM_FILECLASSES])(void) = {
 	kernelFileClassBinary
 };
 
+kernelFileClass dirFileClass = { FILECLASS_NAME_DIR, NULL, { } };
 kernelFileClass emptyFileClass = { FILECLASS_NAME_EMPTY, NULL, { } };
 static kernelFileClass *fileClassList[LOADER_NUM_FILECLASSES];
 static int numFileClasses = 0;
@@ -83,13 +90,13 @@ static void parseCommand(char *commandLine, int *argc, char *argv[])
 
 	// Loop through the command string
 
-	for (count = 0; *commandLine != '\0'; count ++)
+	for (count = 0; *commandLine; count ++)
 	{
 		// Remove leading whitespace
-		while ((*commandLine == ' ') && (*commandLine != '\0'))
+		while (*commandLine && (*commandLine == ' '))
 			commandLine += 1;
 
-		if (*commandLine == '\0')
+		if (!*commandLine)
 			break;
 
 		// If the argument starts with a double-quote, we will discard
@@ -101,7 +108,7 @@ static void parseCommand(char *commandLine, int *argc, char *argv[])
 
 			// Accept characters until we hit some whitespace (or the end of
 			// the arguments)
-			while ((*commandLine != ' ') && (*commandLine != '\0'))
+			while (*commandLine && (*commandLine != ' '))
 				commandLine += 1;
 		}
 		else
@@ -113,27 +120,26 @@ static void parseCommand(char *commandLine, int *argc, char *argv[])
 
 			// Accept characters  until we hit another double-quote (or the
 			// end of the arguments)
-			while ((*commandLine != '\"') && (*commandLine != '\0'))
+			while (*commandLine && (*commandLine != '\"'))
 				commandLine += 1;
 		}
 
 		*argc += 1;
 
-		if (*commandLine == '\0')
+		if (!*commandLine)
 			break;
+
 		*commandLine++ = '\0';
 	}
-
-	return;
 }
 
 
 static void *load(const char *filename, file *theFile, int kernel)
 {
-	// This function merely loads the named file into memory (kernel memory
-	// if 'kernel' is non-NULL, otherwise user memory) and returns a pointer
-	// to the memory.  The caller must deallocate the memory when finished
-	// with the data
+	// This function merely loads the named file into memory (kernel memory if
+	// 'kernel' is non-NULL, otherwise user memory) and returns a pointer to
+	// the memory.  The caller must deallocate the memory when finished with
+	// the data
 
 	int status = 0;
 	void *fileData = NULL;
@@ -148,8 +154,8 @@ static void *load(const char *filename, file *theFile, int kernel)
 	// Initialize the file structure we're going to use
 	memset((void *) theFile, 0, sizeof(file));
 
-	// Now, we need to ask the filesystem driver to find the appropriate
-	// file, and return a little information about it
+	// Now, we need to ask the filesystem driver to find the appropriate file,
+	// and return a little information about it
 	status = kernelFileFind(filename, theFile);
 	if (status < 0)
 	{
@@ -159,8 +165,8 @@ static void *load(const char *filename, file *theFile, int kernel)
 		return (fileData = NULL);
 	}
 
-	// If we get here, that means the file was found.  Make sure the size
-	// of the program is greater than zero
+	// If we get here, that means the file was found.  Make sure the size of
+	// the program is greater than zero
 	if (!theFile->size)
 	{
 		kernelError(kernel_error, "File to load is empty (size is zero)");
@@ -169,10 +175,14 @@ static void *load(const char *filename, file *theFile, int kernel)
 
 	// Get some memory into which we can load the program
 	if (kernel)
+	{
 		fileData = kernelMalloc(theFile->blocks * theFile->blockSize);
+	}
 	else
+	{
 		fileData = kernelMemoryGet((theFile->blocks * theFile->blockSize),
 			"file data");
+	}
 
 	if (!fileData)
 		return (fileData);
@@ -186,6 +196,7 @@ static void *load(const char *filename, file *theFile, int kernel)
 			kernelFree(fileData);
 		else
 			kernelMemoryRelease(fileData);
+
 		return (fileData = NULL);
 	}
 
@@ -197,6 +208,7 @@ static void *load(const char *filename, file *theFile, int kernel)
 			kernelFree(fileData);
 		else
 			kernelMemoryRelease(fileData);
+
 		return (fileData = NULL);
 	}
 
@@ -217,31 +229,34 @@ static int sortSymbols(loaderSymbolTable *table)
 	if (!tempTable)
 		return (status = ERR_MEMORY);
 
-	// Loop through our temporary table and fill it with the symbols sorted
-	// by value.
+	// Loop through our temporary table and fill it with the symbols sorted by
+	// value.
 	for (count1 = 0; count1 < table->numSymbols; count1 ++)
 	{
 		smallestValue = NULL;
 		for (count2 = 0; count2 < table->numSymbols; count2 ++)
-			if (table->symbols[count2].value &&
-				(!smallestValue || (table->symbols[count2].value <
-					smallestValue)))
 		{
-			smallestValue = table->symbols[count2].value;
-			smallestPosition = count2;
+			if (table->symbols[count2].value && (!smallestValue ||
+				(table->symbols[count2].value < smallestValue)))
+			{
+				smallestValue = table->symbols[count2].value;
+				smallestPosition = count2;
+			}
 		}
 
 		if (smallestValue)
 		{
-			memcpy(&tempTable->symbols[count1],
+			memcpy(&tempTable->symbols[tempTable->numSymbols++],
 				&table->symbols[smallestPosition], sizeof(loaderSymbol));
 			table->symbols[smallestPosition].value = NULL;
 		}
 	}
 
 	// Copy our temporary table's sorted symbols back to the original table
-	memcpy(table->symbols, tempTable->symbols, (table->numSymbols *
+	memcpy(table->symbols, tempTable->symbols, (tempTable->numSymbols *
 		sizeof(loaderSymbol)));
+
+	table->numSymbols = tempTable->numSymbols;
 
 	kernelFree(tempTable);
 	return (status = 0);
@@ -271,8 +286,8 @@ static void populateFileClassList(void)
 
 void *kernelLoaderLoad(const char *filename, file *theFile)
 {
-	// This function merely loads the named file into memory and returns
-	// a pointer to the memory.  The caller must deallocate the memory when
+	// This function merely loads the named file into memory and returns a
+	// pointer to the memory.  The caller must deallocate the memory when
 	// finished with the data
 
 	// Check params
@@ -300,7 +315,7 @@ kernelFileClass *kernelLoaderGetFileClass(const char *className)
 	// Find the named file class
 	for (count = 0; count < numFileClasses; count ++)
 	{
-		if (!strcmp(fileClassList[count]->className, className))
+		if (!strcmp(fileClassList[count]->name, className))
 			return (fileClassList[count]);
 	}
 
@@ -332,9 +347,9 @@ kernelFileClass *kernelLoaderClassify(const char *fileName, void *fileData,
 	if (!fileData || !size)
 	{
 		kernelDebug(debug_loader, "File is empty");
-		strcpy(fileClass->className, FILECLASS_NAME_EMPTY);
-		fileClass->class = LOADERFILECLASS_NONE;
-		fileClass->subClass = LOADERFILESUBCLASS_NONE;
+		strcpy(fileClass->name, FILECLASS_NAME_EMPTY);
+		fileClass->type = LOADERFILECLASS_NONE;
+		fileClass->subType = LOADERFILESUBCLASS_NONE;
 		return (&emptyFileClass);
 	}
 	else
@@ -345,8 +360,7 @@ kernelFileClass *kernelLoaderClassify(const char *fileName, void *fileData,
 	// Determine the file's class
 	for (count = 0; count < numFileClasses; count ++)
 	{
-		kernelDebug(debug_loader, "Detecting %s",
-			fileClassList[count]->className);
+		kernelDebug(debug_loader, "Detecting %s", fileClassList[count]->name);
 		if (fileClassList[count]->detect(fileName, fileData, size, fileClass))
 			return (fileClassList[count]);
 	}
@@ -375,6 +389,23 @@ kernelFileClass *kernelLoaderClassifyFile(const char *fileName,
 
 	// Initialize the file structure we're going to use
 	memset(&theFile, 0, sizeof(file));
+
+	status = kernelFileFind(fileName, &theFile);
+	if (status < 0)
+		return (class = NULL);
+
+	// What type of file is it?
+	switch (theFile.type)
+	{
+		case dirT:
+			strcpy(fileClass->name, FILECLASS_NAME_DIR);
+			fileClass->type = LOADERFILECLASS_DIR;
+			fileClass->subType = LOADERFILESUBCLASS_NONE;
+			return (&dirFileClass);
+
+		default:
+			break;
+	}
 
 	status = kernelFileOpen(fileName, OPENMODE_READ, &theFile);
 	if (status < 0)
@@ -430,8 +461,8 @@ loaderSymbolTable *kernelLoaderGetSymbols(const char *fileName)
 	}
 
 	// Load the file data into memory
-	loadAddress =
-		(unsigned char *) load(fileName, &theFile, 1 /* kernel memory */);
+	loadAddress = (unsigned char *) load(fileName, &theFile,
+		1 /* kernel memory */);
 	if (!loadAddress)
 		return (symTable = NULL);
 
@@ -444,10 +475,23 @@ loaderSymbolTable *kernelLoaderGetSymbols(const char *fileName)
 		return (symTable = NULL);
 	}
 
+	// Needs to be an executable or dynamic library
+	if (!(fileClass.type & LOADERFILECLASS_EXEC) &&
+		!((fileClass.type & LOADERFILECLASS_LIB) &&
+			(fileClass.subType & LOADERFILESUBCLASS_DYNAMIC)))
+	{
+		kernelError(kernel_error, "\"%s\" is not an executable or dynamic "
+			"library", fileName);
+		kernelFree(loadAddress);
+		return (symTable = NULL);
+	}
+
 	if (fileClassDriver->executable.getSymbols)
+	{
 		// Get the symbols
 		symTable = fileClassDriver->executable.getSymbols(loadAddress,
 			0 /* not kernel */);
+	}
 
 	kernelFree(loadAddress);
 
@@ -519,9 +563,9 @@ int kernelLoaderCheckCommand(const char *command)
 
 int kernelLoaderLoadProgram(const char *command, int privilege)
 {
-	// This takes the string of a command to run and creates a process
-	// image based on the contents of the file.  The program is not started
-	// by this function.
+	// This takes the string of a command to run and creates a process image
+	// based on the contents of the file.  The program is not started by this
+	// function.
 
 	int status = 0;
 	processImage execImage;
@@ -566,7 +610,7 @@ int kernelLoaderLoadProgram(const char *command, int privilege)
 	}
 
 	// Make sure it's an executable
-	if (!(fileClass.class & LOADERFILECLASS_EXEC))
+	if (!(fileClass.type & LOADERFILECLASS_EXEC))
 	{
 		kernelError(kernel_error, "File \"%s\" is not an executable program",
 			command);
@@ -603,7 +647,7 @@ int kernelLoaderLoadProgram(const char *command, int privilege)
 		return (newProcId);
 	}
 
-	if (fileClass.subClass & LOADERFILESUBCLASS_DYNAMIC)
+	if (fileClass.subType & LOADERFILESUBCLASS_DYNAMIC)
 	{
 		// It's a dynamically-linked program, so we need to link in the
 		// required libraries
@@ -620,7 +664,9 @@ int kernelLoaderLoadProgram(const char *command, int privilege)
 		}
 	}
 	else
+	{
 		symTable = kernelLoaderGetSymbols(execImage.argv[0]);
+	}
 
 	if (symTable)
 		kernelMultitaskerSetSymbols(newProcId, symTable);
@@ -629,8 +675,10 @@ int kernelLoaderLoadProgram(const char *command, int privilege)
 	status = kernelPageUnmap(kernelCurrentProcess->processId, execImage.code,
 		execImage.imageSize);
 	if (status < 0)
+	{
 		kernelError(kernel_warn, "Unable to unmap new process memory from "
 			"current process");
+	}
 
 	// Get rid of the old file memory
 	kernelMemoryRelease(loadAddress);
@@ -642,8 +690,8 @@ int kernelLoaderLoadProgram(const char *command, int privilege)
 
 int kernelLoaderLoadLibrary(const char *libraryName)
 {
-	// This takes the name of a library to load and creates a shared library
-	// in the kernel.
+	// This takes the name of a library to load and creates a shared dynamic
+	// library in the kernel.
 
 	int status = 0;
 	file theFile;
@@ -681,10 +729,10 @@ int kernelLoaderLoadLibrary(const char *libraryName)
 	}
 
 	// Make sure it's a dynamic library
-	if (!(fileClass.class & LOADERFILECLASS_LIB) ||
-		!(fileClass.subClass & LOADERFILESUBCLASS_DYNAMIC))
+	if (!(fileClass.type & LOADERFILECLASS_LIB) ||
+		!(fileClass.subType & LOADERFILESUBCLASS_DYNAMIC))
 	{
-		kernelError(kernel_error, "File \"%s\" is not a shared library",
+		kernelError(kernel_error, "File \"%s\" is not a dynamic library",
 			libraryName);
 		kernelFree(loadAddress);
 		return (status = ERR_PERMISSION);
@@ -699,8 +747,8 @@ int kernelLoaderLoadLibrary(const char *libraryName)
 	}
 
 	// Just get the library name without the path, and set it as the default
-	// library name.  The file class driver can reset it to something else
-	// if desired.
+	// library name.  The file class driver can reset it to something else if
+	// desired.
 	status = kernelFileSeparateLast(libraryName, tmp, library->name);
 	if (status < 0)
 		strncpy(library->name, libraryName, MAX_NAME_LENGTH);
@@ -857,11 +905,10 @@ void *kernelLoaderGetSymbol(const char *symbolName)
 
 int kernelLoaderExecProgram(int processId, int block)
 {
-	// This is a convenience function for executing a program loaded by
-	// the kernelLoaderLoadProgram function.  The calling function could
-	// easily accomplish this stuff by talking to the multitasker.  If
-	// blocking is requested, the exit code of the program is returned to
-	// the caller.
+	// This is a convenience function for executing a program loaded by the
+	// kernelLoaderLoadProgram function.  The calling function could easily
+	// accomplish this stuff by talking to the multitasker.  If blocking is
+	// requested, the exit code of the program is returned to the caller.
 
 	int status = 0;
 
@@ -882,8 +929,10 @@ int kernelLoaderExecProgram(int processId, int block)
 		return (status);
 	}
 	else
+	{
 		// Return successfully
 		return (status = 0);
+	}
 }
 
 

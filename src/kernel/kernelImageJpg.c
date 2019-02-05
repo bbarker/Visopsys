@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -64,18 +64,23 @@
 static const unsigned char defaultHuffDcLumSizes[16] = {
 	0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0
 };
+
 static const unsigned char defaultHuffDcLumValues[] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 };
+
 static const unsigned char defaultHuffDcChromSizes[16] = {
 	0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
 };
+
 static const unsigned char defaultHuffDcChromValues[] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 };
+
 static const unsigned char defaultHuffAcLumSizes[16] = {
 	0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 125
 };
+
 static const unsigned char defaultHuffAcLumValues[] = {
 	0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06,
 	0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08,
@@ -92,9 +97,11 @@ static const unsigned char defaultHuffAcLumValues[] = {
 	0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xF1, 0xF2, 0xF3, 0xF4,
 	0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
 };
+
 static const unsigned char defaultHuffAcChromSizes[16] = {
 	0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 119
 };
+
 static const unsigned char defaultHuffAcChromValues[] = {
 	0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12, 0x41,
 	0x51, 0x07, 0x61, 0x71, 0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91,
@@ -159,8 +166,8 @@ static int detect(const char *fileName, void *dataPtr, unsigned dataLength,
 	}
 
 	// We will say this is a JPG file.
-	sprintf(class->className, "%s %s", FILECLASS_NAME_JPG, FILECLASS_NAME_IMAGE);
-	class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
+	sprintf(class->name, "%s %s", FILECLASS_NAME_JPG, FILECLASS_NAME_IMAGE);
+	class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
 	return (1);
 }
 
@@ -174,12 +181,16 @@ static inline void printHuffTable(jpgHuffTable *table)
 	kernelTextPrint("Sizes: ");
 	for (count = 0; count < 16; count ++)
 		kernelTextPrint("%d ", table->sizes[count]);
+
 	kernelTextNewline();
 
 	kernelTextPrint("Codes: ");
 	for (count = 0; count < table->numCodes; count ++)
+	{
 		kernelTextPrint("%04x=%d ", table->huffCodes[count].code,
 			table->huffCodes[count].value);
+	}
+
 	kernelTextNewline();
 }
 
@@ -196,10 +207,17 @@ static inline void printQuantTable(jpgQuantTable *table)
 		for (count2 = 0; count2 < 8; count2 ++)
 		{
 			if (table->precision == 8)
-				kernelTextPrint("%d ", table->values.val8[(count1 * 8) + count2]);
+			{
+				kernelTextPrint("%d ", table->values.val8[(count1 * 8) +
+					count2]);
+			}
 			else
-				kernelTextPrint("%d ", table->values.val16[(count1 * 8) + count2]);
+			{
+				kernelTextPrint("%d ", table->values.val16[(count1 * 8) +
+					count2]);
+			}
 		}
+
 		kernelTextNewline();
 	}
 }
@@ -214,6 +232,7 @@ static inline void printBlock(short *coeff)
 	{
 		for (count2 = 0; count2 < 8; count2 ++)
 			kernelTextPrint("%d, ", coeff[(count1 * 8) + count2]);
+
 		kernelTextNewline();
 	}
 }
@@ -222,6 +241,7 @@ static inline void printBlock(short *coeff)
 	#define printQuantTable(table)  do {} while (0)
 	#define printBlock(coeff) do {} while (0)
 #endif
+
 
 static void genHuffTable(const unsigned char *sizes,
 	const unsigned char *values, jpgHuffTable *table)
@@ -239,31 +259,32 @@ static void genHuffTable(const unsigned char *sizes,
 
 		if (table->sizes[count1])
 		{
-			//kernelTextPrint("%d bits: ", (count1 + 1));
+			kernelDebug(debug_misc, "table->sizes[%d]=%d", count1,
+				table->sizes[count1]);
+
+			//kernelDebug(debug_misc, "%d bits: ", (count1 + 1));
 			for (count2 = 0; count2 < table->sizes[count1]; count2++)
 			{
-				//kernelTextPrint("%04x=%d ", code, values[table->numCodes]);
+				//kernelDebug(debug_misc, "%04x=%d ", code,
+				//	values[table->numCodes]);
 				table->huffCodes[table->numCodes].code = code;
 				table->huffCodes[table->numCodes].value =
 					values[table->numCodes];
 				table->numCodes += 1;
 				code += 1;
 			}
-			//kernelTextNewline();
 		}
 
 		code <<= 1;
 	}
-
-	return;
 }
 
 
 static int genQuantTable(int precision, int ident, unsigned char *values,
 	jpgQuantTable *table)
 {
-	// Given the number of bits per value and a pointer to the array of values,
-	// construct a quantization table
+	// Given the number of bits per value and a pointer to the array of
+	// values, construct a quantization table
 
 	int status = 0;
 
@@ -271,16 +292,21 @@ static int genQuantTable(int precision, int ident, unsigned char *values,
 		table->precision = 8;
 	else
 		table->precision = 16;
+
 	table->ident = ident;
 
 	if (table->precision == 8)
+	{
 		memcpy(table->values.val8, values, (64 * sizeof(unsigned char)));
+	}
 	else if (table->precision == 16)
+	{
 		memcpy(table->values.val16, values, (64 * sizeof(unsigned short)));
+	}
 	else
 	{
-		kernelError(kernel_error, "Quantization tables of precision %d are not "
-			"supported", precision);
+		kernelError(kernel_error, "Quantization tables of precision %d are "
+			"not supported", precision);
 		return (status = ERR_NOTIMPLEMENTED);
 	}
 
@@ -291,8 +317,8 @@ static int genQuantTable(int precision, int ident, unsigned char *values,
 static unsigned short readBits(unsigned char *dataPointer,
 	unsigned *bitPosition, int bits, int consume)
 {
-	// Given a pointer to the start of data, return the requested number
-	// of bits (up to 16) from the stream into the variable pointer.  If
+	// Given a pointer to the start of data, return the requested number of
+	// bits (up to 16) from the stream into the variable pointer.  If
 	// 'consume' is non-zero, the bit position will be moved forward.
 
 	unsigned byteOffset = (*bitPosition / 8);
@@ -306,8 +332,7 @@ static unsigned short readBits(unsigned char *dataPointer,
 
 	if (consume)
 	{
-		numBytes =
-			(((bitOffset + bits) / 8) + (((bitOffset + bits) % 8)? 1 : 0));
+		numBytes = ((bitOffset + bits + 7) / 8);
 
 		for (count = 0; count < numBytes; count ++)
 			nullBytes[count] = 0;
@@ -319,7 +344,8 @@ static unsigned short readBits(unsigned char *dataPointer,
 	for (count = 0; gotBytes < 4; count ++)
 	{
 		// Watch out for 0xFF00 sequences
-		if ((bytes[count] == 0x00) && byteOffset && (bytes[count - 1] == 0xFF))
+		if ((bytes[count] == 0x00) && byteOffset &&
+			(bytes[count - 1] == 0xFF))
 		{
 			// This is 0x00, and the previous byte was 0xFF, so we skip this
 			// byte and make a note of it.
@@ -333,21 +359,23 @@ static unsigned short readBits(unsigned char *dataPointer,
 		}
 	}
 
-	// Adjust the value so that it's just the requested number of bits, shifted
-	// to the right.
+	// Adjust the value so that it's just the requested number of bits,
+	// shifted to the right.
 	value &= (0xFFFFFFFF >> bitOffset);
 	value >>= (32 - (bits + bitOffset));
 
 	if (consume)
 	{
-		// We need to move the bit position forward.  First the number that are
-		// actually requested.
+		// We need to move the bit position forward.  First the number that
+		// are actually requested.
 		*bitPosition += bits;
 
 		// Now add for any 0xFF00 sequences where we skipped the 0x00 part.
 		for (count = 0; count < numBytes; count ++)
+		{
 			if (nullBytes[count])
 				*bitPosition += 8;
+		}
 	}
 
 	return ((unsigned short)(value & 0xFFFF));
@@ -357,7 +385,7 @@ static unsigned short readBits(unsigned char *dataPointer,
 static inline int getHuffValue(jpgHuffTable *table, int bits,
 	unsigned short code, unsigned char *value)
 {
-	// Given a huffman table and a bit code, return the appropriate value.
+	// Given a huffman table and a bit code, return the appropriate value
 
 	int status = 0;
 	int count;
@@ -388,8 +416,8 @@ static int readHuffValue(unsigned char *dataPointer, unsigned *bitPosition,
 	// Peek the maximum possible, 16 bits
 	raw = readBits(dataPointer, bitPosition, 16, 0);
 
-	// While we have only leading ones, shift them up, since there are no valid
-	// codes with all ones.
+	// While we have only leading ones, shift them up, since there are no
+	// valid codes with all ones.
 	while (raw & 0x8000)
 	{
 		raw <<= 1;
@@ -412,6 +440,7 @@ static int readHuffValue(unsigned char *dataPointer, unsigned *bitPosition,
 			readBits(dataPointer, bitPosition, bits, 1);
 			return (status);
 		}
+
 		raw <<= 1;
 	}
 
@@ -442,9 +471,9 @@ static inline short bitcode2Value(unsigned char bits, unsigned short code)
 static unsigned char markerCheck(unsigned char *dataPointer,
 	unsigned *bitPosition)
 {
-	// Peeks ahead in the bitstream for any markers (on the next byte boundary,
-	// if applicable), and if a marker is found, discards any stuffed bits
-	// that come before it.
+	// Peeks ahead in the bitstream for any markers (on the next byte
+	// boundary, if applicable), and if a marker is found, discards any
+	// stuffed bits that come before it.
 
 	unsigned bytePosition;
 	unsigned char marker = 0;
@@ -483,11 +512,12 @@ static unsigned char markerCheck(unsigned char *dataPointer,
 
 
 static int readBlock(unsigned char *dataPointer, unsigned *bitPosition,
-	jpgHuffTable *dcTable, jpgHuffTable *acTable, short *dcValue, short *coeff)
+	jpgHuffTable *dcTable, jpgHuffTable *acTable, short *dcValue,
+	short *coeff)
 {
-	// Reads an 8x8 image block.  Given a pointer to the data and the
-	// current bit position, and DC and AC huffman tables, and the current DC
-	// value, fill in the array of 64 coefficients.
+	// Reads an 8x8 image block.  Given a pointer to the data and the current
+	// bit position, and DC and AC huffman tables, and the current DC value,
+	// fill in the array of 64 coefficients.
 
 	int status = 0;
 	unsigned char category;
@@ -504,9 +534,9 @@ static int readBlock(unsigned char *dataPointer, unsigned *bitPosition,
 	status = readHuffValue(dataPointer, bitPosition, dcTable, &category);
 	if (status < 0)
 	{
-		kernelDebugError("Can't decode DC category for bits %04x offset %u:%d",
-			readBits(dataPointer, bitPosition, 16, 0), (*bitPosition / 8),
-			(*bitPosition % 8));
+		kernelDebugError("Can't decode DC category for bits %04x offset "
+			"%u:%d", readBits(dataPointer, bitPosition, 16, 0),
+			(*bitPosition / 8), (*bitPosition % 8));
 		kernelDebugBinary((dataPointer + (*bitPosition / 8)), 4);
 		return (status);
 	}
@@ -532,8 +562,8 @@ static int readBlock(unsigned char *dataPointer, unsigned *bitPosition,
 	// Now 63 AC coefficients
 	for (count = 1; count < 64; count ++)
 	{
-		// Get a huffman code for the byte that contains the number of zeros and
-		// the category of the next value.
+		// Get a huffman code for the byte that contains the number of zeros
+		// and the category of the next value.
 		status = readHuffValue(dataPointer, bitPosition, acTable, &category);
 		if (status < 0)
 		{
@@ -578,9 +608,9 @@ static int readBlock(unsigned char *dataPointer, unsigned *bitPosition,
 
 static void deQuantBlock(short *coeff, jpgQuantTable *table)
 {
-	// De-quantize an 8x8 data block, given the (zig-zagged) raw component
-	// and the appropriate quantization table.  Returns de-quantized,
-	// de-zigzagged values in the same array of coefficients.
+	// De-quantize an 8x8 data block, given the (zig-zagged) raw component and
+	// the appropriate quantization table.  Returns de-quantized, de-zigzagged
+	// values in the same array of coefficients.
 
 	short tmpCoeff[64];
 	int count1;
@@ -618,29 +648,31 @@ static void inverseDctBlock(short *coeff)
 	// at http://www.geocities.com/liaor2/mpeg2avi/mpeg2avi.htm.  The
 	// copyright notice is as follows:
 	//
-	// Copyright (C) 1996, MPEG Software Simulation Group.  All Rights Reserved.
+	// Copyright (C) 1996, MPEG Software Simulation Group.  All Rights
+	// Reserved.
 	//
 	// Disclaimer of Warranty
 	//
-	// These software programs are available to the user without any license fee
-	// or royalty on an "as is" basis.  The MPEG Software Simulation Group
-	// disclaims any and all warranties, whether express, implied, or statuary,
-	// including any implied warranties or merchantability or of fitness for a
-	// particular purpose.  In no event shall the copyright-holder be liable for
-	// any incidental, punitive, or consequential damages of any kind whatsoever
-	// arising from the use of these programs.
+	// These software programs are available to the user without any license
+	// fee or royalty on an "as is" basis.  The MPEG Software Simulation Group
+	// disclaims any and all warranties, whether express, implied, or
+	// statuary, including any implied warranties or merchantability or of
+	// fitness for a particular purpose.  In no event shall the copyright-
+	// holder be liable for any incidental, punitive, or consequential damages
+	// of any kind whatsoever arising from the use of these programs.
 	//
 	// This disclaimer of warranty extends to the user of these programs and
-	// user's customers, employees, agents, transferees, successors, and assigns.
+	// user's customers, employees, agents, transferees, successors, and
+	// assigns.
 	//
-	// The MPEG Software Simulation Group does not represent or warrant that the
-	// programs furnished hereunder are free of infringement of any third-party
-	// patents.
+	// The MPEG Software Simulation Group does not represent or warrant that
+	// the programs furnished hereunder are free of infringement of any third-
+	// party patents.
 	//
 	// Commercial implementations of MPEG-1 and MPEG-2 video, including
-	// shareware, are subject to royalty fees to patent holders.  Many of these
-	// patents are general enough such that they are unavoidable regardless of
-	// implementation design.
+	// shareware, are subject to royalty fees to patent holders.  Many of
+	// these patents are general enough such that they are unavoidable
+	// regardless of implementation design.
 
 	#define W1 2841 // 2048*sqrt(2)*cos(1*pi/16)
 	#define W2 2676 // 2048*sqrt(2)*cos(2*pi/16)
@@ -666,8 +698,8 @@ static void inverseDctBlock(short *coeff)
 	for (i = 0; i < 8; i ++) // IDCT rows
 	{
 		co = (coeff + (i << 3));
-		if (!((X1 = co[4] << 11) | (X2 = co[6]) | (X3 = co[2]) | (X4 = co[1]) |
-			(X5 = co[7]) | (X6 = co[5]) | (X7 = co[3])))
+		if (!((X1 = co[4] << 11) | (X2 = co[6]) | (X3 = co[2]) |
+			(X4 = co[1]) | (X5 = co[7]) | (X6 = co[5]) | (X7 = co[3])))
 		{
 			co[0] = co[1] = co[2] = co[3] = co[4] = co[5] = co[6] = co[7] =
 				(co[0] << 3);
@@ -808,8 +840,8 @@ static void arrangeMcu(int hBlocks, int vBlocks, short *coeff)
 }
 
 
-static void upsampleMcu(int hyBlocks, int vyBlocks, int hcBlocks, int vcBlocks,
-	short *cCoeff)
+static void upsampleMcu(int hyBlocks, int vyBlocks, int hcBlocks,
+	int vcBlocks, short *cCoeff)
 {
 	// Up-samples a subsampled array of chroma coefficients so that it matches
 	// the size of the luma coefficients.
@@ -827,7 +859,10 @@ static void upsampleMcu(int hyBlocks, int vyBlocks, int hcBlocks, int vcBlocks,
 	//for (count1 = 0; count1 < (vcBlocks * 8); count1 ++)
 	//{
 	//	for (count2 = 0; count2 < (hcBlocks * 8); count2 ++)
-	//		kernelTextPrint("%d ", cCoeff[(count1 * (hcBlocks * 8)) + count2]);
+	//	{
+	//		kernelTextPrint("%d ", cCoeff[(count1 * (hcBlocks * 8)) +
+	//			count2]);
+	//	}
 	//	kernelTextNewline();
 	//}
 
@@ -855,7 +890,10 @@ static void upsampleMcu(int hyBlocks, int vyBlocks, int hcBlocks, int vcBlocks,
 	//for (count1 = 0; count1 < (vyBlocks * 8); count1 ++)
 	//{
 	//	for (count2 = 0; count2 < (hyBlocks * 8); count2 ++)
-	//		kernelTextPrint("%d ", cCoeff[(count1 * (hyBlocks * 8)) + count2]);
+	//	{
+	//		kernelTextPrint("%d ", cCoeff[(count1 * (hyBlocks * 8)) +
+	//			count2]);
+	//	}
 	//	kernelTextNewline();
 	//}
 }
@@ -876,8 +914,10 @@ static void mcuToRgb(jpgData *jpg, short *yCoeff, short *cbCoeff,
 	int count1, count2;
 
 	pixelIndex = ((yCoord * jpg->frameHeader->width) + xCoord);
-	mcuHeight = min((V_Y_BLOCKSPERMCU * 8), (jpg->frameHeader->height - yCoord));
-	mcuWidth = min((H_Y_BLOCKSPERMCU * 8), (jpg->frameHeader->width - xCoord));
+	mcuHeight = min((V_Y_BLOCKSPERMCU * 8), (jpg->frameHeader->height -
+		yCoord));
+	mcuWidth = min((H_Y_BLOCKSPERMCU * 8), (jpg->frameHeader->width -
+		xCoord));
 
 	//kernelDebug(debug_misc, "Start compToRgb (%d,%d)... ", xCoord, yCoord);
 
@@ -905,7 +945,7 @@ static void mcuToRgb(jpgData *jpg, short *yCoeff, short *cbCoeff,
 
 			//kernelDebug(debug_misc, "Value %d (%d,%d,%d)", coeffIndex,
 			//	pixels[pixelIndex].red, pixels[pixelIndex].green,
-			//		pixels[pixelIndex].blue);
+			//	pixels[pixelIndex].blue);
 			pixelIndex += 1;
 		}
 
@@ -928,8 +968,6 @@ static int decode(jpgData *jpg, pixel *imageData)
 	int restartCount = 0;
 	unsigned char marker = 0;
 	int count;
-
-	//kernelDebugBinary(jpg->dataPointer, 16);
 
 	yCoeff = kernelMalloc((Y_BLOCKSPERMCU * 64) * sizeof(short));
 	cbCoeff = kernelMalloc((Y_BLOCKSPERMCU * 64) * sizeof(short));
@@ -983,7 +1021,8 @@ static int decode(jpgData *jpg, pixel *imageData)
 			//kernelDebug(debug_misc, "Start MCU %d (%d,%d)", mcuCount,
 			//	(xCoord / (H_Y_BLOCKSPERMCU * 8)),
 			//	(yCoord / (V_Y_BLOCKSPERMCU * 8)));
-			//kernelDebugBinary((jpg->dataPointer + (jpg->bitPosition / 8)), 16);
+			//kernelDebugBinary((jpg->dataPointer + (jpg->bitPosition / 8)),
+			//	16);
 
 			memset(yCoeff, 0, ((Y_BLOCKSPERMCU * 64) * sizeof(short)));
 			memset(cbCoeff, 0, ((Y_BLOCKSPERMCU * 64) * sizeof(short)));
@@ -996,8 +1035,8 @@ static int decode(jpgData *jpg, pixel *imageData)
 				//	(jpg->bitPosition / 8), (jpg->bitPosition % 8));
 				status = readBlock(jpg->dataPointer, &jpg->bitPosition,
 					&jpg->huffTable[JPG_HUFF_DC_LUM],
-					&jpg->huffTable[JPG_HUFF_AC_LUM],
-					&jpg->yDcValue, (yCoeff + (count * 64)));
+					&jpg->huffTable[JPG_HUFF_AC_LUM], &jpg->yDcValue,
+					(yCoeff + (count * 64)));
 				if (status < 0)
 				{
 					kernelDebugError("Error decoding Y block at offset %u:%d "
@@ -1020,12 +1059,12 @@ static int decode(jpgData *jpg, pixel *imageData)
 				//	(jpg->bitPosition / 8), (jpg->bitPosition % 8));
 				status = readBlock(jpg->dataPointer, &jpg->bitPosition,
 					&jpg->huffTable[JPG_HUFF_DC_CHROM],
-					&jpg->huffTable[JPG_HUFF_AC_CHROM],
-					&jpg->cbDcValue, (cbCoeff + (count * 64)));
+					&jpg->huffTable[JPG_HUFF_AC_CHROM], &jpg->cbDcValue,
+					(cbCoeff + (count * 64)));
 				if (status < 0)
 				{
-					kernelDebugError("Error decoding Cb block at offset %u:%d "
-						"MCU %d (%d,%d)", (jpg->bitPosition / 8),
+					kernelDebugError("Error decoding Cb block at offset "
+						"%u:%d MCU %d (%d,%d)", (jpg->bitPosition / 8),
 						(jpg->bitPosition % 8), mcuCount,
 						(xCoord / (H_Y_BLOCKSPERMCU * 8)),
 						(yCoord / (V_Y_BLOCKSPERMCU * 8)));
@@ -1044,12 +1083,12 @@ static int decode(jpgData *jpg, pixel *imageData)
 				//	(jpg->bitPosition / 8), (jpg->bitPosition % 8));
 				status = readBlock(jpg->dataPointer, &jpg->bitPosition,
 					&jpg->huffTable[JPG_HUFF_DC_CHROM],
-					&jpg->huffTable[JPG_HUFF_AC_CHROM],
-					&jpg->crDcValue, (crCoeff + (count * 64)));
+					&jpg->huffTable[JPG_HUFF_AC_CHROM], &jpg->crDcValue,
+					(crCoeff + (count * 64)));
 				if (status < 0)
 				{
-					kernelDebugError("Error decoding Cr block at offset %u:%d "
-						"MCU %d (%d,%d)", (jpg->bitPosition / 8),
+					kernelDebugError("Error decoding Cr block at offset "
+						"%u:%d MCU %d (%d,%d)", (jpg->bitPosition / 8),
 						(jpg->bitPosition % 8), mcuCount,
 						(xCoord / (H_Y_BLOCKSPERMCU * 8)),
 						(yCoord / (V_Y_BLOCKSPERMCU * 8)));
@@ -1070,20 +1109,25 @@ static int decode(jpgData *jpg, pixel *imageData)
 					arrangeMcu(H_CB_BLOCKSPERMCU, V_CB_BLOCKSPERMCU, cbCoeff);
 
 				if (CB_BLOCKSPERMCU != Y_BLOCKSPERMCU)
+				{
 					upsampleMcu(H_Y_BLOCKSPERMCU, V_Y_BLOCKSPERMCU,
 						H_CB_BLOCKSPERMCU, V_CB_BLOCKSPERMCU, cbCoeff);
+				}
 
 				if (CR_BLOCKSPERMCU != 1)
 					arrangeMcu(H_CR_BLOCKSPERMCU, V_CR_BLOCKSPERMCU, crCoeff);
 
 				if (CR_BLOCKSPERMCU != Y_BLOCKSPERMCU)
+				{
 					upsampleMcu(H_Y_BLOCKSPERMCU, V_Y_BLOCKSPERMCU,
 						H_CR_BLOCKSPERMCU, V_CR_BLOCKSPERMCU, crCoeff);
+				}
 			}
 
 			// We finished reading all the blocks for this MCU.  Now turn them
 			// into RGB image data.
-			mcuToRgb(jpg, yCoeff, cbCoeff, crCoeff, xCoord, yCoord, imageData);
+			mcuToRgb(jpg, yCoeff, cbCoeff, crCoeff, xCoord, yCoord,
+				imageData);
 		}
 
 		//kernelDebug(debug_misc, "Decoded lines %d-%d", yCoord,
@@ -1112,6 +1156,8 @@ static int load(unsigned char *imageFileData, int dataLength,
 	jpgJfifHeader *jfifHeader = NULL;
 	jpgExifHeader *exifHeader = NULL;
 	jpgHuffHeader *huffHeader = NULL;
+	jpgHuffTableHeader *huffTableHeader = NULL;
+	jpgHuffTable *huffTable = NULL;
 	jpgQuantHeader *quantHeader = NULL;
 	pixel *imageData = NULL;
 	int count1, count2;
@@ -1127,243 +1173,313 @@ static int load(unsigned char *imageFileData, int dataLength,
 
 	// Loop through the file data and get pointers to the various tables we
 	// need.
-	for (count1 = 0; count1 < dataLength; count1 ++)
+	for (count1 = 0; ((count1 < (dataLength - 1)) && !jpg->dataPointer);
+		count1 ++)
 	{
-		if ((imageFileData[count1] == 0xFF) && (count1 < (dataLength - 1)))
+		// Each marker consists of two bytes: an FF byte followed by a byte
+		// which is not equal to 0 or FF and specifies the type of the marker
+		if ((imageFileData[count1] != 0xFF) || !imageFileData[count1 + 1] ||
+			(imageFileData[count1 + 1] == 0xFF))
 		{
-			count1 += 1;
+			continue;
+		}
 
-			switch (imageFileData[count1])
+		count1 += 1;
+
+		switch (imageFileData[count1])
+		{
+			case JPG_DHT:
 			{
-				case JPG_DHT:
-					// At least one huffman table is here
-					huffHeader = (jpgHuffHeader *)(imageFileData + count1 + 1);
-					huffHeader->length = processorSwap16(huffHeader->length);
-					kernelDebug(debug_misc, "Hufftable(s) %d bytes at %d",
-						huffHeader->length, count1);
+				// At least one huffman table is here
+				huffHeader = (jpgHuffHeader *)(imageFileData + count1 + 1);
+				huffHeader->length = processorSwap16(huffHeader->length);
+				kernelDebug(debug_misc, "Hufftable(s) %d bytes at %d",
+					huffHeader->length, count1);
 
-					for (count2 = 0; ((void *) &huffHeader->table[count2] <
-							(void *)(huffHeader + huffHeader->length));
-						count2 ++)
+				huffTableHeader = &huffHeader->table[0];
+
+				for (count2 = 0; (((void *) huffTableHeader +
+					sizeof(jpgHuffTableHeader)) < ((void *) huffHeader +
+					huffHeader->length)); count2 ++)
+				{
+					// Construct the huffman table from the huffman header
+					if (huffTableHeader->classIdent == JPG_HUFF_DC_LUM_ID)
 					{
-						kernelDebug(debug_misc, "Hufftable %d", count2);
-
-						// Construct the huffman table from the huffman header
-						if (huffHeader->table[count2].classIdent ==
-							JPG_HUFF_DC_LUM_ID)
-						{
-							genHuffTable(huffHeader->table[count2].sizes,
-								huffHeader->table[count2].values,
-								&jpg->huffTable[JPG_HUFF_DC_LUM]);
-						}
-						else if (huffHeader->table[count2].classIdent ==
-							JPG_HUFF_AC_LUM_ID)
-						{
-							genHuffTable(huffHeader->table[count2].sizes,
-								huffHeader->table[count2].values,
-								&jpg->huffTable[JPG_HUFF_AC_LUM]);
-						}
-						else if (huffHeader->table[count2].classIdent ==
-							JPG_HUFF_DC_CHROM_ID)
-						{
-							genHuffTable(huffHeader->table[count2].sizes,
-								huffHeader->table[count2].values,
-								&jpg->huffTable[JPG_HUFF_DC_CHROM]);
-						}
-						else if (huffHeader->table[count2].classIdent ==
-							JPG_HUFF_AC_CHROM_ID)
-						{
-							genHuffTable(huffHeader->table[count2].sizes,
-								huffHeader->table[count2].values,
-								&jpg->huffTable[JPG_HUFF_AC_CHROM]);
-						}
+						kernelDebug(debug_misc, "Hufftable %d "
+							"JPG_HUFF_DC_LUM", count2);
+						huffTable = &jpg->huffTable[JPG_HUFF_DC_LUM];
 					}
-					count1 += huffHeader->length;
-					break;
-
-				case JPG_SOS:
-					// A start-of-scan marker is here
-					jpg->scanHeader = (jpgScanHeader *)(imageFileData + count1 + 1);
-					jpg->scanHeader->length =
-						processorSwap16(jpg->scanHeader->length);
-					jpg->dataPointer =
-						(imageFileData + count1 + 1 + jpg->scanHeader->length);
-					kernelDebug(debug_misc, "Start-of-scan at %d length %u", count1,
-						jpg->scanHeader->length);
-					count1 += jpg->scanHeader->length;
-					break;
-
-				case JPG_DQT:
-					// At least one quantization table is here
-					quantHeader = (jpgQuantHeader *)(imageFileData + count1 + 1);
-					quantHeader->length = processorSwap16(quantHeader->length);
-					kernelDebug(debug_misc, "Quanttable %d bytes at %d",
-						quantHeader->length, count1);
-
-					count2 = (count1 + 3);
-					while (jpg->numQuantTables < JPG_QUANT_TABLES)
+					else if (huffTableHeader->classIdent ==
+						JPG_HUFF_AC_LUM_ID)
 					{
-						// Construct the quantization table from the quantization
-						// header
-						status = genQuantTable((imageFileData[count2] >> 4),
-							(imageFileData[count2] & 0xF),
-							&imageFileData[count2 + 1],
-							&jpg->quantTable[jpg->numQuantTables]);
-						if (status < 0)
-							break;
-
-						//printQuantTable(&jpg->quantTable[jpg->numQuantTables]);
-						count2 += ((((imageFileData[count2] >> 4) + 1) * 64) + 1);
-						jpg->numQuantTables += 1;
-
-						if ((count2 - count1) >= quantHeader->length)
-							break;
+						kernelDebug(debug_misc, "Hufftable %d "
+							"JPG_HUFF_AC_LUM", count2);
+						huffTable = &jpg->huffTable[JPG_HUFF_AC_LUM];
 					}
-					count1 += quantHeader->length;
-					break;
-
-				case JPG_DRI:
-					// A restart header is here
-					jpg->restartHeader =
-						(jpgRestartHeader *)(imageFileData + count1 + 1);
-					jpg->restartHeader->length =
-						 processorSwap16(jpg->restartHeader->length);
-					jpg->restartHeader->interval =
-						processorSwap16(jpg->restartHeader->interval);
-					kernelDebug(debug_misc, "Restart interval %d at %d",
-						jpg->restartHeader->interval, count1);
-					count1 += jpg->restartHeader->length;
-					break;
-
-				case JPG_SOF:
-					// A frame header is here
-					jpg->frameHeader =
-						(jpgFrameHeader *)(imageFileData + count1 + 1);
-					jpg->frameHeader->length =
-						processorSwap16(jpg->frameHeader->length);
-					if (jpg->frameHeader->precision != 8)
+					else if (huffTableHeader->classIdent ==
+						JPG_HUFF_DC_CHROM_ID)
 					{
-						kernelError(kernel_error, "Only 8bpp JPEGs are supported "
-							"(this is %d)", jpg->frameHeader->precision);
-						return (status = ERR_NOTIMPLEMENTED);
+						kernelDebug(debug_misc, "Hufftable %d "
+							"JPG_HUFF_DC_CHROM", count2);
+						huffTable = &jpg->huffTable[JPG_HUFF_DC_CHROM];
 					}
-					jpg->frameHeader->height =
-						processorSwap16(jpg->frameHeader->height);
-					jpg->frameHeader->width =
-						processorSwap16(jpg->frameHeader->width);
-					if (jpg->frameHeader->numComps != 3)
+					else if (huffTableHeader->classIdent ==
+						JPG_HUFF_AC_CHROM_ID)
 					{
-						kernelError(kernel_error, "Only 3-component JPEGs are "
-							"supported");
-						return (status = ERR_NOTIMPLEMENTED);
+						kernelDebug(debug_misc, "Hufftable %d "
+							"JPG_HUFF_AC_CHROM", count2);
+						huffTable = &jpg->huffTable[JPG_HUFF_AC_CHROM];
 					}
-					count1 += jpg->frameHeader->length;
-					break;
-
-				case JPG_SOF1:
-				case JPG_SOF2:
-				case JPG_SOF3:
-				case JPG_SOF5:
-				case JPG_SOF6:
-				case JPG_SOF7:
-				case JPG_SOF9:
-				case JPG_SOF10:
-				case JPG_SOF11:
-				case JPG_SOF13:
-				case JPG_SOF14:
-				case JPG_SOF15:
-					// All of these frame types represent unsupported compression
-					// formats
-					kernelError(kernel_error, "Unsupported JPEG format (SOF=%02x)",
-						imageFileData[count1]);
-					return (status = ERR_NOTIMPLEMENTED);
-					break;
-
-				case JPG_SOI:
-					kernelDebug(debug_misc, "JPEG SOI at %d", count1);
-					break;
-
-				case JPG_APP0:
-					// A JFIF header is here
-					jfifHeader = (jpgJfifHeader *)(imageFileData + count1 + 1);
-					jfifHeader->length = processorSwap16(jfifHeader->length);
-					kernelDebug(debug_misc, "JPEG APP0 at %d length %d", count1,
-						jfifHeader->length);
-					// Check the version.
-					if (jfifHeader->versionMajor != 0x01)
+					else
 					{
-						kernelError(kernel_error, "Unsupported JPEG version "
-							"%02x%02x", jfifHeader->versionMajor,
-							jfifHeader->versionMinor);
-						return (status = ERR_NOTIMPLEMENTED);
+						kernelError(kernel_error, "Unknown Huffman table "
+							"ident %d", huffTableHeader->classIdent);
+						break;
 					}
-					count1 += jfifHeader->length;
-					break;
 
-				case JPG_APP1:
-					// An EXIF header is here
-					exifHeader = (jpgExifHeader *)(imageFileData + count1 + 1);
-					exifHeader->length = processorSwap16(exifHeader->length);
-					kernelDebug(debug_misc, "EXIF APP1 header at %d length %d",
-						count1, exifHeader->length);
-					// For the moment we ignore the EXIF data.
-					count1 += exifHeader->length;
-					break;
+					genHuffTable(huffTableHeader->sizes,
+						huffTableHeader->values, huffTable);
 
-				case JPG_APP2:
-				case JPG_APP3:
-				case JPG_APP4:
-				case JPG_APP5:
-				case JPG_APP6:
-				case JPG_APP7:
-				case JPG_APP8:
-				case JPG_APP9:
-				case JPG_APP10:
-				case JPG_APP11:
-				case JPG_APP12:
-				case JPG_APP13:
-				case JPG_APP14:
-				case JPG_APP15:
-					// Some other application-specific marker we'll ignore.
-					jfifHeader = (jpgJfifHeader *)(imageFileData + count1 + 1);
-					jfifHeader->length = processorSwap16(jfifHeader->length);
-					kernelDebug(debug_misc, "APP%d marker at %d length %d",
-						(imageFileData[count1] & 0xF), count1,
-						jfifHeader->length);
-					count1 += jfifHeader->length;
-					break;
+					huffTableHeader = ((void *) huffTableHeader +
+						sizeof(jpgHuffTableHeader) + huffTable->numCodes);
+				}
 
-				case JPG_EOI:
-					kernelDebug(debug_misc, "JPEG EOI at %d", count1);
-					break;
+				count1 += huffHeader->length;
+				break;
+			}
 
-				default:
-					// Dont care/not supported
-					kernelDebug(debug_misc, "Unsupported JPEG marker %02x at %d",
-						imageFileData[count1], count1);
-					break;
+			case JPG_SOS:
+			{
+				// A start-of-scan marker is here
+				jpg->scanHeader = (jpgScanHeader *)(imageFileData + count1 +
+					1);
+				jpg->scanHeader->length =
+					processorSwap16(jpg->scanHeader->length);
+				jpg->dataPointer = (imageFileData + count1 + 1 +
+					jpg->scanHeader->length);
+				kernelDebug(debug_misc, "Start-of-scan at %d length %u",
+					count1, jpg->scanHeader->length);
+
+				count1 += jpg->scanHeader->length;
+				break;
+			}
+
+			case JPG_DQT:
+			{
+				// At least one quantization table is here
+				quantHeader = (jpgQuantHeader *)(imageFileData + count1 + 1);
+				quantHeader->length = processorSwap16(quantHeader->length);
+				kernelDebug(debug_misc, "Quanttable %d bytes at %d",
+					quantHeader->length, count1);
+
+				count2 = (count1 + 3);
+				while (jpg->numQuantTables < JPG_QUANT_TABLES)
+				{
+					// Construct the quantization table from the quantization
+					// header
+					status = genQuantTable((imageFileData[count2] >> 4),
+						(imageFileData[count2] & 0xF),
+						&imageFileData[count2 + 1],
+						&jpg->quantTable[jpg->numQuantTables]);
+					if (status < 0)
+						break;
+
+					//printQuantTable(&jpg->quantTable[jpg->numQuantTables]);
+					count2 += ((((imageFileData[count2] >> 4) + 1) * 64) + 1);
+					jpg->numQuantTables += 1;
+
+					if ((count2 - count1) >= quantHeader->length)
+						break;
+				}
+
+				count1 += quantHeader->length;
+				break;
+			}
+
+			case JPG_DRI:
+			{
+				// A restart header is here
+				jpg->restartHeader = (jpgRestartHeader *)(imageFileData +
+					count1 + 1);
+				jpg->restartHeader->length =
+					processorSwap16(jpg->restartHeader->length);
+				jpg->restartHeader->interval =
+					processorSwap16(jpg->restartHeader->interval);
+				kernelDebug(debug_misc, "Restart interval %d at %d",
+					jpg->restartHeader->interval, count1);
+
+				count1 += jpg->restartHeader->length;
+				break;
+			}
+
+			case JPG_SOF:
+			{
+				// A frame header is here
+				jpg->frameHeader = (jpgFrameHeader *)(imageFileData + count1 +
+					1);
+				jpg->frameHeader->length =
+					processorSwap16(jpg->frameHeader->length);
+
+				if (jpg->frameHeader->precision != 8)
+				{
+					kernelError(kernel_error, "Only 8bpp JPEGs are supported "
+						"(this is %d)", jpg->frameHeader->precision);
+					status = ERR_NOTIMPLEMENTED;
+					goto err_out;
+				}
+
+				jpg->frameHeader->height =
+					processorSwap16(jpg->frameHeader->height);
+				jpg->frameHeader->width =
+					processorSwap16(jpg->frameHeader->width);
+
+				if (jpg->frameHeader->numComps != 3)
+				{
+					kernelError(kernel_error, "Only 3-component JPEGs are "
+						"supported");
+					status = ERR_NOTIMPLEMENTED;
+					goto err_out;
+				}
+
+				count1 += jpg->frameHeader->length;
+				break;
+			}
+
+			case JPG_SOF1:
+			case JPG_SOF2:
+			case JPG_SOF3:
+			case JPG_SOF5:
+			case JPG_SOF6:
+			case JPG_SOF7:
+			case JPG_SOF9:
+			case JPG_SOF10:
+			case JPG_SOF11:
+			case JPG_SOF13:
+			case JPG_SOF14:
+			case JPG_SOF15:
+			{
+				// All of these frame types represent unsupported compression
+				// formats
+				kernelError(kernel_error, "Unsupported JPEG format "
+					"(SOF=%02x)", imageFileData[count1]);
+				status = ERR_NOTIMPLEMENTED;
+				goto err_out;
+			}
+
+			case JPG_SOI:
+			{
+				kernelDebug(debug_misc, "JPEG SOI at %d", count1);
+				break;
+			}
+
+			case JPG_APP0:
+			{
+				// A JFIF header is here
+				jfifHeader = (jpgJfifHeader *)(imageFileData + count1 + 1);
+				jfifHeader->length = processorSwap16(jfifHeader->length);
+				kernelDebug(debug_misc, "JPEG APP0 at %d length %d", count1,
+					jfifHeader->length);
+
+				// Check the version.
+				if (jfifHeader->versionMajor != 0x01)
+				{
+					kernelError(kernel_error, "Unsupported JPEG version "
+						"%02x%02x", jfifHeader->versionMajor,
+						jfifHeader->versionMinor);
+					status = ERR_NOTIMPLEMENTED;
+				}
+
+				count1 += jfifHeader->length;
+				break;
+			}
+
+			case JPG_APP1:
+			{
+				// An EXIF header is here
+				exifHeader = (jpgExifHeader *)(imageFileData + count1 + 1);
+				exifHeader->length = processorSwap16(exifHeader->length);
+				kernelDebug(debug_misc, "EXIF APP1 header at %d length %d",
+					count1, exifHeader->length);
+
+				// For the moment we ignore the EXIF data.
+				count1 += exifHeader->length;
+				break;
+			}
+
+			case JPG_APP2:
+			case JPG_APP3:
+			case JPG_APP4:
+			case JPG_APP5:
+			case JPG_APP6:
+			case JPG_APP7:
+			case JPG_APP8:
+			case JPG_APP9:
+			case JPG_APP10:
+			case JPG_APP11:
+			case JPG_APP12:
+			case JPG_APP13:
+			case JPG_APP14:
+			case JPG_APP15:
+			{
+				// Some other application-specific marker we'll ignore.
+				jfifHeader = (jpgJfifHeader *)(imageFileData + count1 + 1);
+				jfifHeader->length = processorSwap16(jfifHeader->length);
+				kernelDebug(debug_misc, "APP%d marker at %d length %d",
+					(imageFileData[count1] & 0xF), count1,
+					jfifHeader->length);
+
+				count1 += jfifHeader->length;
+				break;
+			}
+
+			case JPG_EOI:
+			{
+				kernelDebug(debug_misc, "JPEG EOI at %d", count1);
+				break;
+			}
+
+			default:
+			{
+				// Dont care/not supported
+				kernelDebug(debug_misc, "Unsupported JPEG marker %02x at %d",
+					imageFileData[count1], count1);
+				break;
 			}
 		}
 	}
 
-	// Generate default huffman tables for any that weren't defined in the file.
+	// Generate default huffman tables for any that weren't defined in the
+	// file.
 	if (!jpg->huffTable[JPG_HUFF_DC_LUM].numCodes)
+	{
+		kernelDebug(debug_misc, "Generate hufftable JPG_HUFF_DC_LUM");
 		genHuffTable(defaultHuffDcLumSizes, defaultHuffDcLumValues,
 			&jpg->huffTable[JPG_HUFF_DC_LUM]);
+	}
 	if (!jpg->huffTable[JPG_HUFF_AC_LUM].numCodes)
+	{
+		kernelDebug(debug_misc, "Generate hufftable JPG_HUFF_AC_LUM");
 		genHuffTable(defaultHuffAcLumSizes, defaultHuffAcLumValues,
 			&jpg->huffTable[JPG_HUFF_AC_LUM]);
+	}
 	if (!jpg->huffTable[JPG_HUFF_DC_CHROM].numCodes)
+	{
+		kernelDebug(debug_misc, "Generate hufftable JPG_HUFF_DC_CHROM");
 		genHuffTable(defaultHuffDcChromSizes, defaultHuffDcChromValues,
 			&jpg->huffTable[JPG_HUFF_DC_CHROM]);
+	}
 	if (!jpg->huffTable[JPG_HUFF_AC_CHROM].numCodes)
+	{
+		kernelDebug(debug_misc, "Generate hufftable JPG_HUFF_AC_CHROM");
 		genHuffTable(defaultHuffAcChromSizes, defaultHuffAcChromValues,
 			&jpg->huffTable[JPG_HUFF_AC_CHROM]);
+	}
 
 	if ((jpg->numQuantTables != JPG_QUANT_TABLES) || !jpg->frameHeader)
 	{
 		kernelError(kernel_error, "Image table data missing");
-		return (status = ERR_BADDATA);
+		status = ERR_BADDATA;
+		goto err_out;
 	}
 
 	// Figure out how many Y blocks, Cb blocks, and Cr blocks there will be
@@ -1378,12 +1494,13 @@ static int load(unsigned char *imageFileData, int dataLength,
 			jpg->hvBlocksPerMcu[(count1 * 2) + 1]);
 	}
 
-	if ((Y_BLOCKSPERMCU > 4) || (CB_BLOCKSPERMCU > 2) || (CR_BLOCKSPERMCU > 2))
+	if ((Y_BLOCKSPERMCU > 4) || (CB_BLOCKSPERMCU > 2) ||
+		(CR_BLOCKSPERMCU > 2))
 	{
 		kernelError(kernel_error, "Y/Cb/Cr blocks per MCU (%d/%d/%d) is not "
-			"supported", Y_BLOCKSPERMCU, CB_BLOCKSPERMCU,
-			CR_BLOCKSPERMCU);
-		return (status = ERR_NOTIMPLEMENTED);
+			"supported", Y_BLOCKSPERMCU, CB_BLOCKSPERMCU, CR_BLOCKSPERMCU);
+		status = ERR_NOTIMPLEMENTED;
+		goto err_out;
 	}
 
 	// If the values are the same (for example 4:4:4) then they are 1:1:1.
@@ -1397,15 +1514,17 @@ static int load(unsigned char *imageFileData, int dataLength,
 	}
 
 	for (count1 = 0; count1 < jpg->frameHeader->numComps; count1 ++)
-		kernelDebug(debug_misc, "Frame comp %d id=%d sampFact=%dx%d quantTab=%d",
-			count1, jpg->frameHeader->comp[count1].compId,
+	{
+		kernelDebug(debug_misc, "Frame comp %d id=%d sampFact=%dx%d "
+			"quantTab=%d", count1, jpg->frameHeader->comp[count1].compId,
 			jpg->hvBlocksPerMcu[count1 * 2],
 			jpg->hvBlocksPerMcu[(count1 * 2) + 1],
 			jpg->frameHeader->comp[count1].quantTable);
+	}
 
-	// Figure out how much memory we need for the array of pixels that
-	// we'll attach to the image, and allocate it.  The size is a
-	// product of the image height and width.
+	// Figure out how much memory we need for the array of pixels that we'll
+	// attach to the image, and allocate it.  The size is a product of the
+	// image height and width.
 	loadImage->pixels = (jpg->frameHeader->width * jpg->frameHeader->height);
 	loadImage->dataLength = (loadImage->pixels * sizeof(pixel));
 
@@ -1413,7 +1532,7 @@ static int load(unsigned char *imageFileData, int dataLength,
 	if (!imageData)
 	{
 		status = ERR_MEMORY;
-		goto error_out;
+		goto err_out;
 	}
 
 	kernelDebug(debug_misc, "Jpeg image %dx%d", jpg->frameHeader->width,
@@ -1436,11 +1555,14 @@ static int load(unsigned char *imageFileData, int dataLength,
 	// Return the status of the 'decode' call
 	return (status);
 
-error_out:
+err_out:
+
+	// Release memory
 	if (jpg)
 		kernelFree(jpg);
 	if (imageData)
 		kernelMemoryRelease(imageData);
+
 	return (status);
 }
 

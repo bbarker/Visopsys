@@ -11,3 +11,6 @@ graphics mode.  It can be used to add and delete user accounts, and set
 account passwords.  If '-p user_name' is specified on the command line,
 this command will prompt the user to set the password for the named user.
 
+Options:
+-p <user_name>  : Set the user's password
+

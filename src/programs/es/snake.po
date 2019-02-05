@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: 2014-01-22 04:51-0400\n"
 "Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,12 +25,12 @@ msgstr "Snake"
 msgid "Use cursor keys to change direction"
 msgstr "Usa las teclas del cursor para cambiar de dirección"
 
-#: snake.c:920
+#: snake.c:949
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""
 
-#: snake.c:944
+#: snake.c:973
 #, c-format
 msgid ""
 "%s\n"
@@ -39,14 +39,14 @@ msgstr ""
 "%s\n"
 "Puntaje: %d.\n"
 
-#: snake.c:945
+#: snake.c:974
 msgid "You WIN!"
 msgstr "Ganaste!"
 
-#: snake.c:945
+#: snake.c:974
 msgid "Dead."
 msgstr "Muerto."
 
-#: snake.c:950
+#: snake.c:979
 msgid "Game over"
 msgstr "Fin del juego"

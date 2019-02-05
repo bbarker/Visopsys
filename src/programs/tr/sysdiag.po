@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  The system messages translated to Turkish by Doga Ozkaracaabatlioglu.
 #  Sistem mesajlari Türkçe'ye Doga Özkaracaabatlioglu tarafindan çevirilmistir.
@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Doga Ozkaracaabatlioglu <doga.ozkaraca@gmail.com>\n"
 "Language-Team: Turkish/Türkçe\n"
@@ -23,19 +23,19 @@ msgstr ""
 msgid "System Diagnostics"
 msgstr "Sistem Tanilama"
 
-#: sysdiag.c:55 sysdiag.c:1023
+#: sysdiag.c:55 sysdiag.c:1026
 msgid "Disk test"
 msgstr "Disk testi"
 
-#: sysdiag.c:56 sysdiag.c:1024
+#: sysdiag.c:56 sysdiag.c:1027
 msgid "Memory test"
 msgstr "Bellek testi"
 
-#: sysdiag.c:57 sysdiag.c:1028
+#: sysdiag.c:57 sysdiag.c:1031
 msgid "Read-only"
 msgstr "Sadece-okunabilir"
 
-#: sysdiag.c:58 sysdiag.c:1029
+#: sysdiag.c:58 sysdiag.c:1032
 msgid "Read-write"
 msgstr "Okunabilir-yazilabilir"
 
@@ -117,10 +117,10 @@ msgstr "Iptal"
 #, c-format
 msgid ""
 "%s\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 msgstr ""
 "%s\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 
 #: sysdiag.c:223
 msgid "Please choose the disk to test:"
@@ -134,34 +134,34 @@ msgstr "Sonuçlari göster"
 msgid "Do you want to view the results?\n"
 msgstr "Sonuçlari görmek istiyor musunuz?\n"
 
-#: sysdiag.c:292
+#: sysdiag.c:293
 msgid "Test results"
 msgstr "Test sonuçlari"
 
-#: sysdiag.c:324
+#: sysdiag.c:325
 #, c-format
 msgid "Disk read error at sector %llu\n"
 msgstr "Sektör %llu 'da okuma hatasi\n"
 
-#: sysdiag.c:328
+#: sysdiag.c:329
 #, c-format
 msgid "Disk write error at sector %llu\n"
 msgstr "Sektör %llu 'da yazma hatasi\n"
 
-#: sysdiag.c:332
+#: sysdiag.c:333
 #, c-format
 msgid "Memory error at %llu\n"
 msgstr "%llu 'de bellek hatasi\n"
 
-#: sysdiag.c:426 sysdiag.c:437
+#: sysdiag.c:428 sysdiag.c:439
 msgid "read-write"
 msgstr "okunabilir-yazilabilir"
 
-#: sysdiag.c:426 sysdiag.c:437
+#: sysdiag.c:428 sysdiag.c:439
 msgid "read-only"
 msgstr "sadece-okunabilir"
 
-#: sysdiag.c:428 sysdiag.c:675
+#: sysdiag.c:430 sysdiag.c:678
 msgid ""
 "\n"
 "[ Press 'Q' to cancel ]\n"
@@ -169,16 +169,16 @@ msgstr ""
 "\n"
 "[ Iptal etmek için 'Q' ya basin ]\n"
 
-#: sysdiag.c:547
+#: sysdiag.c:549
 #, c-format
 msgid "Testing disk sectors %llu/%llu"
 msgstr "Disk sektörleri test ediliyor %llu/%llu"
 
-#: sysdiag.c:763
+#: sysdiag.c:766
 #, c-format
 msgid "Testing memory MB %llu/%llu"
 msgstr "Bellek test ediliyor (MB) %llu/%llu"
 
-#: sysdiag.c:1074
+#: sysdiag.c:1077
 msgid "Do you want to do a disk test, or a memory test?\n"
 msgstr "Disk testi mi yoksa bellek testi mi yapmak istiyorsunuz?\n"

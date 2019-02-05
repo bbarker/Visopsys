@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -129,8 +129,12 @@ static void setDefaults(void)
 		KEYMAP_NAMELEN) >= 0)
 	{
 		sprintf(keyMapFile, PATH_SYSTEM_KEYMAPS "/%s.map", keyMapName);
-		keyboardSetMap(keyMapFile);
-		setenv(ENV_KEYMAP, keyMapName, 1);
+
+		if (fileFind(keyMapFile, NULL) >= 0)
+		{
+			keyboardSetMap(keyMapFile);
+			setenv(ENV_KEYMAP, keyMapName, 1);
+		}
 	}
 
 	setlocale(LC_ALL, language);
@@ -216,10 +220,10 @@ static void eventHandler(objectKey key, windowEvent *event)
 	if (event->type == EVENT_MOUSE_LEFTUP)
 	{
 		if (key == rebootButton)
-			shutdown(reboot, 0);
+			systemShutdown(reboot, 0);
 
 		else if (key == shutdownButton)
-			shutdown(halt, 0);
+			systemShutdown(halt, 0);
 	}
 
 	else if ((event->type == EVENT_KEY_DOWN) && (event->key == keyEnter))
@@ -257,6 +261,7 @@ static void constructWindow(int myProcessId)
 
 	color background = { COLOR_DEFAULT_DESKTOP_BLUE,
 		COLOR_DEFAULT_DESKTOP_GREEN, COLOR_DEFAULT_DESKTOP_RED };
+	static char *splashName = PATH_SYSTEM "/visopsys.jpg";
 	componentParameters params;
 
 	// This function can be called multiple times.  Clear any event handlers
@@ -285,9 +290,9 @@ static void constructWindow(int myProcessId)
 	params.orientationX = orient_center;
 	params.orientationY = orient_top;
 
-	if (!splashImage.data)
+	if (!splashImage.data && (fileFind(splashName, NULL) >= 0))
 		// Try to load a splash image to go at the top of the window
-		imageLoad(PATH_SYSTEM "/visopsys.jpg", 0, 0, &splashImage);
+		imageLoad(splashName, 0, 0, &splashImage);
 
 	if (splashImage.data)
 		// Create an image component from it, and add it to the window

@@ -1,4 +1,4 @@
-THE VISOPSYS SHELL LIBRARY (Version 0.7)
+THE VISOPSYS SHELL LIBRARY (Version 0.8)
 
 The shell library is a small set of functions created for the Visopsys shell, /programs/vsh, and provided as a library for other programs to use.
 

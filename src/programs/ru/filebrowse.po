@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: filebrowse\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: 2015-05-08 02:31+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -38,16 +38,16 @@ msgstr "Выход"
 msgid "Refresh"
 msgstr "Обновить"
 
-#: filebrowse.c:123
+#: filebrowse.c:125
 msgid "Error"
 msgstr "Ошибка"
 
-#: filebrowse.c:237
+#: filebrowse.c:275
 #, c-format
 msgid "Couldn't execute command \"%s\""
 msgstr ""
 
-#: filebrowse.c:437
+#: filebrowse.c:482
 #, c-format
 msgid ""
 "\n"
@@ -56,15 +56,15 @@ msgstr ""
 "\n"
 "Команда  \"%s\" работает только в графическом режиме\n"
 
-#: filebrowse.c:451
+#: filebrowse.c:496
 msgid "Memory allocation error"
 msgstr "Ошибка распределения памяти."
 
-#: filebrowse.c:466
+#: filebrowse.c:511
 #, c-format
 msgid "Can't change to directory \"%s\""
 msgstr "Не могу перейти в каталог \"%s\""
 
-#: filebrowse.c:473
+#: filebrowse.c:518
 msgid "Can't determine current directory"
 msgstr "Не могу определить текущий каталог"

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -25,10 +25,10 @@
 
 #include <stddef.h>
 
-#define MAXSTRINGLENGTH 4096
+#define MAXSTRINGLENGTH	4096
 
 #ifndef NULL
-#define NULL
+	#define NULL		0
 #endif
 
 // Functions
@@ -57,6 +57,7 @@ size_t strnlen(const char *, size_t);
 char *strrchr(const char *, int);
 size_t strspn(const char *, const char *);
 char *strtok(char *, const char *);
+char *strtok_r(char *, const char *, char **);
 
 // These have identical definitions to functions above
 #define index(str, chr) strchr(str, chr)

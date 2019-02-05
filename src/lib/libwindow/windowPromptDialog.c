@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -32,6 +32,7 @@
 
 typedef enum {
 	promptDialog, passwordDialog
+
 } dialogType;
 
 
@@ -93,9 +94,7 @@ static int dialog(dialogType type, objectKey parentWindow, const char *title,
 
 	// Make a label with the prompt
 	params.gridWidth = 2;
-	params.padLeft = 0;
-	params.padRight = 0;
-	params.padTop = 0;
+	params.padLeft = params.padRight = params.padTop = params.padBottom = 0;
 	params.orientationX = orient_left;
 	params.orientationY = orient_top;
 	params.flags = (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
@@ -103,6 +102,7 @@ static int dialog(dialogType type, objectKey parentWindow, const char *title,
 
 	// Make the text field(s)
 	params.gridY++;
+	params.padTop = 5;
 	params.flags = WINDOW_COMPFLAG_FIXEDHEIGHT;
 	if (type == passwordDialog)
 	{
@@ -129,7 +129,6 @@ static int dialog(dialogType type, objectKey parentWindow, const char *title,
 	params.gridWidth = 1;
 	params.padLeft = 2;
 	params.padRight = 2;
-	params.padBottom = 5;
 	params.orientationX = orient_right;
 	params.flags = (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
 	okButton = windowNewButton(container, _("OK"), NULL, &params);

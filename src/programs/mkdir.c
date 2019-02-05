@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -36,17 +36,17 @@ parameter is the name of a new directory to create.  Any number of other
 (optional) directories to create can be specified at the same time.
 
 Options:
--p              : Create parent directories, if necessary.
+-p  : Create parent directories, if necessary.
 
 </help>
 */
 
 #include <errno.h>
-#include <libgen.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/api.h>
 #include <sys/env.h>
@@ -60,30 +60,6 @@ static void usage(char *name)
 	printf("%s", _("usage:\n"));
 	printf(_("%s <directory1> [directory2] [...]\n"), name);
 	return;
-}
-
-
-static int makeDirRecursive(char *path)
-{
-	int status = 0;
-	file theDir;
-	char *parent = NULL;
-
-	if (fileFind(path, &theDir) >= 0)
-		return (status = 0);
-
-	parent = dirname(path);
-	if (!parent)
-		return (status = ERR_NOSUCHENTRY);
-
-	status = makeDirRecursive(parent);
-
-	free(parent);
-
-	if (status < 0)
-		return (status);
-
-	return (status = fileMakeDir(path));
 }
 
 
@@ -129,7 +105,7 @@ int main(int argc, char *argv[])
 
 		// Attempt to create the directory
 		if (recurse)
-			status = makeDirRecursive(argv[count]);
+			status = vshMakeDirRecursive(argv[count]);
 		else
 			status = fileMakeDir(argv[count]);
 

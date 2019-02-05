@@ -16,5 +16,5 @@ The disk can be automatically selected by specifying its name (as listed by
 the 'disks' command) as the last argument.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -102,18 +102,22 @@ int main(int argc __attribute__((unused)), char *argv[])
 	{
 		// Print disk info
 		printf("%s", diskInfo[count].name);
+
 		textSetColumn(11);
 		printf("%s", diskInfo[count].partType);
+
 		if (strcmp(diskInfo[count].fsType, "unknown"))
 		{
 			textSetColumn(37);
 			printf("%s", diskInfo[count].fsType);
 		}
+
 		if (diskInfo[count].mounted)
 		{
 			textSetColumn(49);
 			printf("%s", diskInfo[count].mountPoint);
 		}
+
 		printf("\n");
 	}
 

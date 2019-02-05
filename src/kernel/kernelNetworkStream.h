@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -23,12 +23,11 @@
 
 #include "kernelNetwork.h"
 
-#define NETWORK_PACKETS_PER_STREAM  64
-
 // Functions exported by kernelNetworkStream.c
 int kernelNetworkPacketStreamNew(kernelNetworkPacketStream *);
+int kernelNetworkPacketStreamDestroy(kernelNetworkPacketStream *);
 int kernelNetworkPacketStreamRead(kernelNetworkPacketStream *,
-				  kernelNetworkPacket *);
+				  kernelNetworkPacket **);
 int kernelNetworkPacketStreamWrite(kernelNetworkPacketStream *,
 				   kernelNetworkPacket *);
 

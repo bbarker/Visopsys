@@ -9,5 +9,5 @@ Usage:
 (Only available in graphics mode)
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 

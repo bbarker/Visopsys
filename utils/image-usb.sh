@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  image-usb.sh
 ##
@@ -81,7 +81,7 @@ fi
 
 echo -n "Archiving... "
 echo "Visopsys $RELEASE USB Image Release" > /tmp/comment
-echo "Copyright (C) 1998-2016 J. Andrew McLaughlin" >> /tmp/comment
+echo "Copyright (C) 1998-2018 J. Andrew McLaughlin" >> /tmp/comment
 rm -f $ZIPFILE
 zip -9 -z -r $ZIPFILE $IMAGEFILE < /tmp/comment > $ZIPLOG 2>&1
 if [ $? -ne 0 ] ; then

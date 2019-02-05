@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  helpfiles.sh
 ##
@@ -50,3 +50,4 @@ for INSTFILE in $INST_FILES ; do
 		done
 	done
 done
+

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -116,14 +116,18 @@ typedef struct {
 
 } __attribute__((packed)) jpgExifHeader;
 
-// This is the on-disk Huffman table header
+// This is the on-disk Huffman table
+typedef struct {
+	unsigned char classIdent;
+	unsigned char sizes[16];
+	unsigned char values[];
+
+} __attribute__((packed)) jpgHuffTableHeader;
+
+// This is the on-disk Huffman tables header
 typedef struct {
 	unsigned short length;
-	struct {
-		unsigned char classIdent;
-		unsigned char sizes[16];
-		unsigned char values[JPG_HUFF_VALUES];
-	} table[];
+	jpgHuffTableHeader table[];
 
 } __attribute__((packed)) jpgHuffHeader;
 

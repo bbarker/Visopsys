@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,26 +22,53 @@
 // This is the standard "write" function, as found in standard C libraries
 
 #include <unistd.h>
-#include <stdio.h>
 #include <errno.h>
 #include <sys/api.h>
+#include <sys/cdefs.h>
 
-size_t write(int fd, const void *buf, size_t count)
+
+ssize_t write(int fd, const void *buf, size_t count)
 {
 	// Write count bytes to the stream
 
 	int status = 0;
+	fileDescType type = filedesc_unknown;
+	void *data = NULL;
 
 	if (visopsys_in_kernel)
-		return (errno = ERR_BUG);
+	{
+		errno = ERR_BUG;
+		return (status = -1);
+	}
 
-	if ((fd == (int) stdout) || (fd == (int) stderr))
-		status = textPrint(buf);
-	else
-		status = fileStreamWrite((fileStream *) fd, count, (void *) buf);
+	// Look up the file descriptor
+	status = _fdget(fd, &type, &data);
+	if (status < 0)
+	{
+		errno = status;
+		return (status = -1);
+	}
+
+	switch (type)
+	{
+		case filedesc_textstream:
+			status = textPrint(buf);
+			break;
+
+		case filedesc_filestream:
+			status = fileStreamWrite((fileStream *) data, count, (void *) buf);
+			break;
+
+		default:
+			status = ERR_NOTIMPLEMENTED;
+			break;
+	}
 
 	if (status < 0)
-		return (errno = status);
+	{
+		errno = status;
+		return (status = -1);
+	}
 
 	return (count);
 }

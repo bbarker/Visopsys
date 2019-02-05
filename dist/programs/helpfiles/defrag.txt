@@ -16,6 +16,6 @@ The last (optional) parameter is the name of a (logical) disk to defragment
 the driver for the requested filesystem type supports this functionality.
 
 Options:
--s         : Silent mode
--T         : Force text mode operation
+-s  : Silent mode
+-T  : Force text mode operation
 

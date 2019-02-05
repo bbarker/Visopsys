@@ -1,4 +1,4 @@
-THE VISOPSYS WINDOW LIBRARY (Version 0.7)
+THE VISOPSYS WINDOW LIBRARY (Version 0.8)
 
 The window library is a set of functions to aid GUI development on the Visopsys platform. At present the list of functions is small, but it does provide very useful functionality. This includes an interface for registering window event callbacks for GUI components, and a 'run' function to poll for such events.
 

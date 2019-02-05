@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: 2014-01-22 17:25-0400\n"
 "Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: imgboot.c:60
+#: imgboot.c:64
 #, c-format
 msgid "Welcome to %s"
 msgstr "Wilkommen zu %s"
 
-#: imgboot.c:61
-msgid "Copyright (C) 1998-2016 J. Andrew McLaughlin"
-msgstr "Copyright (C) 1998-2016 J. Andrew McLaughlin"
+#: imgboot.c:65
+msgid "Copyright (C) 1998-2018 J. Andrew McLaughlin"
+msgstr "Copyright (C) 1998-2018 J. Andrew McLaughlin"
 
-#: imgboot.c:63
+#: imgboot.c:67
 #, fuzzy
 msgid ""
 "  This program is free software; you can redistribute it and/or modify it\n"
@@ -49,7 +49,7 @@ msgstr ""
 "  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See\n"
 "  the file /system/COPYING.txt for more details."
 
-#: imgboot.c:71
+#: imgboot.c:75
 msgid ""
 "Would you like to install Visopsys?\n"
 "(Choose continue to skip installing)"
@@ -57,27 +57,27 @@ msgstr ""
 "Wollen Sie Visopsys installieren?\n"
 "(Wählen Sie Fortfahren wenn nicht)"
 
-#: imgboot.c:73
+#: imgboot.c:77
 msgid "Install"
 msgstr "Installieren"
 
-#: imgboot.c:74 imgboot.c:204
+#: imgboot.c:78 imgboot.c:212
 msgid "Continue"
 msgstr "Weiter"
 
-#: imgboot.c:75
+#: imgboot.c:79
 msgid "Language"
 msgstr ""
 
-#: imgboot.c:76
+#: imgboot.c:80
 msgid "Don't ask me this again"
 msgstr "Frage mich nicht wieder"
 
-#: imgboot.c:84
+#: imgboot.c:88
 msgid "Would you like to reboot now?"
 msgstr "Wollen Sie jetzt neu starten?"
 
-#: imgboot.c:85
+#: imgboot.c:89
 msgid ""
 "Using the administrator account 'admin'.\n"
 "There is no password set."
@@ -85,11 +85,11 @@ msgstr ""
 "Benutze das 'admin' - Administratorkonto.\n"
 "Kein Passwort konfiguriert."
 
-#: imgboot.c:160
+#: imgboot.c:168
 msgid "Error"
 msgstr "Fehler"
 
-#: imgboot.c:162
+#: imgboot.c:170
 #, c-format
 msgid ""
 "\n"
@@ -102,20 +102,20 @@ msgstr ""
 "FEHLER: %s\n"
 "\n"
 
-#: imgboot.c:185
+#: imgboot.c:193
 #, c-format
 msgid "%s  Quitting."
 msgstr "%s  Schliesse."
 
-#: imgboot.c:203
+#: imgboot.c:211
 msgid "Reboot?"
 msgstr "Neu starten?"
 
-#: imgboot.c:204
+#: imgboot.c:212
 msgid "Reboot"
 msgstr "Neu starten"
 
-#: imgboot.c:213
+#: imgboot.c:221
 #, c-format
 msgid ""
 "\n"
@@ -124,31 +124,31 @@ msgstr ""
 "\n"
 "%s (y/n): "
 
-#: imgboot.c:222
+#: imgboot.c:230
 msgid "Yes\n"
 msgstr "Ja\n"
 
-#: imgboot.c:228
+#: imgboot.c:236
 msgid "No\n"
 msgstr "Nein\n"
 
-#: imgboot.c:438
+#: imgboot.c:446
 msgid "Can't create window!"
 msgstr "Fenster kann nicht erstellt werden!"
 
-#: imgboot.c:558
+#: imgboot.c:572
 msgid "o Install                    "
 msgstr "o Installieren"
 
-#: imgboot.c:559
+#: imgboot.c:573
 msgid "o Continue                   "
 msgstr "o Fortfahren"
 
-#: imgboot.c:560
+#: imgboot.c:574
 msgid "o Always continue (never ask)"
 msgstr "o Immer fortfahren (nie fragen)"
 
-#: imgboot.c:574
+#: imgboot.c:588
 msgid ""
 "This program can only be run as a privileged user.\n"
 "(Try logging in as user \"admin\")."
@@ -156,16 +156,16 @@ msgstr ""
 "Dieses Programm kann nur von einem berechtigtem Benutzer ausgeführt werden.\n"
 "(Versuchen Sie, sich als \"admin\" einzuloggen)."
 
-#: imgboot.c:588
+#: imgboot.c:602
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""
 
-#: imgboot.c:622
+#: imgboot.c:636
 msgid "Administrator account"
 msgstr "Administrator Konto"
 
-#: imgboot.c:654
+#: imgboot.c:668
 msgid ""
 "\n"
 "Please select from the following options"

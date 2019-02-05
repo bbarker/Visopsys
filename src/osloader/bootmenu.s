@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -39,7 +39,7 @@ ENDSTRUC
 
 
 main:
-	jmp bootCode				; 00 - 02 Jump instruction
+	jmp bootCode		; 00 - 02 Jump instruction
 	nop					; 03 - 03 No op
 
 	TARGETS: ISTRUC bootTarget
@@ -54,10 +54,10 @@ main:
 	ISTRUC bootTarget
 	times bootTarget_size	db 0
 	IEND
-	NUM_TARGETS		dd 0
-	DEFAULT_ENTRY		dd 0
-	TIMEOUT_SECONDS		dd 0
-	MAGIC			db 'VBM2'
+	NUM_TARGETS				dd 0
+	DEFAULT_ENTRY			dd 0
+	TIMEOUT_SECONDS			dd 0
+	MAGIC					db 'VBM2'
 
 
 bootCode:
@@ -563,7 +563,7 @@ IOError:
 	ALIGN 4
 
 LOADMSG			db 0Dh, 0Ah, ' Visopsys Boot Menu' , 0Dh, 0Ah
-				db ' Copyright (C) 1998-2016 J. Andrew McLaughlin', 0Dh, 0Ah
+				db ' Copyright (C) 1998-2018 J. Andrew McLaughlin', 0Dh, 0Ah
 				db 0Dh, 0Ah, 0
 NOTARGETS		db ' No targets to boot!  Did you run the installer program?'
 				db 0Dh, 0Ah, 0
@@ -604,5 +604,5 @@ SECTOR			db 0
 CYLINDER		dw 0
 
 ;; Disk cmd packet for extended int13 disk ops
-DISKPACKET	times 16 db 0
+DISKPACKET		times 16 db 0
 

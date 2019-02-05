@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
 			return (status = ERR_INVALID);
 		}
 
-		address.bytes[count] = status;
+		address.byte[count] = status;
 		argv[1] += (strlen(argv[1]) + 1);
 	}
 
@@ -261,8 +261,8 @@ int main(int argc, char *argv[])
 	filter.localPort = 12468;
 	filter.remotePort = 23;
 
-	printf("Telnet %d.%d.%d.%d\n", address.bytes[0], address.bytes[1],
-		address.bytes[2], address.bytes[3]);
+	printf("Telnet %d.%d.%d.%d\n", address.byte[0], address.byte[1],
+		address.byte[2], address.byte[3]);
 
 	// Open a connection on the adapter
 	connection = networkOpen(NETWORK_MODE_READWRITE, &address, &filter);

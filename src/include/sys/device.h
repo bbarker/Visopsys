@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -56,6 +56,7 @@
 
 // Sub-classes of CPUs
 #define DEVICESUBCLASS_CPU_X86				(DEVICECLASS_CPU | 0x01)
+#define DEVICESUBCLASS_CPU_X86_64			(DEVICECLASS_CPU | 0x02)
 
 // System device subclasses
 #define DEVICESUBCLASS_SYSTEM_BIOS			(DEVICECLASS_SYSTEM | 0x01)

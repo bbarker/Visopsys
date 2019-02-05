@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -53,7 +53,7 @@ int kernelLockGet(lock *getLock)
 	// is filled and the lock is granted.
 
 	// If a lock is already held by another process at the time of the
-	// request, this routine will add the requesting process' id to the list
+	// request, this function will add the requesting process' id to the list
 	// of 'waiters' in the lock structure, and go into a multitasker yield()
 	// loop until the lock can be obtained -- on a first come, first served
 	// basis for the time being.  Waiters wait in a queue.
@@ -121,7 +121,7 @@ int kernelLockGet(lock *getLock)
 		// We didn't get the lock.
 
 		if (kernelProcessingInterrupt())
-			// We can't grant this lock to the interrupt service routine
+			// We can't grant this lock to the interrupt service function
 			return (status = ERR_BUSY);
 
 		// This process will now have to continue waiting until the lock has

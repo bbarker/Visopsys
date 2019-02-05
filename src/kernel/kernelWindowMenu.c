@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -75,8 +75,10 @@ static void focus(kernelWindow *menu, int got)
 			itemComponent = container->components[count];
 
 			if (itemComponent->width != menu->mainContainer->width)
+			{
 				kernelWindowComponentSetWidth(itemComponent,
 					menu->mainContainer->width);
+			}
 		}
 	}
 	else
@@ -259,8 +261,10 @@ static int keyEvent(kernelWindow *menu, kernelWindowComponent *itemComponent,
 	}
 
 	else if (event->key == keyEsc)
+	{
 		// No longer visible
 		kernelWindowSetVisible(menu, 0);
+	}
 
 	return (0);
 }

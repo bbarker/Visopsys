@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: copy-boot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2015-05-08 01:17+0700\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -105,82 +105,82 @@ msgstr ""
 msgid "Can't read FAT sector\n"
 msgstr ""
 
-#: copy-boot.c:403
+#: copy-boot.c:404
 #, c-format
 msgid "Unknown FAT type %s\n"
 msgstr ""
 
-#: copy-boot.c:408
+#: copy-boot.c:411
 #, c-format
 msgid "First unused cluster %u\n"
 msgstr ""
 
-#: copy-boot.c:435
+#: copy-boot.c:438
 msgid "Set OS loader parameters\n"
 msgstr ""
 
-#: copy-boot.c:441
+#: copy-boot.c:444
 msgid "Target filesystem is FAT12\n"
 msgstr ""
 
-#: copy-boot.c:443
+#: copy-boot.c:446
 msgid "Target filesystem is FAT16\n"
 msgstr ""
 
-#: copy-boot.c:444 copy-boot.c:479
+#: copy-boot.c:447 copy-boot.c:473
 #, c-format
 msgid "%u reserved\n"
 msgstr ""
 
-#: copy-boot.c:446 copy-boot.c:481
+#: copy-boot.c:449 copy-boot.c:475
 #, c-format
 msgid "%u FATs of %u\n"
 msgstr ""
 
-#: copy-boot.c:449
+#: copy-boot.c:452
 #, c-format
 msgid "%u root dir sectors\n"
 msgstr ""
 
-#: copy-boot.c:452 copy-boot.c:485
+#: copy-boot.c:455 copy-boot.c:479
 #, c-format
 msgid "Sectors per cluster %u\n"
 msgstr ""
 
-#: copy-boot.c:478
+#: copy-boot.c:472
 msgid "Target filesystem is FAT32\n"
 msgstr ""
 
-#: copy-boot.c:483
+#: copy-boot.c:477
 #, c-format
 msgid "Root dir cluster %u\n"
 msgstr ""
 
-#: copy-boot.c:500
+#: copy-boot.c:486
 #, c-format
-msgid "First user sector for OS loader is %u\n"
+msgid "First unused cluster for OS loader is %u\n"
 msgstr ""
 
-#: copy-boot.c:511
+#: copy-boot.c:498
 #, c-format
 msgid "OS loader sectors are %u\n"
 msgstr ""
 
-#: copy-boot.c:525
+#: copy-boot.c:512
 msgid "Add boot sector signature\n"
 msgstr ""
 
-#: copy-boot.c:547
+#: copy-boot.c:534
 #, c-format
 msgid "fatBSHeader size is 0x%02x instead of 0x3E\n"
 msgstr ""
 
-#: copy-boot.c:554
+#: copy-boot.c:541
 #, c-format
 msgid "fat32BSHeader size is 0x%02x instead of 0x5A\n"
 msgstr ""
 
-#: copy-boot.c:561
+#: copy-boot.c:548
 #, c-format
 msgid "fat32FsInfo size is %d instead of 512\n"
 msgstr ""

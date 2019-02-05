@@ -1,6 +1,6 @@
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  Makefile
 ##
@@ -41,7 +41,7 @@ NAMES = kernelMain \
 	kernelDisk \
 	kernelDma \
 	kernelDriver \
-	kernelEncryptMD5 \
+	kernelCryptHashMd5 \
 	kernelEnvironment \
 	kernelError \
 	kernelFile \
@@ -78,8 +78,14 @@ NAMES = kernelMain \
 	kernelMouse \
 	kernelMultitasker \
 	kernelNetwork \
+	kernelNetworkArp \
 	kernelNetworkDevice \
+	kernelNetworkDhcp \
+	kernelNetworkEthernet \
+	kernelNetworkIcmp \
+	kernelNetworkIp4 \
 	kernelNetworkStream \
+	kernelNetworkUdp \
 	kernelPage \
 	kernelPic \
 	kernelPower \
@@ -130,6 +136,7 @@ DRIVERNAMES = kernelAcpiDriver \
 	kernelFramebufferGraphicDriver \
 	kernelGraphicConsoleDriver \
 	kernelIdeDriver \
+	kernelNetworkLoopDriver \
 	kernelNetworkPcNetDriver \
 	kernelPciDriver \
 	kernelPicDriver \

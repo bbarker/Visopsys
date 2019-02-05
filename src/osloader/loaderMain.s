@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -34,7 +34,6 @@
 	EXTERN PARTENTRY
 	EXTERN HARDWAREINFO
 	EXTERN KERNELGMODE
-	EXTERN HDDINFO
 	EXTERN KERNELENTRY
 
 	GLOBAL loaderMain
@@ -929,6 +928,7 @@ SECPERTRACK		dd 0
 SECPERCLUST		dw 0
 FATS			dw 0
 DRIVENUMBER		dw 0
+HDDINFO			times 42h  db 0	;; Space for info ret by EBIOS
 
 ;;
 ;; Tables, desciptors, etc., used for protected mode
@@ -991,8 +991,8 @@ TMPGDT:
 
 HAPPY		db 01h, ' ', 0
 BLANK		db '               ', 10h, ' ', 0
-LOADMSG1	db 'Visopsys OS Loader v0.8', 0
-LOADMSG2	db 'Copyright (C) 1998-2016 J. Andrew McLaughlin', 0
+LOADMSG1	db 'Visopsys BIOS OS Loader v0.83', 0
+LOADMSG2	db 'Copyright (C) 1998-2018 J. Andrew McLaughlin', 0
 BOOTDEV1	db 'Boot device  ', 10h, ' ', 0
 BOOTFLOPPY	db 'fd', 0
 BOOTHDD		db 'hd', 0

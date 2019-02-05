@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 00:44+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,44 +61,44 @@ msgstr ""
 msgid "Enter filename"
 msgstr ""
 
-#: edit.c:967
+#: edit.c:966
 msgid "Discard changes?"
 msgstr ""
 
-#: edit.c:968
+#: edit.c:967
 msgid "Discard"
 msgstr ""
 
-#: edit.c:968
+#: edit.c:967
 msgid "Cancel"
 msgstr ""
 
-#: edit.c:1003 edit.c:1331
+#: edit.c:1002 edit.c:1330
 msgid "Couldn't create file in a read-only filesystem"
 msgstr ""
 
-#: edit.c:1005 edit.c:1333
+#: edit.c:1004 edit.c:1332
 #, c-format
 msgid "Error %d loading file"
 msgstr ""
 
-#: edit.c:1133
+#: edit.c:1132
 msgid "Unable to launch file dialog"
 msgstr ""
 
-#: edit.c:1145
+#: edit.c:1144
 #, c-format
 msgid "Error %d saving file"
 msgstr ""
 
-#: edit.c:1278
+#: edit.c:1277
 #, c-format
 msgid ""
 "\n"
 "The \"%s\" command only works in graphics mode\n"
 msgstr ""
 
-#: edit.c:1294
+#: edit.c:1293
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""

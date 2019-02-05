@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,119 +17,193 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ifconfig.c:54
+#: ifconfig.c:68
 msgid "Network Devices"
 msgstr ""
 
-#: ifconfig.c:55
+#: ifconfig.c:69
+msgid "Enable"
+msgstr ""
+
+#: ifconfig.c:70
+msgid "Disable"
+msgstr ""
+
+#: ifconfig.c:71
 msgid "Enabled at startup"
 msgstr ""
 
-#: ifconfig.c:56
+#: ifconfig.c:72
 msgid "Host name"
 msgstr ""
 
-#: ifconfig.c:57
+#: ifconfig.c:73
 msgid "Domain name"
 msgstr ""
 
-#: ifconfig.c:58
+#: ifconfig.c:74
+msgid "Devices"
+msgstr ""
+
+#: ifconfig.c:75
 msgid "OK"
 msgstr ""
 
-#: ifconfig.c:59
+#: ifconfig.c:76
 msgid "Cancel"
 msgstr ""
 
-#: ifconfig.c:60
+#: ifconfig.c:77
 msgid "No supported network devices."
 msgstr ""
 
-#: ifconfig.c:93
+#: ifconfig.c:145
 msgid "Error"
 msgstr ""
 
-#: ifconfig.c:108
+#: ifconfig.c:163
+msgid "Local Loopback"
+msgstr ""
+
+#: ifconfig.c:166
+msgid "Ethernet"
+msgstr ""
+
+#: ifconfig.c:169
+msgid "Unknown"
+msgstr ""
+
+#: ifconfig.c:175
+msgid "Link encap"
+msgstr ""
+
+#: ifconfig.c:178
+msgid "HWaddr"
+msgstr ""
+
+#: ifconfig.c:185
+msgid "inet addr"
+msgstr ""
+
+#: ifconfig.c:190
+msgid "Mask"
+msgstr ""
+
+#: ifconfig.c:195
+msgid "Bcast"
+msgstr ""
+
+#: ifconfig.c:200
+msgid "Gateway"
+msgstr ""
+
+#: ifconfig.c:205
+msgid "DNS"
+msgstr ""
+
+#: ifconfig.c:210
+msgid "RX packets"
+msgstr ""
+
+#: ifconfig.c:213 ifconfig.c:225
+msgid "errors"
+msgstr ""
+
+#: ifconfig.c:216 ifconfig.c:228
+msgid "dropped"
+msgstr ""
+
+#: ifconfig.c:219 ifconfig.c:231
+msgid "overruns"
+msgstr ""
+
+#: ifconfig.c:222
+msgid "TX packets"
+msgstr ""
+
+#: ifconfig.c:234
+msgid "link status"
+msgstr ""
+
+#: ifconfig.c:236
+msgid "LINK"
+msgstr ""
+
+#: ifconfig.c:236
+msgid "NOLINK"
+msgstr ""
+
+#: ifconfig.c:238
+msgid "running"
+msgstr ""
+
+#: ifconfig.c:240
+msgid "UP"
+msgstr ""
+
+#: ifconfig.c:240
+msgid "DOWN"
+msgstr ""
+
+#: ifconfig.c:242
+msgid "collisions"
+msgstr ""
+
+#: ifconfig.c:245
+msgid "txqueuelen"
+msgstr ""
+
+#: ifconfig.c:248
+msgid "Interrupt"
+msgstr ""
+
+#: ifconfig.c:264 ifconfig.c:732
 #, c-format
 msgid "Can't get info for device %s"
 msgstr ""
 
-#: ifconfig.c:115
-msgid "Ethernet"
-msgstr ""
-
-#: ifconfig.c:118
-msgid "Unknown"
-msgstr ""
-
-#: ifconfig.c:123
-#, c-format
-msgid ""
-"%s   Link encap:%s  HWaddr %02x:%02x:%02x:%02x:%02x:%02x\n"
-"       inet addr:%d.%d.%d.%d  Bcast:%d.%d.%d.%d  Mask:%d.%d.%d.%d\n"
-"       RX packets:%u errors:%u dropped:%u overruns:%u\n"
-"       TX packets:%u errors:%u dropped:%u overruns:%u\n"
-"       %s, %s collisions:%u txqueuelen:%u Interrupt:%d"
-msgstr ""
-
-#: ifconfig.c:142
-msgid "LINK"
-msgstr ""
-
-#: ifconfig.c:142
-msgid "NOLINK"
-msgstr ""
-
-#: ifconfig.c:143
-msgid "UP"
-msgstr ""
-
-#: ifconfig.c:143
-msgid "DOWN"
-msgstr ""
-
-#: ifconfig.c:201
+#: ifconfig.c:396
 #, c-format
 msgid "Networking is %s"
 msgstr ""
 
-#: ifconfig.c:202
+#: ifconfig.c:396
 msgid "enabled"
 msgstr ""
 
-#: ifconfig.c:202
+#: ifconfig.c:397
 msgid "disabled"
 msgstr ""
 
-#: ifconfig.c:205
-msgid "Disable"
+#: ifconfig.c:516
+msgid "Disabling device"
 msgstr ""
 
-#: ifconfig.c:205 ifconfig.c:432
-msgid "Enable"
+#: ifconfig.c:516
+msgid "Enabling device"
 msgstr ""
 
-#: ifconfig.c:342
-msgid "Shutting down networking"
-msgstr ""
-
-#: ifconfig.c:343
-msgid "Initializing networking"
-msgstr ""
-
-#: ifconfig.c:343
+#: ifconfig.c:517 ifconfig.c:559
 msgid "One moment please..."
 msgstr ""
 
-#: ifconfig.c:427
+#: ifconfig.c:558
+msgid "Shutting down networking"
+msgstr ""
+
+#: ifconfig.c:558
+msgid "Initializing networking"
+msgstr ""
+
+#: ifconfig.c:657
 msgid "Networking is disabled"
 msgstr ""
 
-#: ifconfig.c:587
+#: ifconfig.c:863
 #, c-format
 msgid "Unknown option '%c'"
 msgstr ""
 
-#: ifconfig.c:595
+#: ifconfig.c:871
 msgid "Can't get the count of network devices"
 msgstr ""

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -94,9 +94,11 @@ static void renderComponent(kernelWindowComponent *component)
 
 	// Redraw a clip of that part of the window
 	if (window->drawClip)
+	{
 		window->drawClip(window, (component->xCoord - 2),
 			(component->yCoord - 2), (component->width + 4),
 			(component->height + 4));
+	}
 }
 
 
@@ -283,8 +285,6 @@ void kernelWindowComponentDestroy(kernelWindowComponent *component)
 
 	// Free the component itself
 	kernelFree((void *) component);
-
-	return;
 }
 
 

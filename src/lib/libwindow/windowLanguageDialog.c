@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -91,7 +91,7 @@ static int getLanguages(void)
 
 		sprintf(path, "%s/flag-%s.bmp", PATH_SYSTEM_LOCALE, langs[count].text);
 
-		if (fileFind(path, &f) >= 0)
+		if (fileFind(path, NULL) >= 0)
 			imageLoad(path, 0, 0, &langs[count].iconImage);
 	}
 
@@ -235,6 +235,7 @@ _X_ int windowNewLanguageDialog(objectKey parentWindow, char *pickedLanguage)
 				strncpy(pickedLanguage, langs[selected].text, 6);
 				status = 0;
 			}
+
 			break;
 		}
 

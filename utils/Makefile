@@ -1,6 +1,6 @@
 ##
 ##  Visopsys
-##  Copyright (C) 1998-2016 J. Andrew McLaughlin
+##  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ##
 ##  Makefile
 ##
@@ -24,7 +24,7 @@ debug:
 	${MAKE} all DEBUG=1
 
 copy-boot: ${SRCDIR}/copy-boot.c Makefile
-	${CC} ${CFLAGS} ${SRCDIR}/copy-boot.c -o $@
+	${CC} ${CFLAGS} -DPORTABLE ${SRCDIR}/copy-boot.c -o $@
 
 clean:
 	rm -f *~ core *.zip *.iso *.img copy-boot *.log

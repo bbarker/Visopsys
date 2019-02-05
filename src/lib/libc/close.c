@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,21 +22,60 @@
 // This is the standard "close" function, as found in standard C libraries
 
 #include <unistd.h>
-#include <stdlib.h>
 #include <errno.h>
 #include <sys/api.h>
+#include <sys/cdefs.h>
 
 
 int close(int fd)
 {
-	// Given a file descriptor, close the file.
+	// Given a file descriptor, close the file and free the file descriptor.
+
+	int status = 0;
+	fileDescType type = filedesc_unknown;
+	void *data = NULL;
 
 	if (visopsys_in_kernel)
-		return (errno = ERR_BUG);
+	{
+		errno = ERR_BUG;
+		return (status = -1);
+	}
 
-	fileStreamClose((fileStream *) fd);
-	free((void *) fd);
+	// Look up the file descriptor
+	status = _fdget(fd, &type, &data);
+	if (status < 0)
+	{
+		errno = status;
+		return (status = -1);
+	}
 
-	return (0);
+	if (data)
+	{
+		switch (type)
+		{
+			case filedesc_filestream:
+				status = fileStreamClose((fileStream *) data);
+				break;
+
+			case filedesc_socket:
+				status = networkClose(data);
+				break;
+
+			default:
+				status = ERR_NOTIMPLEMENTED;
+				break;
+		}
+
+		if (status < 0)
+		{
+			errno = status;
+			return (status = -1);
+		}
+	}
+
+	// Free the file descriptor
+	_fdfree(fd);
+
+	return (status = 0);
 }
 

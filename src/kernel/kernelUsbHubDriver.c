@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -710,7 +710,7 @@ out:
 static int driverDetect(void *parent __attribute__((unused)),
 	kernelDriver *driver)
 {
-	// This routine is used to detect and initialize each device, as well as
+	// This function is used to detect and initialize each device, as well as
 	// registering each one with any higher-level interfaces.
 
 	int status = 0;
@@ -777,7 +777,7 @@ static int driverHotplug(void *parent __attribute__((unused)),
 	int busType __attribute__((unused)), int target, int connected,
 	kernelDriver *driver)
 {
-	// This routine is used to detect whether a newly-connected, hotplugged
+	// This function is used to detect whether a newly-connected, hotplugged
 	// device is supported by this driver during runtime, and if so to do the
 	// appropriate device setup and registration.  Alternatively if the device
 	// is disconnected a call to this function lets us know to stop trying

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -304,8 +304,10 @@ static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
 	windowEvent cursorEvent;
 	int cursorColumn = 0, cursorRow = 0;
 
-	// Is the event in one of our scroll bars?
-	if (textArea->scrollBar && isMouseInScrollBar(event, textArea->scrollBar))
+	// Is the event in one of our scroll bars, or a mouse scroll?
+	if (textArea->scrollBar &&
+		(isMouseInScrollBar(event, textArea->scrollBar) ||
+			(event->type & EVENT_MOUSE_SCROLL)))
 	{
 		scrollBar = textArea->scrollBar->data;
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-08-06 01:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,68 +34,67 @@ msgstr ""
 msgid "Actual size"
 msgstr ""
 
-#: view.c:105
+#: view.c:102
 msgid "Error"
 msgstr ""
 
-#: view.c:107
-#, c-format
-msgid "ERROR: %s\n"
-msgstr ""
-
-#: view.c:255
-msgid "Loading"
-msgstr ""
-
-#: view.c:256
-msgid "Loading image..."
+#: view.c:174
+msgid "Failed to resize image"
 msgstr ""
 
 #: view.c:263
+msgid "Loading"
+msgstr ""
+
+#: view.c:264
+msgid "Loading image..."
+msgstr ""
+
+#: view.c:276
 #, c-format
 msgid "Error loading the image \"%s\"\n"
 msgstr ""
 
-#: view.c:266
+#: view.c:281
 #, c-format
 msgid "Unable to load the image \"%s\"\n"
 msgstr ""
 
-#: view.c:286
+#: view.c:298
 msgid "Image"
 msgstr ""
 
-#: view.c:326
+#: view.c:351
 #, c-format
 msgid "Unable to load the file \"%s\"\n"
 msgstr ""
 
-#: view.c:374
+#: view.c:397
 #, c-format
 msgid ""
 "\n"
 "The \"%s\" command only works in graphics mode\n"
 msgstr ""
 
-#: view.c:392
+#: view.c:413
 msgid "Enter filename"
 msgstr ""
 
-#: view.c:393
+#: view.c:414
 msgid "Please choose the file to view:"
 msgstr ""
 
-#: view.c:409
+#: view.c:432
 #, c-format
 msgid "The file \"%s\" was not found"
 msgstr ""
 
-#: view.c:418
+#: view.c:441
 #, c-format
 msgid "Unable to classify the file \"%s\""
 msgstr ""
 
-#: view.c:425
+#: view.c:448
 #, c-format
 msgid "Can't display the file type of \"%s\" (%s)"
 msgstr ""

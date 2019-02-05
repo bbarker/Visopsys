@@ -1,0 +1,281 @@
+Index: ntfsprogs/mkntfs.c
+===================================================================
+RCS file: /home/andymc/Prog/cvs/visopsys/ports/ntfsprogs/ntfsprogs/mkntfs.c,v
+retrieving revision 1.4
+diff -u -r1.4 mkntfs.c
+--- ntfsprogs/mkntfs.c	17 Dec 2014 03:07:30 -0000	1.4
++++ ntfsprogs/mkntfs.c	22 Dec 2017 18:40:38 -0000
+@@ -1631,16 +1631,16 @@
+ 	int asize, mpa_size, err, i;
+ 	s64 bw = 0, inited_size;
+ 	VCN highest_vcn;
+-	ntfschar *uname = NULL;
+-	int uname_len = 0;
++	ntfschar *u_name = NULL;
++	int u_name_len = 0;
+ 	/*
+ 	if (base record)
+ 		attr_lookup();
+ 	else
+ 	*/
+ 
+-	uname = ntfs_str2ucs(name, &uname_len);
+-	if (!uname)
++	u_name = ntfs_str2ucs(name, &u_name_len);
++	if (!u_name)
+ 		return -errno;
+ 
+ 	/* Check if the attribute is already there. */
+@@ -1655,7 +1655,7 @@
+ 		err = -EOPNOTSUPP;
+ 		goto err_out;
+ 	}
+-	if (!mkntfs_attr_lookup(type, uname, uname_len, ic, 0, NULL, 0, ctx)) {
++	if (!mkntfs_attr_lookup(type, u_name, u_name_len, ic, 0, NULL, 0, ctx)) {
+ 		err = -EEXIST;
+ 		goto err_out;
+ 	}
+@@ -1755,7 +1755,7 @@
+ 	a->allocated_size = cpu_to_le64(highest_vcn * g_vol->cluster_size);
+ 	a->data_size = cpu_to_le64(val_len);
+ 	if (name_len)
+-		memcpy((char*)a + hdr_size, uname, name_len << 1);
++		memcpy((char*)a + hdr_size, u_name, name_len << 1);
+ 	if (flags & ATTR_COMPRESSION_MASK) {
+ 		if (flags & ATTR_COMPRESSION_MASK & ~ATTR_IS_COMPRESSED) {
+ 			ntfs_log_error("Unknown compression format. Reverting to "
+@@ -1793,7 +1793,7 @@
+ err_out:
+ 	if (ctx)
+ 		ntfs_attr_put_search_ctx(ctx);
+-	ntfs_ucsfree(uname);
++	ntfs_ucsfree(u_name);
+ 	return err;
+ }
+ 
+@@ -1813,16 +1813,16 @@
+ 	int asize, mpa_size, err, i;
+ 	runlist *rl = NULL;
+ 	s64 bw = 0;
+-	ntfschar *uname = NULL;
+-	int uname_len = 0;
++	ntfschar *u_name = NULL;
++	int u_name_len = 0;
+ 	/*
+ 	if (base record)
+ 		attr_lookup();
+ 	else
+ 	*/
+ 
+-	uname = ntfs_str2ucs(name, &uname_len);
+-	if (!uname)
++	u_name = ntfs_str2ucs(name, &u_name_len);
++	if (!u_name)
+ 		return -errno;
+ 
+ 	/* Check if the attribute is already there. */
+@@ -1837,7 +1837,7 @@
+ 		err = -EOPNOTSUPP;
+ 		goto err_out;
+ 	}
+-	if (!mkntfs_attr_lookup(type, uname, uname_len, ic, 0, NULL, 0, ctx)) {
++	if (!mkntfs_attr_lookup(type, u_name, u_name_len, ic, 0, NULL, 0, ctx)) {
+ 		err = -EEXIST;
+ 		goto err_out;
+ 	}
+@@ -1943,7 +1943,7 @@
+ 	a->data_size = cpu_to_le64(val_len);
+ 	a->initialized_size = cpu_to_le64(val_len);
+ 	if (name_len)
+-		memcpy((char*)a + hdr_size, uname, name_len << 1);
++		memcpy((char*)a + hdr_size, u_name, name_len << 1);
+ 	if (flags & ATTR_COMPRESSION_MASK) {
+ 		if (flags & ATTR_COMPRESSION_MASK & ~ATTR_IS_COMPRESSED) {
+ 			ntfs_log_error("Unknown compression format. Reverting to "
+@@ -1979,7 +1979,7 @@
+ err_out:
+ 	if (ctx)
+ 		ntfs_attr_put_search_ctx(ctx);
+-	ntfs_ucsfree(uname);
++	ntfs_ucsfree(u_name);
+ 	free(rl);
+ 	return err;
+ }
+@@ -1998,16 +1998,16 @@
+ 	ntfs_attr_search_ctx *ctx;
+ 	ATTR_RECORD *a;
+ 	int asize, err;
+-	ntfschar *uname = NULL;
+-	int uname_len = 0;
++	ntfschar *u_name = NULL;
++	int u_name_len = 0;
+ 	/*
+ 	if (base record)
+ 		mkntfs_attr_lookup();
+ 	else
+ 	*/
+ 
+-	uname = ntfs_str2ucs(name, &uname_len);
+-	if (!uname)
++	u_name = ntfs_str2ucs(name, &u_name_len);
++	if (!u_name)
+ 		return -errno;
+ 
+ 	/* Check if the attribute is already there. */
+@@ -2022,7 +2022,7 @@
+ 		err = -EOPNOTSUPP;
+ 		goto err_out;
+ 	}
+-	if (!mkntfs_attr_lookup(type, uname, uname_len, ic, 0, val, val_len,
++	if (!mkntfs_attr_lookup(type, u_name, u_name_len, ic, 0, val, val_len,
+ 			ctx)) {
+ 		err = -EEXIST;
+ 		goto err_out;
+@@ -2078,13 +2078,13 @@
+ 	a->resident_flags = res_flags;
+ 	a->reservedR = 0;
+ 	if (name_len)
+-		memcpy((char*)a + 24, uname, name_len << 1);
++		memcpy((char*)a + 24, u_name, name_len << 1);
+ 	if (val_len)
+ 		memcpy((char*)a + le16_to_cpu(a->value_offset), val, val_len);
+ err_out:
+ 	if (ctx)
+ 		ntfs_attr_put_search_ctx(ctx);
+-	ntfs_ucsfree(uname);
++	ntfs_ucsfree(u_name);
+ 	return err;
+ }
+ 
+@@ -2144,7 +2144,7 @@
+ 	STANDARD_INFORMATION *si;
+ 	FILE_NAME_ATTR *fn;
+ 	int i, fn_size;
+-	ntfschar *uname;
++	ntfschar *u_name;
+ 
+ 	/* Check if the attribute is already there. */
+ 	ctx = ntfs_attr_get_search_ctx(NULL, m);
+@@ -2192,8 +2192,8 @@
+ 		fn->reparse_point_tag = cpu_to_le32(reparse_point_tag);
+ 	}
+ 	fn->file_name_type = file_name_type;
+-	uname = fn->file_name;
+-	i = ntfs_mbstoucs(file_name, &uname, i);
++	u_name = fn->file_name;
++	i = ntfs_mbstoucs(file_name, &u_name, i);
+ 	if (i < 1) {
+ 		free(fn);
+ 		return -EINVAL;
+@@ -2314,22 +2314,22 @@
+ static int add_attr_vol_name(MFT_RECORD *m, const char *vol_name,
+ 		const int vol_name_len __attribute__((unused)))
+ {
+-	ntfschar *uname = NULL;
+-	int uname_len = 0;
++	ntfschar *u_name = NULL;
++	int u_name_len = 0;
+ 	int i;
+ 
+ 	if (vol_name) {
+-		uname_len = ntfs_mbstoucs(vol_name, &uname, 0);
+-		if (uname_len < 0)
++		u_name_len = ntfs_mbstoucs(vol_name, &u_name, 0);
++		if (u_name_len < 0)
+ 			return -errno;
+-		if (uname_len > 0xff) {
+-			free(uname);
++		if (u_name_len > 0xff) {
++			free(u_name);
+ 			return -ENAMETOOLONG;
+ 		}
+ 	}
+ 	i = insert_resident_attr_in_mft_record(m, AT_VOLUME_NAME, NULL, 0, 0,
+-			0, 0, (u8*)uname, uname_len*sizeof(ntfschar));
+-	free(uname);
++			0, 0, (u8*)u_name, u_name_len*sizeof(ntfschar));
++	free(u_name);
+ 	if (i < 0)
+ 		ntfs_log_error("add_attr_vol_name failed: %s\n", strerror(-i));
+ 	return i;
+@@ -2523,32 +2523,32 @@
+ 	INDEX_ROOT *r;
+ 	INDEX_ENTRY *re;
+ 	INDEX_ALLOCATION *ia_val = NULL;
+-	ntfschar *uname = NULL;
+-	int uname_len = 0;
++	ntfschar *u_name = NULL;
++	int u_name_len = 0;
+ 	u8 bmp[8];
+ 	char *re_start, *re_end;
+ 	int i, err, index_block_size;
+ 
+-	uname = ntfs_str2ucs(name, &uname_len);
+-	if (!uname)
++	u_name = ntfs_str2ucs(name, &u_name_len);
++	if (!u_name)
+ 		return -errno;
+ 
+ 	/* Find the index root attribute. */
+ 	ctx = ntfs_attr_get_search_ctx(NULL, m);
+ 	if (!ctx) {
+ 		ntfs_log_error("Failed to allocate attribute search context.\n");
+-		ntfs_ucsfree(uname);
++		ntfs_ucsfree(u_name);
+ 		return -ENOMEM;
+ 	}
+ 	if (ic == IGNORE_CASE) {
+ 		ntfs_log_error("FIXME: Hit unimplemented code path #4.\n");
+ 		err = -EOPNOTSUPP;
+-		ntfs_ucsfree(uname);
++		ntfs_ucsfree(u_name);
+ 		goto err_out;
+ 	}
+-	err = mkntfs_attr_lookup(AT_INDEX_ROOT, uname, uname_len, ic, 0, NULL, 0,
++	err = mkntfs_attr_lookup(AT_INDEX_ROOT, u_name, u_name_len, ic, 0, NULL, 0,
+ 			ctx);
+-	ntfs_ucsfree(uname);
++	ntfs_ucsfree(u_name);
+ 	if (err) {
+ 		err = -ENOTDIR;
+ 		goto err_out;
+@@ -3235,7 +3235,7 @@
+ 	FILE_NAME_ATTR *fn;
+ 	int i, fn_size, idx_size;
+ 	INDEX_ENTRY *idx_entry_new;
+-	ntfschar *uname;
++	ntfschar *u_name;
+ 
+ 	/* Create the file_name attribute. */
+ 	i = (strlen(file_name) + 1) * sizeof(ntfschar);
+@@ -3268,8 +3268,8 @@
+ 		fn->reparse_point_tag = cpu_to_le32(reparse_point_tag);
+ 	}
+ 	fn->file_name_type = file_name_type;
+-	uname = fn->file_name;
+-	i = ntfs_mbstoucs(file_name, &uname, i);
++	u_name = fn->file_name;
++	i = ntfs_mbstoucs(file_name, &u_name, i);
+ 	if (i < 1) {
+ 		free(fn);
+ 		return -EINVAL;
+@@ -3350,7 +3350,7 @@
+ {
+ 	FILE_NAME_ATTR *fn;
+ 	int i, fn_size;
+-	ntfschar *uname;
++	ntfschar *u_name;
+ 
+ 	/* Create the file_name attribute. */
+ 	i = (strlen(file_name) + 1) * sizeof(ntfschar);
+@@ -3380,8 +3380,8 @@
+ 		fn->reparse_point_tag = cpu_to_le32(reparse_point_tag);
+ 	}
+ 	fn->file_name_type = file_name_type;
+-	uname = fn->file_name;
+-	i = ntfs_mbstoucs(file_name, &uname, i);
++	u_name = fn->file_name;
++	i = ntfs_mbstoucs(file_name, &u_name, i);
+ 	if (i < 1) {
+ 		free(fn);
+ 		return -EINVAL;

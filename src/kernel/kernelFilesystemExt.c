@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -19,7 +19,7 @@
 //  kernelFilesystemExt.c
 //
 
-// This file contains the routines designed to interpret the EXT2 filesystem
+// This file contains the functions designed to interpret the EXT2 filesystem
 // (commonly found on Linux disks)
 
 #include "kernelFilesystemExt.h"
@@ -118,8 +118,12 @@ static inline void debugGroupDesc(extGroupDesc *groupDesc)
 
 static inline void debugInode(extInode *inode)
 {
-	char tmp[1024];
+	char *tmp = NULL;
 	int count;
+
+	tmp = kernelMalloc(1024);
+	if (!tmp)
+		return;
 
 	tmp[0] = '\0';
 	for (count = 0; count < 15; count ++)
@@ -139,12 +143,18 @@ static inline void debugInode(extInode *inode)
 		inode->atime, inode->ctime, inode->mtime, inode->dtime, inode->gid,
 		inode->links_count, inode->blocks512, inode->flags, tmp,
 		inode->file_acl, inode->dir_acl);
+
+	kernelFree(tmp);
 }
 
 static inline void debugExtentNode(extExtent *extent)
 {
-	char tmp[1024];
+	char *tmp = NULL;
 	int count;
+
+	tmp = kernelMalloc(1024);
+	if (!tmp)
+		return;
 
 	tmp[0] = '\0';
 	for (count = 0; count < extent->header.entries; count ++)
@@ -181,6 +191,8 @@ static inline void debugExtentNode(extExtent *extent)
 		"  generation=%u%s",
 		extent->header.magic, extent->header.entries, extent->header.max,
 		extent->header.depth, extent->header.generation, tmp);
+
+	kernelFree(tmp);
 }
 #else
 	#define debugSuperblock(superblock) do { } while (0)
@@ -490,57 +502,95 @@ static int readInode(extInternalData *extData, unsigned number,
 }
 
 
-static int readExtent(extInternalData *extData, extInode *inode,
-	unsigned startBlock, unsigned numBlocks, void *buffer)
+static int readExtentNode(extInternalData *extData, extExtent *extent,
+	unsigned *startBlock, unsigned *numBlocks, void **buffer)
 {
 	int status = 0;
-	void *dataPointer = NULL;
+	extExtent *nextExtent = NULL;
+	extExtentIdx *extentIdx = NULL;
 	extExtentLeaf *extentLeaf = NULL;
 	unsigned readBlocks = 0;
 	int count;
 
-	dataPointer = buffer;
+	kernelDebug(debug_fs, "EXT extent %d entries", extent->header.entries);
 
-	if (!inode->u.extent.header.depth)
+	if (extent->header.depth)
 	{
-		kernelDebug(debug_fs, "EXT extent leaf node");
-		debugExtentNode(&inode->u.extent);
+		kernelDebug(debug_fs, "EXT extent index node");
+		debugExtentNode(extent);
 
-		for (count = 0; (numBlocks &&
-			(count < inode->u.extent.header.entries)); count ++)
+		// Get memory to read extent nodes
+		nextExtent = kernelMalloc(extData->blockSize);
+		if (!nextExtent)
+			return (status = ERR_MEMORY);
+
+		for (count = 0; (*numBlocks && (count < extent->header.entries));
+			count ++)
 		{
-			extentLeaf = &inode->u.extent.node[count].leaf;
+			extentIdx = &extent->node[count].idx;
 
-			if ((extentLeaf->block <= startBlock) &&
-				((extentLeaf->block + extentLeaf->len) > startBlock))
-			{
-				kernelDebug(debug_fs, "EXT read from leaf node entry %d",
-					count);
+			memset(nextExtent, 0, extData->blockSize);
 
-				readBlocks = min(numBlocks, (extentLeaf->len - (startBlock -
-					extentLeaf->block)));
+			status = kernelDiskReadSectors((char *) extData->disk->name,
+				getSectorNumber(extData, extentIdx->leaf_lo),
+				extData->sectorsPerBlock, nextExtent);
+			if (status < 0)
+				break;
 
-				status = kernelDiskReadSectors((char *) extData->disk->name,
-					getSectorNumber(extData, (extentLeaf->start_lo +
-						(startBlock - extentLeaf->block))),
-					(readBlocks * extData->sectorsPerBlock), dataPointer);
-				if (status < 0)
-					return (status);
-
-				startBlock += readBlocks;
-				numBlocks -= readBlocks;
-				dataPointer += (readBlocks * extData->blockSize);
-			}
+			// Do the next node recursively
+			status = readExtentNode(extData, nextExtent, startBlock, numBlocks,
+				buffer);
+			if (status < 0)
+				break;
 		}
+
+		if (nextExtent)
+			kernelFree(nextExtent);
 	}
 	else
 	{
-		kernelError(kernel_error, "Deep file extents are currently "
-			"unsupported");
-		return (status = ERR_NOTIMPLEMENTED);
+		kernelDebug(debug_fs, "EXT extent leaf node");
+		debugExtentNode(extent);
+
+		for (count = 0; (*numBlocks && (count < extent->header.entries));
+			count ++)
+		{
+			extentLeaf = &extent->node[count].leaf;
+
+			if ((extentLeaf->block <= *startBlock) &&
+				((extentLeaf->block + extentLeaf->len) > *startBlock))
+			{
+				readBlocks = min(*numBlocks, (extentLeaf->len - (*startBlock -
+					extentLeaf->block)));
+
+				kernelDebug(debug_fs, "EXT read %u from leaf node entry %d",
+					readBlocks, count);
+
+				status = kernelDiskReadSectors((char *) extData->disk->name,
+					getSectorNumber(extData, (extentLeaf->start_lo +
+						(*startBlock - extentLeaf->block))),
+					(readBlocks * extData->sectorsPerBlock), *buffer);
+				if (status < 0)
+					break;
+
+				*startBlock += readBlocks;
+				*numBlocks -= readBlocks;
+				*buffer += (readBlocks * extData->blockSize);
+			}
+		}
 	}
 
-	return (status = 0);
+	return (status);
+}
+
+
+static int readExtent(extInternalData *extData, extInode *inode,
+	unsigned startBlock, unsigned numBlocks, void *buffer)
+{
+	// Call the recursive function to walk the extent tree (modifies several
+	// of its arguments)
+	return (readExtentNode(extData, &inode->u.extent, &startBlock, &numBlocks,
+		&buffer));
 }
 
 
@@ -1110,7 +1160,7 @@ static int format(kernelDisk *theDisk, const char *type, const char *label,
 	superblock.state = EXT_VALID_FS;
 	superblock.errors = EXT_ERRORS_DEFAULT;
 	superblock.lastcheck = superblock.mtime;
-	superblock.checkinterval = (SECPERDAY * 180); // 180 days, in seconds
+	superblock.checkinterval = (SECS_PER_DAY * 180); // 180 days, in seconds
 	superblock.creator_os = EXT_OS_VISOPSYS;
 	superblock.rev_level = EXT_DYNAMIC_REV;
 	superblock.first_ino = EXT_GOOD_OLD_FIRST_INODE;
@@ -1495,7 +1545,8 @@ static uquad_t getFreeBytes(kernelDisk *theDisk)
 	if (!extData)
 		return (0);
 
-	return (extData->superblock.free_blocks_count * extData->blockSize);
+	return ((uquad_t) extData->superblock.free_blocks_count *
+		extData->blockSize);
 }
 
 

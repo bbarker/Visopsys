@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2013-11-09 23:14-0400\n"
 "Last-Translator: Jens León Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "%s <Disk> [Verbindungspunkt]\n"
 msgid "No mount point specified for %s in %s\n"
 msgstr "Kein Verbindungspunkt für %s angegeben in %s\n"
 
-#: mount.c:204
+#: mount.c:206
 #, c-format
 msgid "No media in disk %s\n"
 msgstr "Keine Medien in Disk %s\n"

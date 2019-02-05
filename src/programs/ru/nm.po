@@ -1,6 +1,6 @@
 #
 # Visopsys
-# Copyright (C) 1998-2016 J. Andrew McLaughlin
+# Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 # Russian translation by Liss <liss8608@list.ru>
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2018-03-03 03:09+0000\n"
 "PO-Revision-Date: 2014-08-13 22:41+0800\n"
 "Last-Translator: Liss <liss8608@list.ru>\n"
 "Language-Team: liss <liss21@ya.ru>\n"
@@ -69,12 +69,12 @@ msgstr "Не могу загрузить файл \"%s\"\n"
 msgid "File type of \"%s\" is unknown\n"
 msgstr "Тип файла \"%s\" неизвестен\n"
 
-#: nm.c:125
-#, c-format
-msgid "\"%s\" is not a dynamic library or executable\n"
+#: nm.c:127
+#, fuzzy, c-format
+msgid "\"%s\" is not an executable or dynamic library\n"
 msgstr "\"%s\" - не динамическая библиотека или исполняемый файл\n"
 
-#: nm.c:138
+#: nm.c:140
 #, c-format
 msgid "Unable to get dynamic symbols from \"%s\".\n"
 msgstr "Невозможно получить динамические символы из \"%s\".\n"

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -22,42 +22,52 @@
 // This is the standard "ftruncate" function, as found in standard C libraries
 
 #include <unistd.h>
-#include <stdio.h>
 #include <errno.h>
 #include <sys/api.h>
+#include <sys/cdefs.h>
 
 
 int ftruncate(int fd, off_t length)
 {
 	// The ftruncate function causes the file referenced by the supplied file
 	// descriptor to be set to the requested length.  The file must be open
-	// for writing.  If the file was previously larger than this size, the extra
-	// data is lost.  If the file was previously smaller, the file is expanded.
+	// for writing.  If the file was previously larger than this size, the
+	// extra data is lost.  If the file was previously smaller, the file is
+	// expanded.
 
 	int status = 0;
-	fileStream *theStream = (fileStream *) fd;
-
-	// This call is not applicable for stdin, stdout, and stderr
-	if ((theStream == stdin) || (theStream == stdout) || (theStream == stderr))
-	{
-		errno = ERR_NOTAFILE;
-		return (-1);
-	}
+	fileDescType type = filedesc_unknown;
+	fileStream *theStream = NULL;
 
 	if (visopsys_in_kernel)
 	{
 		errno = ERR_BUG;
-		return (-1);
+		return (status = -1);
 	}
 
-	// Let the kernel do the rest of the work, baby.
+	// Look up the file descriptor
+	status = _fdget(fd, &type, (void **) &theStream);
+	if (status < 0)
+	{
+		errno = status;
+		return (status = -1);
+	}
+
+	// This call is only applicable for file types
+	if (type != filedesc_filestream)
+	{
+		errno = ERR_NOTAFILE;
+		return (status = -1);
+	}
+
+	// Let the kernel do the rest of the work
 	status = fileSetSize(&theStream->f, length);
 	if (status < 0)
 	{
 		errno = status;
-		return (-1);
+		return (status = -1);
 	}
 
-	return (0);
+	return (status = 0);
 }
 

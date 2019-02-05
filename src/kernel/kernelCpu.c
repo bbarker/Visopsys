@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -30,6 +30,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <sys/processor.h>
 
 static struct {
@@ -56,35 +57,6 @@ static struct {
 static uquad_t timestampFreq = 0;
 
 
-static kernelDevice *regDevice(void *parent, void *driver,
-	kernelDeviceClass *class, kernelDeviceClass *subClass)
-{
-	// Just collects some of the common things from the other detect routines
-
-	int status = 0;
-	kernelDevice *dev = NULL;
-
-	// Allocate memory for the device
-	dev = kernelMalloc(sizeof(kernelDevice));
-	if (!dev)
-		return (dev);
-
-	dev->device.class = class;
-	dev->device.subClass = subClass;
-	dev->driver = driver;
-
-	// Add the kernel device
-	status = kernelDeviceAdd(parent, dev);
-	if (status < 0)
-	{
-		kernelFree(dev);
-		return (dev = NULL);
-	}
-
-	return (dev);
-}
-
-
 static int driverDetectCpu(void *parent, kernelDriver *driver)
 {
 	int status = 0;
@@ -94,18 +66,22 @@ static int driverDetectCpu(void *parent, kernelDriver *driver)
 	kernelDevice *dev = NULL;
 	char variable[80];
 	char value[80];
+	int longMode = 0;
 	int whitespace = 1;
 	unsigned count1, count2;
 
-	dev = regDevice(parent, driver, kernelDeviceGetClass(DEVICECLASS_CPU),
-		kernelDeviceGetClass(DEVICESUBCLASS_CPU_X86));
+	// Allocate memory for the device
+	dev = kernelMalloc(sizeof(kernelDevice));
 	if (!dev)
 		return (status = ERR_NOCREATE);
 
 	// Initialize the variable list for attributes of the CPU
 	status = kernelVariableListCreate(&dev->device.attrs);
 	if (status < 0)
+	{
+		kernelFree(dev);
 		return (status);
+	}
 
 	// Try to identify the CPU
 
@@ -171,6 +147,15 @@ static int driverDetectCpu(void *parent, kernelDriver *driver)
 	// See if there's extended CPUID info
 	processorId(0x80000000, cpuIdLimit, regb, regc, regd);
 
+	// If supported, get extended processor info and feature bits
+	if (cpuIdLimit >= 0x80000001)
+	{
+		processorId(0x80000001, rega, regb, regc, regd);
+
+		// Is it an x86-64 processor?
+		longMode = ((regd >> 29) & 1);
+	}
+
 	if (cpuIdLimit >= 0x80000004)
 	{
 		// Get the product string
@@ -198,10 +183,33 @@ static int driverDetectCpu(void *parent, kernelDriver *driver)
 				}
 			}
 			else
+			{
 				whitespace = 0;
+			}
 		}
 
-		kernelVariableListSet(&dev->device.attrs, DEVICEATTRNAME_MODEL,	value);
+		kernelVariableListSet(&dev->device.attrs, DEVICEATTRNAME_MODEL,
+			value);
+	}
+
+	// Complete the kernel device depending on what we detected
+
+	dev->device.class = kernelDeviceGetClass(DEVICECLASS_CPU);
+
+	if (longMode)
+		dev->device.subClass = kernelDeviceGetClass(DEVICESUBCLASS_CPU_X86_64);
+	else
+		dev->device.subClass = kernelDeviceGetClass(DEVICESUBCLASS_CPU_X86);
+
+	dev->driver = driver;
+
+	// Add the kernel device
+	status = kernelDeviceAdd(parent, dev);
+	if (status < 0)
+	{
+		kernelVariableListDestroy(&dev->device.attrs);
+		kernelFree(dev);
+		return (status);
 	}
 
 	return (status = 0);
@@ -271,8 +279,8 @@ uquad_t kernelCpuTimestampFreq(void)
 	timestampFreq = ((timestamp2 - timestamp1) * 18);
 	timestampFreq += (((timestamp2 - timestamp1) * 206) / 1000);
 
-	kernelLog("CPU timestamp frequency is %llu MHz",
-		(timestampFreq / 1000000));
+	kernelLog("CPU timestamp frequency is %llu MHz", (timestampFreq /
+		US_PER_SEC));
 
 	return (timestampFreq);
 }
@@ -300,7 +308,7 @@ uquad_t kernelCpuGetMs(void)
 	if (!timestampFreq)
 		kernelCpuTimestampFreq();
 
-	return (kernelCpuTimestamp() / (timestampFreq / 1000));
+	return (kernelCpuTimestamp() / (timestampFreq / US_PER_MS));
 }
 
 

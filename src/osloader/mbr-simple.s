@@ -1,6 +1,6 @@
 ;;
 ;;  Visopsys
-;;  Copyright (C) 1998-2016 J. Andrew McLaughlin
+;;  Copyright (C) 1998-2018 J. Andrew McLaughlin
 ;;
 ;;  This program is free software; you can redistribute it and/or modify it
 ;;  under the terms of the GNU General Public License as published by the Free
@@ -53,11 +53,11 @@
 
 ;; Disk cmd packet for extended int13 disk ops
 %define DISKPACKET		(CYLINDER + CYLINDER_SZ)
-%define DISKPACKET_SZ		(BYTE * 16)
+%define DISKPACKET_SZ	(BYTE * 16)
 
 ;; The offset of the partition table entry we're loading
-%define BOOTPARTITION		(DISKPACKET + DISKPACKET_SZ)
-%define BOOTPARTITION_SZ	WORD
+%define BOOTPART		(DISKPACKET + DISKPACKET_SZ)
+%define BOOTPART_SZ		WORD
 
 %define	NOTFOUND		(NEWCODELOCATION + (DATA_NOTFOUND - main))
 %define	IOERR			(NEWCODELOCATION + (DATA_IOERR - main))
@@ -66,8 +66,8 @@
 
 main:
 	;; A jump is expected at the start of a boot sector, sometimes.
-	jmp short .bootCode			; 00 - 01 Jump instruction
-	nop					; 02 - 02 No op
+	jmp short .bootCode		; 00 - 01 Jump instruction
+	nop						; 02 - 02 No op
 
 	.bootCode:
 	cli
@@ -124,23 +124,23 @@ jmpTarget:
 
 	.gotEntry:
 	;; Got an active boot partition
-	mov word [BOOTPARTITION], SI
+	mov word [BOOTPART], SI
 
 	;; Get disk parameters
 	%include "bootsect-diskparms.s"
 
 	;; Load the target bootsector
 	push word 1				; Read 1 sector
-	push word main				; Offset where we'll move it
+	push word main			; Offset where we'll move it
 	push word 0				; Segment where we'll move it
-	push dword [SI + 8]			; LBA boot sector
+	push dword [SI + 8]		; LBA boot sector
 	call read
 	add SP, 10
 
 	popa
 
 	;; Move the pointer to the partiton table entry into SI
-	mov SI, word [BOOTPARTITION]
+	mov SI, word [BOOTPART]
 
 	;; Move the boot disk device number into DL
 	mov DL, byte [DISK]
@@ -148,11 +148,9 @@ jmpTarget:
 	;; Go
 	jmp 0000:7C00h
 
-
 	%include "bootsect-print.s"
 	%include "bootsect-error.s"
 	%include "bootsect-read.s"
-
 
 ;; Static data follows.  We don't refer to it by any of these symbol names;
 ;; after relocation these are not so meaningful

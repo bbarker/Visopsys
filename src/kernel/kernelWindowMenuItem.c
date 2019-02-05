@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -36,16 +36,18 @@ static int menuWidth(kernelWindow *menu)
 {
 	// Return the width of the widest menu item.
 
-	int maxWidth = 0;
+	int width = 0;
 	kernelWindowContainer *container = (kernelWindowContainer *)
 		menu->mainContainer->data;
 	int count;
 
 	for (count = 0; count < container->numComponents; count ++)
-		if (container->components[count]->width > maxWidth)
-			maxWidth = container->components[count]->width;
+	{
+		if (container->components[count]->width > width)
+			width = container->components[count]->width;
+	}
 
-	return (maxWidth + (windowVariables->border.thickness * 2));
+	return (width + (windowVariables->border.thickness * 6));
 }
 
 
@@ -53,7 +55,7 @@ static int menuHeight(kernelWindow *menu)
 {
 	// Return the cumulative height of the menu items.
 
-	int height = (windowVariables->border.thickness * 2);
+	int height = 0;
 	kernelWindowContainer *container = (kernelWindowContainer *)
 		menu->mainContainer->data;
 	int count;
@@ -61,7 +63,7 @@ static int menuHeight(kernelWindow *menu)
 	for (count = 0; count < container->numComponents; count ++)
 		height += container->components[count]->height;
 
-	return (height);
+	return (height + (windowVariables->border.thickness * 4));
 }
 
 
@@ -90,7 +92,9 @@ static int setData(kernelWindowComponent *component, void *text, int length)
 			menu->draw(menu);
 	}
 	else
+	{
 		status = ERR_NOTINITIALIZED;
+	}
 
 	return (status);
 }
@@ -110,6 +114,7 @@ kernelWindowComponent *kernelWindowNewMenuItem(kernelWindow *menu,
 	// Formats a kernelWindowComponent as a kernelWindowMenuItem
 
 	kernelWindowComponent *component = NULL;
+	int numComponents = 0;
 	componentParameters params;
 	listItemParameters itemParams;
 
@@ -120,16 +125,21 @@ kernelWindowComponent *kernelWindowNewMenuItem(kernelWindow *menu,
 		return (component = NULL);
 	}
 
-	kernelDebug(debug_gui, "WindowMenuItem new menu item %s", text);
+	numComponents =
+		((kernelWindowContainer *) menu->mainContainer->data)->numComponents;
+
+	kernelDebug(debug_gui, "WindowMenuItem new menu item %d %s", numComponents,
+		text);
 
 	memcpy(&params, userParams, sizeof(componentParameters));
 	params.gridX = 0;
-	params.gridY =
-		((kernelWindowContainer *) menu->mainContainer->data)->numComponents;
+	params.gridY = numComponents;
 	params.gridWidth = params.gridHeight = 1;
-	params.padLeft = params.padRight = params.padTop = params.padBottom = 0;
+	params.padLeft = params.padRight = windowVariables->border.thickness;
+	params.padTop = (numComponents? 0 : windowVariables->border.thickness);
+	params.padBottom = 0;
 	params.orientationX = orient_left;
-	params.orientationY = orient_middle;
+	params.orientationY = orient_top;
 
 	if (!params.font)
 		params.font = windowVariables->font.varWidth.small.font;
@@ -154,8 +164,10 @@ kernelWindowComponent *kernelWindowNewMenuItem(kernelWindow *menu,
 	// We use a different default background color than the window list
 	// item component that the menu item is based upon
 	if (!(params.flags & WINDOW_COMPFLAG_CUSTOMBACKGROUND))
+	{
 		memcpy((color *) &component->params.background,
 			&windowVariables->color.background, sizeof(color));
+	}
 
 	// Set the new size of the menu
 	kernelWindowSetSize(menu, menuWidth(menu), menuHeight(menu));

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -59,8 +59,8 @@ typedef enum {
 	// |E0 |E1 |E2 |E3 |E4 |E5 |E6 |E7 |E8 |E9 |E10|E11|E12|Bks| |Ins|Hom|Pgu|
 	// |Tab|D1 |D2 |D3 |D4 |D5 |D6 |D7 |D8 |D9 |D10|D11|D12|D13| |Del|End|Pgd|
 	// |Cap|C1 |C2 |C3 |C4 |C5 |C6 |C7 |C8 |C9 |C10|C11|C12|Ent|
-	// |Lsh|B0 |B1 |B2 |B3 |B4 |B5 |B6 |B7 |B8 |B9 |B10|Rsh    |
-	// |Lct|A0 |Lal|           Spc             |A2 |A3 |A4 |Rct|
+	// |Lsh|B0 |B1 |B2 |B3 |B4 |B5 |B6 |B7 |B8 |B9 |B10|Rsh    |     |CrU|
+	// |Lct|A0 |Lal|           Spc             |A2 |A3 |A4 |Rct| |CrL|CrD|CrR|
 
 	// 6th row
 	keyLCtrl = 0,				// 00

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -43,8 +43,8 @@ static int dayOfWeek(unsigned day, unsigned month, unsigned year)
 
 struct tm *gmtime(time_t timeSimple)
 {
-	// The gmtime() function converts the calendar time timep to broken-down
-	// time representation
+	// The gmtime() function converts the calendar time timeSimple to broken-
+	// down time representation
 
 	int year = 0;
 	int count;
@@ -59,33 +59,33 @@ struct tm *gmtime(time_t timeSimple)
 	memset(&timeStruct, 0, sizeof(struct tm));
 
 	// Calculate seconds
-	timeStruct.tm_sec = (timeSimple % SECPERMIN);
+	timeStruct.tm_sec = (timeSimple % SECS_PER_MIN);
 	timeSimple -= timeStruct.tm_sec;
 
 	// Complete minutes
-	timeStruct.tm_min = ((timeSimple % SECPERHR) / SECPERMIN);
-	timeSimple -= (timeStruct.tm_min * SECPERMIN);
+	timeStruct.tm_min = ((timeSimple % SECS_PER_HR) / SECS_PER_MIN);
+	timeSimple -= (timeStruct.tm_min * SECS_PER_MIN);
 
 	// Complete hours
-	timeStruct.tm_hour = ((timeSimple % SECPERDAY) / SECPERHR);
-	timeSimple -= (timeStruct.tm_hour * SECPERHR);
+	timeStruct.tm_hour = ((timeSimple % SECS_PER_DAY) / SECS_PER_HR);
+	timeSimple -= (timeStruct.tm_hour * SECS_PER_HR);
 
 	// Calculate complete years
 	year = 1970;
-	while (timeSimple >= SECPERYR)
+	while (timeSimple >= SECS_PER_YR)
 	{
 		// There is a leap year in every year divisible by 4 except for years
 		// which are both divisible by 100 not by 400.  Got it?
 		if (!(year % 4) && ((year % 100) || !(year % 400)))
 		{
-			if (timeSimple >= (SECPERYR + SECPERDAY))
-				timeSimple -= (SECPERYR + SECPERDAY);
+			if (timeSimple >= (SECS_PER_YR + SECS_PER_DAY))
+				timeSimple -= (SECS_PER_YR + SECS_PER_DAY);
 			else
 				break;
 		}
 		else
 		{
-			timeSimple -= SECPERYR;
+			timeSimple -= SECS_PER_YR;
 		}
 
 		year += 1;
@@ -94,7 +94,7 @@ struct tm *gmtime(time_t timeSimple)
 	timeStruct.tm_year = (year - 1900);
 
 	// Calculate day of the year
-	timeStruct.tm_yday = (timeSimple / SECPERDAY);
+	timeStruct.tm_yday = (timeSimple / SECS_PER_DAY);
 
 	if (!(year % 4) && ((year % 100) || !(year % 400)))
 		monthDays[1] = 29;
@@ -104,15 +104,15 @@ struct tm *gmtime(time_t timeSimple)
 	// Calculate complete months
 	for (count = 0; count < 12; count ++)
 	{
-		if (timeSimple < (unsigned)(monthDays[count] * SECPERDAY))
+		if (timeSimple < (unsigned)(monthDays[count] * SECS_PER_DAY))
 			break;
 
-		timeSimple -= (monthDays[count] * SECPERDAY);
+		timeSimple -= (monthDays[count] * SECS_PER_DAY);
 		timeStruct.tm_mon += 1;
 	}
 
 	// Calculate the day
-	timeStruct.tm_mday = ((timeSimple / SECPERDAY) + 1);
+	timeStruct.tm_mday = ((timeSimple / SECS_PER_DAY) + 1);
 
 	// Get the day of the week
 	timeStruct.tm_wday = ((dayOfWeek((timeStruct.tm_mday + 1),

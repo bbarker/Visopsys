@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -28,10 +28,16 @@
 
 #define COMPRESS_MAX_BUFFERSIZE		(1048576 * 5)
 
+// Library debugging flags
 extern int debugLibCompress;
 extern int debugDeflate;
 extern int debugDeflateCompress;
 extern int debugDeflateDecompress;
+extern int debugGzip;
+extern int debugTar;
+
+// Exported from libcompress.c
+int archiveCopyFileData(FILE *, FILE *, unsigned, progress *);
 
 // Exported from deflate.c
 void deflateMakeHuffmanTable(huffmanTable *, int, unsigned char *);

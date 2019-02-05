@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -26,19 +26,22 @@
 
 // Loader File class types
 #define LOADERFILECLASS_NONE		0x00000000
-#define LOADERFILECLASS_BIN			0x00000001
-#define LOADERFILECLASS_TEXT		0x00000002
-#define LOADERFILECLASS_EXEC		0x00000004
-#define LOADERFILECLASS_OBJ			0x00000008
-#define LOADERFILECLASS_LIB			0x00000010
-#define LOADERFILECLASS_CORE		0x00000020
-#define LOADERFILECLASS_IMAGE		0x00000040
-#define LOADERFILECLASS_DATA		0x00000080
-#define LOADERFILECLASS_DOC			0x00000100
-#define LOADERFILECLASS_ARCHIVE		0x00000200
-#define LOADERFILECLASS_FONT		0x00000400
-#define LOADERFILECLASS_BOOT		0x00000800
-#define LOADERFILECLASS_KEYMAP		0x00001000
+#define LOADERFILECLASS_DIR			0x00000001
+#define LOADERFILECLASS_BIN			0x00000002
+#define LOADERFILECLASS_TEXT		0x00000004
+#define LOADERFILECLASS_EXEC		0x00000008
+#define LOADERFILECLASS_OBJ			0x00000010
+#define LOADERFILECLASS_LIB			0x00000020
+#define LOADERFILECLASS_CORE		0x00000040
+#define LOADERFILECLASS_IMAGE		0x00000080
+#define LOADERFILECLASS_AUDIO		0x00000100
+#define LOADERFILECLASS_VIDEO		0x00000200
+#define LOADERFILECLASS_DATA		0x00000400
+#define LOADERFILECLASS_DOC			0x00000800
+#define LOADERFILECLASS_ARCHIVE		0x00001000
+#define LOADERFILECLASS_FONT		0x00002000
+#define LOADERFILECLASS_BOOT		0x00004000
+#define LOADERFILECLASS_KEYMAP		0x00008000
 
 // Loader File subclass types
 #define LOADERFILESUBCLASS_NONE		0x00000000
@@ -70,9 +73,9 @@
 
 // This structure describes the classification of the file.
 typedef struct {
-	char className[64];
-	int class;
-	int subClass;
+	char name[64];
+	int type;
+	int subType;
 
 } loaderFileClass;
 

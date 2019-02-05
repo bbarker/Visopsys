@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adduser 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: 2014-01-22 17:47-0400\n"
 "Last-Translator: Jens Leon Wagner <nikski280@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: format.c:102
+#: format.c:103
 msgid "Confirmation"
 msgstr "Bestätigung"
 
-#: format.c:106
+#: format.c:107
 #, c-format
 msgid ""
 "\n"
@@ -30,15 +30,15 @@ msgstr ""
 "\n"
 "%s (y/n): "
 
-#: format.c:115
+#: format.c:116
 msgid "Yes\n"
 msgstr "Ja\n"
 
-#: format.c:121
+#: format.c:122
 msgid "No\n"
 msgstr "Nein\n"
 
-#: format.c:132
+#: format.c:133
 msgid ""
 "\n"
 "Press any key to continue. "
@@ -46,27 +46,27 @@ msgstr ""
 "\n"
 "Drücke eine Taste zum Fortfahren."
 
-#: format.c:155
+#: format.c:156
 msgid "Error"
 msgstr "Fehler"
 
-#: format.c:181
+#: format.c:182
 msgid "Please choose the disk to format:"
 msgstr ""
 
-#: format.c:201
+#: format.c:202
 msgid "Choose Disk"
 msgstr "Disk auswählen"
 
-#: format.c:216
+#: format.c:217
 msgid "OK"
 msgstr "OK"
 
-#: format.c:220 format.c:288
+#: format.c:221 format.c:289
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: format.c:280
+#: format.c:281
 #, c-format
 msgid ""
 "The disk is mounted as %s.  It is STRONGLY recommended\n"
@@ -75,19 +75,19 @@ msgstr ""
 "Die Disk ist als %s verbunden.  Es wird SEHR empfohlen\n"
 "die Verbindung erst zu trennen"
 
-#: format.c:287
+#: format.c:288
 msgid "Disk is mounted"
 msgstr "Disk verbunden"
 
-#: format.c:288
+#: format.c:289
 msgid "Ignore"
 msgstr "Ignorieren"
 
-#: format.c:288
+#: format.c:289
 msgid "Unmount"
 msgstr "Verbindung trennen"
 
-#: format.c:292
+#: format.c:293
 #, c-format
 msgid ""
 "\n"
@@ -96,71 +96,75 @@ msgstr ""
 "\n"
 "%s (I)Ignorieren/(U)Verbindung trennen/(C)Abbrechen?: "
 
-#: format.c:301
+#: format.c:302
 msgid "Ignore\n"
 msgstr "Ignorieren\n"
 
-#: format.c:307
+#: format.c:308
 msgid "Unmount\n"
 msgstr "Verbindung trennen\n"
 
-#: format.c:313
+#: format.c:314
 msgid "Cancel\n"
 msgstr "Abbrechen\n"
 
-#: format.c:332
+#: format.c:333
 #, c-format
 msgid "Unable to unmount %s"
 msgstr "Verbindung mit %s kann nicht getrennt werden"
 
-#: format.c:365
+#: format.c:366
 #, c-format
 msgid "No boot sector available for filesystem type %s\n"
 msgstr "Kein Bootsektor für das %s Dateisystem vorhanden\n"
 
-#: format.c:378
+#: format.c:379
 #, c-format
 msgid "Error %d copying boot sector \"%s\" to disk %s"
 msgstr "Fehler %d beim Kopieren des Bootsektors \"%s\" nach Disk %s"
 
-#: format.c:389
+#: format.c:390
 msgid "usage:\n"
 msgstr "Benutzung:\n"
 
-#: format.c:390
+#: format.c:391
 #, c-format
 msgid "%s [-l] [-s] [-t type] [-T] [disk_name]\n"
 msgstr "%s [-l] [-s] [-t Typ] [-T] [Disk_name]\n"
 
-#: format.c:435
+#: format.c:442
 msgid "Missing volume name argument for '-n' option"
 msgstr "Volumennamen-Argument für '-n' Option fehlt"
 
-#: format.c:452
+#: format.c:459
 msgid "Missing type argument for '-t' option"
 msgstr "Typen-Argument für '-t' Option fehlt"
 
-#: format.c:465
+#: format.c:472
 #, c-format
 msgid "Missing parameter for %s option"
 msgstr "Parameter für %s Option fehlt"
 
-#: format.c:470
+#: format.c:477
 #, c-format
 msgid "Unknown option '%c'"
 msgstr "Unbekannte Option '%c'"
 
-#: format.c:486
+#: format.c:485
+msgid "NTFS formatting is not available"
+msgstr ""
+
+#: format.c:500
 msgid ""
 "\n"
 "Visopsys FORMAT Utility\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 msgstr ""
 "\n"
 "Visopsys FORMAT Werkzeug\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin\n"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin\n"
 
-#: format.c:508
+#: format.c:523
 msgid ""
 "You must be a privileged user to use this command.\n"
 "(Try logging in as user \"admin\")"
@@ -168,7 +172,7 @@ msgstr ""
 "Sie brauchen spezielle Rechte für dieses Kommando.\n"
 "(Versuchen Sie, sich als \"admin\" einzuloggen)"
 
-#: format.c:526
+#: format.c:541
 #, c-format
 msgid ""
 "Formatting disk %s as %s.  All data currenly on the disk will be lost.\n"
@@ -177,7 +181,7 @@ msgstr ""
 "Formatiere Disk %s als %s. Alle Daten auf der Disk werden gelöscht.\n"
 "Sind Sie sicher?"
 
-#: format.c:531 format.c:555
+#: format.c:546 format.c:570
 msgid ""
 "\n"
 "Quitting.\n"
@@ -185,7 +189,7 @@ msgstr ""
 "\n"
 "Schliesse.\n"
 
-#: format.c:549
+#: format.c:564
 msgid ""
 "\n"
 "YOU HAVE REQUESTED TO FORMAT YOUR ROOT DISK.  I probably shouldn't let you\n"
@@ -197,11 +201,11 @@ msgstr ""
 "Nach der Formatierung sollten Sie den Computer neustarten.\n"
 "Wollen Sie WIRKLICH fortfahren?"
 
-#: format.c:565
+#: format.c:580
 msgid "Formatting..."
 msgstr "Formatiere..."
 
-#: format.c:605
+#: format.c:621
 msgid "Success"
 msgstr "Erfolg"
 

@@ -1,6 +1,6 @@
 #
 #  Visopsys
-#  Copyright (C) 1998-2016 J. Andrew McLaughlin
+#  Copyright (C) 1998-2018 J. Andrew McLaughlin
 #
 #  This German translation provided by Proxma AG - www.proxma.com
 #
@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 02:02+0100\n"
+"POT-Creation-Date: 2017-05-29 02:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,10 +25,10 @@ msgstr "Installationsprogramm im Boot-Menü"
 #: bootmenu.c:67
 msgid ""
 "Visopsys Boot Menu Installer\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin"
 msgstr ""
 "Visopsys Installationsprogramm für das Boot-Menü\n"
-"Copyright (C) 1998-2016 J. Andrew McLaughlin"
+"Copyright (C) 1998-2018 J. Andrew McLaughlin"
 
 #: bootmenu.c:69
 msgid ""

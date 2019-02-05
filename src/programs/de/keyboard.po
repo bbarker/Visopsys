@@ -1,4 +1,8 @@
-#: keyboard.c:181
+#: keyboard.c:55
+msgid "Quit"
+msgstr ""
+
+#: keyboard.c:232
 #, c-format
 msgid ""
 "\n"
@@ -7,7 +11,7 @@ msgstr ""
 "\n"
 "Das Kommando \"%s\" funktioniert nur im Grafikmodus\n"
 
-#: keyboard.c:197
+#: keyboard.c:248
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr ""

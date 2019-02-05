@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -295,7 +295,8 @@ static int allocQueueHeads(kernelLinkedList *freeList)
 
 	// Request an aligned page of I/O memory (we need to be sure of 32-byte
 	// alignment for each queue head)
-	status = kernelMemoryGetIo(MEMORY_PAGE_SIZE, MEMORY_PAGE_SIZE, &ioMem);
+	status = kernelMemoryGetIo(MEMORY_PAGE_SIZE, MEMORY_PAGE_SIZE,
+		0 /* not low memory */, "ehci qhs", &ioMem);
 	if (status < 0)
 		goto err_out;
 
@@ -349,7 +350,7 @@ err_out:
 static int setQueueHeadEndpointState(usbDevice *usbDev,
 	unsigned char endpointNum, ehciQueueHead *queueHead)
 {
-	// Given a usbDevice structure and an endpoint number, set all the relevent
+	// Given a usbDevice structure and an endpoint number, set all the relevant
 	// "static endpoint state" fields in the queue head.
 
 	int status = 0;
@@ -600,7 +601,7 @@ static int setup(usbController *controller)
 		// Allocate memory for the periodic queue frame list, and assign the
 		// physical address to the PERIODICLISTBASE register
 		status = kernelMemoryGetIo(EHCI_FRAMELIST_MEMSIZE, MEMORY_PAGE_SIZE,
-			&ioMem);
+			0 /* not low memory */, "ehci framelist", &ioMem);
 		if (status < 0)
 		{
 			kernelError(kernel_error, "Couldn't get periodic frame list "
@@ -1139,7 +1140,8 @@ static int allocQtds(kernelLinkedList *freeList)
 
 	// Request an aligned page of I/O memory (we need to be sure of 32-byte
 	// alignment for each qTD)
-	status = kernelMemoryGetIo(MEMORY_PAGE_SIZE, MEMORY_PAGE_SIZE, &ioMem);
+	status = kernelMemoryGetIo(MEMORY_PAGE_SIZE, MEMORY_PAGE_SIZE,
+		0 /* not low memory */, "ehci qtds", &ioMem);
 	if (status < 0)
 		goto err_out;
 
@@ -1330,7 +1332,7 @@ static int allocQtdBuffer(ehciQtdItem *qtdItem, unsigned buffSize)
 	// of control transfers, or for interrupt registrations.
 
 	int status = 0;
-	unsigned buffPhysical = NULL;
+	unsigned buffPhysical = 0;
 
 	kernelDebug(debug_usb, "EHCI allocate qTD buffer of %u", buffSize);
 
@@ -2306,7 +2308,7 @@ static int interrupt(usbController *controller)
 		kernelDebug(debug_usb, "EHCI data interrupt serviced");
 	}
 
-	// Clear the relevent interrupt bits
+	// Clear the relevant interrupt bits
 	setStatusBits(ehci, (ehci->opRegs->stat & ehci->opRegs->intr));
 
 	return (status = 0);
@@ -2538,7 +2540,7 @@ static int queue(usbController *controller, usbDevice *usbDev,
 				kernelDebug(debug_usb, "EHCI bytesToTransfer=%u, doBytes=%u",
 					bytesToTransfer, doBytes);
 
-				// Set the qTD's buffer pointers to the relevent portions of
+				// Set the qTD's buffer pointers to the relevant portions of
 				// the transaction buffer.
 				status = setQtdBufferPages(dataQtdItems[qtdCount]->qtd,
 					bufferPhysical, doBytes);
@@ -2972,7 +2974,7 @@ static void threadCall(usbHub *hub)
 kernelDevice *kernelUsbEhciDetect(kernelBusTarget *busTarget,
 	kernelDriver *driver)
 {
-	// This routine is used to detect and initialize a potential EHCI USB
+	// This function is used to detect and initialize a potential EHCI USB
 	// device, as well as registering it with the higher-level interfaces.
 
 	int status = 0;

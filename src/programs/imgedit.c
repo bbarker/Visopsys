@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -294,7 +294,30 @@ static void eventHandler(objectKey key, windowEvent *event)
 	scrollBarState vert;
 
 	// Check for editor events.
-	if (key == editor->canvas)
+
+	if ((key == editor->canvas) && (event->type & EVENT_MOUSE_SCROLL))
+	{
+		windowComponentGetData(scrollVert, &vert, sizeof(scrollBarState));
+
+		if (event->type == EVENT_MOUSE_SCROLLUP)
+		{
+			vert.positionPercent = ((vert.positionPercent > 5)?
+				(vert.positionPercent - 5) : 0);
+		}
+		else if (event->type == EVENT_MOUSE_SCROLLDOWN)
+		{
+			vert.positionPercent = ((vert.positionPercent < 95)?
+				(vert.positionPercent + 5) : 100);
+		}
+
+		windowComponentSetData(scrollVert, &vert, sizeof(scrollBarState),
+			1 /* redraw */);
+
+		if (vert.positionPercent != editor->vert.positionPercent)
+			editor->scrollVert(editor, vert.positionPercent);
+	}
+
+	else if (key == editor->canvas)
 	{
 		editor->eventHandler(editor, event);
 
@@ -333,7 +356,7 @@ static void eventHandler(objectKey key, windowEvent *event)
 		}
 	}
 
-	// Horizontal scroll button
+	// Horizontal scroll bar
 	else if (key == scrollHoriz)
 	{
 		windowComponentGetData(scrollHoriz, &horiz, sizeof(scrollBarState));
@@ -341,7 +364,7 @@ static void eventHandler(objectKey key, windowEvent *event)
 			editor->scrollHoriz(editor, horiz.positionPercent);
 	}
 
-	// Vertical scroll button
+	// Vertical scroll bar
 	else if (key == scrollVert)
 	{
 		windowComponentGetData(scrollVert, &vert, sizeof(scrollBarState));
@@ -527,7 +550,8 @@ static int constructWindow(void)
 	params.orientationY = orient_top;
 
 	// Create the pixel editor widget.
-	editor = windowNewPixelEditor(window, ((graphicGetScreenHeight() * 2) / 3),
+	editor = windowNewPixelEditor(window,
+		((graphicGetScreenHeight() * 2) / 3),
 		((graphicGetScreenHeight() * 2) / 3), &img, &params);
 	if (!editor)
 	{
@@ -560,7 +584,8 @@ static int constructWindow(void)
 	params.padLeft = params.padBottom = 0;
 	params.padTop = 5;
 	params.flags = WINDOW_COMPFLAG_FIXEDWIDTH;
-	scrollVert = windowNewScrollBar(window, scrollbar_vertical, 0, 0, &params);
+	scrollVert = windowNewScrollBar(window, scrollbar_vertical, 0, 0,
+		&params);
 	if (!scrollVert)
 	{
 		status = ERR_NOCREATE;
@@ -753,7 +778,9 @@ static int constructWindow(void)
 	windowRegisterEventHandler(fillButton, &eventHandler);
 
 	enableButtons();
+
 	windowSetVisible(window, 1);
+
 	status = 0;
 
 out:
@@ -776,8 +803,8 @@ int main(int argc, char *argv[])
 	// Only work in graphics mode
 	if (!graphicsAreEnabled())
 	{
-		printf(_("\nThe \"%s\" command only works in graphics mode\n"),
-			argv[0]);
+		fprintf(stderr, _("\nThe \"%s\" command only works in graphics "
+			"mode\n"), (argc? argv[0] : ""));
 		return (status = ERR_NOTINITIALIZED);
 	}
 
@@ -849,6 +876,7 @@ out:
 	imageFree(&zoomInImage);
 	imageFree(&zoomOutImage);
 	imageFree(&colorImage);
+	imageFree(&pickImage);
 	imageFree(&drawImage);
 	imageFree(&lineImage);
 	imageFree(&rectImage);

@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -45,9 +45,6 @@
 
 // The kernel executable
 #define KERNEL_FILE					"/visopsys"
-
-// The kernel's settings file
-#define DEFAULT_KERNEL_CONFIG		PATH_SYSTEM_CONFIG "/kernel.conf"
 
 // Default start executable
 #define DEFAULT_KERNEL_STARTPROGRAM	PATH_PROGRAMS "/login"

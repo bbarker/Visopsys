@@ -1,0 +1,22 @@
+
+ -- tar --
+
+Create or manage archive files using TAR format.
+
+Usage:
+  tar [-p] -a <archive> <file1> [file2] [...]
+    Each file name listed will be added to the archive file.
+
+  tar [-p] -d <archive> <member1> [member2] [...]
+    Each member name listed will be deleted from the archive file.
+
+  tar [-p] -i <archive>
+    Print info about the members of the archive file.
+
+Options:
+-a  : Add files to an archive
+-d  : Delete members from an archive
+-i  : Print info about the archive members
+-p  : Show a progress indicator
+-x  : Extract all files from the archive
+

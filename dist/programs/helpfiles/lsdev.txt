@@ -9,5 +9,5 @@ Usage:
 This command will show a listing of the system's hardware devices.
 
 Options:
--T              : Force text mode operation
+-T  : Force text mode operation
 

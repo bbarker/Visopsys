@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -24,47 +24,29 @@
 #include "kernelNetwork.h"
 #include "kernelDevice.h"
 
-// Some constants for Address Resolution Protocol (ARP)
-#define NETWORK_ARPHARDWARE_ETHERNET	1
-#define NETWORK_ARPOP_REQUEST			1
-#define NETWORK_ARPOP_REPLY				2
-
 typedef struct {
-	void (*driverInterruptHandler)(kernelNetworkDevice *);
+	int (*driverInterruptHandler)(kernelNetworkDevice *);
 	int (*driverSetFlags)(kernelNetworkDevice *, unsigned, int);
 	unsigned (*driverReadData)(kernelNetworkDevice *, unsigned char *);
 	int (*driverWriteData)(kernelNetworkDevice *, unsigned char *, unsigned);
 
 } kernelNetworkDeviceOps;
 
-typedef struct {
-	networkEthernetHeader header;
-	unsigned short hardwareAddressSpace;
-	unsigned short protocolAddressSpace;
-	unsigned char hardwareAddrLen;
-	unsigned char protocolAddrLen;
-	unsigned short opCode;
-	// The rest of these are only valid for IP over ethernet
-	unsigned char srcHardwareAddress[NETWORK_ADDRLENGTH_ETHERNET];
-	unsigned char srcLogicalAddress[NETWORK_ADDRLENGTH_IP];
-	unsigned char destHardwareAddress[NETWORK_ADDRLENGTH_ETHERNET];
-	unsigned char destLogicalAddress[NETWORK_ADDRLENGTH_IP];
-	// Padding to bring us up to the mininum 46 byte ethernet packet size.
-	// Some adapters can't automatically pad it for us.
-	char pad[18];
-	// Space for the ethernet FCS checksum.  Some adapters can't automatically
-	// add it for us.
-	unsigned Fcs;
-
-} __attribute__((packed)) kernelArpPacket;
-
+// Functions exported from kernelNetworkDevice.c
 int kernelNetworkDeviceRegister(kernelDevice *);
+int kernelNetworkDeviceStart(const char *, int);
+int kernelNetworkDeviceStop(const char *);
+int kernelNetworkDeviceEnable(const char *);
+int kernelNetworkDeviceDisable(const char *);
 int kernelNetworkDeviceSetFlags(const char *, unsigned, int);
 int kernelNetworkDeviceGetAddress(const char *, networkAddress *,
 	networkAddress *);
-int kernelNetworkDeviceSend(const char *, unsigned char *, unsigned);
+int kernelNetworkDeviceSend(const char *, kernelNetworkPacket *);
 int kernelNetworkDeviceGetCount(void);
 int kernelNetworkDeviceGet(const char *, networkDevice *);
+int kernelNetworkDeviceHook(const char *, void **, int);
+int kernelNetworkDeviceUnhook(const char *, void *, int);
+unsigned kernelNetworkDeviceSniff(void *, unsigned char *, unsigned);
 
 #define _KERNELNETWORKDEVICE_H
 #endif

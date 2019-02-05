@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -51,9 +51,9 @@ static int detect(const char *fileName, void *dataPtr, unsigned size,
 	if (!strncmp(dataPtr, "P3", 2) || !strncmp(dataPtr, "P6", 2))
 	{
 		// We will say this is a PPM file.
-		sprintf(class->className, "%s %s", FILECLASS_NAME_PPM,
+		sprintf(class->name, "%s %s", FILECLASS_NAME_PPM,
 			FILECLASS_NAME_IMAGE);
-		class->class = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
+		class->type = (LOADERFILECLASS_BIN | LOADERFILECLASS_IMAGE);
 
 		return (1);
 	}

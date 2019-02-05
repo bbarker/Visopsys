@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -23,8 +23,17 @@
 
 #include <sys/memory.h>
 
-// Definitions
-#define MAXMEMORYBLOCKS  2048
+// Maximum number of raw memory allocations
+#define MAXMEMORYBLOCKS			2048
+
+// Descriptions for standard reserved memory areas
+#define MEMORYDESC_IVT_BDA		"real mode ivt and bda"
+#define MEMORYDESC_HOLE_EBDA	"memory hole and ebda"
+#define MEMORYDESC_VIDEO_ROM	"video memory and rom"
+#define MEMORYDESC_KERNEL		"kernel memory"
+#define MEMORYDESC_PAGING		"kernel paging data"
+#define MEMORYDESC_USEDBLOCKS	"used memory block list"
+#define MEMORYDESC_FREEBITMAP	"free memory bitmap"
 
 typedef struct {
 	unsigned size;
@@ -35,11 +44,12 @@ typedef struct {
 
 // Functions from kernelMemory.c
 int kernelMemoryInitialize(unsigned);
-unsigned kernelMemoryGetPhysical(unsigned, unsigned, const char *);
+unsigned kernelMemoryGetPhysical(unsigned, unsigned, int, const char *);
 int kernelMemoryReleasePhysical(unsigned);
 void *kernelMemoryGetSystem(unsigned, const char *);
 int kernelMemoryReleaseSystem(void *);
-int kernelMemoryGetIo(unsigned, unsigned, kernelIoMemory *);
+int kernelMemoryGetIo(unsigned, unsigned, int, const char *,
+	kernelIoMemory *);
 int kernelMemoryReleaseIo(kernelIoMemory *);
 int kernelMemoryChangeOwner(int, int, int, void *, void **);
 int kernelMemoryShare(int, int, void *, void **);
@@ -50,7 +60,6 @@ int kernelMemoryRelease(void *);
 int kernelMemoryReleaseAllByProcId(int);
 int kernelMemoryGetStats(memoryStats *, int);
 int kernelMemoryGetBlocks(memoryBlock *, unsigned, int);
-int kernelMemoryBlockInfo(void *, memoryBlock *);
 
 #define _KERNELMEMORY_H
 #endif

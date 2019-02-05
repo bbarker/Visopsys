@@ -1,18 +1,17 @@
 BUILDING VISOPSYS
 
-Visopsys is developed using Ubuntu 12.04 and CentOS 6.4.  To build Visopsys
-you will need the following tools (the first two of which are available as
-standard components of CentOS):
+Visopsys is developed using Linux (current versions are Mint 18 and CentOs
+6).  To build Visopsys you will need the following tools:
 
 - The GNU C Compiler (gcc) able to build 32-bit (with -m32).  The most recent
-  version tested with Visopsys is 4.6.3.
+  version tested with Visopsys is 5.4.0.
 
 - A "make" utility of some kind.  I use GNU Make version 3.81.
 
 - The Netwide Assembler (NASM).  The most recent version tested with Visopsys
-  is 2.09.10.  (Available at http://nasm.us)
+  is 2.11.08.  (Available at http://nasm.us)
 
-- GNU gettext, for generating language message files.  I use version 0.18.1
+- GNU gettext, for generating language message files.  I use version 0.19.7
 
 You might be able to get away with using something other than gcc without
 modifications (doubtful), but you will need NASM-compatible assembler to
@@ -57,5 +56,12 @@ and do:
 Good luck, and let me know if there's any help I can offer.
 
 Andy McLaughlin <andy@visopsys.org>
-05/09/2016
+30/10/2016
+
+Note:
+
+If you get compile errors related to missing include files like errno.h
+and libintl.h, or linking errors like "cannot find crt1.o", "cannot find
+crti.o", or "skipping incompatible libgcc.a" you might need to install the
+package gcc-multilib.
 

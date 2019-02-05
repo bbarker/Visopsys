@@ -1,3 +1,363 @@
+--------------
+ Version 0.83   09/08/2018
+--------------
+
+  Overview: This maintenance version features user experience enhancements and
+  reliability improvements, and a more capable Archive Manager program.  Bug
+  fixes cover a number of GUI flaws and memory leaks, and some of the low-
+  level network infrastructure code has been refined.
+
+- The Archive Manager program now supports the creation of archives.
+Extensively enhanced, it now has 'New', 'Open', 'Add' and 'Delete' operations,
+and the ability to navigate through levels of archives.  By default, it opens
+a new, temporary working archive, and will offer to save in uncompressed
+(.tar) or compressed (.tar.gz) formats.
+- The File Browser now launches a thread to generate custom thumbnail icons
+in the background, rather than processing the entire directory contents before
+showing anything.  This makes a big difference when browsing directories full
+of images.
+- Added the ability to recognize Flash, AVI, MP4, and QuickTime videos to the
+kernel loader, and for the file browser to display an appropriate icon.
+- Added the ability to recognize MP3 and WAV audio files to the kernel loader,
+and for the file browser to display an appropriate icon.
+- Tweaked the XHCI USB 3 driver to be able to handle overlapping input/output
+device endpoint numbers (e.g. 0x01 and 0x81).
+- Added kernel functionality for enabling or disabling individual network
+devices, and made that available to the user in the Network Devices program,
+and the command-line version 'ifconfig'.
+- Added a new kernel thread for configuring (e.g. via DHCP) network devices
+that runs in the background and retries devices for up to 30 seconds.  This
+prevents network startup from holding up system boot.
+- Improved some network packet reference counting, memory management, locking,
+error messages, and tweaked DHCP timeouts.
+- Improved the compression library's efficiency when adding members to a .tar
+archive.  Particulary noticeable when adding many items recursively.
+- Overhauled the kernel's generic data streams functionality for improved
+correctness and performance, removed its 'push' functions, and added 'peek'
+functions.
+- Changed the initial GUI container grid layout so that by default, resizable
+components spanning multiple cells only distribute their excess width/height
+amongst cells that already contain other resizable components.
+- Enhanced the window library's file selection dialog so that the caller can
+specify an unknown type, rather than just a file, or just a directory -
+permitting the user to select either/anything.
+- The window library's file dialog window and file list widget have been
+modified to improve re-entrancy, getting rid of global data items and using
+dynamically-allocated memory.
+- Converted the kernelEncryptMD5() function to a kernelCryptHashMd5()
+function, which takes a length argument and is able to hash any data - not
+just strings.
+- Added the network-related C library function shutdown() and renamed the
+kernel's shutdown() function to systemShutdown() (kernelSystemShutdown()).
+- Added the network-related C library functions accept(), bind(), and
+listen() - although the accept() function is just a stub, since the kernel's
+network code still doesn't handle incoming connections.
+- The scanf() family of C library functions can now read octal numbers using
+the '%o' format specifier (also added verification in the test program).
+- Minor cleanup and formatting edits to the C library functions basename(),
+dirname(), and strstr().
+- Added vshMakeDirRecursive() to the VSH library, removed the files from the
+'shared' lib directory, and incorporated their code into the
+vshMakeAbsolutePath() and vshSearchPath() functions.
+- Removed libdl from the list of libraries that are linked to program
+executables by default.
+- Fixed - The FAT filesystem driver no longer refuses to read a directory if
+it can't count the clusters of every file.  A corrupt file could render whole
+directory trees inaccessible, or if in the root directory, could cause the
+filesystem to become unmountable, and the system unbootable.
+- Fixed - The framebuffer graphics driver's image drawing functions when
+drawing images that are partially inside the graphics buffer - particularly
+when at negative X,Y coordinates - such as when dragging an icon off the left
+or top edges of the screen.
+- Fixed - Window title bars with text that was too long were being shortened
+incorrectly, leading to crashy behaviour, such as when clicking on small icon
+images in the file browser.
+- Fixed - The GUI's icon code could crash when the number of label lines
+overflowed.  It now truncates the last line with ' ...' if it's too long.
+- Fixed - The image viewer program's image scaling, memory management, and
+error handling.  Clicking on some supported images in the file browser wasn't
+working as it should, and could cause crashlike behaviour.  Initial image
+scaling was off for some images, and should be better now.
+- Fixed - The Jpeg image processing code was getting confused about how to
+handle arrays of multiple Huffman tables in the same marker section, and
+corrupting memory, or else missing table data and falling back to defaults,
+potentially hurting image quality.  Also sped up the processing of Jpeg
+headers.
+- Fixed - A (rare) kernel panic - double fault - when windows were opening or
+closing, and the window list was being updated.
+- Fixed - Spurious warning messages when resizing images by a large ratio,
+for example shrinking a large picture to a small thumbnail.
+- Fixed - In some cases, the Visopsys client's host name wasn't appearing
+correctly on the DHCP server.  Implemented smarter DHCP option handing, and
+changed the default behaviour when sending both host and domain names back to
+the server.
+- Fixed - A bug could result in receive queue overruns in the AMD PcNet
+network adapter driver.
+- Fixed - An error due to a bug when opening a file stream to write in
+'append' mode when the existing size is a multiple of the filesystem block
+size.
+- Fixed - The kernel's runtime loader, in the case where the
+kernelLoaderClassifyFile() function is passed the name of a directory, it
+will return an appropriate response (that it's a directory).
+- Fixed - Some window library dialog boxes were leaking icon image memory.
+- Fixed - A small memory leak in which the memory for thread command-line
+arguments was not being deallocated when the thread terminated.
+- Fixed - The GUI's button component, when displaying an image (rather than a
+text label), was freeing image memory directly, instead of calling the
+kernelImageFree() function, resulting in a memory leak of the image's alpha
+channel data.
+- Fixed - The kernelConfigRead() function was freeing its file stream memory
+before closing the stream, resulting in a memory leak.
+- Fixed - File stream buffer memory is now allocated as normal process memory,
+rather then kernel memory, to prevent leaks if the process fails to close the
+stream.
+
+--------------
+ Version 0.82   05/03/2018
+--------------
+
+  Overview: This maintenance version features a small number of user-visible
+  improvements and added functionality, plus polish and bug fixes, but much
+  more in terms of refactoring and fixing existing capabilities (particularly
+  of the nascent networking code) and at the developer level.
+
+- Refactored existing network code, fixing things such as DHCP and ICMP,
+moving the various protocol implementations into their own source files,
+making adapter connections into kernelLinkedLists, improving packet memory
+management, etc.
+- The networking code can now route IP packets to other networks via the
+default gateway.
+- Implemented network 'loopback' capability, via a virtual network adapter
+that doesn't normally appear as a network adapter, but which can be explicitly
+requested by name ('loop') or used via the loopback address(es) such as
+127.0.0.1.
+- Enhanced the intelligence of the function that chooses the best network
+adapter for a new connection.
+- The 'ping' program has been enhanced to report response times.
+- The compression library can now add/delete files from .tar archives.
+- The compression library has a new archiveAddRecursive() function which can
+add directories recursively.
+- Added a new command-line 'tar' program for managing TAR archives.
+- Clarified the keyboard input of control characters and fixed up all of the
+existing keymaps.
+- Reworked the code that lays out and sizes window containers, and the layout/
+sizing of the main and system containers during window (re-)sizing.
+- Separated the one-time network initialization code from the code that
+enables networking, since enabling/disabling can be done any number of times.
+- Parameterized the building of device strings in the Network Devices
+(ifconfig) program, for the purpose of future GUI improvements.
+- Added kernel API functions networkDeviceHook(), networkDeviceUnhook(), and
+networkDeviceSniff() for use by userspace packet sniffing/inspection programs.
+- C++ development compatibility changes; mostly just renaming a few things
+that caused errors when compiling C++ using the system header files.
+- Implemented speedier versions of the kernelPageRoundUp() and
+kernelPageRoundDown() macros, that don't use multiplications and divisions.
+- Exported the windowNewMenuBarIcon() function to userspace.
+- Created 3 new header files <sys/kernconf.h>, <sys/winconf.h>, and
+<sys/deskconf.h> to define the strings used in variable names in the
+corresponding kernel, window, and desktop configuration files.
+- Exported the kernel's cpuGetMs() and cpuSpinMs() functions to user space,
+for timings and delays with millisecond granularity.
+- Added a 'pointer' item type to the kernel streams, with the potential to
+handle pointers of different sizes (e.g. 32-bit or 64-bit) depending on the
+environment.
+- The kernelDebugHex() function has been enhanced so that it shows printable
+ASCII characters in a parallel column.
+- The kernelDebugHex(), kernelDebugHexDwords(), and kernelDebugBinary()
+functions have been replaced with macros so that they will only produce output
+when debugging has been turned on for the source file.
+- Added proper UNIX/POSIX-style per-process integer file descriptors to the C
+library.
+- Added the C library function uname().
+- Added the C library functions opendir(), closedir(), readdir(), readdir_r(),
+and rewinddir() for reading directory contents.
+- Added the C library functions getcwd(), and chdir().
+- Added the C library functions mkdir(), and mkdtemp().
+- Added the C library functions fdopen(), mkstemp(), rmdir(), and unlink().
+- Added the C library function tmpfile().
+- The printf() family of C library functions can now print octal numbers using
+the '%o' format.
+- Added the C library function sched_yield(), defined in <sys/sched.h>, for
+yielding time slices back to the scheduler.
+- Added an incomplete implementation of the C library function getaddrinfo()
+and its companions freeaddrinfo() and gai_strerror().
+- Added network-related C library functions getprotobynumber(),
+getservbyname(), and getservbyport().
+- Added the C library function strtok_r().
+- Added the C library functions poll(), recv(), and send().
+- Added the C library header files <netdb.h>, <poll.h>, <netinet/in.h>, and
+<sys/socket.h>, and the C library functions connect(), getprotobyname(),
+inet_ntop(), inet_pton(), and socket().
+- Added the network header file <arpa/inet.h>, initially for defining the
+macros htonl(), htons(), ntohl(), and ntohs().
+- Fixed: Dragging a window beyond the left edge of the screen caused a GUI
+crash and kernel panic.
+- Fixed: When resizing an icon list window (File Browser, etc) vertically, so
+that it was smaller than the original size, the icon list component/container
+wouldn't resize to less than its original height, and the bottom of the
+scrollbar would show outside the window buffer.
+- Fixed: Adding windowMenuItems to a menu bar or changing windowMenu titles;
+tweaked the layout code.
+- Fixed: The ELF runtime loader so that it does not ignore 'weak' symbols in
+dynamic libraries.
+- Fixed: The 'nm' program was crashing partway through the symbol listing.
+- Fixed: kernelStream creation item sizes for network input streams and
+multitasker signal streams.
+- Fixed: When running in graphics mode, the PcNet network adapter driver
+failed to get device memory that was sufficiently low in the physical address
+space (24-bits maximum).  By default, physical and I/O memory requests now
+attempt to allocate memory starting from 1MB, unless low memory is explicitly
+requested.  The PcNet driver's write() function now attempts to allocate low
+memory if required, and blocks until it can be freed.
+
+--------------
+ Version 0.81   07/06/2017
+--------------
+
+  Overview: This maintenance version polishes the 0.8 release with bug fixes,
+  enhanced hardware support, mouse scroll-wheel integration, better EXT4
+  filesystem handling, and improved reliability and performance.
+
+- Added mouse scroll-wheel support to the USB mouse driver (it was already in
+the PS2 driver), and updated various parts of the GUI to respond to scrolling.
+- The USB 3 XHCI driver now supports 64-bit contexts.
+- Added CPU detection of x86_64 processors
+- Added support for deep EXT4 extent inodes.
+- For improved performance, mouse pointer drawing has been returned to the
+mouse interface's interrupt handling context.
+- Added some new recognized device classes and subclasses to the PCI driver.
+- Disk performance statistics in the Program Manager now calculate throughput
+per second/millisecond, instead of system timer ticks.
+- When the user clicks on a window that has an active dialog window, the GUI
+will now raise or focus the parent window as well, instead of only focusing
+the dialog, so that the parent window becomes visible over some other window
+that might have had the focus.
+- Improved the appearance of GUI menu bars and menus when using small fonts,
+such as the built-in font of the 'basic' mode installation.  Tweaked the
+layout of menu bars and menu items, and reduced the default minimum window
+size to 4x4 (just borders).
+- Modified the framebuffer graphics driver's rectangle drawing function
+driverDrawRect() so that it doesn't need to allocate and free memory.
+- Enhanced the kernelLinkedList code so that when iterating through the list,
+it will check whether the current item has been removed (iteration is
+performed without a lock on the list).  If so, it will restart from the
+beginning.
+- For improved reliability, the GUI's window list has been converted to a
+kernelLinkedList.
+- Added a GUI WINDOW_COMPFLAG_CANDRAG component parameters flag, so that
+window components can discriminate about whether to perform certain actions
+when dragged.  The primary example is an icon, which can be dragged to new
+locations around the desktop, but doing so in other contexts (such as the
+taskbar or shutdown dialog) might be nonsensical and/or crashy.
+- For improved reliability, the FAT boot sector no longer has the OS loader's
+starting sector written into it.  Rather, it now uses the starting cluster
+number, to better survive operations such as a cluster resize.
+- Re-engineered the kernel's existing network DHCP functionality, in
+preparation for proper network support in 0.9.
+- Removed incomplete TCP implementation from the network layer.
+- Additional maintenance of the existing network code, including solving a
+hang that was happening when enabling the PcNet network adapter.  Added some
+network debugging, and tweaked some of the main network and device code.
+- Removed a bunch of legacy hardware detection stuff from the OS loader and
+the information it passes to the kernel.
+- Updated translation strings in the kernel message files, and in the Disk
+Manager's German message file.
+- Added -d and -e command line options to the Network Devices (ifconfig)
+program, for (e)nabling or (d)isabling systemwide networking.
+- Changed the allocation of the memory manager's used memory block list so
+that it's dynamic, like the free memory bitmap, rather than compiled into the
+kernel as 90K of static uninititialized data.
+- The kernel's file copy function now limits its buffer allocation to the
+maximum size of the disk cache.
+- Increased the SCSI USB disk driver's read/write timeout so that it's
+proportional to the number of sectors being operated upon.
+- The floppy disk driver now has a workaround to handle broken emulation
+software (VMware) that always sets the 'media changed' bit.  Previously the
+filesystem layer would interpret this as the media having been removed.
+- The VSH library function vshFileList() now prints the amount of free space
+in megabytes, gigabytes, etc., rather than than bytes, when the numbers are
+large.
+- Before the OS loader sets the A20 address line, it now queries the BIOS
+about allowable methods, and if any are set, doesn't attempt the other
+methods.
+- Removed the unused kernelMemoryBlockInfo() function, as it is not needed for
+the realloc() libc function.
+- Added some additional constants such as MS_PER_SEC to <time.h>.
+- Moved operating system loader definitions from a kernel header file to
+<sys/osloader.h>.
+- Moved ELF binary/object format definitions from a kernel header file to
+<sys/elf.h>.
+- Removed the makepot.sh script from the utils directory, which was used to
+create all of the translation templates by hand.  Added a new script called
+langstrings.sh which automates the whole process (making templates, merging
+translations) for all of the things that are currently translated.
+- Parameterized the utils/wget-site.sh script for the name of the website, and
+it now deletes some extra Wordpress droppings.
+- Fixed: The 'iconwin' program that shows lists of icons ('Programs',
+'Administration', etc) was not correctly finding its language-specific
+configuration files.
+- Fixed: The File Browser would frequently fail to correctly classify new
+files written into the current directory, because it was attempting to do so
+too quickly, before enough of the file had been written.  The update detection
+is now more sophisticated, checking the directory mod time, latest file mod
+time, and sum of file sizes.
+- Fixed: Window menu bars were overlapping window borders on the right hand
+side, due to previous changes in support of on-the-fly language switching.
+Added a bit more intelligence re: maximum sizing of the menu bar and the
+coordinates of its component container.
+- Fixed: Booting problems on larger FAT filesystems.  The loaderCalcVolInfo
+function was calculating the cluster buffer memory location using the entire
+on-disk size of the FATs, rather than the smaller number of sectors that we
+actually load into memory.
+- Fixed: APIC driver initialization would fail in the presence of multiple
+I/O APICS, as local APIC initialization for the boot CPU was being done
+inside of the I/O APIC loop.
+- Fixed: The APIC driver is now more flexible about I/O memory already having
+been mapped into the virtual address space.
+- Fixed: The APIC driver now only creates identity-mapped ISA interrupts for
+the first (starting IRQ=0) I/O APIC.
+- Fixed: The scheduling of a number of mostly-idle kernel threads and other
+processes was driving the CPU load to near 100%.  Tweaked the scheduler and
+the chooseNextProcess() function so that, if a process has already yield()ed
+the current timeslice, it is less likely to be chosen again until the next
+timeslice.
+- Fixed: For device drivers (e.g. PCI-oriented) that share/chain interrupt
+vectors, if they don't service the interrupt and don't have a saved vector to
+call, they now send an acknowledgement to the interrupt controller, so that
+further interrupts to that vector are not locked out.
+- Fixed: The image-cd.sh script was generating an ISO image with incorrect
+file names (in particular, some of the font files).  The arguments to
+'mkisofs' have been changed to use '-iso-level 4' (ISO9660 version 2) instead
+of -U ('untranslated').
+- Fixed: The AHCI SATA driver no longer calls the multitasker to wait for I/O
+when multitasking is not enabled (e.g. during initial disk enumeration).
+- Fixed: A kernel log corruption in flushLogStream() that would happen when
+the waiting buffered output was larger than 512 bytes and didn't have a
+terminating NULL character.
+- Fixed: The kernel API and EXT filesystem driver were returning 64-bit values
+incorrectly.  The userspace filesystemGetFreeBytes() function wasn't working
+for values of > 32 bits.
+- Fixed: When installed in 'basic' mode, all filesystem format operations
+were failing, since libntfs was being dynamically linked to the format
+program.  Both the Disk Manager and the format program now use
+dlopen()/dlsym() to check whether ntfsFormat() is available, and act
+accordingly (i.e. NTFS formatting is not available in 'basic' installations,
+but formatting other filesystem types is supposed to work).
+- Fixed: When installed in 'basic' mode, and using the kernel's small built-in
+font, radio button circles were overlapping one another, and checkboxes didn't
+align well with their labels.
+- Fixed: Improved handling of non-default desktop colours to the kernel and
+window system initializaion.
+- Fixed: When logging out from the 'Exit' menu, there was an error message
+(mostly just in the kernel.log) "It's not possible to kill the kernel
+process".
+- Fixed: When installed in 'basic' mode, the login program would emit
+spurious error messages whilst attempting to load keyboard maps and the
+Visopsys logo image.
+- Fixed: When installed in 'basic' mode, the Disk Manager would emits a
+spurious error message attempting to load its icon image.
+- Fixed: the version numbers of the API documents
+
 -------------
  Version 0.8   16/09/2016
 -------------
@@ -670,7 +1030,7 @@ name on the command line.
 - Added a kernelUserExists() function (userExists() in user space).
 - Added a new include file, <sys/paths.h>, that centralizes the definition
   of some of the basic file structure.
-- Created header files <sys/gpt.h> and <sys/usb.h> and moved the relevent
+- Created header files <sys/gpt.h> and <sys/usb.h> and moved the relevant
   definitions from the Disk Manager and the kernel to those.
 - Added a utils/trim-whitespace script for stripping trailing whitespace
   from source files and whatnot.

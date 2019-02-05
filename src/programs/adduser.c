@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
 {
 	int status = 0;
 	char userDir[MAX_PATH_NAME_LENGTH];
-	file f;
 
 	setlocale(LC_ALL, getenv(ENV_LANG));
 	textdomain("adduser");
@@ -89,7 +88,7 @@ int main(int argc, char *argv[])
 
 	// Try to create the user directory
 	snprintf(userDir, MAX_PATH_NAME_LENGTH, PATH_USERS "/%s", argv[1]);
-	if (fileFind(userDir, &f) < 0)
+	if (fileFind(userDir, NULL) < 0)
 	{
 		status = fileMakeDir(userDir);
 		if (status < 0)

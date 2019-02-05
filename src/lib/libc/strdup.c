@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -42,9 +42,12 @@ char *strdup(const char *srcString)
 	}
 
 	if (visopsys_in_kernel)
+	{
+		errno = ERR_BUG;
 		return (destString = NULL);
+	}
 
-	length = strlen(srcString);
+	length = strnlen(srcString, MAXSTRINGLENGTH);
 
 	destString = malloc(length + 1);
 	if (!destString)
@@ -54,6 +57,7 @@ char *strdup(const char *srcString)
 	}
 
 	strncpy(destString, srcString, length);
+	destString[length] = '\0';
 
 	// Return success
 	return (destString);

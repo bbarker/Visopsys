@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This program is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -25,6 +25,7 @@
 #include <string.h>
 
 static int (*saveDraw)(kernelWindowComponent *) = NULL;
+static int (*saveMouseEvent)(kernelWindowComponent *, windowEvent *) = NULL;
 
 extern kernelWindowVariables *windowVariables;
 
@@ -60,6 +61,20 @@ static int focus(kernelWindowComponent *component, int yesNo)
 	component->window->update(component->window, (component->xCoord - 2),
 		(component->yCoord - 2), (component->width + 4),
 		(component->height + 4));
+
+	return (0);
+}
+
+
+static int mouseEvent(kernelWindowComponent *component, windowEvent *event)
+{
+	// We just don't want the slider to respond to mouse scrolls.
+
+	if (event->type & EVENT_MOUSE_SCROLL)
+		return (0);
+
+	 if (saveMouseEvent)
+		return (saveMouseEvent(component, event));
 
 	return (0);
 }
@@ -195,6 +210,8 @@ kernelWindowComponent *kernelWindowNewSlider(objectKey parent,
 	saveDraw = component->draw;
 	component->draw = &draw;
 	component->focus = &focus;
+	saveMouseEvent = component->mouseEvent;
+	component->mouseEvent = &mouseEvent;
 	component->keyEvent = &keyEvent;
 
 	return (component);

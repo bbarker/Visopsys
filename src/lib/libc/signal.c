@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,8 @@ static int signalThreadPid = 0;
 
 static void signalThread(void)
 {
-	// This thread listens for signals and calls the appropriate signal handler
+	// This thread listens for signals and calls the appropriate signal
+	// handler
 
 	int sig = 0;
 
@@ -60,6 +61,14 @@ static void signalThread(void)
 	multitaskerTerminate(0);
 }
 
+
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+//
+//  Below here, the functions are exported for external use
+//
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 
 sighandler_t signal(int sig, sighandler_t handler)
 {

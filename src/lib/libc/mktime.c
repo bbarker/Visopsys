@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -61,7 +61,7 @@ time_t mktime(struct tm *timeStruct)
 	// 01/01/1970.
 
 	// Calculate seconds for all complete years
-	timeSimple = ((year - 1970) * SECPERYR);
+	timeSimple = ((year - 1970) * SECS_PER_YR);
 
 	// Add 1 day's worth of seconds for every complete leap year.  There
 	// is a leap year in every year divisible by 4 except for years which
@@ -69,15 +69,15 @@ time_t mktime(struct tm *timeStruct)
 	for (count = year; count >= 1972; count--)
 	{
 		if (!(count % 4) && ((count % 100) || !(count % 400)))
-			timeSimple += SECPERDAY;
+			timeSimple += SECS_PER_DAY;
 	}
 
 	// Add seconds for all complete months in the year
 	for (count = (timeStruct->tm_mon - 1); count >= 0; count --)
-		timeSimple += (monthDays[count] * SECPERDAY);
+		timeSimple += (monthDays[count] * SECS_PER_DAY);
 
 	// Add seconds for all complete days in the month
-	timeSimple += ((timeStruct->tm_mday - 1) * SECPERDAY);
+	timeSimple += ((timeStruct->tm_mday - 1) * SECS_PER_DAY);
 
 	// Add one day's worth of seconds if THIS is a leap year, and if the
 	// current month and day are greater than Feb 28
@@ -87,15 +87,15 @@ time_t mktime(struct tm *timeStruct)
 			((timeStruct->tm_mon == 1) &&
 			(timeStruct->tm_mday > 28)))
 		{
-			timeSimple += SECPERDAY;
+			timeSimple += SECS_PER_DAY;
 		}
 	}
 
 	// Add seconds for all complete hours in the day
-	timeSimple += (timeStruct->tm_hour * SECPERHR);
+	timeSimple += (timeStruct->tm_hour * SECS_PER_HR);
 
 	// Add seconds for all complete minutes in the hour
-	timeSimple += (timeStruct->tm_min * SECPERMIN);
+	timeSimple += (timeStruct->tm_min * SECS_PER_MIN);
 
 	// Add the seconds
 	timeSimple += timeStruct->tm_sec;

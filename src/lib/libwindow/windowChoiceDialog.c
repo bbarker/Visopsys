@@ -1,6 +1,6 @@
 //
 //  Visopsys
-//  Copyright (C) 1998-2016 J. Andrew McLaughlin
+//  Copyright (C) 1998-2018 J. Andrew McLaughlin
 //
 //  This library is free software; you can redistribute it and/or modify it
 //  under the terms of the GNU Lesser General Public License as published by
@@ -29,8 +29,6 @@
 extern int libwindow_initialized;
 extern void libwindowInitialize(void);
 
-static volatile image questImage;
-
 
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
@@ -47,6 +45,7 @@ _X_ int windowNewChoiceDialog(objectKey parentWindow, const char *title, const c
 	int status = 0;
 	objectKey dialogWindow = NULL;
 	objectKey container = NULL;
+	image iconImage;
 	objectKey buttonContainer = NULL;
 	objectKey buttons[16];
 	componentParameters params;
@@ -97,15 +96,13 @@ _X_ int windowNewChoiceDialog(objectKey parentWindow, const char *title, const c
 	params.orientationY = orient_top;
 	params.flags = (WINDOW_COMPFLAG_FIXEDWIDTH | WINDOW_COMPFLAG_FIXEDHEIGHT);
 
-	// If our 'question' image hasn't been loaded, try to load it
-	if (!questImage.data)
-		status = imageLoad(QUESTIMAGE_NAME, 64, 64, (image *) &questImage);
-
-	if (!status && questImage.data)
+	// Try to load the 'question' image
+	status = imageLoad(QUESTIMAGE_NAME, 64, 64, &iconImage);
+	if (!status && iconImage.data)
 	{
-		questImage.transColor.green = 0xFF;
-		windowNewImage(container, (image *) &questImage, draw_alphablend,
-			&params);
+		iconImage.transColor.green = 0xFF;
+		windowNewImage(container, &iconImage, draw_alphablend, &params);
+		imageFree(&iconImage);
 	}
 
 	// Create the label
@@ -140,8 +137,8 @@ _X_ int windowNewChoiceDialog(objectKey parentWindow, const char *title, const c
 	for (count = 0; count < numChoices; count ++)
 	{
 		params.gridX = count;
-		buttons[count] = windowNewButton(buttonContainer, choiceStrings[count],
-			NULL, &params);
+		buttons[count] = windowNewButton(buttonContainer,
+			choiceStrings[count], NULL, &params);
 		if (!buttons[count])
 		{
 			status = ERR_NOCREATE;
